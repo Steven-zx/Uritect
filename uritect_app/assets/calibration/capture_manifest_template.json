@@ -1,0 +1,10 @@
+{
+  "project": "Uritect Calibration",
+  "version": "0.1.0",
+  "captureTimingSeconds": 60,
+  "distanceCm": 20,
+  "lightingConditions": [2700, 4000, 5500],
+  "controlLevels": ["L1", "L2", "L3"],
+  "minimumImagesPerCell": 20,
+  "namingPattern": "<device>_<kelvin>K_<controlLevel>_<index>.jpg"
+}
