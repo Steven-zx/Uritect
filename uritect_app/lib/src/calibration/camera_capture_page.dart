@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math' as math;
 import 'dart:typed_data';
 
 import 'package:archive/archive_io.dart';
@@ -7,8 +8,12 @@ import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
+import '../analysis/color_processor_service.dart';
+import '../analysis/debug_dashboard_page.dart';
+import '../analysis/knn_reference_map.dart';
 import 'awb_calibrator.dart';
 import 'awb_models.dart';
+import 'strip_framing_overlay.dart';
 
 class CameraCapturePage extends StatefulWidget {
   const CameraCapturePage({
@@ -36,6 +41,8 @@ class CameraCapturePage extends StatefulWidget {
 
 class _CameraCapturePageState extends State<CameraCapturePage> {
   final AwbCalibrator _calibrator = const AwbCalibrator();
+  final ColorProcessorService _colorProcessorService = const ColorProcessorService();
+  final TextEditingController _sampleLabelController = TextEditingController();
   final List<ResolutionPreset> _fallbackPresets = const [
     ResolutionPreset.veryHigh,
     ResolutionPreset.high,
@@ -48,20 +55,31 @@ class _CameraCapturePageState extends State<CameraCapturePage> {
   bool _isReinitializing = false;
   bool _isCapturing = false;
   bool _isExporting = false;
+  bool _isDatasetMode = false;
+  bool _isDebugMode = false;
+  bool _isProcessingDebugFrame = false;
   String _status = 'Initializing camera...';
   int _savedCount = 0;
+  int _sessionCounter = 0;
+  int _datasetCaptureProgress = 0;
+  int _datasetCaptureTotal = 0;
   int _activePresetIndex = -1;
   String _activeCameraLabel = 'Unknown';
   String _lastInitTrace = '';
+  List<Offset> _normalizedRoiCenters = const [];
+  List<_PadDebugSample> _debugSamples = const [];
 
   @override
   void initState() {
     super.initState();
+    _sampleLabelController.text = widget.batchId;
     _initializeCamera();
   }
 
   @override
   void dispose() {
+    _stopDebugStream();
+    _sampleLabelController.dispose();
     _controller?.dispose();
     super.dispose();
   }
@@ -116,7 +134,8 @@ class _CameraCapturePageState extends State<CameraCapturePage> {
             backCamera,
             preset,
             enableAudio: false,
-            imageFormatGroup: ImageFormatGroup.jpeg,
+            imageFormatGroup:
+                Platform.isIOS ? ImageFormatGroup.bgra8888 : ImageFormatGroup.yuv420,
           );
 
           await candidate.initialize();
@@ -144,6 +163,10 @@ class _CameraCapturePageState extends State<CameraCapturePage> {
             _status = 'Camera ready at ${preset.name}. Capture under ${widget.lightKelvin}K.';
             _lastInitTrace = failureTraces.join(' | ');
           });
+
+          if (_isDebugMode) {
+            await _startDebugStream();
+          }
           return;
         } catch (error) {
           failureTraces.add('${preset.name}: $error');
@@ -183,7 +206,155 @@ class _CameraCapturePageState extends State<CameraCapturePage> {
     return controller != null && controller.value.isInitialized;
   }
 
-  Future<void> _captureAndCalibrate({bool allowRecovery = true}) async {
+  Future<void> _setDebugMode(bool enabled) async {
+    if (_isDebugMode == enabled) {
+      return;
+    }
+
+    if (enabled) {
+      setState(() {
+        _isDebugMode = true;
+        _status = 'Debug mode enabled. Sampling RGB/HSV from ROI boxes...';
+      });
+      await _startDebugStream();
+      return;
+    }
+
+    await _stopDebugStream();
+    if (!mounted) return;
+    setState(() {
+      _isDebugMode = false;
+      _debugSamples = const [];
+      _status = 'Debug mode disabled.';
+    });
+  }
+
+  Future<void> _startDebugStream() async {
+    final controller = _controller;
+    if (controller == null || !controller.value.isInitialized) {
+      return;
+    }
+
+    if (controller.value.isStreamingImages) {
+      return;
+    }
+
+    try {
+      await controller.startImageStream((image) {
+        if (!_isDebugMode || _isProcessingDebugFrame || !mounted) {
+          return;
+        }
+        _isProcessingDebugFrame = true;
+        _processDebugFrame(image).whenComplete(() {
+          _isProcessingDebugFrame = false;
+        });
+      });
+    } catch (_) {
+      if (!mounted) return;
+      setState(() {
+        _status = 'Debug stream unavailable on this device configuration.';
+      });
+    }
+  }
+
+  Future<void> _stopDebugStream() async {
+    final controller = _controller;
+    if (controller == null || !controller.value.isInitialized) {
+      return;
+    }
+
+    if (!controller.value.isStreamingImages) {
+      return;
+    }
+
+    try {
+      await controller.stopImageStream();
+    } catch (_) {}
+  }
+
+  Future<void> _processDebugFrame(CameraImage image) async {
+    final centers = _normalizedRoiCenters;
+    if (centers.isEmpty) {
+      return;
+    }
+
+    final samples = <_PadDebugSample>[];
+
+    for (var index = 0; index < math.min(10, centers.length); index++) {
+      final center = centers[index];
+      final x = (center.dx * image.width).round().clamp(0, image.width - 1);
+      final y = (center.dy * image.height).round().clamp(0, image.height - 1);
+
+      final sampledColor = _sampleColorAt(image, x, y);
+      final hsv = HSVColor.fromColor(sampledColor);
+
+      samples.add(
+        _PadDebugSample(
+          index: index + 1,
+          color: sampledColor,
+          hsv: hsv,
+          normalizedCenter: center,
+        ),
+      );
+    }
+
+    if (!mounted) return;
+    setState(() {
+      _debugSamples = samples;
+    });
+  }
+
+  Color _sampleColorAt(CameraImage image, int x, int y) {
+    if (image.format.group == ImageFormatGroup.bgra8888 && image.planes.isNotEmpty) {
+      final plane = image.planes.first;
+      final bytes = plane.bytes;
+      final bytesPerPixel = plane.bytesPerPixel ?? 4;
+      final index = (y * plane.bytesPerRow) + (x * bytesPerPixel);
+      if (index + 3 < bytes.length) {
+        final b = bytes[index];
+        final g = bytes[index + 1];
+        final r = bytes[index + 2];
+        return Color.fromARGB(255, r, g, b);
+      }
+    }
+
+    if (image.planes.length >= 3) {
+      final yPlane = image.planes[0];
+      final uPlane = image.planes[1];
+      final vPlane = image.planes[2];
+
+      final yIndex = (y * yPlane.bytesPerRow) + x;
+      final uvRow = y ~/ 2;
+      final uvCol = x ~/ 2;
+      final uvPixelStride = uPlane.bytesPerPixel ?? 1;
+      final uvIndex = (uvRow * uPlane.bytesPerRow) + (uvCol * uvPixelStride);
+
+      if (yIndex < yPlane.bytes.length && uvIndex < uPlane.bytes.length && uvIndex < vPlane.bytes.length) {
+        final yValue = yPlane.bytes[yIndex].toDouble();
+        final uValue = uPlane.bytes[uvIndex].toDouble();
+        final vValue = vPlane.bytes[uvIndex].toDouble();
+
+        final r = (yValue + (1.402 * (vValue - 128))).round().clamp(0, 255);
+        final g = (yValue - (0.344136 * (uValue - 128)) - (0.714136 * (vValue - 128))).round().clamp(0, 255);
+        final b = (yValue + (1.772 * (uValue - 128))).round().clamp(0, 255);
+
+        return Color.fromARGB(255, r, g, b);
+      }
+    }
+
+    return const Color(0xFF000000);
+  }
+
+  Future<void> _onCapturePressed() async {
+    if (_isDatasetMode) {
+      await _captureDatasetBurst();
+      return;
+    }
+
+    await _captureSingleFrame();
+  }
+
+  Future<void> _captureSingleFrame() async {
     final controller = _controller;
     if (controller == null || !controller.value.isInitialized) {
       setState(() => _status = 'Camera is not initialized.');
@@ -194,10 +365,166 @@ class _CameraCapturePageState extends State<CameraCapturePage> {
       return;
     }
 
+    final sessionNumber = _nextSessionNumber();
+    final sampleLabel = _effectiveSampleLabel;
+    final sessionId = _buildSessionId(sessionNumber: sessionNumber, sampleLabel: sampleLabel);
+
     setState(() {
       _isCapturing = true;
-      _status = 'Capturing image...';
+      _datasetCaptureProgress = 0;
+      _datasetCaptureTotal = 1;
+      _status = 'Capturing 1/1... Keep phone stable.';
     });
+
+    try {
+      await _stopDebugStream();
+      final captureResult = await _captureReplicate(
+        sessionNumber: sessionNumber,
+        sessionId: sessionId,
+        sampleLabel: sampleLabel,
+        replicateId: 1,
+        totalReplicates: 1,
+        allowRecovery: true,
+      );
+
+      if (!mounted) return;
+      if (!captureResult.success) {
+        setState(() {
+          _status = 'Capture failed and stopped. ${captureResult.message}';
+        });
+      } else {
+        setState(() {
+          _datasetCaptureProgress = 1;
+          _status =
+              'Capture complete. AWB gains -> R:${captureResult.result!.gainR.toStringAsFixed(3)} '
+              'G:${captureResult.result!.gainG.toStringAsFixed(3)} '
+              'B:${captureResult.result!.gainB.toStringAsFixed(3)}\n'
+              'Saved: ${captureResult.persistResult!.rawImagePath}\n'
+              'Session ID: $sessionId | Sample Label: $sampleLabel | Replicate: 1/1\n'
+              'Session saved count: $_savedCount';
+        });
+
+              await _openDebugDashboard(captureResult);
+      }
+
+      if (_isDebugMode) {
+        await _startDebugStream();
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isCapturing = false;
+        });
+      }
+    }
+  }
+
+  Future<void> _captureDatasetBurst() async {
+    final controller = _controller;
+    if (controller == null || !controller.value.isInitialized) {
+      setState(() => _status = 'Camera is not initialized.');
+      return;
+    }
+
+    if (_isCapturing) {
+      return;
+    }
+
+    const totalReplicates = 10;
+    const interCaptureDelay = Duration(milliseconds: 150);
+    final sessionNumber = _nextSessionNumber();
+    final sampleLabel = _effectiveSampleLabel;
+    final sessionId = _buildSessionId(sessionNumber: sessionNumber, sampleLabel: sampleLabel);
+
+    setState(() {
+      _isCapturing = true;
+      _datasetCaptureProgress = 0;
+      _datasetCaptureTotal = totalReplicates;
+      _status = 'Dataset mode enabled. Capturing 1/$totalReplicates... Do not move the phone.';
+    });
+
+    var successCount = 0;
+
+    try {
+      await _stopDebugStream();
+      for (var replicateId = 1; replicateId <= totalReplicates; replicateId++) {
+        if (!mounted) return;
+
+        setState(() {
+          _datasetCaptureProgress = replicateId - 1;
+          _status =
+              'Capturing $replicateId/$totalReplicates... Do not move the phone. '
+              'Session ID: $sessionId';
+        });
+
+        final captureResult = await _captureReplicate(
+          sessionNumber: sessionNumber,
+          sessionId: sessionId,
+          sampleLabel: sampleLabel,
+          replicateId: replicateId,
+          totalReplicates: totalReplicates,
+          allowRecovery: true,
+        );
+
+        if (!captureResult.success) {
+          if (!mounted) return;
+          setState(() {
+            _datasetCaptureProgress = successCount;
+            _status =
+                'Dataset capture stopped at frame $replicateId/$totalReplicates. '
+                '${captureResult.message}';
+          });
+          return;
+        }
+
+        successCount += 1;
+        if (!mounted) return;
+        setState(() {
+          _datasetCaptureProgress = successCount;
+          _status =
+              'Captured $successCount/$totalReplicates. '
+              'Session ID: $sessionId | Sample Label: $sampleLabel';
+        });
+
+        if (replicateId < totalReplicates) {
+          await Future<void>.delayed(interCaptureDelay);
+        }
+      }
+
+      if (!mounted) return;
+      setState(() {
+        _status =
+            'Dataset capture complete: $successCount/$totalReplicates frames saved. '
+            'Session ID: $sessionId | Sample Label: $sampleLabel';
+      });
+
+      if (_isDebugMode) {
+        await _startDebugStream();
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isCapturing = false;
+        });
+      }
+    }
+  }
+
+  Future<_CaptureReplicateResult> _captureReplicate({
+    required int sessionNumber,
+    required String sessionId,
+    required String sampleLabel,
+    required int replicateId,
+    required int totalReplicates,
+    required bool allowRecovery,
+  }) async {
+    final controller = _controller;
+    if (controller == null || !controller.value.isInitialized) {
+      return const _CaptureReplicateResult(
+        success: false,
+        message: 'Camera is not initialized.',
+      );
+    }
 
     try {
       final file = await controller.takePicture();
@@ -211,40 +538,50 @@ class _CameraCapturePageState extends State<CameraCapturePage> {
         rawBytes: Uint8List.fromList(bytes),
         awbBytes: result.correctedBytes,
         result: result,
+        sessionNumber: sessionNumber,
+        sessionId: sessionId,
+        sampleLabel: sampleLabel,
+        replicateId: replicateId,
       );
 
-      if (!mounted) return;
-      setState(() {
-        _status =
-            'Capture complete. AWB gains -> R:${result.gainR.toStringAsFixed(3)} '
-            'G:${result.gainG.toStringAsFixed(3)} B:${result.gainB.toStringAsFixed(3)}\n'
-            'Saved: ${saveResult.rawImagePath}\n'
-            'Session saved count: $_savedCount';
-      });
+      return _CaptureReplicateResult(
+        success: true,
+        message: 'Captured replicate $replicateId/$totalReplicates',
+        result: result,
+        persistResult: saveResult,
+      );
     } catch (error) {
       if (allowRecovery) {
         final recovered = await _recoverWithLowerPreset();
         if (recovered) {
-          if (!mounted) return;
+          if (!mounted) {
+            return const _CaptureReplicateResult(
+              success: false,
+              message: 'Widget unmounted during recovery.',
+            );
+          }
+
           setState(() {
             _status =
-                'Capture recovered by compatibility fallback to ${_fallbackPresets[_activePresetIndex].name}. Retrying...';
+                'Capture recovered by compatibility fallback to ${_fallbackPresets[_activePresetIndex].name}. '
+                'Retrying replicate $replicateId/$totalReplicates...';
           });
-          await _captureAndCalibrate(allowRecovery: false);
-          return;
+
+          return _captureReplicate(
+            sessionNumber: sessionNumber,
+            sessionId: sessionId,
+            sampleLabel: sampleLabel,
+            replicateId: replicateId,
+            totalReplicates: totalReplicates,
+            allowRecovery: false,
+          );
         }
       }
 
-      if (!mounted) return;
-      setState(() {
-        _status = 'Capture failed: $error';
-      });
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isCapturing = false;
-        });
-      }
+      return _CaptureReplicateResult(
+        success: false,
+        message: 'Capture failed at replicate $replicateId: $error',
+      );
     }
   }
 
@@ -252,6 +589,10 @@ class _CameraCapturePageState extends State<CameraCapturePage> {
     required Uint8List rawBytes,
     required Uint8List awbBytes,
     required AwbResult result,
+    required int sessionNumber,
+    required String sessionId,
+    required String sampleLabel,
+    required int replicateId,
   }) async {
     final baseDir = await getApplicationDocumentsDirectory();
     final calibrationDir = Directory('${baseDir.path}/uritect_calibration');
@@ -267,11 +608,12 @@ class _CameraCapturePageState extends State<CameraCapturePage> {
 
     final now = DateTime.now();
     final timestampIso = now.toIso8601String();
-    final timestampSafe = timestampIso.replaceAll(':', '-').replaceAll('.', '-');
-    final baseName = '${widget.batchId}_${widget.lightKelvin}K_$timestampSafe';
+    final sessionStem = 'IMG_${sessionNumber.toString().padLeft(3, '0')}';
+    final rawFileName = '${sessionStem}_$replicateId.jpg';
+    final awbFileName = '${sessionStem}_${replicateId}_AWB.jpg';
 
-    final rawImagePath = '${phaseDir.path}/${baseName}_raw.jpg';
-    final awbImagePath = '${phaseDir.path}/${baseName}_awb.jpg';
+    final rawImagePath = '${phaseDir.path}/$rawFileName';
+    final awbImagePath = '${phaseDir.path}/$awbFileName';
 
     await File(rawImagePath).writeAsBytes(rawBytes, flush: true);
     await File(awbImagePath).writeAsBytes(awbBytes, flush: true);
@@ -280,13 +622,16 @@ class _CameraCapturePageState extends State<CameraCapturePage> {
     final logFile = File(logPath);
     if (!await logFile.exists()) {
       await logFile.writeAsString(
-        'timestamp_iso8601,phase,light_kelvin,batch_id,control_level,capture_delay_sec,distance_cm,'
+        'timestamp_iso8601,session_id,sample_label,replicate_id,phase,light_kelvin,batch_id,control_level,capture_delay_sec,distance_cm,'
         'raw_image_path,awb_image_path,awb_gain_r,awb_gain_g,awb_gain_b,ref_mean_r,ref_mean_g,ref_mean_b\n',
       );
     }
 
     final csvRow = [
       timestampIso,
+      sessionId,
+      sampleLabel,
+      replicateId.toString(),
       widget.phaseLabel,
       widget.lightKelvin.toString(),
       widget.batchId,
@@ -314,6 +659,117 @@ class _CameraCapturePageState extends State<CameraCapturePage> {
   }
 
   String get _phaseDirectoryName => widget.phaseLabel.toLowerCase().replaceAll(' ', '_');
+
+  String get _effectiveSampleLabel {
+    final value = _sampleLabelController.text.trim();
+    if (value.isEmpty) {
+      return widget.batchId;
+    }
+    return value;
+  }
+
+  int _nextSessionNumber() {
+    _sessionCounter += 1;
+    return _sessionCounter;
+  }
+
+  String _buildSessionId({required int sessionNumber, required String sampleLabel}) {
+    final timestamp = DateTime.now().toIso8601String().replaceAll(':', '-').replaceAll('.', '-');
+    final sanitizedLabel = sampleLabel.replaceAll(RegExp(r'[^a-zA-Z0-9_-]'), '_');
+    return '${sanitizedLabel}_S${sessionNumber.toString().padLeft(3, '0')}_$timestamp';
+  }
+
+  Future<void> _openDebugDashboard(_CaptureReplicateResult captureResult) async {
+    final persisted = captureResult.persistResult;
+    final awb = captureResult.result;
+    if (persisted == null || awb == null) {
+      return;
+    }
+
+    if (_normalizedRoiCenters.length != 10) {
+      if (!mounted) return;
+      setState(() {
+        _status =
+            'Debug dashboard skipped: ROI centers are not ready yet. Align strip first so all 10 ROI targets are available.';
+      });
+      return;
+    }
+
+    try {
+      final results = await _colorProcessorService.extractPadColors(
+        File(persisted.rawImagePath),
+        _normalizedRoiCenters,
+        awbGainR: awb.gainR,
+        awbGainG: awb.gainG,
+        awbGainB: awb.gainB,
+        knnReferenceMap: _buildPlaceholderKnnMap(),
+      );
+
+      if (!mounted) return;
+      final accepted = await Navigator.of(context).push<bool>(
+        MaterialPageRoute<bool>(
+          builder: (_) => DebugDashboardPage(
+            results: results,
+            onDiscard: () {
+              if (!mounted) return;
+              setState(() {
+                _status = 'Verification discarded. You can recapture with better alignment.';
+              });
+            },
+            onConfirmAndSave: (verifiedResults) async {
+              if (!mounted) return;
+              setState(() {
+                _status =
+                    'Verification confirmed (${verifiedResults.length}/10 analytes). Capture log already saved to CSV.';
+              });
+            },
+          ),
+        ),
+      );
+
+      if (!mounted) return;
+      if (accepted == true) {
+        setState(() {
+          _status = 'Verification accepted. Proceed to next capture or analysis step.';
+        });
+      }
+    } catch (error) {
+      if (!mounted) return;
+      setState(() {
+        _status = 'Failed to build debug dashboard data: $error';
+      });
+    }
+  }
+
+  KnnReferenceMap _buildPlaceholderKnnMap() {
+    Map<String, List<ParameterThreshold>> forAnalyte(String name) {
+      return {
+        name: const [
+          ParameterThreshold(
+            level: 'Negative',
+            referenceColor: Color(0xFFE7E2B7),
+            weight: 1.0,
+          ),
+          ParameterThreshold(
+            level: 'Trace',
+            referenceColor: Color(0xFFC9CE8B),
+            weight: 1.1,
+          ),
+          ParameterThreshold(
+            level: '1+',
+            referenceColor: Color(0xFFA3B965),
+            weight: 1.2,
+          ),
+        ],
+      };
+    }
+
+    final map = <String, List<ParameterThreshold>>{};
+    for (final analyte in ColorProcessorService.defaultAnalyteOrder) {
+      map.addAll(forAnalyte(analyte));
+    }
+    return KnnReferenceMap(map: map);
+  }
 
   Future<void> _exportSession() async {
     if (_isCapturing || _isExporting) {
@@ -357,11 +813,7 @@ class _CameraCapturePageState extends State<CameraCapturePage> {
         final imageFiles = phaseDir
             .listSync()
             .whereType<File>()
-            .where(
-              (file) =>
-                  file.path.toLowerCase().endsWith('.jpg') &&
-                  file.uri.pathSegments.last.startsWith('${widget.batchId}_'),
-            )
+            .where((file) => file.path.toLowerCase().endsWith('.jpg'))
             .toList();
 
         for (final imageFile in imageFiles) {
@@ -402,7 +854,7 @@ class _CameraCapturePageState extends State<CameraCapturePage> {
 
   Future<List<String>> _buildFilteredCsvLines(File logFile) async {
     const header =
-        'timestamp_iso8601,phase,light_kelvin,batch_id,control_level,capture_delay_sec,distance_cm,'
+        'timestamp_iso8601,session_id,sample_label,replicate_id,phase,light_kelvin,batch_id,control_level,capture_delay_sec,distance_cm,'
         'raw_image_path,awb_image_path,awb_gain_r,awb_gain_g,awb_gain_b,ref_mean_r,ref_mean_g,ref_mean_b';
 
     if (!await logFile.exists()) {
@@ -474,10 +926,19 @@ class _CameraCapturePageState extends State<CameraCapturePage> {
                         children: [
                           CameraPreview(controller),
                           IgnorePointer(
-                            child: CustomPaint(
-                              painter: _FrameGuidePainter(),
+                            child: StripFramingOverlay(
+                              roiCount: 10,
+                              onGeometryChanged: (geometry) {
+                                _normalizedRoiCenters = geometry.normalizedRoiCenters();
+                              },
                             ),
                           ),
+                          if (_isDebugMode)
+                            IgnorePointer(
+                              child: _DebugOverlay(
+                                samples: _debugSamples,
+                              ),
+                            ),
                         ],
                       ),
           ),
@@ -491,6 +952,41 @@ class _CameraCapturePageState extends State<CameraCapturePage> {
                 Text('Batch: ${widget.batchId} | Delay: ${widget.captureDelaySec}s | Distance: ${widget.distanceCm}cm'),
                 if (widget.controlLevel != null && widget.controlLevel!.isNotEmpty)
                   Text('Control level: ${widget.controlLevel}'),
+                const SizedBox(height: 8),
+                TextField(
+                  controller: _sampleLabelController,
+                  enabled: !_isCapturing,
+                  decoration: const InputDecoration(
+                    labelText: 'Sample Label',
+                    hintText: 'e.g., Control_Negative',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                SwitchListTile(
+                  contentPadding: EdgeInsets.zero,
+                  title: const Text('Dataset Mode (10-frame burst)'),
+                  subtitle: const Text('When enabled, captures 10 consecutive frames with replicate logging.'),
+                  value: _isDatasetMode,
+                  onChanged: (_isCapturing || _isInitializing || _isReinitializing || _isExporting)
+                      ? null
+                      : (value) {
+                          setState(() {
+                            _isDatasetMode = value;
+                          });
+                        },
+                ),
+                SwitchListTile(
+                  contentPadding: EdgeInsets.zero,
+                  title: const Text('Debug Mode (ROI RGB/HSV)'),
+                  subtitle: const Text('Shows real-time RGB/HSV values for the 10 ROI pads.'),
+                  value: _isDebugMode,
+                  onChanged: (_isCapturing || _isInitializing || _isReinitializing || _isExporting)
+                      ? null
+                      : _setDebugMode,
+                ),
+                if (_isDatasetMode && (_isCapturing || _datasetCaptureTotal > 0))
+                  Text('Progress: $_datasetCaptureProgress/$_datasetCaptureTotal'),
                 const SizedBox(height: 8),
                 Text('Camera: $_activeCameraLabel | Preset: $_activePresetLabel'),
                 if (_lastInitTrace.isNotEmpty)
@@ -506,9 +1002,15 @@ class _CameraCapturePageState extends State<CameraCapturePage> {
                   onPressed:
                       _isInitializing || _isReinitializing || _isCapturing || _isExporting
                           ? null
-                          : _captureAndCalibrate,
+                          : _onCapturePressed,
                   icon: const Icon(Icons.camera_alt),
-                  label: Text(_isCapturing ? 'Capturing...' : 'Capture + Run AWB'),
+                  label: Text(
+                    _isCapturing
+                        ? (_isDatasetMode
+                            ? 'Capturing $_datasetCaptureProgress/$_datasetCaptureTotal...'
+                            : 'Capturing...')
+                        : (_isDatasetMode ? 'Capture Dataset (10 Frames)' : 'Capture + Run AWB'),
+                  ),
                 ),
                 const SizedBox(height: 8),
                 OutlinedButton.icon(
@@ -543,73 +1045,54 @@ class _CameraCapturePageState extends State<CameraCapturePage> {
   }
 }
 
-class _FrameGuidePainter extends CustomPainter {
+class _DebugOverlay extends StatelessWidget {
+  const _DebugOverlay({
+    required this.samples,
+  });
+
+  final List<_PadDebugSample> samples;
+
   @override
-  void paint(Canvas canvas, Size size) {
-    final overlayPaint = Paint()..color = Colors.black.withValues(alpha: 0.25);
-    canvas.drawRect(Offset.zero & size, overlayPaint);
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return Stack(
+          children: samples.map((sample) {
+            final x = sample.normalizedCenter.dx * constraints.maxWidth;
+            final y = sample.normalizedCenter.dy * constraints.maxHeight;
 
-    final guideWidth = size.width * 0.72;
-    final guideHeight = size.height * 0.56;
-    final guideRect = Rect.fromCenter(
-      center: size.center(Offset.zero),
-      width: guideWidth,
-      height: guideHeight,
-    );
+            final label =
+                'P${sample.index} '
+                'RGB(${sample.color.r},${sample.color.g},${sample.color.b}) '
+                'HSV(${sample.hsv.hue.toStringAsFixed(1)},'
+                '${sample.hsv.saturation.toStringAsFixed(2)},'
+                '${sample.hsv.value.toStringAsFixed(2)})';
 
-    final clearPaint = Paint()..blendMode = BlendMode.clear;
-    canvas.saveLayer(Offset.zero & size, Paint());
-    canvas.drawRect(Offset.zero & size, overlayPaint);
-    canvas.drawRRect(
-      RRect.fromRectAndRadius(guideRect, const Radius.circular(12)),
-      clearPaint,
-    );
-    canvas.restore();
-
-    final borderPaint = Paint()
-      ..color = Colors.white
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 2;
-    canvas.drawRRect(
-      RRect.fromRectAndRadius(guideRect, const Radius.circular(12)),
-      borderPaint,
-    );
-
-    final cornerPaint = Paint()
-      ..color = Colors.white
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 4;
-    final cornerLength = 24.0;
-
-    void drawCorner(Offset start, Offset horizontalEnd, Offset verticalEnd) {
-      canvas.drawLine(start, horizontalEnd, cornerPaint);
-      canvas.drawLine(start, verticalEnd, cornerPaint);
-    }
-
-    drawCorner(
-      guideRect.topLeft,
-      guideRect.topLeft + Offset(cornerLength, 0),
-      guideRect.topLeft + Offset(0, cornerLength),
-    );
-    drawCorner(
-      guideRect.topRight,
-      guideRect.topRight + Offset(-cornerLength, 0),
-      guideRect.topRight + Offset(0, cornerLength),
-    );
-    drawCorner(
-      guideRect.bottomLeft,
-      guideRect.bottomLeft + Offset(cornerLength, 0),
-      guideRect.bottomLeft + Offset(0, -cornerLength),
-    );
-    drawCorner(
-      guideRect.bottomRight,
-      guideRect.bottomRight + Offset(-cornerLength, 0),
-      guideRect.bottomRight + Offset(0, -cornerLength),
+            return Positioned(
+              left: x - 70,
+              top: y - 30,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+                decoration: BoxDecoration(
+                  color: Colors.black.withValues(alpha: 0.65),
+                  borderRadius: BorderRadius.circular(6),
+                  border: Border.all(color: Colors.white54),
+                ),
+                child: Text(
+                  label,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 10,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            );
+          }).toList(growable: false),
+        );
+      },
     );
   }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
 class _PersistResult {
@@ -622,4 +1105,32 @@ class _PersistResult {
   final String rawImagePath;
   final String awbImagePath;
   final String logPath;
+}
+
+class _CaptureReplicateResult {
+  const _CaptureReplicateResult({
+    required this.success,
+    required this.message,
+    this.result,
+    this.persistResult,
+  });
+
+  final bool success;
+  final String message;
+  final AwbResult? result;
+  final _PersistResult? persistResult;
+}
+
+class _PadDebugSample {
+  const _PadDebugSample({
+    required this.index,
+    required this.color,
+    required this.hsv,
+    required this.normalizedCenter,
+  });
+
+  final int index;
+  final Color color;
+  final HSVColor hsv;
+  final Offset normalizedCenter;
 }
