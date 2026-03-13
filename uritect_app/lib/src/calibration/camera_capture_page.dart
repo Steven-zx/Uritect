@@ -6,7 +6,6 @@ import 'package:archive/archive_io.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:gal/gal.dart';
-import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart' as image_picker;
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
@@ -49,8 +48,6 @@ class _CameraCapturePageState extends State<CameraCapturePage> {
   final MacroMarkerDetector _macroMarkerDetector = const MacroMarkerDetector();
   final ColorProcessorService _colorProcessorService = const ColorProcessorService();
   final TextEditingController _sampleLabelController = TextEditingController();
-  final TextEditingController _collectorEndpointController = TextEditingController();
-  final TextEditingController _collectorApiKeyController = TextEditingController();
   final image_picker.ImagePicker _imagePicker = image_picker.ImagePicker();
   final List<ResolutionPreset> _fallbackPresets = const [
     ResolutionPreset.veryHigh,
@@ -107,8 +104,6 @@ class _CameraCapturePageState extends State<CameraCapturePage> {
   void dispose() {
     _stopDebugStream();
     _sampleLabelController.dispose();
-    _collectorEndpointController.dispose();
-    _collectorApiKeyController.dispose();
     _controller?.dispose();
     super.dispose();
   }
@@ -765,31 +760,15 @@ class _CameraCapturePageState extends State<CameraCapturePage> {
     await manifestFile.writeAsString('$row\n', mode: FileMode.append, flush: true);
   }
 
-  Future<void> _uploadFromGalleryToCollector() async {
+  Future<void> _shareBatchFromGallery() async {
     if (_isCapturing || _isExporting || _isUploading) {
-      return;
-    }
-
-    final endpoint = _collectorEndpointController.text.trim();
-    if (endpoint.isEmpty) {
-      setState(() {
-        _uploadStatus = 'Enter Dataset Collector endpoint before uploading.';
-      });
-      return;
-    }
-
-    final endpointUri = Uri.tryParse(endpoint);
-    if (endpointUri == null || (!endpointUri.isScheme('http') && !endpointUri.isScheme('https'))) {
-      setState(() {
-        _uploadStatus = 'Dataset Collector endpoint must be a valid http(s) URL.';
-      });
       return;
     }
 
     final selected = await _imagePicker.pickMultiImage();
     if (selected.isEmpty) {
       setState(() {
-        _uploadStatus = 'No gallery images selected.';
+        _uploadStatus = 'No gallery photos selected.';
       });
       return;
     }
@@ -805,86 +784,63 @@ class _CameraCapturePageState extends State<CameraCapturePage> {
     final sampleLabel = _effectiveSampleLabel;
     final sessionNumber = _nextSessionNumber();
     final eventId = _buildSessionId(sessionNumber: sessionNumber, sampleLabel: sampleLabel);
-    final apiKey = _collectorApiKeyController.text.trim();
 
     setState(() {
       _isUploading = true;
       _uploadProgress = 0;
       _uploadTotal = selected.length;
       _uploadStatus =
-          'Preparing batch upload payload (1/${selected.length})... Event ID: $eventId';
+          'Opening gallery batch ${selected.length}/${selected.length} for sharing... Event ID: $eventId';
     });
 
     try {
-      final request = http.MultipartRequest('POST', endpointUri);
-      if (apiKey.isNotEmpty) {
-        request.headers['Authorization'] = 'Bearer $apiKey';
-      }
-
-      request.fields.addAll({
-        'timestamp_iso8601': DateTime.now().toIso8601String(),
-        'event_id': eventId,
-        'label': sampleLabel,
-        'photo_count': selected.length.toString(),
-        'photo_indices': List.generate(selected.length, (index) => '${index + 1}').join(','),
-        'phase': widget.phaseLabel,
-        'light_kelvin': widget.lightKelvin.toString(),
-        'batch_id': widget.batchId,
-        'capture_delay_sec': widget.captureDelaySec.toString(),
-        'distance_cm': widget.distanceCm.toStringAsFixed(2),
-        'source': 'gallery_batch',
-      });
-
       for (var i = 0; i < selected.length; i++) {
         if (!mounted) return;
         final photoIndex = i + 1;
         final pickedImage = selected[i];
 
         setState(() {
-          _uploadProgress = i;
+          _uploadProgress = photoIndex;
           _uploadStatus =
-              'Preparing batch payload $photoIndex/${selected.length}: ${path.basename(pickedImage.path)}';
+              'Preparing $photoIndex/${selected.length}: ${path.basename(pickedImage.path)}';
         });
-
-        request.files.add(
-          await http.MultipartFile.fromPath(
-            'images',
-            pickedImage.path,
-            filename: '${photoIndex.toString().padLeft(2, '0')}_${path.basename(pickedImage.path)}',
-          ),
-        );
       }
+
+      final manifestFile = await _buildGalleryShareManifest(
+        eventId: eventId,
+        label: sampleLabel,
+        selected: selected,
+      );
 
       if (!mounted) return;
       setState(() {
         _uploadProgress = selected.length;
-        _uploadStatus = 'Uploading batch request to Dataset Collector...';
+        _uploadStatus = 'Opening share sheet for ${selected.length} gallery photos...';
       });
 
-      final response = await request.send();
-      final responseBody = await response.stream.bytesToString();
-      if (response.statusCode < 200 || response.statusCode >= 300) {
-        final trimmed = responseBody.trim();
-        final preview = trimmed.isEmpty
-            ? ''
-            : (trimmed.length > 220 ? '${trimmed.substring(0, 220)}...' : trimmed);
-        if (!mounted) return;
-        setState(() {
-          _uploadStatus =
-              'Batch upload failed (HTTP ${response.statusCode})${preview.isEmpty ? '' : ': $preview'}';
-        });
-        return;
-      }
+      final files = <XFile>[
+        ...selected.map((image) => XFile(image.path)),
+        XFile(manifestFile.path),
+      ];
+
+      await SharePlus.instance.share(
+        ShareParams(
+          files: files,
+          text:
+              'Uritect training batch $eventId | Label: $sampleLabel | ${selected.length} gallery photos + manifest',
+          subject: 'Uritect Training Batch',
+        ),
+      );
 
       if (!mounted) return;
       setState(() {
         _uploadStatus =
-            'Batch upload complete: ${selected.length}/${selected.length} photos uploaded in one request. Event ID: $eventId';
+            'Share sheet opened for ${selected.length} gallery photos. Choose your target destination there. Event ID: $eventId';
       });
     } catch (error) {
       if (!mounted) return;
       setState(() {
-        _uploadStatus = 'Batch upload failed: $error';
+        _uploadStatus = 'Gallery batch share failed: $error';
       });
     } finally {
       if (mounted) {
@@ -893,6 +849,43 @@ class _CameraCapturePageState extends State<CameraCapturePage> {
         });
       }
     }
+  }
+
+  Future<File> _buildGalleryShareManifest({
+    required String eventId,
+    required String label,
+    required List<image_picker.XFile> selected,
+  }) async {
+    final tempDir = await getTemporaryDirectory();
+    final manifestStamp = DateTime.now().toIso8601String().replaceAll(':', '-').replaceAll('.', '-');
+    final manifestFile = File('${tempDir.path}/training_share_manifest_$manifestStamp.csv');
+
+    final buffer = StringBuffer()
+      ..writeln(
+        'timestamp_iso8601,event_id,label,photo_index,file_name,selected_image_path,phase,light_kelvin,batch_id,capture_delay_sec,distance_cm,source',
+      );
+
+    for (var index = 0; index < selected.length; index++) {
+      final image = selected[index];
+      final row = [
+        DateTime.now().toIso8601String(),
+        eventId,
+        label,
+        (index + 1).toString(),
+        path.basename(image.path),
+        image.path,
+        widget.phaseLabel,
+        widget.lightKelvin.toString(),
+        widget.batchId,
+        widget.captureDelaySec.toString(),
+        widget.distanceCm.toStringAsFixed(2),
+        'gallery_manual_share',
+      ].map(_csvEscape).join(',');
+      buffer.writeln(row);
+    }
+
+    await manifestFile.writeAsString(buffer.toString(), flush: true);
+    return manifestFile;
   }
 
   String get _phaseDirectoryName => widget.phaseLabel.toLowerCase().replaceAll(' ', '_');
@@ -1294,29 +1287,8 @@ class _CameraCapturePageState extends State<CameraCapturePage> {
                   ),
                 ),
                 const SizedBox(height: 8),
-                TextField(
-                  controller: _collectorEndpointController,
-                  enabled: !_isCapturing && !_isUploading && !_isExporting,
-                  keyboardType: TextInputType.url,
-                  decoration: const InputDecoration(
-                    labelText: 'Dataset Collector Endpoint',
-                    hintText: 'https://your-collector/upload',
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-                const SizedBox(height: 8),
-                TextField(
-                  controller: _collectorApiKeyController,
-                  enabled: !_isCapturing && !_isUploading && !_isExporting,
-                  decoration: const InputDecoration(
-                    labelText: 'Collector API Key (optional)',
-                    hintText: 'Bearer token (without "Bearer")',
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-                const SizedBox(height: 8),
                 const Text(
-                  'Training mode: captures 20 photos per event, saves originals to Gallery album "Uritect Training", logs labels in training_upload_manifest.csv, and uploads 20 selected gallery photos as one batch request to your dataset collector endpoint.',
+                  'Training mode: captures 20 photos per event, saves originals to Gallery album "Uritect Training", logs labels in training_upload_manifest.csv, then opens your phone gallery so you can select 20 photos and manually share them to the target destination.',
                 ),
                 if (_isCapturing || _datasetCaptureTotal > 0)
                   Text('Progress: $_datasetCaptureProgress/$_datasetCaptureTotal'),
@@ -1382,15 +1354,15 @@ class _CameraCapturePageState extends State<CameraCapturePage> {
                   onPressed:
                       _isInitializing || _isReinitializing || _isCapturing || _isExporting || _isUploading
                           ? null
-                          : _uploadFromGalleryToCollector,
+                          : _shareBatchFromGallery,
                   icon: _isUploading
                       ? const SizedBox(
                           width: 16,
                           height: 16,
                           child: CircularProgressIndicator(strokeWidth: 2),
                         )
-                      : const Icon(Icons.cloud_upload),
-                  label: const Text('Upload Batch (20 Photos)'),
+                      : const Icon(Icons.photo_library_outlined),
+                  label: const Text('Open Gallery + Share Batch'),
                 ),
               ],
             ),
