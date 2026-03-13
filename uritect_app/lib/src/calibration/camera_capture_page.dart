@@ -5,6 +5,7 @@ import 'dart:typed_data';
 import 'package:archive/archive_io.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:gal/gal.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -15,7 +16,6 @@ import '../database/app_database.dart';
 import 'awb_calibrator.dart';
 import 'awb_models.dart';
 import 'macro_marker_detector.dart';
-import 'strip_framing_overlay.dart';
 
 class CameraCapturePage extends StatefulWidget {
   const CameraCapturePage({
@@ -58,9 +58,8 @@ class _CameraCapturePageState extends State<CameraCapturePage> {
   bool _isReinitializing = false;
   bool _isCapturing = false;
   bool _isExporting = false;
-  bool _isDatasetMode = false;
   bool _isDebugMode = false;
-  bool _requireMacroMarker = true;
+  bool _requireMacroMarker = false;
   bool _isProcessingDebugFrame = false;
   String _status = 'Initializing camera...';
   int _savedCount = 0;
@@ -364,12 +363,7 @@ class _CameraCapturePageState extends State<CameraCapturePage> {
   }
 
   Future<void> _onCapturePressed() async {
-    if (_isDatasetMode) {
-      await _captureDatasetBurst();
-      return;
-    }
-
-    await _captureSingleFrame();
+    await _captureDatasetBurst();
   }
 
   Future<void> _captureSingleFrame() async {
@@ -466,6 +460,7 @@ class _CameraCapturePageState extends State<CameraCapturePage> {
     });
 
     var successCount = 0;
+    var gallerySavedCount = 0;
 
     try {
       await _stopDebugStream();
@@ -500,6 +495,9 @@ class _CameraCapturePageState extends State<CameraCapturePage> {
         }
 
         successCount += 1;
+        if (captureResult.persistResult?.savedToGallery ?? false) {
+          gallerySavedCount += 1;
+        }
         if (!mounted) return;
         setState(() {
           _lastMacroMarkerDetection = captureResult.macroMarkerDetection;
@@ -509,6 +507,7 @@ class _CameraCapturePageState extends State<CameraCapturePage> {
           _datasetCaptureProgress = successCount;
           _status =
               'Captured $successCount/$totalReplicates. '
+              'Gallery saved: $gallerySavedCount/$successCount. '
               'Session ID: $sessionId | Sample Label: $sampleLabel';
         });
 
@@ -521,6 +520,7 @@ class _CameraCapturePageState extends State<CameraCapturePage> {
       setState(() {
         _status =
             'Dataset capture complete: $successCount/$totalReplicates frames saved. '
+        'Gallery saved: $gallerySavedCount/$successCount. '
             'Session ID: $sessionId | Sample Label: $sampleLabel';
       });
 
@@ -688,12 +688,69 @@ class _CameraCapturePageState extends State<CameraCapturePage> {
 
     await logFile.writeAsString('$csvRow\n', mode: FileMode.append, flush: true);
 
+    final savedToGallery = await _saveRawImageToGallery(rawImagePath);
+    await _appendTrainingUploadManifest(
+      calibrationDir: calibrationDir,
+      timestampIso: timestampIso,
+      sessionId: sessionId,
+      sampleLabel: sampleLabel,
+      replicateId: replicateId,
+      rawImagePath: rawImagePath,
+      savedToGallery: savedToGallery,
+    );
+
     _savedCount += 1;
     return _PersistResult(
       rawImagePath: rawImagePath,
       awbImagePath: awbImagePath,
       logPath: logPath,
+      savedToGallery: savedToGallery,
     );
+  }
+
+  Future<bool> _saveRawImageToGallery(String rawImagePath) async {
+    try {
+      await Gal.putImage(rawImagePath, album: 'Uritect Training');
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  Future<void> _appendTrainingUploadManifest({
+    required Directory calibrationDir,
+    required String timestampIso,
+    required String sessionId,
+    required String sampleLabel,
+    required int replicateId,
+    required String rawImagePath,
+    required bool savedToGallery,
+  }) async {
+    final manifestPath = '${calibrationDir.path}/training_upload_manifest.csv';
+    final manifestFile = File(manifestPath);
+
+    if (!await manifestFile.exists()) {
+      await manifestFile.writeAsString(
+        'timestamp_iso8601,event_id,label,photo_index,phase,light_kelvin,batch_id,capture_delay_sec,distance_cm,raw_image_path,saved_to_gallery\n',
+        flush: true,
+      );
+    }
+
+    final row = [
+      timestampIso,
+      sessionId,
+      sampleLabel,
+      replicateId.toString(),
+      widget.phaseLabel,
+      widget.lightKelvin.toString(),
+      widget.batchId,
+      widget.captureDelaySec.toString(),
+      widget.distanceCm.toStringAsFixed(2),
+      rawImagePath,
+      savedToGallery ? '1' : '0',
+    ].map(_csvEscape).join(',');
+
+    await manifestFile.writeAsString('$row\n', mode: FileMode.append, flush: true);
   }
 
   String get _phaseDirectoryName => widget.phaseLabel.toLowerCase().replaceAll(' ', '_');
@@ -1071,20 +1128,6 @@ class _CameraCapturePageState extends State<CameraCapturePage> {
                         fit: StackFit.expand,
                         children: [
                           CameraPreview(controller),
-                          IgnorePointer(
-                            child: StripFramingOverlay(
-                              roiCount: 10,
-                              onGeometryChanged: (geometry) {
-                                _normalizedRoiCenters = geometry.normalizedRoiCenters();
-                              },
-                            ),
-                          ),
-                          if (_isDebugMode)
-                            IgnorePointer(
-                              child: _DebugOverlay(
-                                samples: _debugSamples,
-                              ),
-                            ),
                         ],
                       ),
           ),
@@ -1103,50 +1146,16 @@ class _CameraCapturePageState extends State<CameraCapturePage> {
                   controller: _sampleLabelController,
                   enabled: !_isCapturing,
                   decoration: const InputDecoration(
-                    labelText: 'Sample Label',
-                    hintText: 'e.g., Control_Negative',
+                    labelText: 'Training Label',
+                    hintText: 'e.g., Negative, Positive, Class_A',
                     border: OutlineInputBorder(),
                   ),
                 ),
                 const SizedBox(height: 8),
-                SwitchListTile(
-                  contentPadding: EdgeInsets.zero,
-                  title: const Text('Dataset Mode (20-frame burst)'),
-                  subtitle: Text(
-                    'When enabled, captures $_datasetBurstLimit consecutive frames with replicate logging.',
-                  ),
-                  value: _isDatasetMode,
-                  onChanged: (_isCapturing || _isInitializing || _isReinitializing || _isExporting)
-                      ? null
-                      : (value) {
-                          setState(() {
-                            _isDatasetMode = value;
-                          });
-                        },
+                const Text(
+                  'Training mode: captures 20 photos per event, saves originals to Gallery album "Uritect Training", and logs labels in training_upload_manifest.csv.',
                 ),
-                SwitchListTile(
-                  contentPadding: EdgeInsets.zero,
-                  title: const Text('Require Macro Marker'),
-                  subtitle: const Text('Use black ring + white center marker as capture gate and AWB reference.'),
-                  value: _requireMacroMarker,
-                  onChanged: (_isCapturing || _isInitializing || _isReinitializing || _isExporting)
-                      ? null
-                      : (value) {
-                          setState(() {
-                            _requireMacroMarker = value;
-                          });
-                        },
-                ),
-                SwitchListTile(
-                  contentPadding: EdgeInsets.zero,
-                  title: const Text('Debug Mode (ROI RGB/HSV)'),
-                  subtitle: const Text('Shows real-time RGB/HSV values for the 10 ROI pads.'),
-                  value: _isDebugMode,
-                  onChanged: (_isCapturing || _isInitializing || _isReinitializing || _isExporting)
-                      ? null
-                      : _setDebugMode,
-                ),
-                if (_isDatasetMode && (_isCapturing || _datasetCaptureTotal > 0))
+                if (_isCapturing || _datasetCaptureTotal > 0)
                   Text('Progress: $_datasetCaptureProgress/$_datasetCaptureTotal'),
                 const SizedBox(height: 8),
                 Text(_macroMarkerStatus),
@@ -1174,11 +1183,7 @@ class _CameraCapturePageState extends State<CameraCapturePage> {
                           : _onCapturePressed,
                   icon: const Icon(Icons.camera_alt),
                   label: Text(
-                    _isCapturing
-                        ? (_isDatasetMode
-                            ? 'Capturing $_datasetCaptureProgress/$_datasetCaptureTotal...'
-                            : 'Capturing...')
-                        : (_isDatasetMode ? 'Capture Dataset (20 Frames)' : 'Capture + Run AWB'),
+                    _isCapturing ? 'Capturing $_datasetCaptureProgress/$_datasetCaptureTotal...' : 'Capture Event (20 Photos)',
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -1269,11 +1274,13 @@ class _PersistResult {
     required this.rawImagePath,
     required this.awbImagePath,
     required this.logPath,
+    required this.savedToGallery,
   });
 
   final String rawImagePath;
   final String awbImagePath;
   final String logPath;
+  final bool savedToGallery;
 }
 
 class _CaptureReplicateResult {
