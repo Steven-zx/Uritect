@@ -1,5 +1,6 @@
 import 'dart:ui' as ui;
 import 'dart:typed_data';
+import 'package:flutter/painting.dart';
 
 class AnalyteResult {
   const AnalyteResult({
@@ -15,7 +16,7 @@ class AnalyteResult {
   final String analyteName;
   final ui.Color rawRgb;
   final ui.Color correctedRgb;
-  final ui.HSVColor hsv;
+  final HSVColor hsv;
   final ui.Offset sampleCenter;
   final Uint8List sampledCropPng;
   final String nearestMatch;
