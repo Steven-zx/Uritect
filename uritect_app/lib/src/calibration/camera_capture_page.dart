@@ -6,6 +6,9 @@ import 'package:archive/archive_io.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:gal/gal.dart';
+import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart' as image_picker;
+import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -46,6 +49,9 @@ class _CameraCapturePageState extends State<CameraCapturePage> {
   final MacroMarkerDetector _macroMarkerDetector = const MacroMarkerDetector();
   final ColorProcessorService _colorProcessorService = const ColorProcessorService();
   final TextEditingController _sampleLabelController = TextEditingController();
+  final TextEditingController _collectorEndpointController = TextEditingController();
+  final TextEditingController _collectorApiKeyController = TextEditingController();
+  final image_picker.ImagePicker _imagePicker = image_picker.ImagePicker();
   final List<ResolutionPreset> _fallbackPresets = const [
     ResolutionPreset.veryHigh,
     ResolutionPreset.high,
@@ -58,14 +64,18 @@ class _CameraCapturePageState extends State<CameraCapturePage> {
   bool _isReinitializing = false;
   bool _isCapturing = false;
   bool _isExporting = false;
+  bool _isUploading = false;
   bool _isDebugMode = false;
   bool _requireMacroMarker = false;
   bool _isProcessingDebugFrame = false;
   String _status = 'Initializing camera...';
+  String _uploadStatus = '';
   int _savedCount = 0;
   int _sessionCounter = 0;
   int _datasetCaptureProgress = 0;
   int _datasetCaptureTotal = 0;
+  int _uploadProgress = 0;
+  int _uploadTotal = 0;
   int _activePresetIndex = -1;
   String _activeCameraLabel = 'Unknown';
   String _lastInitTrace = '';
@@ -97,6 +107,8 @@ class _CameraCapturePageState extends State<CameraCapturePage> {
   void dispose() {
     _stopDebugStream();
     _sampleLabelController.dispose();
+    _collectorEndpointController.dispose();
+    _collectorApiKeyController.dispose();
     _controller?.dispose();
     super.dispose();
   }
@@ -753,6 +765,136 @@ class _CameraCapturePageState extends State<CameraCapturePage> {
     await manifestFile.writeAsString('$row\n', mode: FileMode.append, flush: true);
   }
 
+  Future<void> _uploadFromGalleryToCollector() async {
+    if (_isCapturing || _isExporting || _isUploading) {
+      return;
+    }
+
+    final endpoint = _collectorEndpointController.text.trim();
+    if (endpoint.isEmpty) {
+      setState(() {
+        _uploadStatus = 'Enter Dataset Collector endpoint before uploading.';
+      });
+      return;
+    }
+
+    final endpointUri = Uri.tryParse(endpoint);
+    if (endpointUri == null || (!endpointUri.isScheme('http') && !endpointUri.isScheme('https'))) {
+      setState(() {
+        _uploadStatus = 'Dataset Collector endpoint must be a valid http(s) URL.';
+      });
+      return;
+    }
+
+    final selected = await _imagePicker.pickMultiImage();
+    if (selected.isEmpty) {
+      setState(() {
+        _uploadStatus = 'No gallery images selected.';
+      });
+      return;
+    }
+
+    if (selected.length != _datasetBurstLimit) {
+      setState(() {
+        _uploadStatus =
+            'Select exactly $_datasetBurstLimit photos for one event. You selected ${selected.length}.';
+      });
+      return;
+    }
+
+    final sampleLabel = _effectiveSampleLabel;
+    final sessionNumber = _nextSessionNumber();
+    final eventId = _buildSessionId(sessionNumber: sessionNumber, sampleLabel: sampleLabel);
+    final apiKey = _collectorApiKeyController.text.trim();
+
+    setState(() {
+      _isUploading = true;
+      _uploadProgress = 0;
+      _uploadTotal = selected.length;
+      _uploadStatus =
+          'Preparing batch upload payload (1/${selected.length})... Event ID: $eventId';
+    });
+
+    try {
+      final request = http.MultipartRequest('POST', endpointUri);
+      if (apiKey.isNotEmpty) {
+        request.headers['Authorization'] = 'Bearer $apiKey';
+      }
+
+      request.fields.addAll({
+        'timestamp_iso8601': DateTime.now().toIso8601String(),
+        'event_id': eventId,
+        'label': sampleLabel,
+        'photo_count': selected.length.toString(),
+        'photo_indices': List.generate(selected.length, (index) => '${index + 1}').join(','),
+        'phase': widget.phaseLabel,
+        'light_kelvin': widget.lightKelvin.toString(),
+        'batch_id': widget.batchId,
+        'capture_delay_sec': widget.captureDelaySec.toString(),
+        'distance_cm': widget.distanceCm.toStringAsFixed(2),
+        'source': 'gallery_batch',
+      });
+
+      for (var i = 0; i < selected.length; i++) {
+        if (!mounted) return;
+        final photoIndex = i + 1;
+        final pickedImage = selected[i];
+
+        setState(() {
+          _uploadProgress = i;
+          _uploadStatus =
+              'Preparing batch payload $photoIndex/${selected.length}: ${path.basename(pickedImage.path)}';
+        });
+
+        request.files.add(
+          await http.MultipartFile.fromPath(
+            'images',
+            pickedImage.path,
+            filename: '${photoIndex.toString().padLeft(2, '0')}_${path.basename(pickedImage.path)}',
+          ),
+        );
+      }
+
+      if (!mounted) return;
+      setState(() {
+        _uploadProgress = selected.length;
+        _uploadStatus = 'Uploading batch request to Dataset Collector...';
+      });
+
+      final response = await request.send();
+      final responseBody = await response.stream.bytesToString();
+      if (response.statusCode < 200 || response.statusCode >= 300) {
+        final trimmed = responseBody.trim();
+        final preview = trimmed.isEmpty
+            ? ''
+            : (trimmed.length > 220 ? '${trimmed.substring(0, 220)}...' : trimmed);
+        if (!mounted) return;
+        setState(() {
+          _uploadStatus =
+              'Batch upload failed (HTTP ${response.statusCode})${preview.isEmpty ? '' : ': $preview'}';
+        });
+        return;
+      }
+
+      if (!mounted) return;
+      setState(() {
+        _uploadStatus =
+            'Batch upload complete: ${selected.length}/${selected.length} photos uploaded in one request. Event ID: $eventId';
+      });
+    } catch (error) {
+      if (!mounted) return;
+      setState(() {
+        _uploadStatus = 'Batch upload failed: $error';
+      });
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isUploading = false;
+        });
+      }
+    }
+  }
+
   String get _phaseDirectoryName => widget.phaseLabel.toLowerCase().replaceAll(' ', '_');
 
   String get _effectiveSampleLabel {
@@ -975,7 +1117,7 @@ class _CameraCapturePageState extends State<CameraCapturePage> {
   }
 
   Future<void> _exportSession() async {
-    if (_isCapturing || _isExporting) {
+    if (_isCapturing || _isExporting || _isUploading) {
       return;
     }
 
@@ -1098,7 +1240,7 @@ class _CameraCapturePageState extends State<CameraCapturePage> {
         actions: [
           IconButton(
             onPressed:
-              _isInitializing || _isReinitializing || _isCapturing || _isExporting
+              _isInitializing || _isReinitializing || _isCapturing || _isExporting || _isUploading
                 ? null
                 : _exportSession,
             tooltip: 'Export session CSV + ZIP',
@@ -1144,7 +1286,7 @@ class _CameraCapturePageState extends State<CameraCapturePage> {
                 const SizedBox(height: 8),
                 TextField(
                   controller: _sampleLabelController,
-                  enabled: !_isCapturing,
+                  enabled: !_isCapturing && !_isUploading,
                   decoration: const InputDecoration(
                     labelText: 'Training Label',
                     hintText: 'e.g., Negative, Positive, Class_A',
@@ -1152,13 +1294,38 @@ class _CameraCapturePageState extends State<CameraCapturePage> {
                   ),
                 ),
                 const SizedBox(height: 8),
+                TextField(
+                  controller: _collectorEndpointController,
+                  enabled: !_isCapturing && !_isUploading && !_isExporting,
+                  keyboardType: TextInputType.url,
+                  decoration: const InputDecoration(
+                    labelText: 'Dataset Collector Endpoint',
+                    hintText: 'https://your-collector/upload',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                TextField(
+                  controller: _collectorApiKeyController,
+                  enabled: !_isCapturing && !_isUploading && !_isExporting,
+                  decoration: const InputDecoration(
+                    labelText: 'Collector API Key (optional)',
+                    hintText: 'Bearer token (without "Bearer")',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(height: 8),
                 const Text(
-                  'Training mode: captures 20 photos per event, saves originals to Gallery album "Uritect Training", and logs labels in training_upload_manifest.csv.',
+                  'Training mode: captures 20 photos per event, saves originals to Gallery album "Uritect Training", logs labels in training_upload_manifest.csv, and uploads 20 selected gallery photos as one batch request to your dataset collector endpoint.',
                 ),
                 if (_isCapturing || _datasetCaptureTotal > 0)
                   Text('Progress: $_datasetCaptureProgress/$_datasetCaptureTotal'),
+                if (_isUploading || _uploadTotal > 0)
+                  Text('Upload Progress: $_uploadProgress/$_uploadTotal'),
                 const SizedBox(height: 8),
                 Text(_macroMarkerStatus),
+                if (_uploadStatus.isNotEmpty)
+                  Text(_uploadStatus),
                 if (_lastMacroMarkerDetection != null)
                   Text(
                     'Marker center: '
@@ -1178,7 +1345,7 @@ class _CameraCapturePageState extends State<CameraCapturePage> {
                 const SizedBox(height: 12),
                 FilledButton.icon(
                   onPressed:
-                      _isInitializing || _isReinitializing || _isCapturing || _isExporting
+                      _isInitializing || _isReinitializing || _isCapturing || _isExporting || _isUploading
                           ? null
                           : _onCapturePressed,
                   icon: const Icon(Icons.camera_alt),
@@ -1189,7 +1356,7 @@ class _CameraCapturePageState extends State<CameraCapturePage> {
                 const SizedBox(height: 8),
                 OutlinedButton.icon(
                   onPressed:
-                      _isInitializing || _isReinitializing || _isCapturing || _isExporting
+                      _isInitializing || _isReinitializing || _isCapturing || _isExporting || _isUploading
                           ? null
                           : () => _initializeWithFallback(startIndex: 0, showAsInitial: false),
                   icon: _isReinitializing
@@ -1204,11 +1371,26 @@ class _CameraCapturePageState extends State<CameraCapturePage> {
                 const SizedBox(height: 8),
                 OutlinedButton.icon(
                   onPressed:
-                      _isInitializing || _isReinitializing || _isCapturing || _isExporting
+                      _isInitializing || _isReinitializing || _isCapturing || _isExporting || _isUploading
                           ? null
                           : _exportSession,
                   icon: const Icon(Icons.folder_zip),
                   label: const Text('Export Session (CSV + ZIP)'),
+                ),
+                const SizedBox(height: 8),
+                FilledButton.icon(
+                  onPressed:
+                      _isInitializing || _isReinitializing || _isCapturing || _isExporting || _isUploading
+                          ? null
+                          : _uploadFromGalleryToCollector,
+                  icon: _isUploading
+                      ? const SizedBox(
+                          width: 16,
+                          height: 16,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : const Icon(Icons.cloud_upload),
+                  label: const Text('Upload Batch (20 Photos)'),
                 ),
               ],
             ),
