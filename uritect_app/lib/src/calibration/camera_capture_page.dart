@@ -11,8 +11,10 @@ import 'package:share_plus/share_plus.dart';
 import '../analysis/color_processor_service.dart';
 import '../analysis/debug_dashboard_page.dart';
 import '../analysis/knn_reference_map.dart';
+import '../database/app_database.dart';
 import 'awb_calibrator.dart';
 import 'awb_models.dart';
+import 'macro_marker_detector.dart';
 import 'strip_framing_overlay.dart';
 
 class CameraCapturePage extends StatefulWidget {
@@ -41,6 +43,7 @@ class CameraCapturePage extends StatefulWidget {
 
 class _CameraCapturePageState extends State<CameraCapturePage> {
   final AwbCalibrator _calibrator = const AwbCalibrator();
+  final MacroMarkerDetector _macroMarkerDetector = const MacroMarkerDetector();
   final ColorProcessorService _colorProcessorService = const ColorProcessorService();
   final TextEditingController _sampleLabelController = TextEditingController();
   final List<ResolutionPreset> _fallbackPresets = const [
@@ -57,6 +60,7 @@ class _CameraCapturePageState extends State<CameraCapturePage> {
   bool _isExporting = false;
   bool _isDatasetMode = false;
   bool _isDebugMode = false;
+  bool _requireMacroMarker = true;
   bool _isProcessingDebugFrame = false;
   String _status = 'Initializing camera...';
   int _savedCount = 0;
@@ -66,14 +70,28 @@ class _CameraCapturePageState extends State<CameraCapturePage> {
   int _activePresetIndex = -1;
   String _activeCameraLabel = 'Unknown';
   String _lastInitTrace = '';
+  String _macroMarkerStatus = 'Macro marker pending';
+  MacroMarkerDetection? _lastMacroMarkerDetection;
   List<Offset> _normalizedRoiCenters = const [];
   List<_PadDebugSample> _debugSamples = const [];
+  KnnReferenceMap? _knnReferenceMap;
+
+  static const int _datasetBurstLimit = 20;
 
   @override
   void initState() {
     super.initState();
     _sampleLabelController.text = widget.batchId;
     _initializeCamera();
+    _loadKnnReferenceMap();
+  }
+
+  Future<void> _loadKnnReferenceMap() async {
+    final map = await AppDatabase.instance.buildKnnReferenceMap();
+    if (!mounted) return;
+    if (map.map.isNotEmpty) {
+      setState(() => _knnReferenceMap = map);
+    }
   }
 
   @override
@@ -394,6 +412,10 @@ class _CameraCapturePageState extends State<CameraCapturePage> {
         });
       } else {
         setState(() {
+          _lastMacroMarkerDetection = captureResult.macroMarkerDetection;
+          _macroMarkerStatus = captureResult.macroMarkerDetection == null
+              ? 'Macro marker: not detected (fallback AWB region used)'
+              : 'Macro marker detected (${(captureResult.macroMarkerDetection!.confidence * 100).toStringAsFixed(0)}% confidence)';
           _datasetCaptureProgress = 1;
           _status =
               'Capture complete. AWB gains -> R:${captureResult.result!.gainR.toStringAsFixed(3)} '
@@ -404,7 +426,7 @@ class _CameraCapturePageState extends State<CameraCapturePage> {
               'Session saved count: $_savedCount';
         });
 
-              await _openDebugDashboard(captureResult);
+              await _openDebugDashboard(captureResult, sessionId: sessionId);
       }
 
       if (_isDebugMode) {
@@ -430,7 +452,7 @@ class _CameraCapturePageState extends State<CameraCapturePage> {
       return;
     }
 
-    const totalReplicates = 10;
+    const totalReplicates = _datasetBurstLimit;
     const interCaptureDelay = Duration(milliseconds: 150);
     final sessionNumber = _nextSessionNumber();
     final sampleLabel = _effectiveSampleLabel;
@@ -480,6 +502,10 @@ class _CameraCapturePageState extends State<CameraCapturePage> {
         successCount += 1;
         if (!mounted) return;
         setState(() {
+          _lastMacroMarkerDetection = captureResult.macroMarkerDetection;
+          _macroMarkerStatus = captureResult.macroMarkerDetection == null
+              ? 'Macro marker: not detected (fallback AWB region used)'
+              : 'Macro marker detected (${(captureResult.macroMarkerDetection!.confidence * 100).toStringAsFixed(0)}% confidence)';
           _datasetCaptureProgress = successCount;
           _status =
               'Captured $successCount/$totalReplicates. '
@@ -529,13 +555,24 @@ class _CameraCapturePageState extends State<CameraCapturePage> {
     try {
       final file = await controller.takePicture();
       final bytes = await file.readAsBytes();
+      final encodedBytes = Uint8List.fromList(bytes);
+
+      final markerDetection = _macroMarkerDetector.detect(encodedBytes);
+      if (_requireMacroMarker && markerDetection == null) {
+        return const _CaptureReplicateResult(
+          success: false,
+          message: 'Macro marker not detected. Keep the black-ring white-center marker visible and retry.',
+        );
+      }
+
+      final awbReferenceRegion = markerDetection?.whiteCenterRegion ?? widget.referenceRegion;
       final result = _calibrator.applyReferenceWhiteBalance(
-        Uint8List.fromList(bytes),
-        widget.referenceRegion,
+        encodedBytes,
+        awbReferenceRegion,
       );
 
       final saveResult = await _persistCapture(
-        rawBytes: Uint8List.fromList(bytes),
+        rawBytes: encodedBytes,
         awbBytes: result.correctedBytes,
         result: result,
         sessionNumber: sessionNumber,
@@ -549,6 +586,7 @@ class _CameraCapturePageState extends State<CameraCapturePage> {
         message: 'Captured replicate $replicateId/$totalReplicates',
         result: result,
         persistResult: saveResult,
+        macroMarkerDetection: markerDetection,
       );
     } catch (error) {
       if (allowRecovery) {
@@ -679,7 +717,110 @@ class _CameraCapturePageState extends State<CameraCapturePage> {
     return '${sanitizedLabel}_S${sessionNumber.toString().padLeft(3, '0')}_$timestamp';
   }
 
-  Future<void> _openDebugDashboard(_CaptureReplicateResult captureResult) async {
+  /// Persists a confirmed single-capture session to the database.
+  ///
+  /// Saves the session metadata, all 10 analyte results, their crop PNGs as
+  /// individual files, and (when [widget.controlLevel] is set) k-NN reference
+  /// samples built from the AWB-corrected pad colours.
+  Future<void> _saveAnalysisSession({
+    required String sessionId,
+    required _CaptureReplicateResult captureResult,
+    required List<dynamic> verifiedResults,
+  }) async {
+    final baseDir = await getApplicationDocumentsDirectory();
+    final cropsDir =
+        Directory('${baseDir.path}/uritect_calibration/crops');
+    if (!await cropsDir.exists()) {
+      await cropsDir.create(recursive: true);
+    }
+
+    final now = DateTime.now().toIso8601String();
+
+    await AppDatabase.instance.insertSession(
+      AnalysisSessionRecord(
+        sessionUuid: sessionId,
+        timestamp: now,
+        phase: widget.phaseLabel,
+        batchId: widget.batchId,
+        lightKelvin: widget.lightKelvin,
+        controlLevel: widget.controlLevel,
+        markerConfidence: captureResult.macroMarkerDetection?.confidence,
+      ),
+    );
+
+    final resultRecords = <AnalysisResultRecord>[];
+    final knnSamples = <KnnSampleRecord>[];
+    final isCalibration =
+        widget.controlLevel != null && widget.controlLevel!.isNotEmpty;
+
+    for (final dynamic r in verifiedResults) {
+      final analyteName = r.analyteName as String;
+      final safeName = analyteName
+          .replaceAll(RegExp(r'[^a-zA-Z0-9]'), '_')
+          .toLowerCase();
+      final cropPath = '${cropsDir.path}/${sessionId}_$safeName.png';
+      await File(cropPath)
+          .writeAsBytes(r.sampledCropPng as List<int>, flush: true);
+
+      final rawR = (r.rawRgb.r * 255).round() as int;
+      final rawG = (r.rawRgb.g * 255).round() as int;
+      final rawB = (r.rawRgb.b * 255).round() as int;
+      final corrR = (r.correctedRgb.r * 255).round() as int;
+      final corrG = (r.correctedRgb.g * 255).round() as int;
+      final corrB = (r.correctedRgb.b * 255).round() as int;
+
+      resultRecords.add(AnalysisResultRecord(
+        sessionUuid: sessionId,
+        analyteName: analyteName,
+        rawR: rawR,
+        rawG: rawG,
+        rawB: rawB,
+        corrR: corrR,
+        corrG: corrG,
+        corrB: corrB,
+        h: r.hsv.hue as double,
+        s: r.hsv.saturation as double,
+        v: r.hsv.value as double,
+        nearestMatch: r.nearestMatch as String,
+        cropImagePath: cropPath,
+      ));
+
+      if (isCalibration) {
+        knnSamples.add(KnnSampleRecord(
+          analyteName: analyteName,
+          level: widget.controlLevel!,
+          r: corrR,
+          g: corrG,
+          b: corrB,
+          h: r.hsv.hue as double,
+          s: r.hsv.saturation as double,
+          v: r.hsv.value as double,
+          source: 'calibration',
+          batchId: widget.batchId,
+          sessionId: sessionId,
+          createdAt: now,
+        ));
+      }
+    }
+
+    await AppDatabase.instance.insertResults(resultRecords);
+
+    if (knnSamples.isNotEmpty) {
+      await AppDatabase.instance.insertKnnSamples(knnSamples);
+      final refreshed = await AppDatabase.instance.buildKnnReferenceMap();
+      if (mounted) {
+        setState(() {
+          _knnReferenceMap =
+              refreshed.map.isNotEmpty ? refreshed : _knnReferenceMap;
+        });
+      }
+    }
+  }
+
+  Future<void> _openDebugDashboard(
+    _CaptureReplicateResult captureResult, {
+    required String sessionId,
+  }) async {
     final persisted = captureResult.persistResult;
     final awb = captureResult.result;
     if (persisted == null || awb == null) {
@@ -702,7 +843,7 @@ class _CameraCapturePageState extends State<CameraCapturePage> {
         awbGainR: awb.gainR,
         awbGainG: awb.gainG,
         awbGainB: awb.gainB,
-        knnReferenceMap: _buildPlaceholderKnnMap(),
+        knnReferenceMap: _knnReferenceMap ?? _buildPlaceholderKnnMap(),
       );
 
       if (!mounted) return;
@@ -717,10 +858,15 @@ class _CameraCapturePageState extends State<CameraCapturePage> {
               });
             },
             onConfirmAndSave: (verifiedResults) async {
+              await _saveAnalysisSession(
+                sessionId: sessionId,
+                captureResult: captureResult,
+                verifiedResults: verifiedResults,
+              );
               if (!mounted) return;
               setState(() {
                 _status =
-                    'Verification confirmed (${verifiedResults.length}/10 analytes). Capture log already saved to CSV.';
+                    'Verification confirmed (${verifiedResults.length}/10 analytes). Saved to history.';
               });
             },
           ),
@@ -965,14 +1111,29 @@ class _CameraCapturePageState extends State<CameraCapturePage> {
                 const SizedBox(height: 8),
                 SwitchListTile(
                   contentPadding: EdgeInsets.zero,
-                  title: const Text('Dataset Mode (10-frame burst)'),
-                  subtitle: const Text('When enabled, captures 10 consecutive frames with replicate logging.'),
+                  title: const Text('Dataset Mode (20-frame burst)'),
+                  subtitle: Text(
+                    'When enabled, captures $_datasetBurstLimit consecutive frames with replicate logging.',
+                  ),
                   value: _isDatasetMode,
                   onChanged: (_isCapturing || _isInitializing || _isReinitializing || _isExporting)
                       ? null
                       : (value) {
                           setState(() {
                             _isDatasetMode = value;
+                          });
+                        },
+                ),
+                SwitchListTile(
+                  contentPadding: EdgeInsets.zero,
+                  title: const Text('Require Macro Marker'),
+                  subtitle: const Text('Use black ring + white center marker as capture gate and AWB reference.'),
+                  value: _requireMacroMarker,
+                  onChanged: (_isCapturing || _isInitializing || _isReinitializing || _isExporting)
+                      ? null
+                      : (value) {
+                          setState(() {
+                            _requireMacroMarker = value;
                           });
                         },
                 ),
@@ -987,6 +1148,14 @@ class _CameraCapturePageState extends State<CameraCapturePage> {
                 ),
                 if (_isDatasetMode && (_isCapturing || _datasetCaptureTotal > 0))
                   Text('Progress: $_datasetCaptureProgress/$_datasetCaptureTotal'),
+                const SizedBox(height: 8),
+                Text(_macroMarkerStatus),
+                if (_lastMacroMarkerDetection != null)
+                  Text(
+                    'Marker center: '
+                    '${_lastMacroMarkerDetection!.centerNormalized.dx.toStringAsFixed(3)}, '
+                    '${_lastMacroMarkerDetection!.centerNormalized.dy.toStringAsFixed(3)}',
+                  ),
                 const SizedBox(height: 8),
                 Text('Camera: $_activeCameraLabel | Preset: $_activePresetLabel'),
                 if (_lastInitTrace.isNotEmpty)
@@ -1009,7 +1178,7 @@ class _CameraCapturePageState extends State<CameraCapturePage> {
                         ? (_isDatasetMode
                             ? 'Capturing $_datasetCaptureProgress/$_datasetCaptureTotal...'
                             : 'Capturing...')
-                        : (_isDatasetMode ? 'Capture Dataset (10 Frames)' : 'Capture + Run AWB'),
+                        : (_isDatasetMode ? 'Capture Dataset (20 Frames)' : 'Capture + Run AWB'),
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -1113,12 +1282,14 @@ class _CaptureReplicateResult {
     required this.message,
     this.result,
     this.persistResult,
+    this.macroMarkerDetection,
   });
 
   final bool success;
   final String message;
   final AwbResult? result;
   final _PersistResult? persistResult;
+  final MacroMarkerDetection? macroMarkerDetection;
 }
 
 class _PadDebugSample {

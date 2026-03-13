@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import '../history/history_page.dart';
 import 'camera_capture_page.dart';
 import 'awb_models.dart';
 
@@ -149,7 +150,20 @@ class _CalibrationPageState extends State<CalibrationPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Uritect Calibration Start')),
+      appBar: AppBar(
+        title: const Text('Uritect Calibration Start'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.history),
+            tooltip: 'Analysis History',
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => const HistoryPage(),
+              ),
+            ),
+          ),
+        ],
+      ),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
