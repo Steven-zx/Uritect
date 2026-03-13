@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
+import 'package:flutter/painting.dart';
 import 'package:image/image.dart' as img;
 
 import 'analyte_result.dart';
@@ -82,7 +83,7 @@ class ColorProcessorService {
         correctedMean.b,
       );
 
-      final hsv = ui.HSVColor.fromColor(correctedColor);
+      final hsv = HSVColor.fromColor(correctedColor);
       final cropPng = _extractKernelCropPng(
         image: decoded,
         centerX: center.dx,
@@ -174,8 +175,8 @@ class ColorProcessorService {
     final originX = centerX.round() - half;
     final originY = centerY.round() - half;
 
-    final safeX = originX.clamp(0, math.max(0, image.width - kernelSize));
-    final safeY = originY.clamp(0, math.max(0, image.height - kernelSize));
+    final safeX = originX.clamp(0, math.max(0, image.width - kernelSize)).toInt();
+    final safeY = originY.clamp(0, math.max(0, image.height - kernelSize)).toInt();
     final safeWidth = math.min(kernelSize, image.width);
     final safeHeight = math.min(kernelSize, image.height);
 

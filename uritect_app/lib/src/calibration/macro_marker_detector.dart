@@ -72,8 +72,8 @@ class MacroMarkerDetector {
         for (var x = margin; x < working.width - margin; x += stride) {
           final innerMean = _sampleDiskMeanBrightness(
             image: working,
-            centerX: x,
-            centerY: y,
+            centerX: x.toDouble(),
+            centerY: y.toDouble(),
             radius: radius * 0.55,
             radialSteps: 3,
             angularSteps: 12,
@@ -81,8 +81,8 @@ class MacroMarkerDetector {
 
           final ringMean = _sampleAnnulusMeanBrightness(
             image: working,
-            centerX: x,
-            centerY: y,
+            centerX: x.toDouble(),
+            centerY: y.toDouble(),
             innerRadius: radius * 1.05,
             outerRadius: radius * 1.75,
             radialSteps: 3,
