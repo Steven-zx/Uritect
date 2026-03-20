@@ -1,0 +1,205 @@
+{
+  "version": "trained_v4_hsv",
+  "source": "uritect_training_pipeline",
+  "generated_at": "2026-03-20T12:21:22.929240+00:00",
+  "total_samples": 12,
+  "reference_color_space": "hsv",
+  "label_mode_counts": {
+    "binary": 12,
+    "semiquant": 0,
+    "unknown": 0
+  },
+  "reference_strategy": "semiquant_preferred_with_binary_fallback",
+  "pipeline_sequence": [
+    "geometric_rectification",
+    "awb_marker_center_10x10",
+    "grid_slicing_px_per_mm",
+    "burst_temporal_median",
+    "mean_hsv_features",
+    "smote_augmentation",
+    "knn_bruteforce_k5",
+    "bayesian_fusion_and_risk"
+  ],
+  "analytes": {
+    "Leukocytes": [
+      {
+        "level": "Normal",
+        "h": 194.234001,
+        "s": 0.073588,
+        "v": 0.731417,
+        "weight": 1.0,
+        "sample_count": 6
+      },
+      {
+        "level": "Abnormal",
+        "h": 68.526001,
+        "s": 0.194827,
+        "v": 0.679399,
+        "weight": 1.0,
+        "sample_count": 6
+      }
+    ],
+    "Nitrite": [
+      {
+        "level": "Normal",
+        "h": 206.532395,
+        "s": 0.050882,
+        "v": 0.708511,
+        "weight": 1.0,
+        "sample_count": 6
+      },
+      {
+        "level": "Abnormal",
+        "h": 89.073601,
+        "s": 0.136866,
+        "v": 0.632038,
+        "weight": 1.0,
+        "sample_count": 6
+      }
+    ],
+    "Urobilinogen": [
+      {
+        "level": "Normal",
+        "h": 208.568802,
+        "s": 0.052787,
+        "v": 0.713413,
+        "weight": 1.0,
+        "sample_count": 6
+      },
+      {
+        "level": "Abnormal",
+        "h": 94.9208,
+        "s": 0.117753,
+        "v": 0.684518,
+        "weight": 1.0,
+        "sample_count": 6
+      }
+    ],
+    "Protein": [
+      {
+        "level": "Normal",
+        "h": 202.433999,
+        "s": 0.054524,
+        "v": 0.720534,
+        "weight": 1.0,
+        "sample_count": 6
+      },
+      {
+        "level": "Abnormal",
+        "h": 114.1036,
+        "s": 0.152861,
+        "v": 0.698351,
+        "weight": 1.0,
+        "sample_count": 6
+      }
+    ],
+    "pH": [
+      {
+        "level": "Normal",
+        "h": 200.375199,
+        "s": 0.018826,
+        "v": 0.719053,
+        "weight": 1.0,
+        "sample_count": 6
+      },
+      {
+        "level": "Abnormal",
+        "h": 169.144004,
+        "s": 0.063734,
+        "v": 0.682589,
+        "weight": 1.0,
+        "sample_count": 6
+      }
+    ],
+    "Blood": [
+      {
+        "level": "Normal",
+        "h": 168.429199,
+        "s": 0.014882,
+        "v": 0.735531,
+        "weight": 1.0,
+        "sample_count": 6
+      },
+      {
+        "level": "Abnormal",
+        "h": 145.5756,
+        "s": 0.015647,
+        "v": 0.70455,
+        "weight": 1.0,
+        "sample_count": 6
+      }
+    ],
+    "Specific Gravity": [
+      {
+        "level": "Normal",
+        "h": 159.607998,
+        "s": 0.01124,
+        "v": 0.716222,
+        "weight": 1.0,
+        "sample_count": 6
+      },
+      {
+        "level": "Abnormal",
+        "h": 44.111999,
+        "s": 0.007841,
+        "v": 0.412585,
+        "weight": 1.0,
+        "sample_count": 6
+      }
+    ],
+    "Ketone": [
+      {
+        "level": "Normal",
+        "h": 34.042001,
+        "s": 0.003647,
+        "v": 0.358886,
+        "weight": 1.0,
+        "sample_count": 6
+      },
+      {
+        "level": "Abnormal",
+        "h": 0.0,
+        "s": 0.0,
+        "v": 0.0,
+        "weight": 1.0,
+        "sample_count": 6
+      }
+    ],
+    "Bilirubin": [
+      {
+        "level": "Normal",
+        "h": 0.0,
+        "s": 0.0,
+        "v": 0.0,
+        "weight": 1.0,
+        "sample_count": 6
+      },
+      {
+        "level": "Abnormal",
+        "h": 0.0,
+        "s": 0.0,
+        "v": 0.0,
+        "weight": 1.0,
+        "sample_count": 6
+      }
+    ],
+    "Glucose": [
+      {
+        "level": "Normal",
+        "h": 0.0,
+        "s": 0.0,
+        "v": 0.0,
+        "weight": 1.0,
+        "sample_count": 6
+      },
+      {
+        "level": "Abnormal",
+        "h": 0.0,
+        "s": 0.0,
+        "v": 0.0,
+        "weight": 1.0,
+        "sample_count": 6
+      }
+    ]
+  }
+}

@@ -1,0 +1,94 @@
+{
+  "version": "binary_knn_v2",
+  "generated_at": "2026-03-20T12:21:22.926412+00:00",
+  "metrics": {
+    "accuracy": 0.3333333333333333,
+    "f1_score": 0.5,
+    "sensitivity": 1.0,
+    "specificity": 0.0,
+    "confusion_matrix": {
+      "tn": 0,
+      "fp": 2,
+      "fn": 0,
+      "tp": 1
+    },
+    "posterior_accuracy": 0.3333333333333333,
+    "posterior_probability_summary": {
+      "min": 0.9991265578036826,
+      "max": 0.9991265578036826,
+      "mean": 0.9991265578036826
+    },
+    "risk_counts": {
+      "Low": 0,
+      "Moderate": 0,
+      "High": 3
+    },
+    "risk_thresholds": {
+      "Low": "P < 0.35",
+      "Moderate": "0.35 <= P <= 0.70",
+      "High": "P > 0.70"
+    }
+  },
+  "counts": {
+    "raw_binary_samples": 12,
+    "train_samples_before_smote": 9,
+    "train_samples_after_smote": 4500,
+    "eval_samples": 3,
+    "class_distribution_raw": {
+      "Normal(1)": 6,
+      "Abnormal(2)": 6
+    },
+    "class_distribution_train_before_smote": {
+      "Normal(1)": 4,
+      "Abnormal(2)": 5
+    }
+  },
+  "config": {
+    "n_neighbors": 5,
+    "algorithm": "brute",
+    "weights": "distance",
+    "metric": "euclidean",
+    "feature_columns": [
+      "leukocytes_h",
+      "leukocytes_s",
+      "leukocytes_v",
+      "nitrite_h",
+      "nitrite_s",
+      "nitrite_v",
+      "urobilinogen_h",
+      "urobilinogen_s",
+      "urobilinogen_v",
+      "protein_h",
+      "protein_s",
+      "protein_v",
+      "ph_h",
+      "ph_s",
+      "ph_v",
+      "blood_h",
+      "blood_s",
+      "blood_v",
+      "specific_gravity_h",
+      "specific_gravity_s",
+      "specific_gravity_v",
+      "ketone_h",
+      "ketone_s",
+      "ketone_v",
+      "bilirubin_h",
+      "bilirubin_s",
+      "bilirubin_v",
+      "glucose_h",
+      "glucose_s",
+      "glucose_v"
+    ],
+    "split_strategy": "stratified_random_split",
+    "smote": {
+      "applied": true,
+      "note": "applied (k_neighbors=3, strategy={1: 2250, 2: 2250})",
+      "target_augmented_size": 4500
+    },
+    "class_encoding": {
+      "Normal": 1,
+      "Abnormal": 2
+    }
+  }
+}

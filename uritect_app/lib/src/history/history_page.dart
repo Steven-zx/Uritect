@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
+import '../analysis/analyte_value_basis.dart';
 import '../database/app_database.dart';
 
 class HistoryPage extends StatefulWidget {
@@ -266,6 +267,10 @@ class _SessionDetailPageState extends State<_SessionDetailPage> {
                       value:
                           '${(session.markerConfidence! * 100).toStringAsFixed(0)}%',
                     ),
+                  _MetaChip(
+                    label: 'Value Profile',
+                    value: analyteValueProfileVersion,
+                  ),
                 ],
               ),
             ),
@@ -287,7 +292,7 @@ class _SessionDetailPageState extends State<_SessionDetailPage> {
                             crossAxisCount: 2,
                             mainAxisSpacing: 10,
                             crossAxisSpacing: 10,
-                            childAspectRatio: 0.95,
+                            childAspectRatio: 0.84,
                           ),
                           itemCount: _results.length,
                           itemBuilder: (context, index) =>
@@ -343,6 +348,10 @@ class _ResultCard extends StatelessWidget {
         Color.fromARGB(255, record.corrR, record.corrG, record.corrB);
     final rawColor =
         Color.fromARGB(255, record.rawR, record.rawG, record.rawB);
+    final resolvedValue = resolveAnalyteValue(
+      analyteName: record.analyteName,
+      nearestMatch: record.nearestMatch,
+    );
 
     return Card(
       elevation: 2,
@@ -420,6 +429,26 @@ class _ResultCard extends StatelessWidget {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              resolvedValue.isMapped
+                  ? 'Mapped: ${resolvedValue.displayValue} ${resolvedValue.unit}'
+                  : 'Mapped: ${resolvedValue.displayValue}',
+              style: const TextStyle(
+                color: Colors.tealAccent,
+                fontSize: 10,
+                fontWeight: FontWeight.w600,
+              ),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+            const SizedBox(height: 2),
+            Text(
+              'Basis: ${resolvedValue.basisTag}',
+              style: const TextStyle(color: Colors.white54, fontSize: 9),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
           ],
         ),

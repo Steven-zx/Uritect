@@ -1,1 +1,1 @@
-image_name,device_id,light_kelvin,control_level,capture_delay_sec,distance_cm,awb_ref_x_norm,awb_ref_y_norm,awb_ref_w_norm,awb_ref_h_norm,awb_gain_r,awb_gain_g,awb_gain_b,operator_id,timestamp_iso8601,notes
+image_name,device_id,light_kelvin,control_level,capture_delay_sec,distance_cm,awb_ref_x_norm,awb_ref_y_norm,awb_ref_w_norm,awb_ref_h_norm,awb_gain_r,awb_gain_g,awb_gain_b,operator_id,timestamp_iso8601,strip_brand,strip_model,strip_lot,ifu_revision,value_profile_version,value_basis_tag,notes

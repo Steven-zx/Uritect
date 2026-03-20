@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart' as p;
 import 'package:sqflite/sqflite.dart';
@@ -194,9 +197,28 @@ class AppDatabase {
 
   static final AppDatabase instance = AppDatabase._internal();
 
+  final List<KnnSampleRecord> _memoryKnnSamples = <KnnSampleRecord>[];
+  final List<AnalysisSessionRecord> _memorySessions = <AnalysisSessionRecord>[];
+  final List<AnalysisResultRecord> _memoryResults = <AnalysisResultRecord>[];
+
   Database? _db;
 
+  bool get _supportsSqfliteBackend {
+    if (kIsWeb) {
+      return false;
+    }
+    return Platform.isAndroid || Platform.isIOS;
+  }
+
+  bool get usesPersistentSqlite => _supportsSqfliteBackend;
+
   Future<Database> get database async {
+    if (!_supportsSqfliteBackend) {
+      throw UnsupportedError(
+        'SQLite backend disabled on this platform. AppDatabase is running in in-memory mode.',
+      );
+    }
+
     if (_db != null) return _db!;
     _db = await _open();
     return _db!;
@@ -267,6 +289,11 @@ class AppDatabase {
   // ─── knn_reference_samples ──────────────────────────────────────────────
 
   Future<void> insertKnnSamples(List<KnnSampleRecord> records) async {
+    if (!_supportsSqfliteBackend) {
+      _memoryKnnSamples.addAll(records);
+      return;
+    }
+
     final db = await database;
     final batch = db.batch();
     for (final record in records) {
@@ -276,6 +303,12 @@ class AppDatabase {
   }
 
   Future<List<KnnSampleRecord>> getAllKnnSamples() async {
+    if (!_supportsSqfliteBackend) {
+      final items = List<KnnSampleRecord>.from(_memoryKnnSamples);
+      items.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+      return items;
+    }
+
     final db = await database;
     final rows =
         await db.query('knn_reference_samples', orderBy: 'created_at DESC');
@@ -283,6 +316,10 @@ class AppDatabase {
   }
 
   Future<int> getKnnSampleCount() async {
+    if (!_supportsSqfliteBackend) {
+      return _memoryKnnSamples.length;
+    }
+
     final db = await database;
     final result =
         await db.rawQuery('SELECT COUNT(*) FROM knn_reference_samples');
@@ -313,6 +350,12 @@ class AppDatabase {
   // ─── analysis_sessions ──────────────────────────────────────────────────
 
   Future<void> insertSession(AnalysisSessionRecord record) async {
+    if (!_supportsSqfliteBackend) {
+      _memorySessions.removeWhere((item) => item.sessionUuid == record.sessionUuid);
+      _memorySessions.add(record);
+      return;
+    }
+
     final db = await database;
     await db.insert(
       'analysis_sessions',
@@ -322,6 +365,12 @@ class AppDatabase {
   }
 
   Future<List<AnalysisSessionRecord>> getAllSessions() async {
+    if (!_supportsSqfliteBackend) {
+      final items = List<AnalysisSessionRecord>.from(_memorySessions);
+      items.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+      return items;
+    }
+
     final db = await database;
     final rows =
         await db.query('analysis_sessions', orderBy: 'timestamp DESC');
@@ -329,6 +378,12 @@ class AppDatabase {
   }
 
   Future<void> deleteSession(String sessionUuid) async {
+    if (!_supportsSqfliteBackend) {
+      _memorySessions.removeWhere((item) => item.sessionUuid == sessionUuid);
+      _memoryResults.removeWhere((item) => item.sessionUuid == sessionUuid);
+      return;
+    }
+
     final db = await database;
     await db.delete(
       'analysis_sessions',
@@ -345,6 +400,11 @@ class AppDatabase {
   // ─── analysis_results ───────────────────────────────────────────────────
 
   Future<void> insertResults(List<AnalysisResultRecord> records) async {
+    if (!_supportsSqfliteBackend) {
+      _memoryResults.addAll(records);
+      return;
+    }
+
     final db = await database;
     final batch = db.batch();
     for (final record in records) {
@@ -355,6 +415,12 @@ class AppDatabase {
 
   Future<List<AnalysisResultRecord>> getResultsForSession(
       String sessionUuid) async {
+    if (!_supportsSqfliteBackend) {
+      return _memoryResults
+          .where((item) => item.sessionUuid == sessionUuid)
+          .toList(growable: false);
+    }
+
     final db = await database;
     final rows = await db.query(
       'analysis_results',

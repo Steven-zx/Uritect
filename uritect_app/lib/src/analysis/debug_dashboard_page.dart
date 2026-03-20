@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'analyte_result.dart';
+import 'analyte_value_basis.dart';
 
 class DebugDashboardPage extends StatefulWidget {
   const DebugDashboardPage({
@@ -80,7 +81,7 @@ class _DebugDashboardPageState extends State<DebugDashboardPage> {
                   crossAxisCount: 2,
                   mainAxisSpacing: 10,
                   crossAxisSpacing: 10,
-                  childAspectRatio: 1.1,
+                  childAspectRatio: 0.92,
                 ),
                 itemCount: cards.length,
                 itemBuilder: (context, index) {
@@ -149,6 +150,10 @@ class _AnalyteCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final raw = result.rawRgb;
     final hsv = result.hsv;
+    final resolvedValue = resolveAnalyteValue(
+      analyteName: result.analyteName,
+      nearestMatch: result.nearestMatch,
+    );
 
     return Card(
       elevation: 2,
@@ -235,6 +240,22 @@ class _AnalyteCard extends StatelessWidget {
             Text(
               result.nearestMatch,
               style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              resolvedValue.isMapped
+                  ? 'Mapped Value: ${resolvedValue.displayValue} ${resolvedValue.unit}'
+                  : 'Mapped Value: ${resolvedValue.displayValue}',
+              style: const TextStyle(color: Colors.tealAccent, fontSize: 11, fontWeight: FontWeight.w600),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+            const SizedBox(height: 2),
+            Text(
+              'Basis: ${resolvedValue.basisTag}',
+              style: const TextStyle(color: Colors.white60, fontSize: 10),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
           ],
         ),
