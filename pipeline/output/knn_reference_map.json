@@ -1,15 +1,209 @@
 {
   "version": "trained_v4_hsv",
   "source": "uritect_training_pipeline",
-  "generated_at": "2026-03-20T12:21:22.929240+00:00",
-  "total_samples": 12,
+  "generated_at": "2026-03-22T09:23:17.517323+00:00",
+  "total_samples": 820,
   "reference_color_space": "hsv",
   "label_mode_counts": {
-    "binary": 12,
-    "semiquant": 0,
+    "binary": 0,
+    "semiquant": 820,
     "unknown": 0
   },
   "reference_strategy": "semiquant_preferred_with_binary_fallback",
+  "semiquant_augmentation": {
+    "applied": true,
+    "target_per_level": 120,
+    "analytes": {
+      "Leukocytes": {
+        "applied": true,
+        "smote_k_neighbors": 5,
+        "counts_before": {
+          "Large 500": 16,
+          "Moderate 125": 16,
+          "Neg": 17,
+          "Small 70": 16,
+          "Trace 15": 17
+        },
+        "counts_after": {
+          "Large 500": 120,
+          "Moderate 125": 120,
+          "Neg": 120,
+          "Small 70": 120,
+          "Trace 15": 120
+        }
+      },
+      "Nitrite": {
+        "applied": true,
+        "smote_k_neighbors": 5,
+        "counts_before": {
+          "Neg": 42,
+          "Positive": 40
+        },
+        "counts_after": {
+          "Neg": 120,
+          "Positive": 120
+        }
+      },
+      "Urobilinogen": {
+        "applied": true,
+        "smote_k_neighbors": 5,
+        "counts_before": {
+          "128": 16,
+          "16": 17,
+          "3.2": 17,
+          "32": 16,
+          "64": 16
+        },
+        "counts_after": {
+          "128": 120,
+          "16": 120,
+          "3.2": 120,
+          "32": 120,
+          "64": 120
+        }
+      },
+      "Protein": {
+        "applied": true,
+        "smote_k_neighbors": 5,
+        "counts_before": {
+          "0.3": 14,
+          "1.0": 13,
+          "3.0": 13,
+          ">=20.0": 13,
+          "Neg": 15,
+          "Trace": 14
+        },
+        "counts_after": {
+          "0.3": 120,
+          "1.0": 120,
+          "3.0": 120,
+          ">=20.0": 120,
+          "Neg": 120,
+          "Trace": 120
+        }
+      },
+      "pH": {
+        "applied": true,
+        "smote_k_neighbors": 5,
+        "counts_before": {
+          "5.0": 13,
+          "6.0": 13,
+          "6.5": 12,
+          "7.0": 12,
+          "7.5": 11,
+          "8.0": 11,
+          "8.5": 10
+        },
+        "counts_after": {
+          "5.0": 120,
+          "6.0": 120,
+          "6.5": 120,
+          "7.0": 120,
+          "7.5": 120,
+          "8.0": 120,
+          "8.5": 120
+        }
+      },
+      "Blood": {
+        "applied": true,
+        "smote_k_neighbors": 5,
+        "counts_before": {
+          "Hemolyzed 10": 14,
+          "Large 200": 13,
+          "Moderate 80": 13,
+          "Neg": 15,
+          "Non-hemolyzed 10": 14,
+          "Small 25": 13
+        },
+        "counts_after": {
+          "Hemolyzed 10": 120,
+          "Large 200": 120,
+          "Moderate 80": 120,
+          "Neg": 120,
+          "Non-hemolyzed 10": 120,
+          "Small 25": 120
+        }
+      },
+      "Specific Gravity": {
+        "applied": true,
+        "smote_k_neighbors": 5,
+        "counts_before": {
+          "1.000": 13,
+          "1.005": 13,
+          "1.010": 12,
+          "1.015": 12,
+          "1.020": 11,
+          "1.025": 11,
+          "1.030": 10
+        },
+        "counts_after": {
+          "1.000": 120,
+          "1.005": 120,
+          "1.010": 120,
+          "1.015": 120,
+          "1.020": 120,
+          "1.025": 120,
+          "1.030": 120
+        }
+      },
+      "Ketone": {
+        "applied": true,
+        "smote_k_neighbors": 5,
+        "counts_before": {
+          "8.0": 13,
+          "Large 16": 13,
+          "Moderate 4.0": 13,
+          "Neg": 15,
+          "Small 1.5": 14,
+          "Trace 0.5": 14
+        },
+        "counts_after": {
+          "8.0": 120,
+          "Large 16": 120,
+          "Moderate 4.0": 120,
+          "Neg": 120,
+          "Small 1.5": 120,
+          "Trace 0.5": 120
+        }
+      },
+      "Bilirubin": {
+        "applied": true,
+        "smote_k_neighbors": 5,
+        "counts_before": {
+          "Large 100": 19,
+          "Moderate 50": 20,
+          "Neg": 22,
+          "Small 17": 21
+        },
+        "counts_after": {
+          "Large 100": 120,
+          "Moderate 50": 120,
+          "Neg": 120,
+          "Small 17": 120
+        }
+      },
+      "Glucose": {
+        "applied": true,
+        "smote_k_neighbors": 5,
+        "counts_before": {
+          "110 ++++": 13,
+          "15 +": 14,
+          "30 ++": 13,
+          "60 +++": 13,
+          "Neg": 15,
+          "Trace 5": 14
+        },
+        "counts_after": {
+          "110 ++++": 120,
+          "15 +": 120,
+          "30 ++": 120,
+          "60 +++": 120,
+          "Neg": 120,
+          "Trace 5": 120
+        }
+      }
+    }
+  },
   "pipeline_sequence": [
     "geometric_rectification",
     "awb_marker_center_10x10",
@@ -23,182 +217,454 @@
   "analytes": {
     "Leukocytes": [
       {
-        "level": "Normal",
-        "h": 194.234001,
-        "s": 0.073588,
-        "v": 0.731417,
+        "level": "Large 500",
+        "h": 130.536301,
+        "s": 0.18622,
+        "v": 0.890875,
         "weight": 1.0,
-        "sample_count": 6
+        "sample_count": 120
       },
       {
-        "level": "Abnormal",
-        "h": 68.526001,
-        "s": 0.194827,
-        "v": 0.679399,
+        "level": "Moderate 125",
+        "h": 177.322739,
+        "s": 0.170013,
+        "v": 0.893505,
         "weight": 1.0,
-        "sample_count": 6
+        "sample_count": 120
+      },
+      {
+        "level": "Neg",
+        "h": 188.090958,
+        "s": 0.20704,
+        "v": 0.950164,
+        "weight": 1.0,
+        "sample_count": 120
+      },
+      {
+        "level": "Small 70",
+        "h": 147.69735,
+        "s": 0.20355,
+        "v": 0.880271,
+        "weight": 1.0,
+        "sample_count": 120
+      },
+      {
+        "level": "Trace 15",
+        "h": 122.130489,
+        "s": 0.182262,
+        "v": 0.889101,
+        "weight": 1.0,
+        "sample_count": 120
       }
     ],
     "Nitrite": [
       {
-        "level": "Normal",
-        "h": 206.532395,
-        "s": 0.050882,
-        "v": 0.708511,
+        "level": "Neg",
+        "h": 141.631691,
+        "s": 0.214991,
+        "v": 0.964612,
         "weight": 1.0,
-        "sample_count": 6
+        "sample_count": 120
       },
       {
-        "level": "Abnormal",
-        "h": 89.073601,
-        "s": 0.136866,
-        "v": 0.632038,
+        "level": "Positive",
+        "h": 127.478111,
+        "s": 0.160908,
+        "v": 0.852331,
         "weight": 1.0,
-        "sample_count": 6
+        "sample_count": 120
       }
     ],
     "Urobilinogen": [
       {
-        "level": "Normal",
-        "h": 208.568802,
-        "s": 0.052787,
-        "v": 0.713413,
+        "level": "128",
+        "h": 129.529152,
+        "s": 0.180299,
+        "v": 0.886993,
         "weight": 1.0,
-        "sample_count": 6
+        "sample_count": 120
       },
       {
-        "level": "Abnormal",
-        "h": 94.9208,
-        "s": 0.117753,
-        "v": 0.684518,
+        "level": "16",
+        "h": 124.946255,
+        "s": 0.179371,
+        "v": 0.864171,
         "weight": 1.0,
-        "sample_count": 6
+        "sample_count": 120
+      },
+      {
+        "level": "3.2",
+        "h": 188.153847,
+        "s": 0.212238,
+        "v": 0.966036,
+        "weight": 1.0,
+        "sample_count": 120
+      },
+      {
+        "level": "32",
+        "h": 148.15004,
+        "s": 0.198645,
+        "v": 0.902822,
+        "weight": 1.0,
+        "sample_count": 120
+      },
+      {
+        "level": "64",
+        "h": 177.715607,
+        "s": 0.182136,
+        "v": 0.884498,
+        "weight": 1.0,
+        "sample_count": 120
       }
     ],
     "Protein": [
       {
-        "level": "Normal",
-        "h": 202.433999,
-        "s": 0.054524,
-        "v": 0.720534,
+        "level": "0.3",
+        "h": 107.62505,
+        "s": 0.194146,
+        "v": 0.882183,
         "weight": 1.0,
-        "sample_count": 6
+        "sample_count": 120
       },
       {
-        "level": "Abnormal",
-        "h": 114.1036,
-        "s": 0.152861,
-        "v": 0.698351,
+        "level": "1.0",
+        "h": 130.156425,
+        "s": 0.184345,
+        "v": 0.8686,
         "weight": 1.0,
-        "sample_count": 6
+        "sample_count": 120
+      },
+      {
+        "level": "3.0",
+        "h": 120.422607,
+        "s": 0.204017,
+        "v": 0.983894,
+        "weight": 1.0,
+        "sample_count": 120
+      },
+      {
+        "level": ">=20.0",
+        "h": 108.702,
+        "s": 0.134203,
+        "v": 0.879093,
+        "weight": 1.0,
+        "sample_count": 120
+      },
+      {
+        "level": "Neg",
+        "h": 181.107574,
+        "s": 0.210608,
+        "v": 0.945185,
+        "weight": 1.0,
+        "sample_count": 120
+      },
+      {
+        "level": "Trace",
+        "h": 186.041611,
+        "s": 0.193164,
+        "v": 0.951754,
+        "weight": 1.0,
+        "sample_count": 120
       }
     ],
     "pH": [
       {
-        "level": "Normal",
-        "h": 200.375199,
-        "s": 0.018826,
-        "v": 0.719053,
+        "level": "5.0",
+        "h": 153.642357,
+        "s": 0.189028,
+        "v": 0.888081,
         "weight": 1.0,
-        "sample_count": 6
+        "sample_count": 120
       },
       {
-        "level": "Abnormal",
-        "h": 169.144004,
-        "s": 0.063734,
-        "v": 0.682589,
+        "level": "6.0",
+        "h": 83.511349,
+        "s": 0.225769,
+        "v": 0.952619,
         "weight": 1.0,
-        "sample_count": 6
+        "sample_count": 120
+      },
+      {
+        "level": "6.5",
+        "h": 126.857452,
+        "s": 0.154567,
+        "v": 0.858147,
+        "weight": 1.0,
+        "sample_count": 120
+      },
+      {
+        "level": "7.0",
+        "h": 184.909248,
+        "s": 0.186922,
+        "v": 0.845687,
+        "weight": 1.0,
+        "sample_count": 120
+      },
+      {
+        "level": "7.5",
+        "h": 180.285278,
+        "s": 0.173457,
+        "v": 0.891489,
+        "weight": 1.0,
+        "sample_count": 120
+      },
+      {
+        "level": "8.0",
+        "h": 147.787331,
+        "s": 0.157349,
+        "v": 0.81817,
+        "weight": 1.0,
+        "sample_count": 120
+      },
+      {
+        "level": "8.5",
+        "h": 150.601875,
+        "s": 0.211176,
+        "v": 0.936978,
+        "weight": 1.0,
+        "sample_count": 120
       }
     ],
     "Blood": [
       {
-        "level": "Normal",
-        "h": 168.429199,
-        "s": 0.014882,
-        "v": 0.735531,
+        "level": "Hemolyzed 10",
+        "h": 88.378807,
+        "s": 0.23793,
+        "v": 0.746557,
         "weight": 1.0,
-        "sample_count": 6
+        "sample_count": 120
       },
       {
-        "level": "Abnormal",
-        "h": 145.5756,
-        "s": 0.015647,
-        "v": 0.70455,
+        "level": "Large 200",
+        "h": 75.046146,
+        "s": 0.136952,
+        "v": 0.847704,
         "weight": 1.0,
-        "sample_count": 6
+        "sample_count": 120
+      },
+      {
+        "level": "Moderate 80",
+        "h": 150.409889,
+        "s": 0.311348,
+        "v": 0.858811,
+        "weight": 1.0,
+        "sample_count": 120
+      },
+      {
+        "level": "Neg",
+        "h": 185.695251,
+        "s": 0.262216,
+        "v": 0.847788,
+        "weight": 1.0,
+        "sample_count": 120
+      },
+      {
+        "level": "Non-hemolyzed 10",
+        "h": 188.321205,
+        "s": 0.246972,
+        "v": 0.88149,
+        "weight": 1.0,
+        "sample_count": 120
+      },
+      {
+        "level": "Small 25",
+        "h": 91.1105,
+        "s": 0.208157,
+        "v": 0.790192,
+        "weight": 1.0,
+        "sample_count": 120
       }
     ],
     "Specific Gravity": [
       {
-        "level": "Normal",
-        "h": 159.607998,
-        "s": 0.01124,
-        "v": 0.716222,
+        "level": "1.000",
+        "h": 159.024117,
+        "s": 0.190179,
+        "v": 0.842197,
         "weight": 1.0,
-        "sample_count": 6
+        "sample_count": 120
       },
       {
-        "level": "Abnormal",
-        "h": 44.111999,
-        "s": 0.007841,
-        "v": 0.412585,
+        "level": "1.005",
+        "h": 82.11755,
+        "s": 0.220108,
+        "v": 0.921507,
         "weight": 1.0,
-        "sample_count": 6
+        "sample_count": 120
+      },
+      {
+        "level": "1.010",
+        "h": 117.002178,
+        "s": 0.161468,
+        "v": 0.85809,
+        "weight": 1.0,
+        "sample_count": 120
+      },
+      {
+        "level": "1.015",
+        "h": 182.441429,
+        "s": 0.173335,
+        "v": 0.849175,
+        "weight": 1.0,
+        "sample_count": 120
+      },
+      {
+        "level": "1.020",
+        "h": 184.097527,
+        "s": 0.175223,
+        "v": 0.8848,
+        "weight": 1.0,
+        "sample_count": 120
+      },
+      {
+        "level": "1.025",
+        "h": 125.534824,
+        "s": 0.150866,
+        "v": 0.802659,
+        "weight": 1.0,
+        "sample_count": 120
+      },
+      {
+        "level": "1.030",
+        "h": 156.671448,
+        "s": 0.216292,
+        "v": 0.933695,
+        "weight": 1.0,
+        "sample_count": 120
       }
     ],
     "Ketone": [
       {
-        "level": "Normal",
-        "h": 34.042001,
-        "s": 0.003647,
-        "v": 0.358886,
+        "level": "8.0",
+        "h": 128.133076,
+        "s": 0.213161,
+        "v": 0.989059,
         "weight": 1.0,
-        "sample_count": 6
+        "sample_count": 120
       },
       {
-        "level": "Abnormal",
-        "h": 0.0,
-        "s": 0.0,
-        "v": 0.0,
+        "level": "Large 16",
+        "h": 59.867537,
+        "s": 0.134139,
+        "v": 0.896467,
         "weight": 1.0,
-        "sample_count": 6
+        "sample_count": 120
+      },
+      {
+        "level": "Moderate 4.0",
+        "h": 99.275715,
+        "s": 0.171714,
+        "v": 0.829446,
+        "weight": 1.0,
+        "sample_count": 120
+      },
+      {
+        "level": "Neg",
+        "h": 180.498291,
+        "s": 0.200328,
+        "v": 0.904505,
+        "weight": 1.0,
+        "sample_count": 120
+      },
+      {
+        "level": "Small 1.5",
+        "h": 108.85033,
+        "s": 0.180773,
+        "v": 0.83148,
+        "weight": 1.0,
+        "sample_count": 120
+      },
+      {
+        "level": "Trace 0.5",
+        "h": 189.815819,
+        "s": 0.216823,
+        "v": 0.946815,
+        "weight": 1.0,
+        "sample_count": 120
       }
     ],
     "Bilirubin": [
       {
-        "level": "Normal",
-        "h": 0.0,
-        "s": 0.0,
-        "v": 0.0,
+        "level": "Large 100",
+        "h": 162.911713,
+        "s": 0.156718,
+        "v": 0.846139,
         "weight": 1.0,
-        "sample_count": 6
+        "sample_count": 120
       },
       {
-        "level": "Abnormal",
-        "h": 0.0,
-        "s": 0.0,
-        "v": 0.0,
+        "level": "Moderate 50",
+        "h": 182.310669,
+        "s": 0.234396,
+        "v": 0.897998,
         "weight": 1.0,
-        "sample_count": 6
+        "sample_count": 120
+      },
+      {
+        "level": "Neg",
+        "h": 118.786987,
+        "s": 0.170964,
+        "v": 0.871973,
+        "weight": 1.0,
+        "sample_count": 120
+      },
+      {
+        "level": "Small 17",
+        "h": 137.683151,
+        "s": 0.177253,
+        "v": 0.859134,
+        "weight": 1.0,
+        "sample_count": 120
       }
     ],
     "Glucose": [
       {
-        "level": "Normal",
-        "h": 0.0,
-        "s": 0.0,
-        "v": 0.0,
+        "level": "110 ++++",
+        "h": 52.827135,
+        "s": 0.130895,
+        "v": 0.8758,
         "weight": 1.0,
-        "sample_count": 6
+        "sample_count": 120
       },
       {
-        "level": "Abnormal",
-        "h": 0.0,
-        "s": 0.0,
-        "v": 0.0,
+        "level": "15 +",
+        "h": 91.923656,
+        "s": 0.188027,
+        "v": 0.787437,
         "weight": 1.0,
-        "sample_count": 6
+        "sample_count": 120
+      },
+      {
+        "level": "30 ++",
+        "h": 94.363224,
+        "s": 0.166445,
+        "v": 0.801077,
+        "weight": 1.0,
+        "sample_count": 120
+      },
+      {
+        "level": "60 +++",
+        "h": 125.53231,
+        "s": 0.256477,
+        "v": 0.920434,
+        "weight": 1.0,
+        "sample_count": 120
+      },
+      {
+        "level": "Neg",
+        "h": 180.276665,
+        "s": 0.212489,
+        "v": 0.890297,
+        "weight": 1.0,
+        "sample_count": 120
+      },
+      {
+        "level": "Trace 5",
+        "h": 187.314522,
+        "s": 0.226957,
+        "v": 0.902534,
+        "weight": 1.0,
+        "sample_count": 120
       }
     ]
   }

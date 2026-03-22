@@ -1,0 +1,5 @@
+event_id,batch_id,split,light_kelvin,label,relative_image_path
+warm_normal_0001,batch_warm,train,2700,Normal,images/warm_normal_0001.jpg
+warm_abnormal_0001,batch_warm,train,2700,Abnormal,images/warm_abnormal_0001.jpg
+cool_normal_0001,batch_cool,val,4000,Normal,images/cool_normal_0001.jpg
+daylight_abnormal_0001,batch_daylight,test,5500,Abnormal,images/daylight_abnormal_0001.jpg

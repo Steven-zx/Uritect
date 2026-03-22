@@ -17,7 +17,9 @@ This script implements burst-level vision preprocessing before feature extractio
 
 SUPPORTED LABEL FORMATS:
   1) Binary (current): Normal | Abnormal
-  2) Semiquant (future): <AnalyteName>:<Level>
+    2) Semiquant (single): <AnalyteName>:<Level>
+    3) Semiquant (multi-analyte): one level column per analyte
+         e.g., leukocytes_level, nitrite_level, ..., glucose_level
 """
 
 from __future__ import annotations
@@ -87,6 +89,7 @@ class BurstGroupKey:
     class_id: str
     analyte: str
     level: str
+    semiquant_pairs: tuple[tuple[str, str], ...]
 
 
 def _canonical_binary_label(raw: str) -> Optional[str]:
@@ -130,6 +133,44 @@ def parse_label(label: str) -> Optional[ParsedLabel]:
     return None
 
 
+def _analyte_key(analyte_name: str) -> str:
+    return analyte_name.lower().replace(" ", "_")
+
+
+def _candidate_multi_label_columns(analyte_name: str) -> tuple[str, ...]:
+    key = _analyte_key(analyte_name)
+    lower_name = analyte_name.lower()
+    return (
+        f"{key}_level",
+        f"{key}_label",
+        key,
+        analyte_name,
+        lower_name,
+        f"{analyte_name} level",
+        f"{lower_name} level",
+    )
+
+
+def parse_multi_analyte_levels(row: dict[str, str]) -> dict[str, str]:
+    levels: dict[str, str] = {}
+
+    for analyte_name in ANALYTE_ORDER:
+        level = ""
+        for column_name in _candidate_multi_label_columns(analyte_name):
+            raw = row.get(column_name, "")
+            if raw is None:
+                continue
+            trimmed = str(raw).strip()
+            if trimmed:
+                level = trimmed
+                break
+
+        if level:
+            levels[analyte_name] = level
+
+    return levels
+
+
 def _safe_event_id(raw: str, zip_stem: str, row_index: int) -> str:
     trimmed = raw.strip()
     if trimmed:
@@ -160,15 +201,31 @@ def process_zip(zip_path: pathlib.Path, pipeline: BurstFeaturePipeline) -> tuple
         grouped_entries: dict[BurstGroupKey, list[str]] = defaultdict(list)
 
         for row_index, row in enumerate(index_rows, start=1):
-            label_raw = row.get("label", "").strip()
-            parsed = parse_label(label_raw)
-            if parsed is None:
-                print(
-                    "  [SKIP] "
-                    f"label='{label_raw}' -> use binary 'Normal/Abnormal' "
-                    "or semiquant 'AnalyteName:Level'"
+            multi_levels = parse_multi_analyte_levels(row)
+
+            parsed: ParsedLabel | None = None
+            semiquant_pairs: tuple[tuple[str, str], ...] = tuple()
+
+            if multi_levels:
+                semiquant_pairs = tuple((name, multi_levels[name]) for name in ANALYTE_ORDER if name in multi_levels)
+                parsed = ParsedLabel(
+                    label_mode="semiquant",
+                    label_canonical="multi_analyte",
+                    class_label="",
+                    class_id="",
+                    analyte="",
+                    level="",
                 )
-                continue
+            else:
+                label_raw = row.get("label", "").strip()
+                parsed = parse_label(label_raw)
+                if parsed is None:
+                    print(
+                        "  [SKIP] "
+                        f"label='{label_raw}' -> use binary 'Normal/Abnormal', "
+                        "semiquant 'AnalyteName:Level', or multi-analyte *_level columns"
+                    )
+                    continue
 
             rel_path = row.get("relative_image_path", "").strip()
             image_name = "images/" + pathlib.Path(rel_path).name
@@ -187,6 +244,7 @@ def process_zip(zip_path: pathlib.Path, pipeline: BurstFeaturePipeline) -> tuple
                 class_id=parsed.class_id,
                 analyte=parsed.analyte,
                 level=parsed.level,
+                semiquant_pairs=semiquant_pairs,
             )
             grouped_entries[key].append(image_name)
 
@@ -206,18 +264,12 @@ def process_zip(zip_path: pathlib.Path, pipeline: BurstFeaturePipeline) -> tuple
                 )
                 continue
 
-            row_out: dict[str, str | float | int] = {
+            common_row: dict[str, str | float | int] = {
                 "event_id": key.event_id,
                 "batch_id": key.batch_id,
                 "split": key.split,
                 "light_kelvin": key.light_kelvin,
                 "label_mode": key.label_mode,
-                "label_raw": key.label_canonical,
-                "label_canonical": key.label_canonical,
-                "class_label": key.class_label,
-                "class_id": key.class_id,
-                "analyte": key.analyte,
-                "level": key.level,
                 "source_zip": zip_path.name,
                 "frames_total": burst_result.frames_total,
                 "frames_used": burst_result.frames_used,
@@ -228,11 +280,29 @@ def process_zip(zip_path: pathlib.Path, pipeline: BurstFeaturePipeline) -> tuple
             for analyte_name in ANALYTE_ORDER:
                 h, s, v = burst_result.features_by_pad[analyte_name]
                 col_h, col_s, col_v = feature_columns_for_analyte(analyte_name)
-                row_out[col_h] = h
-                row_out[col_s] = s
-                row_out[col_v] = v
+                common_row[col_h] = h
+                common_row[col_s] = s
+                common_row[col_v] = v
 
-            rows_out.append(row_out)
+            if key.label_mode == "semiquant" and key.semiquant_pairs:
+                for analyte_name, level in key.semiquant_pairs:
+                    row_out = dict(common_row)
+                    row_out["label_raw"] = f"{analyte_name}:{level}"
+                    row_out["label_canonical"] = f"{analyte_name}:{level}"
+                    row_out["class_label"] = ""
+                    row_out["class_id"] = ""
+                    row_out["analyte"] = analyte_name
+                    row_out["level"] = level
+                    rows_out.append(row_out)
+            else:
+                row_out = dict(common_row)
+                row_out["label_raw"] = key.label_canonical
+                row_out["label_canonical"] = key.label_canonical
+                row_out["class_label"] = key.class_label
+                row_out["class_id"] = key.class_id
+                row_out["analyte"] = key.analyte
+                row_out["level"] = key.level
+                rows_out.append(row_out)
 
     return rows_out, skipped_bursts
 

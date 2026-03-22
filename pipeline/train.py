@@ -43,6 +43,7 @@ except ImportError:
 try:
     from bayesian_fusion import BayesianFusionEngine
     from vision_pipeline import ANALYTE_ORDER, all_feature_columns, feature_columns_for_analyte
+    from semiquant_schema import ANALYTE_LEVEL_SCHEMA, canonicalize_level
 except ImportError as error:
     print(f"Failed to import pipeline modules: {error}")
     print("Run from repository root: python pipeline/train.py")
@@ -123,6 +124,25 @@ def parse_args() -> argparse.Namespace:
         type=int,
         default=4500,
         help="Target total size after SMOTE for binary training split (default: 4500).",
+    )
+    parser.add_argument(
+        "--enforce-semiquant-schema",
+        action="store_true",
+        help="Fail if semiquant rows contain invalid analyte names/levels.",
+    )
+    parser.add_argument(
+        "--semiquant-report-path",
+        default=str(OUTPUT_DIR / "semiquant_label_validation.json"),
+        help="Path to write semiquant validation report JSON.",
+    )
+    parser.add_argument(
+        "--semiquant-augment-target-per-level",
+        type=int,
+        default=0,
+        help=(
+            "Target sample count per semiquant level (per analyte) via SMOTE. "
+            "0 disables semiquant augmentation (default: 0)."
+        ),
     )
     return parser.parse_args()
 
@@ -496,6 +516,78 @@ def _median_hsv(samples: list[tuple[float, float, float]]) -> tuple[float, float
     return round(_normalize_hue(h), 6), round(_clip_01(s), 6), round(_clip_01(v), 6)
 
 
+def validate_and_normalize_semiquant_rows(
+    rows: list[dict[str, str]],
+) -> tuple[list[dict[str, str]], dict[str, Any]]:
+    normalized_rows: list[dict[str, str]] = []
+    invalid_rows: list[dict[str, str]] = []
+    dropped_missing_features = 0
+
+    level_counts: dict[str, Counter[str]] = defaultdict(Counter)
+
+    for index, row in enumerate(rows, start=1):
+        analyte = row.get("analyte", "").strip()
+        level_raw = row.get("level", "").strip()
+
+        if analyte not in ANALYTE_ORDER:
+            invalid_rows.append(
+                {
+                    "row_index": index,
+                    "event_id": row.get("event_id", ""),
+                    "reason": f"invalid analyte '{analyte}'",
+                    "analyte": analyte,
+                    "level": level_raw,
+                }
+            )
+            continue
+
+        canonical_level = canonicalize_level(analyte, level_raw)
+        if canonical_level is None:
+            invalid_rows.append(
+                {
+                    "row_index": index,
+                    "event_id": row.get("event_id", ""),
+                    "reason": f"invalid level '{level_raw}' for analyte '{analyte}'",
+                    "analyte": analyte,
+                    "level": level_raw,
+                    "allowed_levels": ANALYTE_LEVEL_SCHEMA.get(analyte, []),
+                }
+            )
+            continue
+
+        has_all_features = True
+        for feature_col in feature_columns_for_analyte(analyte):
+            if row.get(feature_col, "").strip() == "":
+                has_all_features = False
+                break
+
+        if not has_all_features:
+            dropped_missing_features += 1
+            continue
+
+        normalized = dict(row)
+        normalized["level"] = canonical_level
+        normalized["label_canonical"] = f"{analyte}:{canonical_level}"
+        normalized["label_raw"] = normalized.get("label_raw", "") or normalized["label_canonical"]
+
+        normalized_rows.append(normalized)
+        level_counts[analyte][canonical_level] += 1
+
+    report: dict[str, Any] = {
+        "total_input_rows": len(rows),
+        "valid_rows": len(normalized_rows),
+        "invalid_rows": len(invalid_rows),
+        "dropped_missing_analyte_features": dropped_missing_features,
+        "invalid_examples": invalid_rows[:50],
+        "level_counts": {
+            analyte: dict(sorted(counter.items()))
+            for analyte, counter in sorted(level_counts.items())
+        },
+    }
+
+    return normalized_rows, report
+
+
 def build_binary_reference_map(rows: list[dict[str, str]]) -> dict[str, list[dict[str, Any]]]:
     groups: dict[tuple[str, str], list[tuple[float, float, float]]] = defaultdict(list)
 
@@ -543,7 +635,7 @@ def build_binary_reference_map(rows: list[dict[str, str]]) -> dict[str, list[dic
     return output
 
 
-def build_semiquant_reference_map(rows: list[dict[str, str]]) -> dict[str, list[dict[str, Any]]]:
+def _build_semiquant_groups(rows: list[dict[str, str]]) -> dict[tuple[str, str], list[tuple[float, float, float]]]:
     groups: dict[tuple[str, str], list[tuple[float, float, float]]] = defaultdict(list)
 
     for row in rows:
@@ -564,13 +656,115 @@ def build_semiquant_reference_map(rows: list[dict[str, str]]) -> dict[str, list[
         v = _safe_float(raw_v)
         groups[(analyte_name, level)].append((h, s, v))
 
+    return groups
+
+
+def _augment_semiquant_groups_smote(
+    groups: dict[tuple[str, str], list[tuple[float, float, float]]],
+    target_per_level: int,
+) -> tuple[dict[tuple[str, str], list[tuple[float, float, float]]], dict[str, Any]]:
+    if target_per_level <= 0:
+        return groups, {"applied": False, "reason": "disabled"}
+
+    if SMOTE is None:
+        return groups, {"applied": False, "reason": "imbalanced-learn not installed"}
+
+    augmented_groups: dict[tuple[str, str], list[tuple[float, float, float]]] = defaultdict(list)
+    summary: dict[str, Any] = {
+        "applied": True,
+        "target_per_level": target_per_level,
+        "analytes": {},
+    }
+
+    for analyte_name in ANALYTE_ORDER:
+        level_names = sorted(level for (analyte, level) in groups if analyte == analyte_name)
+        if not level_names:
+            continue
+
+        samples: list[list[float]] = []
+        labels: list[str] = []
+        counts_before: dict[str, int] = {}
+        for level in level_names:
+            level_samples = groups[(analyte_name, level)]
+            counts_before[level] = len(level_samples)
+            for h, s, v in level_samples:
+                samples.append([float(h), float(s), float(v)])
+                labels.append(level)
+
+        if len(set(labels)) < 2:
+            for level in level_names:
+                augmented_groups[(analyte_name, level)].extend(groups[(analyte_name, level)])
+            summary["analytes"][analyte_name] = {
+                "applied": False,
+                "reason": "single_level_only",
+                "counts_before": counts_before,
+                "counts_after": counts_before,
+            }
+            continue
+
+        min_class = min(counts_before.values())
+        if min_class < 2:
+            for level in level_names:
+                augmented_groups[(analyte_name, level)].extend(groups[(analyte_name, level)])
+            summary["analytes"][analyte_name] = {
+                "applied": False,
+                "reason": "min_level_count_below_2",
+                "counts_before": counts_before,
+                "counts_after": counts_before,
+            }
+            continue
+
+        sampling_strategy = {
+            level: max(target_per_level, counts_before[level])
+            for level in level_names
+        }
+        smote_k = min(5, min_class - 1)
+
+        smote = SMOTE(
+            random_state=42,
+            k_neighbors=smote_k,
+            sampling_strategy=sampling_strategy,
+        )
+        X_res, y_res = smote.fit_resample(np.array(samples, dtype=np.float32), np.array(labels))
+
+        counts_after: dict[str, int] = Counter(y_res.tolist())
+        for vector, level in zip(X_res.tolist(), y_res.tolist()):
+            h, s, v = vector
+            augmented_groups[(analyte_name, level)].append(
+                (
+                    _normalize_hue(float(h)),
+                    _clip_01(float(s)),
+                    _clip_01(float(v)),
+                )
+            )
+
+        summary["analytes"][analyte_name] = {
+            "applied": True,
+            "smote_k_neighbors": smote_k,
+            "counts_before": counts_before,
+            "counts_after": dict(sorted(counts_after.items())),
+        }
+
+    return augmented_groups, summary
+
+
+def build_semiquant_reference_map(
+    rows: list[dict[str, str]],
+    augment_target_per_level: int = 0,
+) -> tuple[dict[str, list[dict[str, Any]]], dict[str, Any]]:
+    groups = _build_semiquant_groups(rows)
+    groups_for_map, augmentation_summary = _augment_semiquant_groups_smote(
+        groups=groups,
+        target_per_level=augment_target_per_level,
+    )
+
     output: dict[str, list[dict[str, Any]]] = {}
     for analyte_name in ANALYTE_ORDER:
         level_entries: list[dict[str, Any]] = []
-        level_names = sorted(level for (analyte, level) in groups if analyte == analyte_name)
+        level_names = sorted(level for (analyte, level) in groups_for_map if analyte == analyte_name)
 
         for level in level_names:
-            samples = groups[(analyte_name, level)]
+            samples = groups_for_map[(analyte_name, level)]
             if not samples:
                 continue
 
@@ -589,7 +783,7 @@ def build_semiquant_reference_map(rows: list[dict[str, str]]) -> dict[str, list[
         if level_entries:
             output[analyte_name] = level_entries
 
-    return output
+    return output, augmentation_summary
 
 
 def merge_reference_maps(
@@ -612,10 +806,29 @@ def main() -> None:
     print(f"Loaded {len(rows)} rows from:\n  {FEATURES_PATH}\n")
 
     binary_rows, semiquant_rows, unknown_rows = split_rows_by_mode(rows)
+
+    normalized_semiquant_rows, semiquant_report = validate_and_normalize_semiquant_rows(semiquant_rows)
+    semiquant_report_path = pathlib.Path(args.semiquant_report_path)
+    semiquant_report_path.parent.mkdir(parents=True, exist_ok=True)
+    with open(semiquant_report_path, "w", encoding="utf-8") as report_file:
+        json.dump(semiquant_report, report_file, indent=2)
+
     print("Label mode breakdown:")
     print(f"  binary:    {len(binary_rows)}")
-    print(f"  semiquant: {len(semiquant_rows)}")
+    print(f"  semiquant: {len(normalized_semiquant_rows)}")
     print(f"  unknown:   {len(unknown_rows)}")
+    print(f"  semiquant validation report: {semiquant_report_path}")
+
+    if semiquant_report["invalid_rows"] > 0:
+        print(
+            "  [WARN] "
+            f"{semiquant_report['invalid_rows']} semiquant row(s) invalid and excluded."
+        )
+
+    if args.enforce_semiquant_schema and semiquant_report["invalid_rows"] > 0:
+        print("\n[PRECHECK FAILED] Invalid semiquant labels detected.")
+        print(f"See report: {semiquant_report_path}")
+        sys.exit(1)
 
     if args.enforce_readiness and binary_rows:
         if evaluate_binary is None:
@@ -670,7 +883,10 @@ def main() -> None:
             )
 
     print("\n[2/3] Building app reference map ...")
-    semiquant_map = build_semiquant_reference_map(semiquant_rows)
+    semiquant_map, semiquant_augmentation_summary = build_semiquant_reference_map(
+        normalized_semiquant_rows,
+        augment_target_per_level=args.semiquant_augment_target_per_level,
+    )
     binary_map = build_binary_reference_map(binary_rows)
     merged_map = merge_reference_maps(semiquant_map, binary_map)
 
@@ -686,10 +902,11 @@ def main() -> None:
         "reference_color_space": "hsv",
         "label_mode_counts": {
             "binary": len(binary_rows),
-            "semiquant": len(semiquant_rows),
+            "semiquant": len(normalized_semiquant_rows),
             "unknown": len(unknown_rows),
         },
         "reference_strategy": "semiquant_preferred_with_binary_fallback",
+        "semiquant_augmentation": semiquant_augmentation_summary,
         "pipeline_sequence": [
             "geometric_rectification",
             "awb_marker_center_10x10",
