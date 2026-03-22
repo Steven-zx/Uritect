@@ -23,12 +23,13 @@ import argparse
 import csv
 import importlib
 import json
+import math
 import pathlib
 import pickle
 import sys
 from collections import Counter, defaultdict
 from datetime import datetime, timezone
-from statistics import median
+from statistics import mean, median
 from typing import Any
 
 try:
@@ -144,6 +145,41 @@ def parse_args() -> argparse.Namespace:
             "0 disables semiquant augmentation (default: 0)."
         ),
     )
+    parser.add_argument(
+        "--semiquant-prototype-mode",
+        choices=["median", "library"],
+        default="median",
+        help=(
+            "Semiquant reference construction mode: "
+            "'median' uses one prototype per level, 'library' keeps all augmented instances."
+        ),
+    )
+    parser.add_argument(
+        "--event-center-hsv",
+        action="store_true",
+        help=(
+            "Apply event-level HSV centering for semiquant rows: "
+            "each event is shifted to a global training anchor before reference map construction."
+        ),
+    )
+    parser.add_argument(
+        "--event-center-mode",
+        choices=["global", "per-light"],
+        default="global",
+        help=(
+            "Target anchor mode for event centering: "
+            "'global' uses one anchor for all rows, 'per-light' uses one anchor per light_kelvin."
+        ),
+    )
+    parser.add_argument(
+        "--calibration-anchors",
+        default="",
+        help=(
+            "Optional JSON file with per-light anchor overrides, e.g. "
+            "{'5500': {'h': 160.0, 's': 0.2, 'v': 0.8}}. "
+            "Used only with --event-center-hsv and --event-center-mode per-light."
+        ),
+    )
     return parser.parse_args()
 
 
@@ -182,19 +218,20 @@ def _detect_row_mode(row: dict[str, str]) -> str:
     if explicit_mode in {"binary", "semiquant"}:
         return explicit_mode
 
-    for candidate in (
-        row.get("class_label", ""),
-        row.get("level", ""),
-        row.get("label_canonical", ""),
-        row.get("label_raw", ""),
-    ):
-        if _canonical_binary_label(candidate) is not None:
-            return "binary"
-
     analyte = row.get("analyte", "").strip()
     level = row.get("level", "").strip()
     if analyte and level:
         return "semiquant"
+
+    for candidate in (
+        row.get("class_label", ""),
+        row.get("label_canonical", ""),
+        row.get("label_raw", ""),
+    ):
+        if ":" in candidate:
+            continue
+        if _canonical_binary_label(candidate) is not None:
+            return "binary"
 
     return "unknown"
 
@@ -217,12 +254,16 @@ def split_rows_by_mode(rows: list[dict[str, str]]) -> tuple[list[dict[str, str]]
 
 
 def _binary_label_from_row(row: dict[str, str]) -> str | None:
+    if row.get("analyte", "").strip() and row.get("level", "").strip():
+        return None
+
     for candidate in (
         row.get("class_label", ""),
-        row.get("level", ""),
         row.get("label_canonical", ""),
         row.get("label_raw", ""),
     ):
+        if ":" in candidate:
+            continue
         label = _canonical_binary_label(candidate)
         if label is not None:
             return label
@@ -516,6 +557,172 @@ def _median_hsv(samples: list[tuple[float, float, float]]) -> tuple[float, float
     return round(_normalize_hue(h), 6), round(_clip_01(s), 6), round(_clip_01(v), 6)
 
 
+def _circular_mean_deg(values: list[float]) -> float:
+    if not values:
+        return 0.0
+    sin_sum = sum(math.sin(math.radians(value)) for value in values)
+    cos_sum = sum(math.cos(math.radians(value)) for value in values)
+    if abs(sin_sum) < 1e-12 and abs(cos_sum) < 1e-12:
+        return _normalize_hue(float(values[0]))
+    angle = math.degrees(math.atan2(sin_sum, cos_sum))
+    return _normalize_hue(angle)
+
+
+def _row_event_anchor(row: dict[str, str]) -> tuple[float, float, float] | None:
+    hues: list[float] = []
+    sats: list[float] = []
+    vals: list[float] = []
+
+    for analyte_name in ANALYTE_ORDER:
+        col_h, col_s, col_v = feature_columns_for_analyte(analyte_name)
+        raw_h = row.get(col_h, "").strip()
+        raw_s = row.get(col_s, "").strip()
+        raw_v = row.get(col_v, "").strip()
+        if not raw_h or not raw_s or not raw_v:
+            continue
+
+        hues.append(_normalize_hue(_safe_float(raw_h)))
+        sats.append(_clip_01(_safe_float(raw_s)))
+        vals.append(_clip_01(_safe_float(raw_v)))
+
+    if not hues or not sats or not vals:
+        return None
+
+    return (
+        _circular_mean_deg(hues),
+        float(mean(sats)),
+        float(mean(vals)),
+    )
+
+
+def _compute_event_hsv_anchors(rows: list[dict[str, str]]) -> tuple[dict[str, tuple[float, float, float]], tuple[float, float, float]]:
+    anchors_by_event: dict[str, tuple[float, float, float]] = {}
+    hue_values: list[float] = []
+    sat_values: list[float] = []
+    val_values: list[float] = []
+
+    for row in rows:
+        event_id = row.get("event_id", "").strip()
+        if not event_id or event_id in anchors_by_event:
+            continue
+
+        anchor = _row_event_anchor(row)
+        if anchor is None:
+            continue
+
+        anchors_by_event[event_id] = anchor
+        h, s, v = anchor
+        hue_values.append(h)
+        sat_values.append(s)
+        val_values.append(v)
+
+    target_anchor = (
+        _circular_mean_deg(hue_values),
+        float(mean(sat_values)) if sat_values else 0.0,
+        float(mean(val_values)) if val_values else 0.0,
+    )
+
+    return anchors_by_event, target_anchor
+
+
+def _compute_light_target_anchors(
+    rows: list[dict[str, str]],
+    event_anchors: dict[str, tuple[float, float, float]],
+) -> dict[str, tuple[float, float, float]]:
+    hue_by_light: dict[str, list[float]] = defaultdict(list)
+    sat_by_light: dict[str, list[float]] = defaultdict(list)
+    val_by_light: dict[str, list[float]] = defaultdict(list)
+
+    seen_events: set[str] = set()
+    for row in rows:
+        event_id = row.get("event_id", "").strip()
+        if not event_id or event_id in seen_events:
+            continue
+        seen_events.add(event_id)
+
+        anchor = event_anchors.get(event_id)
+        if anchor is None:
+            continue
+
+        light = row.get("light_kelvin", "").strip()
+        if not light:
+            continue
+
+        h, s, v = anchor
+        hue_by_light[light].append(h)
+        sat_by_light[light].append(s)
+        val_by_light[light].append(v)
+
+    out: dict[str, tuple[float, float, float]] = {}
+    for light, hues in hue_by_light.items():
+        sats = sat_by_light.get(light, [])
+        vals = val_by_light.get(light, [])
+        if not hues or not sats or not vals:
+            continue
+        out[light] = (
+            _circular_mean_deg(hues),
+            float(mean(sats)),
+            float(mean(vals)),
+        )
+
+    return out
+
+
+def _load_calibration_anchor_overrides(path: pathlib.Path) -> dict[str, tuple[float, float, float]]:
+    if not path.exists():
+        return {}
+
+    with open(path, "r", encoding="utf-8") as file:
+        payload = json.load(file)
+
+    if not isinstance(payload, dict):
+        return {}
+
+    out: dict[str, tuple[float, float, float]] = {}
+    for light, anchor in payload.items():
+        if not isinstance(anchor, dict):
+            continue
+        out[str(light).strip()] = (
+            _normalize_hue(_safe_float(anchor.get("h", 0.0))),
+            _clip_01(_safe_float(anchor.get("s", 0.0))),
+            _clip_01(_safe_float(anchor.get("v", 0.0))),
+        )
+
+    return out
+
+
+def _event_centered_hsv(
+    h: float,
+    s: float,
+    v: float,
+    event_id: str,
+    light_kelvin: str,
+    event_anchors: dict[str, tuple[float, float, float]] | None,
+    target_anchor: tuple[float, float, float] | None,
+    target_anchor_by_light: dict[str, tuple[float, float, float]] | None = None,
+) -> tuple[float, float, float]:
+    if not event_anchors:
+        return _normalize_hue(h), _clip_01(s), _clip_01(v)
+
+    event_anchor = event_anchors.get(event_id)
+    if event_anchor is None:
+        return _normalize_hue(h), _clip_01(s), _clip_01(v)
+
+    event_h, event_s, event_v = event_anchor
+    selected_target = target_anchor
+    if target_anchor_by_light:
+        selected_target = target_anchor_by_light.get(light_kelvin, target_anchor)
+    if selected_target is None:
+        return _normalize_hue(h), _clip_01(s), _clip_01(v)
+
+    target_h, target_s, target_v = selected_target
+    return (
+        _normalize_hue(h - event_h + target_h),
+        _clip_01(s - event_s + target_s),
+        _clip_01(v - event_v + target_v),
+    )
+
+
 def validate_and_normalize_semiquant_rows(
     rows: list[dict[str, str]],
 ) -> tuple[list[dict[str, str]], dict[str, Any]]:
@@ -635,7 +842,13 @@ def build_binary_reference_map(rows: list[dict[str, str]]) -> dict[str, list[dic
     return output
 
 
-def _build_semiquant_groups(rows: list[dict[str, str]]) -> dict[tuple[str, str], list[tuple[float, float, float]]]:
+def _build_semiquant_groups(
+    rows: list[dict[str, str]],
+    event_center_hsv: bool = False,
+    event_anchors: dict[str, tuple[float, float, float]] | None = None,
+    target_anchor: tuple[float, float, float] | None = None,
+    target_anchor_by_light: dict[str, tuple[float, float, float]] | None = None,
+) -> dict[tuple[str, str], list[tuple[float, float, float]]]:
     groups: dict[tuple[str, str], list[tuple[float, float, float]]] = defaultdict(list)
 
     for row in rows:
@@ -651,9 +864,25 @@ def _build_semiquant_groups(rows: list[dict[str, str]]) -> dict[tuple[str, str],
         if not raw_h or not raw_s or not raw_v:
             continue
 
-        h = _safe_float(raw_h)
-        s = _safe_float(raw_s)
-        v = _safe_float(raw_v)
+        h_raw = _safe_float(raw_h)
+        s_raw = _safe_float(raw_s)
+        v_raw = _safe_float(raw_v)
+
+        if event_center_hsv:
+            h, s, v = _event_centered_hsv(
+                h_raw,
+                s_raw,
+                v_raw,
+                row.get("event_id", "").strip(),
+                row.get("light_kelvin", "").strip(),
+                event_anchors,
+                target_anchor,
+                target_anchor_by_light,
+            )
+        else:
+            h = _normalize_hue(h_raw)
+            s = _clip_01(s_raw)
+            v = _clip_01(v_raw)
         groups[(analyte_name, level)].append((h, s, v))
 
     return groups
@@ -751,8 +980,19 @@ def _augment_semiquant_groups_smote(
 def build_semiquant_reference_map(
     rows: list[dict[str, str]],
     augment_target_per_level: int = 0,
+    prototype_mode: str = "median",
+    event_center_hsv: bool = False,
+    event_anchors: dict[str, tuple[float, float, float]] | None = None,
+    target_anchor: tuple[float, float, float] | None = None,
+    target_anchor_by_light: dict[str, tuple[float, float, float]] | None = None,
 ) -> tuple[dict[str, list[dict[str, Any]]], dict[str, Any]]:
-    groups = _build_semiquant_groups(rows)
+    groups = _build_semiquant_groups(
+        rows,
+        event_center_hsv=event_center_hsv,
+        event_anchors=event_anchors,
+        target_anchor=target_anchor,
+        target_anchor_by_light=target_anchor_by_light,
+    )
     groups_for_map, augmentation_summary = _augment_semiquant_groups_smote(
         groups=groups,
         target_per_level=augment_target_per_level,
@@ -768,17 +1008,30 @@ def build_semiquant_reference_map(
             if not samples:
                 continue
 
-            h, s, v = _median_hsv(samples)
-            level_entries.append(
-                {
-                    "level": level,
-                    "h": h,
-                    "s": s,
-                    "v": v,
-                    "weight": 1.0,
-                    "sample_count": len(samples),
-                }
-            )
+            if prototype_mode == "library":
+                for h_raw, s_raw, v_raw in samples:
+                    level_entries.append(
+                        {
+                            "level": level,
+                            "h": round(_normalize_hue(float(h_raw)), 6),
+                            "s": round(_clip_01(float(s_raw)), 6),
+                            "v": round(_clip_01(float(v_raw)), 6),
+                            "weight": 1.0,
+                            "sample_count": 1,
+                        }
+                    )
+            else:
+                h, s, v = _median_hsv(samples)
+                level_entries.append(
+                    {
+                        "level": level,
+                        "h": h,
+                        "s": s,
+                        "v": v,
+                        "weight": 1.0,
+                        "sample_count": len(samples),
+                    }
+                )
 
         if level_entries:
             output[analyte_name] = level_entries
@@ -883,9 +1136,27 @@ def main() -> None:
             )
 
     print("\n[2/3] Building app reference map ...")
+    event_anchors, semiquant_target_anchor = _compute_event_hsv_anchors(normalized_semiquant_rows)
+    semiquant_light_target_anchors = _compute_light_target_anchors(normalized_semiquant_rows, event_anchors)
+    calibration_anchor_overrides: dict[str, tuple[float, float, float]] = {}
+    if args.calibration_anchors:
+        calibration_anchor_overrides = _load_calibration_anchor_overrides(pathlib.Path(args.calibration_anchors))
+
+    merged_light_anchors = dict(semiquant_light_target_anchors)
+    merged_light_anchors.update(calibration_anchor_overrides)
+
     semiquant_map, semiquant_augmentation_summary = build_semiquant_reference_map(
         normalized_semiquant_rows,
         augment_target_per_level=args.semiquant_augment_target_per_level,
+        prototype_mode=args.semiquant_prototype_mode,
+        event_center_hsv=args.event_center_hsv,
+        event_anchors=event_anchors if args.event_center_hsv else None,
+        target_anchor=semiquant_target_anchor if args.event_center_hsv else None,
+        target_anchor_by_light=(
+            merged_light_anchors
+            if args.event_center_hsv and args.event_center_mode == "per-light"
+            else None
+        ),
     )
     binary_map = build_binary_reference_map(binary_rows)
     merged_map = merge_reference_maps(semiquant_map, binary_map)
@@ -900,12 +1171,34 @@ def main() -> None:
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "total_samples": len(rows),
         "reference_color_space": "hsv",
-        "label_mode_counts": {
-            "binary": len(binary_rows),
-            "semiquant": len(normalized_semiquant_rows),
-            "unknown": len(unknown_rows),
-        },
         "reference_strategy": "semiquant_preferred_with_binary_fallback",
+        "event_hsv_centering": {
+            "enabled": bool(args.event_center_hsv),
+            "mode": args.event_center_mode,
+            "target_anchor": {
+                "h": semiquant_target_anchor[0],
+                "s": semiquant_target_anchor[1],
+                "v": semiquant_target_anchor[2],
+            },
+            "target_anchor_by_light": {
+                light: {
+                    "h": values[0],
+                    "s": values[1],
+                    "v": values[2],
+                }
+                for light, values in sorted(merged_light_anchors.items())
+            },
+            "calibration_anchor_overrides": {
+                light: {
+                    "h": values[0],
+                    "s": values[1],
+                    "v": values[2],
+                }
+                for light, values in sorted(calibration_anchor_overrides.items())
+            },
+            "events_with_anchor": len(event_anchors),
+        },
+        "semiquant_prototype_mode": args.semiquant_prototype_mode,
         "semiquant_augmentation": semiquant_augmentation_summary,
         "pipeline_sequence": [
             "geometric_rectification",

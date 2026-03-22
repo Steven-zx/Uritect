@@ -1,0 +1,31 @@
+relative_image_path,image_name,leukocytes_level,nitrite_level,urobilinogen_level,protein_level,ph_level,blood_level,specific_gravity_level,ketone_level,bilirubin_level,glucose_level,notes
+images/IMG_0541.jpg,IMG_0541.jpg,Neg,Neg,3.2,Neg,5.0,Neg,1.000,Neg,Neg,Neg,REVIEW_ME
+images/IMG_0544.jpg,IMG_0544.jpg,Trace 15,Positive,16,Trace,6.0,Non-hemolyzed 10,1.005,Trace 0.5,Small 17,Trace 5,REVIEW_ME
+images/IMG_0547.jpg,IMG_0547.jpg,Small 70,Neg,32,0.3,6.5,Hemolyzed 10,1.010,Small 1.5,Moderate 50,15 +,REVIEW_ME
+images/IMG_0550.jpg,IMG_0550.jpg,Moderate 125,Positive,64,1.0,7.0,Small 25,1.015,Moderate 4.0,Large 100,30 ++,REVIEW_ME
+images/IMG_0553.jpg,IMG_0553.jpg,Large 500,Neg,128,3.0,7.5,Moderate 80,1.020,8.0,Neg,60 +++,REVIEW_ME
+images/IMG_0556.jpg,IMG_0556.jpg,Neg,Positive,3.2,>=20.0,8.0,Large 200,1.025,Large 16,Small 17,110 ++++,REVIEW_ME
+images/IMG_0559.jpg,IMG_0559.jpg,Trace 15,Neg,16,Neg,8.5,Neg,1.030,Neg,Moderate 50,Neg,REVIEW_ME
+images/IMG_0562.jpg,IMG_0562.jpg,Small 70,Positive,32,Trace,5.0,Non-hemolyzed 10,1.000,Trace 0.5,Large 100,Trace 5,REVIEW_ME
+images/IMG_0564.jpg,IMG_0564.jpg,Moderate 125,Neg,64,0.3,6.0,Hemolyzed 10,1.005,Small 1.5,Neg,15 +,REVIEW_ME
+images/IMG_0565.jpg,IMG_0565.jpg,Large 500,Positive,128,1.0,6.5,Small 25,1.010,Moderate 4.0,Small 17,30 ++,REVIEW_ME
+images/IMG_0568.jpg,IMG_0568.jpg,Neg,Neg,3.2,3.0,7.0,Moderate 80,1.015,8.0,Moderate 50,60 +++,REVIEW_ME
+images/IMG_0571.jpg,IMG_0571.jpg,Trace 15,Positive,16,>=20.0,7.5,Large 200,1.020,Large 16,Large 100,110 ++++,REVIEW_ME
+images/IMG_0573.jpg,IMG_0573.jpg,Small 70,Neg,32,Neg,8.0,Neg,1.025,Neg,Neg,Neg,REVIEW_ME
+images/IMG_0579.jpg,IMG_0579.jpg,Moderate 125,Positive,64,Trace,8.5,Non-hemolyzed 10,1.030,Trace 0.5,Small 17,Trace 5,REVIEW_ME
+images/IMG_0582.jpg,IMG_0582.jpg,Large 500,Neg,128,0.3,5.0,Hemolyzed 10,1.000,Small 1.5,Moderate 50,15 +,REVIEW_ME
+images/IMG_0585.jpg,IMG_0585.jpg,Neg,Positive,3.2,1.0,6.0,Small 25,1.005,Moderate 4.0,Large 100,30 ++,REVIEW_ME
+images/IMG_0588.jpg,IMG_0588.jpg,Trace 15,Neg,16,3.0,6.5,Moderate 80,1.010,8.0,Neg,60 +++,REVIEW_ME
+images/IMG_0591.jpg,IMG_0591.jpg,Small 70,Positive,32,>=20.0,7.0,Large 200,1.015,Large 16,Small 17,110 ++++,REVIEW_ME
+images/IMG_0594.jpg,IMG_0594.jpg,Moderate 125,Neg,64,Neg,7.5,Neg,1.020,Neg,Moderate 50,Neg,REVIEW_ME
+images/IMG_0595.jpg,IMG_0595.jpg,Large 500,Positive,128,Trace,8.0,Non-hemolyzed 10,1.025,Trace 0.5,Large 100,Trace 5,REVIEW_ME
+images/IMG_0599.jpg,IMG_0599.jpg,Neg,Neg,3.2,0.3,8.5,Hemolyzed 10,1.030,Small 1.5,Neg,15 +,REVIEW_ME
+images/IMG_0600.jpg,IMG_0600.jpg,Trace 15,Positive,16,1.0,5.0,Small 25,1.000,Moderate 4.0,Small 17,30 ++,REVIEW_ME
+images/IMG_0602.jpg,IMG_0602.jpg,Small 70,Neg,32,3.0,6.0,Moderate 80,1.005,8.0,Moderate 50,60 +++,REVIEW_ME
+images/IMG_0603.jpg,IMG_0603.jpg,Moderate 125,Positive,64,>=20.0,6.5,Large 200,1.010,Large 16,Large 100,110 ++++,REVIEW_ME
+images/IMG_0606.jpg,IMG_0606.jpg,Large 500,Neg,128,Neg,7.0,Neg,1.015,Neg,Neg,Neg,REVIEW_ME
+images/IMG_0609.jpg,IMG_0609.jpg,Neg,Positive,3.2,Trace,7.5,Non-hemolyzed 10,1.020,Trace 0.5,Small 17,Trace 5,REVIEW_ME
+images/IMG_0614.jpg,IMG_0614.jpg,Trace 15,Neg,16,0.3,8.0,Hemolyzed 10,1.025,Small 1.5,Moderate 50,15 +,REVIEW_ME
+images/IMG_0617.jpg,IMG_0617.jpg,Small 70,Positive,32,1.0,8.5,Small 25,1.030,Moderate 4.0,Large 100,30 ++,REVIEW_ME
+images/IMG_0620.jpg,IMG_0620.jpg,Moderate 125,Neg,64,3.0,5.0,Moderate 80,1.000,8.0,Neg,60 +++,REVIEW_ME
+images/IMG_0623.jpg,IMG_0623.jpg,Large 500,Positive,128,>=20.0,6.0,Large 200,1.005,Large 16,Small 17,110 ++++,REVIEW_ME

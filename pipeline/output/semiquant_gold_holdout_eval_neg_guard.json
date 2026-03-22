@@ -1,0 +1,13 @@
+{
+  "overall": {
+    "accuracy": 0,
+    "f1_macro": 0,
+    "f1_weighted": 0,
+    "cohen_kappa": 0,
+    "n": 0
+  },
+  "selected_guard": {
+    "ratio": 0.0,
+    "margin": 0.0
+  }
+}

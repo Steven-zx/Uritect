@@ -1,0 +1,450 @@
+{
+  "artifacts": {
+    "dev_features": "C:\\Users\\acer\\Downloads\\Github\\Uritect\\pipeline\\output\\features_gold_dev.csv",
+    "holdout_features": "C:\\Users\\acer\\Downloads\\Github\\Uritect\\pipeline\\output\\features_gold_holdout.csv",
+    "generated_at": "2026-03-22T17:38:00.412837+00:00",
+    "method": "Nearest-neighbor in analyte HSV with optional event-centering correction"
+  },
+  "dev_anchor": {
+    "h": 165.33083920852076,
+    "s": 0.19195695789473685,
+    "v": 0.8158969385964913
+  },
+  "baseline_no_correction": {
+    "metrics": {
+      "samples": 250,
+      "accuracy": 0.212,
+      "f1_macro": 0.12673321292602338,
+      "f1_weighted": 0.1504197266785502,
+      "cohen_kappa": 0.19544548632665726
+    },
+    "top_confusions": [
+      {
+        "analyte": "Nitrite",
+        "true_level": "Neg",
+        "pred_level": "Positive",
+        "count": 9
+      },
+      {
+        "analyte": "Protein",
+        "true_level": "Neg",
+        "pred_level": ">=20.0",
+        "count": 5
+      },
+      {
+        "analyte": "Bilirubin",
+        "true_level": "Neg",
+        "pred_level": "Small 17",
+        "count": 5
+      },
+      {
+        "analyte": "pH",
+        "true_level": "5.0",
+        "pred_level": "7.5",
+        "count": 4
+      },
+      {
+        "analyte": "Leukocytes",
+        "true_level": "Trace 15",
+        "pred_level": "Neg",
+        "count": 4
+      },
+      {
+        "analyte": "Urobilinogen",
+        "true_level": "32",
+        "pred_level": "3.2",
+        "count": 4
+      },
+      {
+        "analyte": "Urobilinogen",
+        "true_level": "64",
+        "pred_level": "16",
+        "count": 4
+      },
+      {
+        "analyte": "Urobilinogen",
+        "true_level": "128",
+        "pred_level": "3.2",
+        "count": 4
+      },
+      {
+        "analyte": "Bilirubin",
+        "true_level": "Moderate 50",
+        "pred_level": "Small 17",
+        "count": 4
+      },
+      {
+        "analyte": "Leukocytes",
+        "true_level": "Small 70",
+        "pred_level": "Neg",
+        "count": 3
+      },
+      {
+        "analyte": "Ketone",
+        "true_level": "Small 1.5",
+        "pred_level": "Moderate 4.0",
+        "count": 3
+      },
+      {
+        "analyte": "Glucose",
+        "true_level": "15 +",
+        "pred_level": "30 ++",
+        "count": 3
+      },
+      {
+        "analyte": "Leukocytes",
+        "true_level": "Moderate 125",
+        "pred_level": "Neg",
+        "count": 3
+      },
+      {
+        "analyte": "Leukocytes",
+        "true_level": "Large 500",
+        "pred_level": "Neg",
+        "count": 3
+      },
+      {
+        "analyte": "pH",
+        "true_level": "8.0",
+        "pred_level": "7.5",
+        "count": 3
+      }
+    ]
+  },
+  "event_centering_correction": {
+    "metrics": {
+      "samples": 250,
+      "accuracy": 0.232,
+      "f1_macro": 0.17443357900874243,
+      "f1_weighted": 0.19221194752959456,
+      "cohen_kappa": 0.21567345871664578
+    },
+    "delta_vs_baseline": {
+      "accuracy": 0.020000000000000018,
+      "f1_macro": 0.04770036608271905,
+      "f1_weighted": 0.041792220851044365,
+      "cohen_kappa": 0.020227972389988524
+    },
+    "top_confusions": [
+      {
+        "analyte": "Nitrite",
+        "true_level": "Neg",
+        "pred_level": "Positive",
+        "count": 12
+      },
+      {
+        "analyte": "Ketone",
+        "true_level": "Neg",
+        "pred_level": "8.0",
+        "count": 3
+      },
+      {
+        "analyte": "Bilirubin",
+        "true_level": "Small 17",
+        "pred_level": "Neg",
+        "count": 3
+      },
+      {
+        "analyte": "Bilirubin",
+        "true_level": "Moderate 50",
+        "pred_level": "Small 17",
+        "count": 3
+      },
+      {
+        "analyte": "Leukocytes",
+        "true_level": "Moderate 125",
+        "pred_level": "Trace 15",
+        "count": 3
+      },
+      {
+        "analyte": "Glucose",
+        "true_level": "110 ++++",
+        "pred_level": "60 +++",
+        "count": 3
+      },
+      {
+        "analyte": "pH",
+        "true_level": "8.5",
+        "pred_level": "7.5",
+        "count": 3
+      },
+      {
+        "analyte": "Bilirubin",
+        "true_level": "Large 100",
+        "pred_level": "Neg",
+        "count": 3
+      },
+      {
+        "analyte": "Nitrite",
+        "true_level": "Positive",
+        "pred_level": "Neg",
+        "count": 3
+      },
+      {
+        "analyte": "Ketone",
+        "true_level": "Large 16",
+        "pred_level": "8.0",
+        "count": 3
+      },
+      {
+        "analyte": "Leukocytes",
+        "true_level": "Small 70",
+        "pred_level": "Large 500",
+        "count": 3
+      },
+      {
+        "analyte": "Protein",
+        "true_level": "Neg",
+        "pred_level": ">=20.0",
+        "count": 2
+      },
+      {
+        "analyte": "pH",
+        "true_level": "5.0",
+        "pred_level": "7.0",
+        "count": 2
+      },
+      {
+        "analyte": "Blood",
+        "true_level": "Neg",
+        "pred_level": "Moderate 80",
+        "count": 2
+      },
+      {
+        "analyte": "Specific Gravity",
+        "true_level": "1.000",
+        "pred_level": "1.015",
+        "count": 2
+      }
+    ]
+  },
+  "per_analyte_drift": {
+    "Leukocytes": {
+      "dev_samples": 57,
+      "holdout_samples": 25,
+      "dev_mean": {
+        "h": 167.41713252255752,
+        "s": 0.19476087719298246,
+        "v": 0.8318698596491229
+      },
+      "holdout_mean": {
+        "h": 48.412457334083534,
+        "s": 0.24985136,
+        "v": 0.91628188
+      },
+      "delta": {
+        "h_abs_deg": 119.00467518847398,
+        "s": 0.05509048280701753,
+        "v": 0.08441202035087714
+      }
+    },
+    "Nitrite": {
+      "dev_samples": 57,
+      "holdout_samples": 25,
+      "dev_mean": {
+        "h": 165.0490339125631,
+        "s": 0.19696180701754387,
+        "v": 0.8299868947368421
+      },
+      "holdout_mean": {
+        "h": 49.460968144016775,
+        "s": 0.24911896,
+        "v": 0.9104748
+      },
+      "delta": {
+        "h_abs_deg": 115.58806576854631,
+        "s": 0.05215715298245613,
+        "v": 0.08048790526315797
+      }
+    },
+    "Urobilinogen": {
+      "dev_samples": 57,
+      "holdout_samples": 25,
+      "dev_mean": {
+        "h": 167.1285759610586,
+        "s": 0.1861022456140351,
+        "v": 0.8354207368421053
+      },
+      "holdout_mean": {
+        "h": 51.72856432414558,
+        "s": 0.20693776,
+        "v": 0.93101304
+      },
+      "delta": {
+        "h_abs_deg": 115.40001163691302,
+        "s": 0.0208355143859649,
+        "v": 0.09559230315789469
+      }
+    },
+    "Protein": {
+      "dev_samples": 57,
+      "holdout_samples": 25,
+      "dev_mean": {
+        "h": 167.18616324741166,
+        "s": 0.1810183859649123,
+        "v": 0.8439347368421053
+      },
+      "holdout_mean": {
+        "h": 50.617123138816275,
+        "s": 0.18910024,
+        "v": 0.93802724
+      },
+      "delta": {
+        "h_abs_deg": 116.56904010859537,
+        "s": 0.00808185403508771,
+        "v": 0.09409250315789475
+      }
+    },
+    "pH": {
+      "dev_samples": 57,
+      "holdout_samples": 25,
+      "dev_mean": {
+        "h": 168.01182424412545,
+        "s": 0.19526466666666667,
+        "v": 0.8364977543859649
+      },
+      "holdout_mean": {
+        "h": 49.06086360569922,
+        "s": 0.24821568,
+        "v": 0.93218404
+      },
+      "delta": {
+        "h_abs_deg": 118.95096063842624,
+        "s": 0.052951013333333324,
+        "v": 0.09568628561403514
+      }
+    },
+    "Blood": {
+      "dev_samples": 57,
+      "holdout_samples": 25,
+      "dev_mean": {
+        "h": 165.072515246427,
+        "s": 0.20748340350877192,
+        "v": 0.7717888596491228
+      },
+      "holdout_mean": {
+        "h": 62.55789430879698,
+        "s": 0.29801108,
+        "v": 0.84476264
+      },
+      "delta": {
+        "h_abs_deg": 102.51462093763001,
+        "s": 0.09052767649122806,
+        "v": 0.0729737803508772
+      }
+    },
+    "Specific Gravity": {
+      "dev_samples": 57,
+      "holdout_samples": 25,
+      "dev_mean": {
+        "h": 165.8506389044385,
+        "s": 0.1885901754385965,
+        "v": 0.8184984035087719
+      },
+      "holdout_mean": {
+        "h": 54.17207863777456,
+        "s": 0.21408888,
+        "v": 0.9105591199999999
+      },
+      "delta": {
+        "h_abs_deg": 111.67856026666395,
+        "s": 0.025498704561403518,
+        "v": 0.09206071649122805
+      }
+    },
+    "Ketone": {
+      "dev_samples": 57,
+      "holdout_samples": 25,
+      "dev_mean": {
+        "h": 165.82449233091873,
+        "s": 0.18257314035087718,
+        "v": 0.8154418771929824
+      },
+      "holdout_mean": {
+        "h": 55.49623437623318,
+        "s": 0.18484972,
+        "v": 0.91185112
+      },
+      "delta": {
+        "h_abs_deg": 110.32825795468554,
+        "s": 0.002276579649122812,
+        "v": 0.09640924280701757
+      }
+    },
+    "Bilirubin": {
+      "dev_samples": 57,
+      "holdout_samples": 25,
+      "dev_mean": {
+        "h": 165.35221904234967,
+        "s": 0.1927330701754386,
+        "v": 0.7908665438596492
+      },
+      "holdout_mean": {
+        "h": 58.721711037672776,
+        "s": 0.1972016,
+        "v": 0.88009284
+      },
+      "delta": {
+        "h_abs_deg": 106.6305080046769,
+        "s": 0.004468529824561418,
+        "v": 0.08922629614035082
+      }
+    },
+    "Glucose": {
+      "dev_samples": 57,
+      "holdout_samples": 25,
+      "dev_mean": {
+        "h": 165.79572672816607,
+        "s": 0.19408180701754385,
+        "v": 0.7846637192982456
+      },
+      "holdout_mean": {
+        "h": 59.458846308830594,
+        "s": 0.19768184,
+        "v": 0.87230472
+      },
+      "delta": {
+        "h_abs_deg": 106.33688041933547,
+        "s": 0.0036000329824561472,
+        "v": 0.0876410007017544
+      }
+    }
+  },
+  "largest_shifted_analytes": [
+    {
+      "analyte": "pH",
+      "h_abs_deg": 118.95096063842624,
+      "s": 0.052951013333333324,
+      "v": 0.09568628561403514
+    },
+    {
+      "analyte": "Leukocytes",
+      "h_abs_deg": 119.00467518847398,
+      "s": 0.05509048280701753,
+      "v": 0.08441202035087714
+    },
+    {
+      "analyte": "Nitrite",
+      "h_abs_deg": 115.58806576854631,
+      "s": 0.05215715298245613,
+      "v": 0.08048790526315797
+    },
+    {
+      "analyte": "Urobilinogen",
+      "h_abs_deg": 115.40001163691302,
+      "s": 0.0208355143859649,
+      "v": 0.09559230315789469
+    },
+    {
+      "analyte": "Protein",
+      "h_abs_deg": 116.56904010859537,
+      "s": 0.00808185403508771,
+      "v": 0.09409250315789475
+    }
+  ],
+  "recommended_next": [
+    "If correction improves holdout metrics, integrate event-centered normalization into feature extraction path.",
+    "Collect 5500K calibration/gold events into training to reduce domain gap.",
+    "Re-check pad grid with overlay output to rule out strip placement variance."
+  ]
+}

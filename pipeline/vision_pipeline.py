@@ -78,6 +78,15 @@ class VisionPipelineConfig:
     max_marker_area_ratio: float = 0.25
     border_reject_margin_ratio: float = 0.005
     max_quad_side_ratio: float = 3.5
+    adaptive_grid_enabled: bool = True
+    adaptive_x_search_px: int = 220
+    adaptive_x_step_px: int = 10
+    adaptive_y_search_px: int = 60
+    adaptive_y_step_px: int = 4
+    per_pad_localization_enabled: bool = True
+    per_pad_y_refine_px: int = 6
+    per_pad_y_step_px: int = 2
+    per_pad_max_step_deviation_px: int = 8
 
     def validate(self) -> None:
         if len(self.pad_offsets_mm) != len(self.analyte_order):
@@ -99,6 +108,20 @@ class VisionPipelineConfig:
             raise ValueError("border_reject_margin_ratio must be in [0, 0.1]")
         if self.max_quad_side_ratio <= 1.0:
             raise ValueError("max_quad_side_ratio must be > 1")
+        if self.adaptive_x_search_px < 0:
+            raise ValueError("adaptive_x_search_px must be >= 0")
+        if self.adaptive_x_step_px <= 0:
+            raise ValueError("adaptive_x_step_px must be > 0")
+        if self.adaptive_y_search_px < 0:
+            raise ValueError("adaptive_y_search_px must be >= 0")
+        if self.adaptive_y_step_px <= 0:
+            raise ValueError("adaptive_y_step_px must be > 0")
+        if self.per_pad_y_refine_px < 0:
+            raise ValueError("per_pad_y_refine_px must be >= 0")
+        if self.per_pad_y_step_px <= 0:
+            raise ValueError("per_pad_y_step_px must be > 0")
+        if self.per_pad_max_step_deviation_px < 0:
+            raise ValueError("per_pad_max_step_deviation_px must be >= 0")
 
 
 @dataclass
@@ -126,6 +149,20 @@ class BurstProcessingResult:
     frames_used: int
     frames_skipped: int
     frame_errors: list[str]
+
+
+@dataclass
+class PadLocalizationResult:
+    analyte_name: str
+    base_x: int
+    base_y: int
+    final_x: int
+    final_y: int
+    width: int
+    height: int
+    local_dx: int
+    local_dy: int
+    local_score: float
 
 
 class MacroMarkerRectifier:
@@ -316,6 +353,9 @@ class AdaptiveWhiteBalancer:
 class GridSlicer:
     def __init__(self, config: VisionPipelineConfig) -> None:
         self.config = config
+        self.last_global_x_shift_px: int = 0
+        self.last_global_y_shift_px: int = 0
+        self.last_pad_localization: dict[str, PadLocalizationResult] = {}
 
     def pixels_per_mm(self) -> float:
         return float(self.config.marker_size_px) / float(self.config.marker_size_mm)
@@ -331,25 +371,255 @@ class GridSlicer:
 
         return image_bgr[y0:y1, x0:x1].copy()
 
-    def slice_pads(self, awb_bgr: np.ndarray) -> dict[str, np.ndarray]:
+    def _compute_pad_geometry(self) -> tuple[int, int, int, int, float]:
         ppm = self.pixels_per_mm()
         pad_w = max(1, int(round(self.config.pad_width_mm * ppm)))
         pad_h = max(1, int(round(self.config.pad_height_mm * ppm)))
-
         marker_x = int(round(self.config.marker_anchor_x_px))
         marker_y = int(round(self.config.marker_anchor_y_px))
+        return marker_x, marker_y, pad_w, pad_h, ppm
 
+    def _pad_roi(
+        self,
+        marker_x: int,
+        marker_y: int,
+        ppm: float,
+        offset_x_mm: float,
+        offset_y_mm: float,
+        global_x_shift_px: int = 0,
+        global_y_shift_px: int = 0,
+        local_dy_px: int = 0,
+    ) -> tuple[int, int]:
+        x = int(round(marker_x + offset_x_mm * ppm)) + int(global_x_shift_px)
+        y = int(round(marker_y + offset_y_mm * ppm)) + int(global_y_shift_px) + int(local_dy_px)
+        return x, y
+
+    def _slice_pads_with_shift(
+        self,
+        awb_bgr: np.ndarray,
+        x_shift_px: int,
+        y_shift_px: int,
+        per_pad_y_offset: dict[str, int] | None = None,
+    ) -> dict[str, np.ndarray]:
+        marker_x, marker_y, pad_w, pad_h, ppm = self._compute_pad_geometry()
         crops: dict[str, np.ndarray] = {}
         for analyte_name, (offset_x_mm, offset_y_mm) in zip(
             self.config.analyte_order,
             self.config.pad_offsets_mm,
             strict=True,
         ):
-            x = int(round(marker_x + offset_x_mm * ppm))
-            y = int(round(marker_y + offset_y_mm * ppm))
+            local_dy = 0
+            if per_pad_y_offset is not None:
+                local_dy = int(per_pad_y_offset.get(analyte_name, 0))
+            x, y = self._pad_roi(
+                marker_x=marker_x,
+                marker_y=marker_y,
+                ppm=ppm,
+                offset_x_mm=offset_x_mm,
+                offset_y_mm=offset_y_mm,
+                global_x_shift_px=x_shift_px,
+                global_y_shift_px=y_shift_px,
+                local_dy_px=local_dy,
+            )
             crops[analyte_name] = self._crop(awb_bgr, x, y, pad_w, pad_h)
-
         return crops
+
+    def _single_pad_lock_score(self, crop_bgr: np.ndarray) -> float:
+        hsv = cv2.cvtColor(crop_bgr, cv2.COLOR_BGR2HSV).astype(np.float32)
+        gray = cv2.cvtColor(crop_bgr, cv2.COLOR_BGR2GRAY)
+
+        hue_std = float(np.std(hsv[:, :, 0]) * 2.0)
+        sat = hsv[:, :, 1] / 255.0
+        val = hsv[:, :, 2] / 255.0
+        sat_std = float(np.std(sat))
+        mean_val = float(np.mean(hsv[:, :, 2]) / 255.0)
+        mean_sat = float(np.mean(sat))
+        edges = cv2.Canny(gray, 30, 100)
+        edge_density = float(np.mean(edges > 0))
+
+        texture_signal = (hue_std * 0.1) + (mean_sat * 25.0) + (mean_val * 5.0) - (sat_std * 20.0)
+        structure_penalty = edge_density * 35.0
+        clipping_penalty = 0.0
+        if mean_val >= 0.995:
+            clipping_penalty += 0.5
+        return texture_signal - structure_penalty - clipping_penalty
+
+    def _refine_single_pad_y(
+        self,
+        awb_bgr: np.ndarray,
+        analyte_name: str,
+        offset_x_mm: float,
+        offset_y_mm: float,
+        marker_x: int,
+        marker_y: int,
+        pad_w: int,
+        pad_h: int,
+        ppm: float,
+        global_x_shift_px: int,
+        global_y_shift_px: int,
+        prev_expected_y: int | None,
+        prev_final_y: int | None,
+    ) -> tuple[np.ndarray, PadLocalizationResult]:
+        base_x, base_y = self._pad_roi(
+            marker_x=marker_x,
+            marker_y=marker_y,
+            ppm=ppm,
+            offset_x_mm=offset_x_mm,
+            offset_y_mm=offset_y_mm,
+            global_x_shift_px=global_x_shift_px,
+            global_y_shift_px=global_y_shift_px,
+        )
+
+        search_px = int(self.config.per_pad_y_refine_px)
+        step_px = int(self.config.per_pad_y_step_px)
+
+        best_crop = self._crop(awb_bgr, base_x, base_y, pad_w, pad_h)
+        best_dy = 0
+        best_score = self._single_pad_lock_score(best_crop)
+
+        for dy in range(-search_px, search_px + 1, step_px):
+            y = base_y + dy
+
+            if prev_expected_y is not None and prev_final_y is not None:
+                expected_step = int(base_y - prev_expected_y)
+                actual_step = int(y - prev_final_y)
+                if abs(actual_step - expected_step) > int(self.config.per_pad_max_step_deviation_px):
+                    continue
+
+            try:
+                candidate = self._crop(awb_bgr, base_x, y, pad_w, pad_h)
+            except ValueError:
+                continue
+
+            score = self._single_pad_lock_score(candidate) - (abs(dy) * 0.05)
+            if score > best_score:
+                best_crop = candidate
+                best_dy = dy
+                best_score = score
+
+        localization = PadLocalizationResult(
+            analyte_name=analyte_name,
+            base_x=base_x,
+            base_y=base_y,
+            final_x=base_x,
+            final_y=base_y + best_dy,
+            width=pad_w,
+            height=pad_h,
+            local_dx=0,
+            local_dy=best_dy,
+            local_score=float(best_score),
+        )
+        return best_crop, localization
+
+    def _alignment_score(self, pad_crops: dict[str, np.ndarray]) -> float:
+        hue_means: list[float] = []
+        sat_means: list[float] = []
+        val_means: list[float] = []
+        clipped_count = 0
+        edge_density_list: list[float] = []
+
+        for analyte_name in self.config.analyte_order:
+            crop = pad_crops[analyte_name]
+            hsv = cv2.cvtColor(crop, cv2.COLOR_BGR2HSV).astype(np.float32)
+            gray = cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
+            h = float(np.mean(hsv[:, :, 0]) * 2.0)
+            s = float(np.mean(hsv[:, :, 1]) / 255.0)
+            v = float(np.mean(hsv[:, :, 2]) / 255.0)
+            hue_means.append(h)
+            sat_means.append(s)
+            val_means.append(v)
+            edge_density_list.append(float(np.mean(cv2.Canny(gray, 30, 100) > 0)))
+            if v >= 0.995:
+                clipped_count += 1
+
+        hue_std = float(np.std(np.array(hue_means, dtype=np.float32)))
+        sat_std = float(np.std(np.array(sat_means, dtype=np.float32)))
+        val_std = float(np.std(np.array(val_means, dtype=np.float32)))
+        sat_mean = float(np.mean(np.array(sat_means, dtype=np.float32)))
+        edge_density_mean = float(np.mean(np.array(edge_density_list, dtype=np.float32)))
+
+        color_separation = hue_std + (sat_std * 100.0) + (val_std * 100.0)
+        clipping_penalty = clipped_count * 0.75
+        return color_separation + (sat_mean * 20.0) - clipping_penalty - (edge_density_mean * 30.0)
+
+    def slice_pads(self, awb_bgr: np.ndarray) -> dict[str, np.ndarray]:
+        if not self.config.adaptive_grid_enabled:
+            self.last_global_x_shift_px = 0
+            self.last_global_y_shift_px = 0
+            self.last_pad_localization = {}
+            return self._slice_pads_with_shift(awb_bgr, x_shift_px=0, y_shift_px=0)
+
+        search_px = int(self.config.adaptive_x_search_px)
+        step_px = int(self.config.adaptive_x_step_px)
+        search_y_px = int(self.config.adaptive_y_search_px)
+        step_y_px = int(self.config.adaptive_y_step_px)
+
+        best_crops: dict[str, np.ndarray] | None = None
+        best_score = -float("inf")
+        best_x_shift = 0
+        best_y_shift = 0
+
+        for x_shift in range(-search_px, search_px + 1, step_px):
+            for y_shift in range(-search_y_px, search_y_px + 1, step_y_px):
+                try:
+                    candidate = self._slice_pads_with_shift(
+                        awb_bgr,
+                        x_shift_px=x_shift,
+                        y_shift_px=y_shift,
+                    )
+                except ValueError:
+                    continue
+
+                score = self._alignment_score(candidate)
+                if score > best_score:
+                    best_score = score
+                    best_crops = candidate
+                    best_x_shift = x_shift
+                    best_y_shift = y_shift
+
+        if best_crops is None:
+            raise ValueError("Adaptive grid localization failed to produce valid pad crops.")
+
+        self.last_global_x_shift_px = int(best_x_shift)
+        self.last_global_y_shift_px = int(best_y_shift)
+
+        if not self.config.per_pad_localization_enabled:
+            self.last_pad_localization = {}
+            return best_crops
+
+        marker_x, marker_y, pad_w, pad_h, ppm = self._compute_pad_geometry()
+        refined: dict[str, np.ndarray] = {}
+        localization: dict[str, PadLocalizationResult] = {}
+        prev_expected_y: int | None = None
+        prev_final_y: int | None = None
+
+        for analyte_name, (offset_x_mm, offset_y_mm) in zip(
+            self.config.analyte_order,
+            self.config.pad_offsets_mm,
+            strict=True,
+        ):
+            crop, result = self._refine_single_pad_y(
+                awb_bgr=awb_bgr,
+                analyte_name=analyte_name,
+                offset_x_mm=offset_x_mm,
+                offset_y_mm=offset_y_mm,
+                marker_x=marker_x,
+                marker_y=marker_y,
+                pad_w=pad_w,
+                pad_h=pad_h,
+                ppm=ppm,
+                global_x_shift_px=best_x_shift,
+                global_y_shift_px=best_y_shift,
+                prev_expected_y=prev_expected_y,
+                prev_final_y=prev_final_y,
+            )
+            refined[analyte_name] = crop
+            localization[analyte_name] = result
+            prev_expected_y = result.base_y
+            prev_final_y = result.final_y
+
+        self.last_pad_localization = localization
+        return refined
 
 
 class TemporalMedianCleaner:

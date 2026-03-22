@@ -53,6 +53,24 @@ class LevelRef:
         self.v = v
 
 
+class EventCenteringConfig:
+    def __init__(
+        self,
+        enabled: bool,
+        target_h: float,
+        target_s: float,
+        target_v: float,
+        mode: str = "global",
+        target_by_light: dict[str, tuple[float, float, float]] | None = None,
+    ):
+        self.enabled = enabled
+        self.target_h = target_h
+        self.target_s = target_s
+        self.target_v = target_v
+        self.mode = mode
+        self.target_by_light = target_by_light or {}
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Evaluate semiquant performance metrics")
     parser.add_argument("--features", type=pathlib.Path, default=FEATURES_PATH, help="Path to features.csv")
@@ -63,6 +81,15 @@ def parse_args() -> argparse.Namespace:
         type=int,
         default=1,
         help="Repeat full prediction pass N times to average latency (default: 1)",
+    )
+    parser.add_argument(
+        "--event-center-hsv",
+        choices=["auto", "on", "off"],
+        default="auto",
+        help=(
+            "Apply event-level HSV centering before prediction: "
+            "'auto' follows map metadata, 'on' forces it, 'off' disables it."
+        ),
     )
     return parser.parse_args()
 
@@ -93,6 +120,17 @@ def _hsv_distance(a_h: float, a_s: float, a_v: float, b_h: float, b_s: float, b_
     return math.sqrt((hue_delta * hue_delta) + (saturation_delta * saturation_delta) + (value_delta * value_delta))
 
 
+def _circular_mean_deg(values: list[float]) -> float:
+    if not values:
+        return 0.0
+    sin_sum = sum(math.sin(math.radians(value)) for value in values)
+    cos_sum = sum(math.cos(math.radians(value)) for value in values)
+    if abs(sin_sum) < 1e-12 and abs(cos_sum) < 1e-12:
+        return _normalize_hue(float(values[0]))
+    angle = math.degrees(math.atan2(sin_sum, cos_sum))
+    return _normalize_hue(angle)
+
+
 def load_features(path: pathlib.Path) -> list[dict[str, str]]:
     if not path.exists():
         raise FileNotFoundError(f"features.csv not found: {path}")
@@ -103,7 +141,7 @@ def load_features(path: pathlib.Path) -> list[dict[str, str]]:
     return rows
 
 
-def load_reference_map(path: pathlib.Path) -> dict[str, list[LevelRef]]:
+def load_reference_map(path: pathlib.Path) -> tuple[dict[str, list[LevelRef]], EventCenteringConfig]:
     if not path.exists():
         raise FileNotFoundError(f"knn_reference_map.json not found: {path}")
 
@@ -111,6 +149,28 @@ def load_reference_map(path: pathlib.Path) -> dict[str, list[LevelRef]]:
         payload = json.load(file)
 
     analytes_payload = payload.get("analytes", {})
+    center_payload = payload.get("event_hsv_centering", {}) if isinstance(payload, dict) else {}
+    center_target = center_payload.get("target_anchor", {}) if isinstance(center_payload, dict) else {}
+    center_by_light_payload = center_payload.get("target_anchor_by_light", {}) if isinstance(center_payload, dict) else {}
+    target_by_light: dict[str, tuple[float, float, float]] = {}
+    if isinstance(center_by_light_payload, dict):
+        for light, anchor in center_by_light_payload.items():
+            if not isinstance(anchor, dict):
+                continue
+            target_by_light[str(light)] = (
+                _normalize_hue(_safe_float(anchor.get("h", 0.0))),
+                _clip_01(_safe_float(anchor.get("s", 0.0))),
+                _clip_01(_safe_float(anchor.get("v", 0.0))),
+            )
+
+    centering = EventCenteringConfig(
+        enabled=bool(center_payload.get("enabled", False)),
+        target_h=_normalize_hue(_safe_float(center_target.get("h", 0.0))),
+        target_s=_clip_01(_safe_float(center_target.get("s", 0.0))),
+        target_v=_clip_01(_safe_float(center_target.get("v", 0.0))),
+        mode=str(center_payload.get("mode", "global") or "global"),
+        target_by_light=target_by_light,
+    )
     refs: dict[str, list[LevelRef]] = {}
 
     for analyte_name in ANALYTE_ORDER:
@@ -141,22 +201,91 @@ def load_reference_map(path: pathlib.Path) -> dict[str, list[LevelRef]]:
         if level_refs:
             refs[analyte_name] = level_refs
 
-    return refs
+    return refs, centering
 
 
 def semiquant_rows(rows: list[dict[str, str]]) -> list[dict[str, str]]:
     out: list[dict[str, str]] = []
     for row in rows:
-        mode = row.get("label_mode", "").strip().lower()
         analyte = row.get("analyte", "").strip()
         level_raw = row.get("level", "").strip()
-        if mode == "semiquant" and analyte in ANALYTE_ORDER and level_raw:
+        if analyte in ANALYTE_ORDER and level_raw:
             canonical = canonicalize_level(analyte, level_raw)
             if canonical is not None:
                 copied = dict(row)
                 copied["level"] = canonical
                 out.append(copied)
     return out
+
+
+def build_event_anchors(rows: list[dict[str, str]]) -> dict[str, tuple[float, float, float]]:
+    anchors: dict[str, tuple[float, float, float]] = {}
+
+    for row in rows:
+        event_id = row.get("event_id", "").strip()
+        if not event_id or event_id in anchors:
+            continue
+
+        hues: list[float] = []
+        sats: list[float] = []
+        vals: list[float] = []
+        for analyte_name in ANALYTE_ORDER:
+            col_h, col_s, col_v = feature_columns_for_analyte(analyte_name)
+            raw_h = row.get(col_h, "").strip()
+            raw_s = row.get(col_s, "").strip()
+            raw_v = row.get(col_v, "").strip()
+            if not raw_h or not raw_s or not raw_v:
+                continue
+            hues.append(_normalize_hue(_safe_float(raw_h)))
+            sats.append(_clip_01(_safe_float(raw_s)))
+            vals.append(_clip_01(_safe_float(raw_v)))
+
+        if not hues or not sats or not vals:
+            continue
+
+        anchors[event_id] = (
+            _circular_mean_deg(hues),
+            float(mean(sats)),
+            float(mean(vals)),
+        )
+
+    return anchors
+
+
+def apply_event_centering(
+    h: float,
+    s: float,
+    v: float,
+    event_id: str,
+    light_kelvin: str,
+    event_anchors: dict[str, tuple[float, float, float]] | None,
+    config: EventCenteringConfig,
+) -> tuple[float, float, float]:
+    h0 = _normalize_hue(h)
+    s0 = _clip_01(s)
+    v0 = _clip_01(v)
+
+    if not config.enabled or not event_anchors:
+        return h0, s0, v0
+
+    event_anchor = event_anchors.get(event_id)
+    if event_anchor is None:
+        return h0, s0, v0
+
+    event_h, event_s, event_v = event_anchor
+    target_h = config.target_h
+    target_s = config.target_s
+    target_v = config.target_v
+    if config.mode == "per-light" and config.target_by_light:
+        target_tuple = config.target_by_light.get(light_kelvin)
+        if target_tuple is not None:
+            target_h, target_s, target_v = target_tuple
+
+    return (
+        _normalize_hue(h0 - event_h + target_h),
+        _clip_01(s0 - event_s + target_s),
+        _clip_01(v0 - event_v + target_v),
+    )
 
 
 def _sensitivity_specificity_one_vs_rest(y_true: list[str], y_pred: list[str], labels: list[str]) -> dict[str, Any]:
@@ -222,7 +351,12 @@ def predict_one(
     return best_level, float(confidence), float(best_distance)
 
 
-def evaluate(rows: list[dict[str, str]], refs: dict[str, list[LevelRef]]) -> dict[str, Any]:
+def evaluate(
+    rows: list[dict[str, str]],
+    refs: dict[str, list[LevelRef]],
+    event_anchors: dict[str, tuple[float, float, float]] | None,
+    centering_config: EventCenteringConfig,
+) -> dict[str, Any]:
     per_analyte_true: dict[str, list[str]] = defaultdict(list)
     per_analyte_pred: dict[str, list[str]] = defaultdict(list)
 
@@ -245,9 +379,15 @@ def evaluate(rows: list[dict[str, str]], refs: dict[str, list[LevelRef]]) -> dic
             dropped += 1
             continue
 
-        h = _normalize_hue(_safe_float(raw_h))
-        s = _clip_01(_safe_float(raw_s))
-        v = _clip_01(_safe_float(raw_v))
+        h, s, v = apply_event_centering(
+            _safe_float(raw_h),
+            _safe_float(raw_s),
+            _safe_float(raw_v),
+            row.get("event_id", "").strip(),
+            row.get("light_kelvin", "").strip(),
+            event_anchors,
+            centering_config,
+        )
 
         pred, confidence, distance = predict_one(analyte, h, s, v, refs)
         if pred is None:
@@ -337,7 +477,13 @@ def evaluate(rows: list[dict[str, str]], refs: dict[str, list[LevelRef]]) -> dic
     }
 
 
-def benchmark_latency(rows: list[dict[str, str]], refs: dict[str, list[LevelRef]], runs: int) -> dict[str, Any]:
+def benchmark_latency(
+    rows: list[dict[str, str]],
+    refs: dict[str, list[LevelRef]],
+    runs: int,
+    event_anchors: dict[str, tuple[float, float, float]] | None,
+    centering_config: EventCenteringConfig,
+) -> dict[str, Any]:
     if runs < 1:
         runs = 1
 
@@ -352,12 +498,16 @@ def benchmark_latency(rows: list[dict[str, str]], refs: dict[str, list[LevelRef]
         raw_v = row.get(col_v, "").strip()
         if not raw_h or not raw_s or not raw_v:
             continue
-        observed_samples.append((
-            analyte,
-            _normalize_hue(_safe_float(raw_h)),
-            _clip_01(_safe_float(raw_s)),
-            _clip_01(_safe_float(raw_v)),
-        ))
+        h, s, v = apply_event_centering(
+            _safe_float(raw_h),
+            _safe_float(raw_s),
+            _safe_float(raw_v),
+            row.get("event_id", "").strip(),
+            row.get("light_kelvin", "").strip(),
+            event_anchors,
+            centering_config,
+        )
+        observed_samples.append((analyte, h, s, v))
 
     if not observed_samples:
         return {
@@ -391,19 +541,55 @@ def main() -> None:
     args = parse_args()
 
     features = load_features(args.features)
-    refs = load_reference_map(args.map)
+    refs, map_centering = load_reference_map(args.map)
 
     rows = semiquant_rows(features)
     if not rows:
         print("No semiquant rows found in features. Run ingest pipeline first.")
         sys.exit(1)
 
-    report = evaluate(rows, refs)
-    report["latency_benchmark_ms"] = benchmark_latency(rows, refs, runs=args.latency_runs)
+    use_centering = map_centering.enabled if args.event_center_hsv == "auto" else args.event_center_hsv == "on"
+    centering_config = EventCenteringConfig(
+        enabled=use_centering,
+        target_h=map_centering.target_h,
+        target_s=map_centering.target_s,
+        target_v=map_centering.target_v,
+        mode=map_centering.mode,
+        target_by_light=map_centering.target_by_light,
+    )
+    event_anchors = build_event_anchors(rows) if use_centering else {}
+
+    report = evaluate(rows, refs, event_anchors, centering_config)
+    report["latency_benchmark_ms"] = benchmark_latency(
+        rows,
+        refs,
+        runs=args.latency_runs,
+        event_anchors=event_anchors,
+        centering_config=centering_config,
+    )
     report["artifacts"] = {
         "features_path": str(args.features.resolve()),
         "reference_map_path": str(args.map.resolve()),
         "generated_at": datetime.now(timezone.utc).isoformat(),
+        "event_hsv_centering": {
+            "mode": args.event_center_hsv,
+            "enabled": use_centering,
+            "target_mode": centering_config.mode,
+            "target_anchor": {
+                "h": centering_config.target_h,
+                "s": centering_config.target_s,
+                "v": centering_config.target_v,
+            },
+            "target_anchor_by_light": {
+                light: {
+                    "h": values[0],
+                    "s": values[1],
+                    "v": values[2],
+                }
+                for light, values in sorted(centering_config.target_by_light.items())
+            },
+            "events_with_anchor": len(event_anchors),
+        },
     }
 
     args.output.parent.mkdir(parents=True, exist_ok=True)

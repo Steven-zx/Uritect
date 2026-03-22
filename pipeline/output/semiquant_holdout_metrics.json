@@ -1,0 +1,276 @@
+{
+  "generated_at": "2026-03-22T16:00:46.962189+00:00",
+  "features_path": "C:\\Users\\acer\\Downloads\\Github\\Uritect\\pipeline\\dataset\\features.csv",
+  "config": {
+    "test_size": 0.2,
+    "repeats": 8,
+    "seed": 42,
+    "semiquant_augment_target_per_level": 200,
+    "semiquant_prototype_mode": "library",
+    "splitter": "GroupShuffleSplit(event_id)"
+  },
+  "dataset": {
+    "rows_total": 940,
+    "unique_events": 94
+  },
+  "summary": {
+    "accuracy": {
+      "mean": 0.22171052631578947,
+      "stdev": 0.028880005352168375,
+      "min": 0.1631578947368421,
+      "max": 0.24736842105263157
+    },
+    "f1_macro": {
+      "mean": 0.17196726940741575,
+      "stdev": 0.02590716224413748,
+      "min": 0.1248439831773165,
+      "max": 0.2058521725188392
+    },
+    "f1_weighted": {
+      "mean": 0.22060422892679926,
+      "stdev": 0.030558011171770108,
+      "min": 0.1572784525416104,
+      "max": 0.25811946253593854
+    },
+    "cohen_kappa": {
+      "mean": 0.20506254566234308,
+      "stdev": 0.029267971937704144,
+      "min": 0.1457414319647099,
+      "max": 0.2318131697249003
+    }
+  },
+  "splits": [
+    {
+      "ok": true,
+      "overall": {
+        "accuracy": 0.24736842105263157,
+        "f1_macro": 0.19799326188215075,
+        "f1_weighted": 0.24842587237324082,
+        "cohen_kappa": 0.23042062030873822
+      },
+      "per_analyte_accuracy": {
+        "Leukocytes": 0.21052631578947367,
+        "Nitrite": 0.5789473684210527,
+        "Urobilinogen": 0.2631578947368421,
+        "Protein": 0.2631578947368421,
+        "pH": 0.15789473684210525,
+        "Blood": 0.21052631578947367,
+        "Specific Gravity": 0.05263157894736842,
+        "Ketone": 0.15789473684210525,
+        "Bilirubin": 0.2631578947368421,
+        "Glucose": 0.3157894736842105
+      },
+      "counts": {
+        "train_valid_rows": 750,
+        "test_valid_rows": 190,
+        "dropped_predictions": 0,
+        "train_invalid_rows": 0,
+        "test_invalid_rows": 0
+      },
+      "split_index": 1
+    },
+    {
+      "ok": true,
+      "overall": {
+        "accuracy": 0.21052631578947367,
+        "f1_macro": 0.15832521388076942,
+        "f1_weighted": 0.20990792832898095,
+        "cohen_kappa": 0.19286321155480035
+      },
+      "per_analyte_accuracy": {
+        "Leukocytes": 0.10526315789473684,
+        "Nitrite": 0.5789473684210527,
+        "Urobilinogen": 0.10526315789473684,
+        "Protein": 0.2631578947368421,
+        "pH": 0.0,
+        "Blood": 0.2631578947368421,
+        "Specific Gravity": 0.15789473684210525,
+        "Ketone": 0.3157894736842105,
+        "Bilirubin": 0.10526315789473684,
+        "Glucose": 0.21052631578947367
+      },
+      "counts": {
+        "train_valid_rows": 750,
+        "test_valid_rows": 190,
+        "dropped_predictions": 0,
+        "train_invalid_rows": 0,
+        "test_invalid_rows": 0
+      },
+      "split_index": 2
+    },
+    {
+      "ok": true,
+      "overall": {
+        "accuracy": 0.22105263157894736,
+        "f1_macro": 0.15435841935841935,
+        "f1_weighted": 0.21691201780675468,
+        "cohen_kappa": 0.20425604165487565
+      },
+      "per_analyte_accuracy": {
+        "Leukocytes": 0.21052631578947367,
+        "Nitrite": 0.5263157894736842,
+        "Urobilinogen": 0.05263157894736842,
+        "Protein": 0.21052631578947367,
+        "pH": 0.21052631578947367,
+        "Blood": 0.10526315789473684,
+        "Specific Gravity": 0.21052631578947367,
+        "Ketone": 0.21052631578947367,
+        "Bilirubin": 0.3157894736842105,
+        "Glucose": 0.15789473684210525
+      },
+      "counts": {
+        "train_valid_rows": 750,
+        "test_valid_rows": 190,
+        "dropped_predictions": 0,
+        "train_invalid_rows": 0,
+        "test_invalid_rows": 0
+      },
+      "split_index": 3
+    },
+    {
+      "ok": true,
+      "overall": {
+        "accuracy": 0.24210526315789474,
+        "f1_macro": 0.1822047919874007,
+        "f1_weighted": 0.25811946253593854,
+        "cohen_kappa": 0.22549963199909417
+      },
+      "per_analyte_accuracy": {
+        "Leukocytes": 0.15789473684210525,
+        "Nitrite": 0.631578947368421,
+        "Urobilinogen": 0.15789473684210525,
+        "Protein": 0.2631578947368421,
+        "pH": 0.2631578947368421,
+        "Blood": 0.15789473684210525,
+        "Specific Gravity": 0.21052631578947367,
+        "Ketone": 0.10526315789473684,
+        "Bilirubin": 0.3684210526315789,
+        "Glucose": 0.10526315789473684
+      },
+      "counts": {
+        "train_valid_rows": 750,
+        "test_valid_rows": 190,
+        "dropped_predictions": 0,
+        "train_invalid_rows": 0,
+        "test_invalid_rows": 0
+      },
+      "split_index": 4
+    },
+    {
+      "ok": true,
+      "overall": {
+        "accuracy": 0.24736842105263157,
+        "f1_macro": 0.2058521725188392,
+        "f1_weighted": 0.25133287764866713,
+        "cohen_kappa": 0.2318131697249003
+      },
+      "per_analyte_accuracy": {
+        "Leukocytes": 0.15789473684210525,
+        "Nitrite": 0.47368421052631576,
+        "Urobilinogen": 0.15789473684210525,
+        "Protein": 0.3157894736842105,
+        "pH": 0.2631578947368421,
+        "Blood": 0.15789473684210525,
+        "Specific Gravity": 0.21052631578947367,
+        "Ketone": 0.21052631578947367,
+        "Bilirubin": 0.3157894736842105,
+        "Glucose": 0.21052631578947367
+      },
+      "counts": {
+        "train_valid_rows": 750,
+        "test_valid_rows": 190,
+        "dropped_predictions": 0,
+        "train_invalid_rows": 0,
+        "test_invalid_rows": 0
+      },
+      "split_index": 5
+    },
+    {
+      "ok": true,
+      "overall": {
+        "accuracy": 0.1631578947368421,
+        "f1_macro": 0.1248439831773165,
+        "f1_weighted": 0.1572784525416104,
+        "cohen_kappa": 0.1457414319647099
+      },
+      "per_analyte_accuracy": {
+        "Leukocytes": 0.3157894736842105,
+        "Nitrite": 0.47368421052631576,
+        "Urobilinogen": 0.15789473684210525,
+        "Protein": 0.05263157894736842,
+        "pH": 0.10526315789473684,
+        "Blood": 0.05263157894736842,
+        "Specific Gravity": 0.10526315789473684,
+        "Ketone": 0.10526315789473684,
+        "Bilirubin": 0.15789473684210525,
+        "Glucose": 0.10526315789473684
+      },
+      "counts": {
+        "train_valid_rows": 750,
+        "test_valid_rows": 190,
+        "dropped_predictions": 0,
+        "train_invalid_rows": 0,
+        "test_invalid_rows": 0
+      },
+      "split_index": 6
+    },
+    {
+      "ok": true,
+      "overall": {
+        "accuracy": 0.24736842105263157,
+        "f1_macro": 0.19463399103921983,
+        "f1_weighted": 0.21579144969237848,
+        "cohen_kappa": 0.2314872433105165
+      },
+      "per_analyte_accuracy": {
+        "Leukocytes": 0.21052631578947367,
+        "Nitrite": 0.631578947368421,
+        "Urobilinogen": 0.2631578947368421,
+        "Protein": 0.21052631578947367,
+        "pH": 0.21052631578947367,
+        "Blood": 0.21052631578947367,
+        "Specific Gravity": 0.15789473684210525,
+        "Ketone": 0.2631578947368421,
+        "Bilirubin": 0.21052631578947367,
+        "Glucose": 0.10526315789473684
+      },
+      "counts": {
+        "train_valid_rows": 750,
+        "test_valid_rows": 190,
+        "dropped_predictions": 0,
+        "train_invalid_rows": 0,
+        "test_invalid_rows": 0
+      },
+      "split_index": 7
+    },
+    {
+      "ok": true,
+      "overall": {
+        "accuracy": 0.19473684210526315,
+        "f1_macro": 0.1575263214152103,
+        "f1_weighted": 0.20706577048682312,
+        "cohen_kappa": 0.17841901478110955
+      },
+      "per_analyte_accuracy": {
+        "Leukocytes": 0.2631578947368421,
+        "Nitrite": 0.5789473684210527,
+        "Urobilinogen": 0.15789473684210525,
+        "Protein": 0.15789473684210525,
+        "pH": 0.10526315789473684,
+        "Blood": 0.21052631578947367,
+        "Specific Gravity": 0.05263157894736842,
+        "Ketone": 0.10526315789473684,
+        "Bilirubin": 0.21052631578947367,
+        "Glucose": 0.10526315789473684
+      },
+      "counts": {
+        "train_valid_rows": 750,
+        "test_valid_rows": 190,
+        "dropped_predictions": 0,
+        "train_invalid_rows": 0,
+        "test_invalid_rows": 0
+      },
+      "split_index": 8
+    }
+  ]
+}

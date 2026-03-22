@@ -122,19 +122,20 @@ def detect_mode(row: dict[str, str]) -> str:
     if explicit in {"binary", "semiquant"}:
         return explicit
 
-    for candidate in (
-        row.get("class_label", ""),
-        row.get("level", ""),
-        row.get("label_canonical", ""),
-        row.get("label_raw", ""),
-    ):
-        if canonical_binary_label(candidate) is not None:
-            return "binary"
-
     analyte = row.get("analyte", "").strip()
     level = row.get("level", "").strip()
     if analyte and level:
         return "semiquant"
+
+    for candidate in (
+        row.get("class_label", ""),
+        row.get("label_canonical", ""),
+        row.get("label_raw", ""),
+    ):
+        if ":" in candidate:
+            continue
+        if canonical_binary_label(candidate) is not None:
+            return "binary"
 
     return "unknown"
 

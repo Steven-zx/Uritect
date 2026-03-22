@@ -1,0 +1,248 @@
+{
+  "dev_baseline_no_guard": {
+    "accuracy": 1.0,
+    "f1_macro": 1.0,
+    "f1_weighted": 1.0,
+    "cohen_kappa": 1.0,
+    "n": 570
+  },
+  "holdout_baseline_no_guard": {
+    "accuracy": 0.208,
+    "f1_macro": 0.11239299453691999,
+    "f1_weighted": 0.1382833113835806,
+    "cohen_kappa": 0.19137466307277629,
+    "n": 250
+  },
+  "best_guard_from_dev": {
+    "ratio": 0.0,
+    "margin": 0.0,
+    "accuracy": 1.0,
+    "f1_macro": 1.0,
+    "f1_weighted": 1.0,
+    "cohen_kappa": 1.0,
+    "n": 570
+  },
+  "holdout_with_best_guard": {
+    "accuracy": 0.208,
+    "f1_macro": 0.11239299453691999,
+    "f1_weighted": 0.1382833113835806,
+    "cohen_kappa": 0.19137466307277629,
+    "n": 250
+  },
+  "holdout_neg_sensitivity_baseline": {
+    "Leukocytes": {
+      "support_neg": 5,
+      "tp_neg": 3,
+      "fn_neg": 2,
+      "sens_neg": 0.6
+    },
+    "Nitrite": {
+      "support_neg": 13,
+      "tp_neg": 3,
+      "fn_neg": 10,
+      "sens_neg": 0.23076923076923078
+    },
+    "Urobilinogen": {
+      "support_neg": 0,
+      "tp_neg": 0,
+      "fn_neg": 0,
+      "sens_neg": null
+    },
+    "Protein": {
+      "support_neg": 5,
+      "tp_neg": 0,
+      "fn_neg": 5,
+      "sens_neg": 0.0
+    },
+    "pH": {
+      "support_neg": 0,
+      "tp_neg": 0,
+      "fn_neg": 0,
+      "sens_neg": null
+    },
+    "Blood": {
+      "support_neg": 5,
+      "tp_neg": 0,
+      "fn_neg": 5,
+      "sens_neg": 0.0
+    },
+    "Specific Gravity": {
+      "support_neg": 0,
+      "tp_neg": 0,
+      "fn_neg": 0,
+      "sens_neg": null
+    },
+    "Ketone": {
+      "support_neg": 5,
+      "tp_neg": 0,
+      "fn_neg": 5,
+      "sens_neg": 0.0
+    },
+    "Bilirubin": {
+      "support_neg": 7,
+      "tp_neg": 0,
+      "fn_neg": 7,
+      "sens_neg": 0.0
+    },
+    "Glucose": {
+      "support_neg": 5,
+      "tp_neg": 0,
+      "fn_neg": 5,
+      "sens_neg": 0.0
+    }
+  },
+  "holdout_neg_sensitivity_with_guard": {
+    "Leukocytes": {
+      "support_neg": 5,
+      "tp_neg": 3,
+      "fn_neg": 2,
+      "sens_neg": 0.6
+    },
+    "Nitrite": {
+      "support_neg": 13,
+      "tp_neg": 3,
+      "fn_neg": 10,
+      "sens_neg": 0.23076923076923078
+    },
+    "Urobilinogen": {
+      "support_neg": 0,
+      "tp_neg": 0,
+      "fn_neg": 0,
+      "sens_neg": null
+    },
+    "Protein": {
+      "support_neg": 5,
+      "tp_neg": 0,
+      "fn_neg": 5,
+      "sens_neg": 0.0
+    },
+    "pH": {
+      "support_neg": 0,
+      "tp_neg": 0,
+      "fn_neg": 0,
+      "sens_neg": null
+    },
+    "Blood": {
+      "support_neg": 5,
+      "tp_neg": 0,
+      "fn_neg": 5,
+      "sens_neg": 0.0
+    },
+    "Specific Gravity": {
+      "support_neg": 0,
+      "tp_neg": 0,
+      "fn_neg": 0,
+      "sens_neg": null
+    },
+    "Ketone": {
+      "support_neg": 5,
+      "tp_neg": 0,
+      "fn_neg": 5,
+      "sens_neg": 0.0
+    },
+    "Bilirubin": {
+      "support_neg": 7,
+      "tp_neg": 0,
+      "fn_neg": 7,
+      "sens_neg": 0.0
+    },
+    "Glucose": {
+      "support_neg": 5,
+      "tp_neg": 0,
+      "fn_neg": 5,
+      "sens_neg": 0.0
+    }
+  },
+  "top_dev_trials": [
+    {
+      "ratio": 0.0,
+      "margin": 0.0,
+      "accuracy": 1.0,
+      "f1_macro": 1.0,
+      "f1_weighted": 1.0,
+      "cohen_kappa": 1.0,
+      "n": 570
+    },
+    {
+      "ratio": 0.05,
+      "margin": 0.0,
+      "accuracy": 1.0,
+      "f1_macro": 1.0,
+      "f1_weighted": 1.0,
+      "cohen_kappa": 1.0,
+      "n": 570
+    },
+    {
+      "ratio": 0.1,
+      "margin": 0.0,
+      "accuracy": 1.0,
+      "f1_macro": 1.0,
+      "f1_weighted": 1.0,
+      "cohen_kappa": 1.0,
+      "n": 570
+    },
+    {
+      "ratio": 0.2,
+      "margin": 0.0,
+      "accuracy": 1.0,
+      "f1_macro": 1.0,
+      "f1_weighted": 1.0,
+      "cohen_kappa": 1.0,
+      "n": 570
+    },
+    {
+      "ratio": 0.3,
+      "margin": 0.0,
+      "accuracy": 1.0,
+      "f1_macro": 1.0,
+      "f1_weighted": 1.0,
+      "cohen_kappa": 1.0,
+      "n": 570
+    },
+    {
+      "ratio": 0.4,
+      "margin": 0.0,
+      "accuracy": 1.0,
+      "f1_macro": 1.0,
+      "f1_weighted": 1.0,
+      "cohen_kappa": 1.0,
+      "n": 570
+    },
+    {
+      "ratio": 0.0,
+      "margin": 0.005,
+      "accuracy": 0.9982456140350877,
+      "f1_macro": 0.9981435069154366,
+      "f1_weighted": 0.9982412170777822,
+      "cohen_kappa": 0.9982078402273842,
+      "n": 570
+    },
+    {
+      "ratio": 0.05,
+      "margin": 0.005,
+      "accuracy": 0.9982456140350877,
+      "f1_macro": 0.9981435069154366,
+      "f1_weighted": 0.9982412170777822,
+      "cohen_kappa": 0.9982078402273842,
+      "n": 570
+    },
+    {
+      "ratio": 0.1,
+      "margin": 0.005,
+      "accuracy": 0.9982456140350877,
+      "f1_macro": 0.9981435069154366,
+      "f1_weighted": 0.9982412170777822,
+      "cohen_kappa": 0.9982078402273842,
+      "n": 570
+    },
+    {
+      "ratio": 0.2,
+      "margin": 0.005,
+      "accuracy": 0.9982456140350877,
+      "f1_macro": 0.9981435069154366,
+      "f1_weighted": 0.9982412170777822,
+      "cohen_kappa": 0.9982078402273842,
+      "n": 570
+    }
+  ]
+}

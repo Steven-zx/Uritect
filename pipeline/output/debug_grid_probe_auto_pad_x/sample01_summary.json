@@ -1,0 +1,116 @@
+{
+  "image": "C:\\Users\\acer\\Downloads\\Github\\Uritect\\pipeline\\output\\debug_grid_probe\\00_original.png",
+  "global_x_shift_px": 120,
+  "pads": {
+    "Leukocytes": {
+      "base_x": 520,
+      "base_y": 130,
+      "final_x": 526,
+      "final_y": 136,
+      "width": 50,
+      "height": 50,
+      "local_dx": 6,
+      "local_dy": 6,
+      "local_score": 91.61175084114075
+    },
+    "Nitrite": {
+      "base_x": 520,
+      "base_y": 205,
+      "final_x": 534,
+      "final_y": 203,
+      "width": 50,
+      "height": 50,
+      "local_dx": 14,
+      "local_dy": -2,
+      "local_score": 96.55903577804565
+    },
+    "Urobilinogen": {
+      "base_x": 520,
+      "base_y": 280,
+      "final_x": 520,
+      "final_y": 266,
+      "width": 50,
+      "height": 50,
+      "local_dx": 0,
+      "local_dy": -14,
+      "local_score": 70.29748159646988
+    },
+    "Protein": {
+      "base_x": 520,
+      "base_y": 355,
+      "final_x": 512,
+      "final_y": 369,
+      "width": 50,
+      "height": 50,
+      "local_dx": -8,
+      "local_dy": 14,
+      "local_score": 0.9515838176012039
+    },
+    "pH": {
+      "base_x": 520,
+      "base_y": 430,
+      "final_x": 506,
+      "final_y": 444,
+      "width": 50,
+      "height": 50,
+      "local_dx": -14,
+      "local_dy": 14,
+      "local_score": 0.7889703214168549
+    },
+    "Blood": {
+      "base_x": 520,
+      "base_y": 505,
+      "final_x": 506,
+      "final_y": 505,
+      "width": 50,
+      "height": 50,
+      "local_dx": -14,
+      "local_dy": 0,
+      "local_score": 71.2961031794548
+    },
+    "Specific Gravity": {
+      "base_x": 520,
+      "base_y": 580,
+      "final_x": 534,
+      "final_y": 594,
+      "width": 50,
+      "height": 50,
+      "local_dx": 14,
+      "local_dy": 14,
+      "local_score": 1.3973927237093449
+    },
+    "Ketone": {
+      "base_x": 520,
+      "base_y": 655,
+      "final_x": 534,
+      "final_y": 669,
+      "width": 50,
+      "height": 50,
+      "local_dx": 14,
+      "local_dy": 14,
+      "local_score": 1.1529553979635239
+    },
+    "Bilirubin": {
+      "base_x": 520,
+      "base_y": 730,
+      "final_x": 534,
+      "final_y": 744,
+      "width": 50,
+      "height": 50,
+      "local_dx": 14,
+      "local_dy": 14,
+      "local_score": 36.015196710824966
+    },
+    "Glucose": {
+      "base_x": 520,
+      "base_y": 805,
+      "final_x": 534,
+      "final_y": 791,
+      "width": 50,
+      "height": 50,
+      "local_dx": 14,
+      "local_dy": -14,
+      "local_score": 30.736279100179672
+    }
+  }
+}

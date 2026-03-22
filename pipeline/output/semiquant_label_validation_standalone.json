@@ -1,8 +1,8 @@
 {
   "features_path": "C:\\Users\\acer\\Downloads\\Github\\Uritect\\pipeline\\dataset\\features.csv",
-  "total_rows": 820,
-  "semiquant_rows": 820,
-  "valid_rows": 820,
+  "total_rows": 250,
+  "semiquant_rows": 250,
+  "valid_rows": 250,
   "invalid_rows": 0,
   "invalid_examples": []
 }

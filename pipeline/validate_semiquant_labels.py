@@ -42,7 +42,12 @@ def main() -> None:
     with open(features_path, newline="", encoding="utf-8") as file:
         rows = list(csv.DictReader(file))
 
-    semiquant_rows = [r for r in rows if r.get("label_mode", "").strip().lower() == "semiquant"]
+    semiquant_rows = []
+    for row in rows:
+        analyte = row.get("analyte", "").strip()
+        level = row.get("level", "").strip()
+        if analyte and level:
+            semiquant_rows.append(row)
 
     invalid = []
     valid_count = 0

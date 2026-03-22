@@ -1,0 +1,14 @@
+{
+  "total": 111,
+  "load_ok": 111,
+  "rectify_ok": 111,
+  "pads_ok": 111,
+  "load_rate": 1.0,
+  "rectify_rate": 1.0,
+  "pads_rate": 1.0,
+  "height_min": 2908,
+  "height_max": 7055,
+  "width_min": 3850,
+  "width_max": 7055,
+  "failures_sample": []
+}

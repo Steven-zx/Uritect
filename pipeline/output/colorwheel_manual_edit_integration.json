@@ -1,0 +1,21 @@
+{
+  "integrated_at": "2026-03-23T03:54:17.366060",
+  "source_roots": [
+    "C:\\Users\\acer\\Documents\\uritect_training_dataset\\jpg_colorwheel",
+    "C:\\Users\\acer\\Documents\\uritect_training_dataset\\tmp_colorwheel"
+  ],
+  "image_counts": {
+    "C:\\Users\\acer\\Documents\\uritect_training_dataset\\jpg_colorwheel": 82,
+    "C:\\Users\\acer\\Documents\\uritect_training_dataset\\tmp_colorwheel": 29
+  },
+  "qc_report": "C:\\Users\\acer\\Downloads\\Github\\Uritect\\pipeline\\output\\colorwheel_manual_edit_qc.json",
+  "qc_summary": {
+    "total": 111,
+    "load_ok": 111,
+    "rectify_ok": 111,
+    "pads_ok": 111,
+    "load_rate": 1.0,
+    "rectify_rate": 1.0,
+    "pads_rate": 1.0
+  }
+}

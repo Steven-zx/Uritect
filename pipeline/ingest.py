@@ -346,7 +346,6 @@ def main() -> None:
         "batch_id",
         "split",
         "light_kelvin",
-        "label_mode",
         "label_raw",
         "label_canonical",
         "class_label",
@@ -361,7 +360,7 @@ def main() -> None:
     ] + all_feature_columns(ANALYTE_ORDER)
 
     with open(output_path, "w", newline="", encoding="utf-8") as file:
-        writer = csv.DictWriter(file, fieldnames=fieldnames)
+        writer = csv.DictWriter(file, fieldnames=fieldnames, extrasaction="ignore")
         writer.writeheader()
         writer.writerows(all_rows)
 
