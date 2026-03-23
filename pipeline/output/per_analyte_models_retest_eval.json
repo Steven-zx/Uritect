@@ -1,0 +1,751 @@
+{
+  "artifacts": {
+    "train_features": "C:\\Users\\acer\\Downloads\\Github\\Uritect\\pipeline\\output\\features_gold_dev.csv",
+    "test_features": "C:\\Users\\acer\\Downloads\\Github\\Uritect\\pipeline\\output\\features_gold_holdout.csv",
+    "baseline_report": "C:\\Users\\acer\\Downloads\\Github\\Uritect\\pipeline\\output\\semiquant_gold_holdout_eval_retest_diabetic_proxy.json",
+    "generated_at": "2026-03-23T05:10:50.733706+00:00",
+    "model": "Per-analyte KNN(distance), hue sin/cos + S + V",
+    "analytes_evaluated": [
+      "Leukocytes",
+      "Nitrite",
+      "Urobilinogen",
+      "Protein",
+      "pH",
+      "Blood",
+      "Specific Gravity",
+      "Ketone",
+      "Bilirubin",
+      "Glucose"
+    ]
+  },
+  "overall": {
+    "samples_evaluated": 250,
+    "accuracy": 0.188,
+    "f1_macro": 0.07866923818075436,
+    "f1_weighted": 0.09848410770235753,
+    "cohen_kappa": 0.1703991891980252
+  },
+  "baseline_overall": {
+    "accuracy": 0.232,
+    "f1_macro": 0.17443357900874243,
+    "f1_weighted": 0.19221194752959456,
+    "cohen_kappa": 0.21567345871664578
+  },
+  "baseline_scope": "overall",
+  "delta_vs_baseline": {
+    "accuracy": -0.04400000000000001,
+    "f1_macro": -0.09576434082798807,
+    "f1_weighted": -0.09372783982723702,
+    "cohen_kappa": -0.04527426951862057
+  },
+  "per_analyte": {
+    "Leukocytes": {
+      "ok": true,
+      "k_selected": 15,
+      "train_samples": 57,
+      "test_samples": 25,
+      "accuracy": 0.2,
+      "f1_macro": 0.06896551724137931,
+      "f1_weighted": 0.06896551724137931,
+      "cohen_kappa": 0.0,
+      "support_per_level": {
+        "Large 500": 5,
+        "Moderate 125": 5,
+        "Neg": 5,
+        "Small 70": 5,
+        "Trace 15": 5
+      },
+      "confusion_matrix": {
+        "labels": [
+          "Large 500",
+          "Moderate 125",
+          "Neg",
+          "Small 70",
+          "Trace 15"
+        ],
+        "matrix": [
+          [
+            0,
+            0,
+            0,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0,
+            1,
+            4
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            5
+          ]
+        ]
+      }
+    },
+    "Nitrite": {
+      "ok": true,
+      "k_selected": 3,
+      "train_samples": 57,
+      "test_samples": 25,
+      "accuracy": 0.44,
+      "f1_macro": 0.3055555555555556,
+      "f1_weighted": 0.31777777777777777,
+      "cohen_kappa": -0.15894039735099352,
+      "support_per_level": {
+        "Neg": 13,
+        "Positive": 12
+      },
+      "confusion_matrix": {
+        "labels": [
+          "Neg",
+          "Positive"
+        ],
+        "matrix": [
+          [
+            11,
+            2
+          ],
+          [
+            12,
+            0
+          ]
+        ]
+      }
+    },
+    "Urobilinogen": {
+      "ok": true,
+      "k_selected": 11,
+      "train_samples": 57,
+      "test_samples": 25,
+      "accuracy": 0.24,
+      "f1_macro": 0.1380952380952381,
+      "f1_weighted": 0.1380952380952381,
+      "cohen_kappa": 0.050000000000000044,
+      "support_per_level": {
+        "128": 5,
+        "16": 5,
+        "3.2": 5,
+        "32": 5,
+        "64": 5
+      },
+      "confusion_matrix": {
+        "labels": [
+          "128",
+          "16",
+          "3.2",
+          "32",
+          "64"
+        ],
+        "matrix": [
+          [
+            0,
+            5,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            5,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            3,
+            1,
+            1,
+            0
+          ],
+          [
+            0,
+            5,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            5,
+            0,
+            0,
+            0
+          ]
+        ]
+      }
+    },
+    "Protein": {
+      "ok": true,
+      "k_selected": 15,
+      "train_samples": 57,
+      "test_samples": 25,
+      "accuracy": 0.12,
+      "f1_macro": 0.04,
+      "f1_weighted": 0.0384,
+      "cohen_kappa": -0.04961832061068705,
+      "support_per_level": {
+        "0.3": 4,
+        "1.0": 4,
+        "3.0": 4,
+        ">=20.0": 4,
+        "Neg": 5,
+        "Trace": 4
+      },
+      "confusion_matrix": {
+        "labels": [
+          "0.3",
+          "1.0",
+          "3.0",
+          ">=20.0",
+          "Neg",
+          "Trace"
+        ],
+        "matrix": [
+          [
+            3,
+            0,
+            0,
+            1,
+            0,
+            0
+          ],
+          [
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            3,
+            0,
+            0,
+            0,
+            1,
+            0
+          ],
+          [
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            3,
+            0,
+            0,
+            2,
+            0,
+            0
+          ],
+          [
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ]
+      }
+    },
+    "pH": {
+      "ok": true,
+      "k_selected": 11,
+      "train_samples": 57,
+      "test_samples": 25,
+      "accuracy": 0.16,
+      "f1_macro": 0.04081632653061224,
+      "f1_weighted": 0.045714285714285714,
+      "cohen_kappa": 0.0019011406844106071,
+      "support_per_level": {
+        "5.0": 4,
+        "6.0": 4,
+        "6.5": 4,
+        "7.0": 4,
+        "7.5": 3,
+        "8.0": 3,
+        "8.5": 3
+      },
+      "confusion_matrix": {
+        "labels": [
+          "5.0",
+          "6.0",
+          "6.5",
+          "7.0",
+          "7.5",
+          "8.0",
+          "8.5"
+        ],
+        "matrix": [
+          [
+            0,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            3,
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            3,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            3,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            3,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ]
+      }
+    },
+    "Blood": {
+      "ok": true,
+      "k_selected": 1,
+      "train_samples": 57,
+      "test_samples": 25,
+      "accuracy": 0.12,
+      "f1_macro": 0.07474747474747474,
+      "f1_weighted": 0.07175757575757576,
+      "cohen_kappa": -0.04761904761904767,
+      "support_per_level": {
+        "Hemolyzed 10": 4,
+        "Large 200": 4,
+        "Moderate 80": 4,
+        "Neg": 5,
+        "Non-hemolyzed 10": 4,
+        "Small 25": 4
+      },
+      "confusion_matrix": {
+        "labels": [
+          "Hemolyzed 10",
+          "Large 200",
+          "Moderate 80",
+          "Neg",
+          "Non-hemolyzed 10",
+          "Small 25"
+        ],
+        "matrix": [
+          [
+            0,
+            1,
+            1,
+            0,
+            0,
+            2
+          ],
+          [
+            0,
+            1,
+            1,
+            0,
+            0,
+            2
+          ],
+          [
+            0,
+            2,
+            0,
+            0,
+            1,
+            1
+          ],
+          [
+            0,
+            1,
+            2,
+            0,
+            0,
+            2
+          ],
+          [
+            0,
+            1,
+            1,
+            0,
+            0,
+            2
+          ],
+          [
+            0,
+            1,
+            1,
+            0,
+            0,
+            2
+          ]
+        ]
+      }
+    },
+    "Specific Gravity": {
+      "ok": true,
+      "k_selected": 9,
+      "train_samples": 57,
+      "test_samples": 25,
+      "accuracy": 0.16,
+      "f1_macro": 0.047619047619047616,
+      "f1_weighted": 0.05333333333333333,
+      "cohen_kappa": 0.00568181818181801,
+      "support_per_level": {
+        "1.000": 4,
+        "1.005": 4,
+        "1.010": 4,
+        "1.015": 4,
+        "1.020": 3,
+        "1.025": 3,
+        "1.030": 3
+      },
+      "confusion_matrix": {
+        "labels": [
+          "1.000",
+          "1.005",
+          "1.010",
+          "1.015",
+          "1.020",
+          "1.025",
+          "1.030"
+        ],
+        "matrix": [
+          [
+            0,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            3,
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            2,
+            1,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            3,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            1,
+            0,
+            2,
+            0,
+            0
+          ]
+        ]
+      }
+    },
+    "Ketone": {
+      "ok": true,
+      "k_selected": 7,
+      "train_samples": 57,
+      "test_samples": 25,
+      "accuracy": 0.12,
+      "f1_macro": 0.041666666666666664,
+      "f1_weighted": 0.04,
+      "cohen_kappa": -0.04961832061068705,
+      "support_per_level": {
+        "8.0": 4,
+        "Large 16": 4,
+        "Moderate 4.0": 4,
+        "Neg": 5,
+        "Small 1.5": 4,
+        "Trace 0.5": 4
+      },
+      "confusion_matrix": {
+        "labels": [
+          "8.0",
+          "Large 16",
+          "Moderate 4.0",
+          "Neg",
+          "Small 1.5",
+          "Trace 0.5"
+        ],
+        "matrix": [
+          [
+            0,
+            3,
+            0,
+            1,
+            0,
+            0
+          ],
+          [
+            0,
+            3,
+            0,
+            0,
+            1,
+            0
+          ],
+          [
+            0,
+            3,
+            0,
+            0,
+            1,
+            0
+          ],
+          [
+            0,
+            4,
+            0,
+            0,
+            1,
+            0
+          ],
+          [
+            0,
+            4,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            3,
+            0,
+            0,
+            1,
+            0
+          ]
+        ]
+      }
+    },
+    "Bilirubin": {
+      "ok": true,
+      "k_selected": 13,
+      "train_samples": 57,
+      "test_samples": 25,
+      "accuracy": 0.16,
+      "f1_macro": 0.13664596273291924,
+      "f1_weighted": 0.13118012422360248,
+      "cohen_kappa": -0.11702127659574457,
+      "support_per_level": {
+        "Large 100": 6,
+        "Moderate 50": 6,
+        "Neg": 7,
+        "Small 17": 6
+      },
+      "confusion_matrix": {
+        "labels": [
+          "Large 100",
+          "Moderate 50",
+          "Neg",
+          "Small 17"
+        ],
+        "matrix": [
+          [
+            0,
+            0,
+            2,
+            4
+          ],
+          [
+            0,
+            1,
+            1,
+            4
+          ],
+          [
+            1,
+            0,
+            0,
+            6
+          ],
+          [
+            1,
+            0,
+            2,
+            3
+          ]
+        ]
+      }
+    },
+    "Glucose": {
+      "ok": true,
+      "k_selected": 3,
+      "train_samples": 57,
+      "test_samples": 25,
+      "accuracy": 0.16,
+      "f1_macro": 0.08293460925039872,
+      "f1_weighted": 0.07961722488038277,
+      "cohen_kappa": -2.220446049250313e-16,
+      "support_per_level": {
+        "110 ++++": 4,
+        "15 +": 4,
+        "30 ++": 4,
+        "60 +++": 4,
+        "Neg": 5,
+        "Trace 5": 4
+      },
+      "confusion_matrix": {
+        "labels": [
+          "110 ++++",
+          "15 +",
+          "30 ++",
+          "60 +++",
+          "Neg",
+          "Trace 5"
+        ],
+        "matrix": [
+          [
+            3,
+            1,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            3,
+            1,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            2,
+            2,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            2,
+            0,
+            1,
+            0,
+            0,
+            1
+          ],
+          [
+            3,
+            2,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            2,
+            1,
+            1,
+            0,
+            0,
+            0
+          ]
+        ]
+      }
+    }
+  }
+}

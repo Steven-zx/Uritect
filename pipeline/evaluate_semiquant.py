@@ -41,8 +41,21 @@ except ImportError as error:
     sys.exit(1)
 
 FEATURES_PATH = pathlib.Path(__file__).parent / "dataset" / "features.csv"
-MAP_PATH = pathlib.Path(__file__).parent / "output" / "knn_reference_map.json"
+MAP_PATH = pathlib.Path(__file__).parent / "output" / "knn_reference_map_20260323_baseline_restored.json"
 OUTPUT_PATH = pathlib.Path(__file__).parent / "output" / "semiquant_evaluation_metrics.json"
+
+DEFAULT_ANALYTE_DISTANCE_WEIGHTS: dict[str, dict[str, float]] = {
+    "Leukocytes": {"h": 1.35, "s": 0.95, "v": 0.70},
+    "Nitrite": {"h": 1.45, "s": 0.90, "v": 0.65},
+    "Urobilinogen": {"h": 1.15, "s": 1.00, "v": 0.85},
+    "Protein": {"h": 0.95, "s": 1.15, "v": 1.00},
+    "pH": {"h": 1.25, "s": 0.95, "v": 0.80},
+    "Blood": {"h": 1.10, "s": 1.00, "v": 1.00},
+    "Specific Gravity": {"h": 0.80, "s": 1.10, "v": 1.25},
+    "Ketone": {"h": 1.00, "s": 1.05, "v": 1.00},
+    "Bilirubin": {"h": 1.10, "s": 1.00, "v": 0.95},
+    "Glucose": {"h": 0.90, "s": 1.15, "v": 1.10},
+}
 
 
 class LevelRef:
@@ -71,6 +84,20 @@ class EventCenteringConfig:
         self.target_by_light = target_by_light or {}
 
 
+class AbstainConfig:
+    def __init__(
+        self,
+        enabled: bool,
+        min_confidence: float,
+        min_margin: float,
+        max_distance: float,
+    ):
+        self.enabled = enabled
+        self.min_confidence = min(max(min_confidence, 0.0), 1.0)
+        self.min_margin = max(min_margin, 0.0)
+        self.max_distance = max(max_distance, 0.0)
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Evaluate semiquant performance metrics")
     parser.add_argument("--features", type=pathlib.Path, default=FEATURES_PATH, help="Path to features.csv")
@@ -90,6 +117,45 @@ def parse_args() -> argparse.Namespace:
             "Apply event-level HSV centering before prediction: "
             "'auto' follows map metadata, 'on' forces it, 'off' disables it."
         ),
+    )
+    parser.add_argument(
+        "--distance-weight-profile",
+        choices=["legacy", "analyte-v1"],
+        default="legacy",
+        help="Distance weighting profile for HSV channels.",
+    )
+    parser.add_argument(
+        "--distance-weights-json",
+        type=pathlib.Path,
+        default=None,
+        help=(
+            "Optional JSON overrides for per-analyte HSV weights. "
+            "Format: {\"Analyte\": {\"h\": 1.2, \"s\": 1.0, \"v\": 0.8}}"
+        ),
+    )
+    parser.add_argument(
+        "--abstain-band",
+        choices=["off", "on"],
+        default="off",
+        help="Enable confidence/distance abstain band.",
+    )
+    parser.add_argument(
+        "--abstain-min-confidence",
+        type=float,
+        default=0.0,
+        help="Abstain if top class confidence is below this threshold.",
+    )
+    parser.add_argument(
+        "--abstain-min-margin",
+        type=float,
+        default=0.0,
+        help="Abstain if (top1_confidence - top2_confidence) is below this threshold.",
+    )
+    parser.add_argument(
+        "--abstain-max-distance",
+        type=float,
+        default=999.0,
+        help="Abstain if nearest distance exceeds this threshold.",
     )
     return parser.parse_args()
 
@@ -112,12 +178,68 @@ def _safe_float(value: Any, default: float = 0.0) -> float:
         return default
 
 
-def _hsv_distance(a_h: float, a_s: float, a_v: float, b_h: float, b_s: float, b_v: float) -> float:
+def _hsv_distance(
+    a_h: float,
+    a_s: float,
+    a_v: float,
+    b_h: float,
+    b_s: float,
+    b_v: float,
+    w_h: float,
+    w_s: float,
+    w_v: float,
+) -> float:
     raw_hue_delta = abs(a_h - b_h)
     hue_delta = min(raw_hue_delta, 360.0 - raw_hue_delta) / 180.0
     saturation_delta = a_s - b_s
     value_delta = a_v - b_v
-    return math.sqrt((hue_delta * hue_delta) + (saturation_delta * saturation_delta) + (value_delta * value_delta))
+    return math.sqrt(
+        (w_h * hue_delta * hue_delta)
+        + (w_s * saturation_delta * saturation_delta)
+        + (w_v * value_delta * value_delta)
+    )
+
+
+def _load_distance_weights(
+    profile: str,
+    overrides_path: pathlib.Path | None,
+) -> dict[str, tuple[float, float, float]]:
+    if profile == "legacy":
+        weights: dict[str, tuple[float, float, float]] = {
+            analyte: (1.0, 1.0, 1.0) for analyte in ANALYTE_ORDER
+        }
+    else:
+        weights = {
+            analyte: (
+                float(DEFAULT_ANALYTE_DISTANCE_WEIGHTS.get(analyte, {}).get("h", 1.0)),
+                float(DEFAULT_ANALYTE_DISTANCE_WEIGHTS.get(analyte, {}).get("s", 1.0)),
+                float(DEFAULT_ANALYTE_DISTANCE_WEIGHTS.get(analyte, {}).get("v", 1.0)),
+            )
+            for analyte in ANALYTE_ORDER
+        }
+
+    if overrides_path is None:
+        return weights
+
+    if not overrides_path.exists():
+        raise FileNotFoundError(f"Distance weights override file not found: {overrides_path}")
+
+    with open(overrides_path, "r", encoding="utf-8") as file:
+        payload = json.load(file)
+
+    if not isinstance(payload, dict):
+        raise ValueError("distance-weights-json must contain a JSON object")
+
+    for analyte, item in payload.items():
+        if analyte not in ANALYTE_ORDER or not isinstance(item, dict):
+            continue
+        current = weights.get(analyte, (1.0, 1.0, 1.0))
+        h = float(item.get("h", current[0]))
+        s = float(item.get("s", current[1]))
+        v = float(item.get("v", current[2]))
+        weights[analyte] = (max(h, 0.0), max(s, 0.0), max(v, 0.0))
+
+    return weights
 
 
 def _circular_mean_deg(values: list[float]) -> float:
@@ -333,22 +455,46 @@ def predict_one(
     observed_s: float,
     observed_v: float,
     refs: dict[str, list[LevelRef]],
-) -> tuple[str | None, float, float]:
+    distance_weights: dict[str, tuple[float, float, float]],
+    abstain_config: AbstainConfig,
+) -> tuple[str | None, float, float, float, bool]:
     candidates = refs.get(analyte, [])
     if not candidates:
-        return None, 0.0, 0.0
+        return None, 0.0, 0.0, 0.0, True
+
+    w_h, w_s, w_v = distance_weights.get(analyte, (1.0, 1.0, 1.0))
 
     distances: list[tuple[str, float]] = []
     for ref in candidates:
-        d = _hsv_distance(observed_h, observed_s, observed_v, ref.h, ref.s, ref.v)
+        d = _hsv_distance(observed_h, observed_s, observed_v, ref.h, ref.s, ref.v, w_h, w_s, w_v)
         distances.append((ref.level, d))
 
     distances.sort(key=lambda item: item[1])
     best_level, best_distance = distances[0]
 
     inv_scores = [1.0 / (distance + 1e-9) for _, distance in distances]
-    confidence = inv_scores[0] / sum(inv_scores)
-    return best_level, float(confidence), float(best_distance)
+    inv_score_sum = sum(inv_scores)
+    if inv_score_sum <= 0:
+        return None, 0.0, float(best_distance), 0.0, True
+
+    probabilities = [score / inv_score_sum for score in inv_scores]
+    confidence = float(probabilities[0])
+    second_confidence = float(probabilities[1]) if len(probabilities) > 1 else 0.0
+    confidence_margin = confidence - second_confidence
+
+    should_abstain = False
+    if abstain_config.enabled:
+        if confidence < abstain_config.min_confidence:
+            should_abstain = True
+        if confidence_margin < abstain_config.min_margin:
+            should_abstain = True
+        if best_distance > abstain_config.max_distance:
+            should_abstain = True
+
+    if should_abstain:
+        return None, confidence, float(best_distance), float(confidence_margin), True
+
+    return best_level, confidence, float(best_distance), float(confidence_margin), False
 
 
 def evaluate(
@@ -356,14 +502,19 @@ def evaluate(
     refs: dict[str, list[LevelRef]],
     event_anchors: dict[str, tuple[float, float, float]] | None,
     centering_config: EventCenteringConfig,
+    distance_weights: dict[str, tuple[float, float, float]],
+    abstain_config: AbstainConfig,
 ) -> dict[str, Any]:
     per_analyte_true: dict[str, list[str]] = defaultdict(list)
     per_analyte_pred: dict[str, list[str]] = defaultdict(list)
 
     confidence_by_analyte: dict[str, list[float]] = defaultdict(list)
     distance_by_analyte: dict[str, list[float]] = defaultdict(list)
+    margin_by_analyte: dict[str, list[float]] = defaultdict(list)
+    abstained_by_analyte: Counter[str] = Counter()
 
     dropped = 0
+    abstained = 0
 
     for row in rows:
         analyte = row["analyte"].strip()
@@ -389,7 +540,20 @@ def evaluate(
             centering_config,
         )
 
-        pred, confidence, distance = predict_one(analyte, h, s, v, refs)
+        pred, confidence, distance, margin, was_abstained = predict_one(
+            analyte,
+            h,
+            s,
+            v,
+            refs,
+            distance_weights,
+            abstain_config,
+        )
+        if was_abstained:
+            abstained += 1
+            abstained_by_analyte[analyte] += 1
+            continue
+
         if pred is None:
             dropped += 1
             continue
@@ -398,6 +562,7 @@ def evaluate(
         per_analyte_pred[analyte].append(pred)
         confidence_by_analyte[analyte].append(confidence)
         distance_by_analyte[analyte].append(distance)
+        margin_by_analyte[analyte].append(margin)
 
     overall_true: list[str] = []
     overall_pred: list[str] = []
@@ -447,12 +612,19 @@ def evaluate(
                 "min": float(min(conf_values)) if conf_values else 0.0,
                 "max": float(max(conf_values)) if conf_values else 0.0,
             },
+            "confidence_margin": {
+                "mean": float(mean(margin_by_analyte.get(analyte, []))) if margin_by_analyte.get(analyte) else 0.0,
+                "median": float(median(margin_by_analyte.get(analyte, []))) if margin_by_analyte.get(analyte) else 0.0,
+                "min": float(min(margin_by_analyte.get(analyte, []))) if margin_by_analyte.get(analyte) else 0.0,
+                "max": float(max(margin_by_analyte.get(analyte, []))) if margin_by_analyte.get(analyte) else 0.0,
+            },
             "nearest_distance": {
                 "mean": float(mean(dist_values)) if dist_values else 0.0,
                 "median": float(median(dist_values)) if dist_values else 0.0,
                 "min": float(min(dist_values)) if dist_values else 0.0,
                 "max": float(max(dist_values)) if dist_values else 0.0,
             },
+            "abstained_samples": int(abstained_by_analyte.get(analyte, 0)),
         }
 
         overall_true.extend([f"{analyte}:{item}" for item in y_true])
@@ -467,6 +639,8 @@ def evaluate(
         "samples_total": len(rows),
         "samples_evaluated": len(overall_true),
         "samples_dropped": dropped,
+        "samples_abstained": abstained,
+        "coverage": float(len(overall_true) / len(rows)) if rows else 0.0,
         "overall": {
             "accuracy": overall_accuracy,
             "f1_macro": overall_f1_macro,
@@ -483,6 +657,8 @@ def benchmark_latency(
     runs: int,
     event_anchors: dict[str, tuple[float, float, float]] | None,
     centering_config: EventCenteringConfig,
+    distance_weights: dict[str, tuple[float, float, float]],
+    abstain_config: AbstainConfig,
 ) -> dict[str, Any]:
     if runs < 1:
         runs = 1
@@ -523,7 +699,7 @@ def benchmark_latency(
     total_predictions = 0
     for _ in range(runs):
         for analyte, h, s, v in observed_samples:
-            predict_one(analyte, h, s, v, refs)
+            predict_one(analyte, h, s, v, refs, distance_weights, abstain_config)
             total_predictions += 1
     elapsed_ms = (time.perf_counter() - start) * 1000.0
 
@@ -558,14 +734,30 @@ def main() -> None:
         target_by_light=map_centering.target_by_light,
     )
     event_anchors = build_event_anchors(rows) if use_centering else {}
+    distance_weights = _load_distance_weights(args.distance_weight_profile, args.distance_weights_json)
+    abstain_config = AbstainConfig(
+        enabled=args.abstain_band == "on",
+        min_confidence=args.abstain_min_confidence,
+        min_margin=args.abstain_min_margin,
+        max_distance=args.abstain_max_distance,
+    )
 
-    report = evaluate(rows, refs, event_anchors, centering_config)
+    report = evaluate(
+        rows,
+        refs,
+        event_anchors,
+        centering_config,
+        distance_weights,
+        abstain_config,
+    )
     report["latency_benchmark_ms"] = benchmark_latency(
         rows,
         refs,
         runs=args.latency_runs,
         event_anchors=event_anchors,
         centering_config=centering_config,
+        distance_weights=distance_weights,
+        abstain_config=abstain_config,
     )
     report["artifacts"] = {
         "features_path": str(args.features.resolve()),
@@ -589,6 +781,20 @@ def main() -> None:
                 for light, values in sorted(centering_config.target_by_light.items())
             },
             "events_with_anchor": len(event_anchors),
+        },
+        "distance_weighting": {
+            "profile": args.distance_weight_profile,
+            "overrides_path": str(args.distance_weights_json.resolve()) if args.distance_weights_json else None,
+            "weights": {
+                analyte: {"h": weights[0], "s": weights[1], "v": weights[2]}
+                for analyte, weights in sorted(distance_weights.items())
+            },
+        },
+        "abstain_band": {
+            "enabled": abstain_config.enabled,
+            "min_confidence": abstain_config.min_confidence,
+            "min_margin": abstain_config.min_margin,
+            "max_distance": abstain_config.max_distance,
         },
     }
 

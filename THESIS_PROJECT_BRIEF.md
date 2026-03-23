@@ -51,6 +51,19 @@ Design, implement, and evaluate an illumination-invariant image-processing + mul
 - Use Level 1/2/3 control solutions (negative/low abnormal/high abnormal).
 - Capture images across warm/neutral/cool lighting setups.
 
+### Phase 1 Metric Positioning (For Defense)
+- Phase 1 performance must be presented as a **calibrated baseline feasibility result** under strict multiclass semiquant conditions.
+- The current aggregate score (~20% overall accuracy in recent retests) is **not** the final thesis claim and should not be interpreted as final clinical performance.
+- Rationale: Phase 1 prioritizes controlled ground-truth establishment, pipeline stability, and reproducible calibration behavior over peak classification performance.
+- Therefore, Phase 1 success criteria are:
+   1. Stable end-to-end capture-to-inference pipeline,
+   2. Reproducible metrics under frozen evaluation protocol,
+   3. Clear error characterization to guide Phase 2 optimization.
+
+### Phase 2 Performance Claim Window
+- Final performance claims must be reserved for Phase 2+ experiments after targeted data expansion, analyte-level hard-case balancing, and optimized model configuration.
+- Defense wording should emphasize that Phase 1 establishes the baseline and risk map; Phase 2 is the performance-optimization stage.
+
 ### Phase 2 – Model Development
 - Train k-NN with colorimetric ground truth.
 - Tune AWB to minimize cross-light color discrepancy (e.g., Delta E).
@@ -68,6 +81,10 @@ Design, implement, and evaluate an illumination-invariant image-processing + mul
    - Output variance across 2700K/4000K/5500K conditions
 4. **Statistical testing**
    - ANOVA for lighting-condition effect on performance
+
+### Reporting Rule for Current Stage
+- In early-stage reporting to panelists, prioritize **Accuracy** and **F1-macro** as baseline indicators.
+- Keep agreement metrics (e.g., Cohen's kappa) as secondary/supporting analysis unless explicitly required by the panel.
 
 ## Clinical Threshold Basis (From Proposal)
 - Proteinuria risk emphasis at **>=1+ (30 mg/dL)**

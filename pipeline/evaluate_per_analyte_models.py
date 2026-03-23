@@ -31,6 +31,13 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--output", type=pathlib.Path, default=DEFAULT_OUTPUT)
     parser.add_argument("--baseline-report", type=pathlib.Path, default=DEFAULT_BASELINE)
     parser.add_argument("--max-k", type=int, default=15)
+    parser.add_argument(
+        "--analyte",
+        type=str,
+        choices=ANALYTE_ORDER,
+        default=None,
+        help="Optional: evaluate only one analyte (e.g., Leukocytes).",
+    )
     return parser.parse_args()
 
 
@@ -197,7 +204,9 @@ def main() -> None:
     overall_true: list[str] = []
     overall_pred: list[str] = []
 
-    for analyte in ANALYTE_ORDER:
+    analytes_to_run = [args.analyte] if args.analyte else list(ANALYTE_ORDER)
+
+    for analyte in analytes_to_run:
         report = evaluate_analyte(
             analyte=analyte,
             train_items=train_by_analyte.get(analyte, []),
@@ -229,11 +238,28 @@ def main() -> None:
         }
 
     baseline_summary: dict[str, Any] | None = None
+    baseline_scope = "overall"
     baseline_path = args.baseline_report.resolve()
     if baseline_path.exists():
         with open(baseline_path, "r", encoding="utf-8") as file:
             baseline_payload = json.load(file)
-        baseline_summary = baseline_payload.get("overall")
+        if args.analyte:
+            baseline_summary = baseline_payload.get("per_analyte", {}).get(args.analyte)
+            if baseline_summary:
+                baseline_scope = f"per_analyte:{args.analyte}"
+            else:
+                baseline_summary = baseline_payload.get("overall")
+        else:
+            baseline_summary = baseline_payload.get("overall")
+
+    comparison_target = per_analyte.get(args.analyte) if args.analyte else overall
+    delta_vs_baseline = None
+    if baseline_summary and comparison_target and comparison_target.get("ok", True):
+        delta_vs_baseline = {
+            key: (comparison_target[key] - baseline_summary[key])
+            for key in ("accuracy", "f1_macro", "f1_weighted", "cohen_kappa")
+            if key in comparison_target and key in baseline_summary
+        }
 
     report = {
         "artifacts": {
@@ -242,13 +268,12 @@ def main() -> None:
             "baseline_report": str(baseline_path),
             "generated_at": datetime.now(timezone.utc).isoformat(),
             "model": "Per-analyte KNN(distance), hue sin/cos + S + V",
+            "analytes_evaluated": analytes_to_run,
         },
         "overall": overall,
         "baseline_overall": baseline_summary,
-        "delta_vs_baseline": {
-            key: (overall[key] - baseline_summary[key])
-            for key in ("accuracy", "f1_macro", "f1_weighted", "cohen_kappa")
-        } if baseline_summary else None,
+        "baseline_scope": baseline_scope,
+        "delta_vs_baseline": delta_vs_baseline,
         "per_analyte": per_analyte,
     }
 
@@ -263,12 +288,12 @@ def main() -> None:
         f"F1-macro={overall['f1_macro']:.4f}, "
         f"Kappa={overall['cohen_kappa']:.4f}"
     )
-    if baseline_summary:
+    if delta_vs_baseline:
         print(
             "Delta vs baseline: "
-            f"Acc={overall['accuracy'] - baseline_summary['accuracy']:+.4f}, "
-            f"F1-macro={overall['f1_macro'] - baseline_summary['f1_macro']:+.4f}, "
-            f"Kappa={overall['cohen_kappa'] - baseline_summary['cohen_kappa']:+.4f}"
+            f"Acc={delta_vs_baseline.get('accuracy', 0.0):+.4f}, "
+            f"F1-macro={delta_vs_baseline.get('f1_macro', 0.0):+.4f}, "
+            f"Kappa={delta_vs_baseline.get('cohen_kappa', 0.0):+.4f}"
         )
 
 

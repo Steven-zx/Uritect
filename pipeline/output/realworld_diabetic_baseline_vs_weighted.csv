@@ -1,0 +1,10 @@
+Metric,Baseline,Weighted
+overall_accuracy,0.232000,0.236000
+overall_f1_macro,0.174434,0.178203
+overall_cohen_kappa,0.215673,0.219733
+Glucose_accuracy,0.160000,0.160000
+Glucose_f1_macro,0.117063,0.122549
+Glucose_cohen_kappa,-0.003824,-0.001908
+Ketone_accuracy,0.200000,0.200000
+Ketone_f1_macro,0.160909,0.160909
+Ketone_cohen_kappa,0.047619,0.047619

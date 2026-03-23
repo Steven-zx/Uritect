@@ -1,0 +1,244 @@
+{
+  "baseline": {
+    "path": "C:\\Users\\acer\\Downloads\\Github\\Uritect\\pipeline\\output\\semiquant_gold_holdout_eval_restored_prior.json",
+    "accuracy": 0.232,
+    "f1_macro": 0.17443357900874243,
+    "kappa": 0.21567345871664578
+  },
+  "total_eval_reports_scanned": 15,
+  "ranked_by_f1_delta": [
+    {
+      "file": "semiquant_gold_holdout_eval_neg_guard.json",
+      "accuracy": 0.0,
+      "f1_macro": 0.0,
+      "kappa": 0.0,
+      "coverage": 0.0,
+      "samples_evaluated": 0,
+      "samples_total": 0,
+      "delta_vs_baseline": {
+        "accuracy": -0.232,
+        "f1_macro": -0.17443357900874243,
+        "kappa": -0.21567345871664578
+      },
+      "likely_change": "general experiment variant"
+    },
+    {
+      "file": "semiquant_gold_holdout_eval_event_centered_per_light_calibrated.json",
+      "accuracy": 0.204,
+      "f1_macro": 0.06637497488442984,
+      "kappa": 0.18772857889237193,
+      "coverage": 1.0,
+      "samples_evaluated": 250,
+      "samples_total": 250,
+      "delta_vs_baseline": {
+        "accuracy": -0.028000000000000025,
+        "f1_macro": -0.10805860412431259,
+        "kappa": -0.02794487982427385
+      },
+      "likely_change": "event-center strategy variant"
+    },
+    {
+      "file": "semiquant_gold_holdout_eval_edited_colorwheel.json",
+      "accuracy": 0.212,
+      "f1_macro": 0.08652653894095577,
+      "kappa": 0.19495888977883835,
+      "coverage": 1.0,
+      "samples_evaluated": 250,
+      "samples_total": 250,
+      "delta_vs_baseline": {
+        "accuracy": -0.020000000000000018,
+        "f1_macro": -0.08790704006778666,
+        "kappa": -0.02071456893780743
+      },
+      "likely_change": "DEV reference source switched to edited colorwheel set"
+    },
+    {
+      "file": "semiquant_gold_holdout_eval_weighted_abstain_v1.json",
+      "accuracy": 0.20454545454545456,
+      "f1_macro": 0.0982456140350877,
+      "kappa": 0.17558886509635974,
+      "coverage": 0.176,
+      "samples_evaluated": 44,
+      "samples_total": 250,
+      "delta_vs_baseline": {
+        "accuracy": -0.027454545454545454,
+        "f1_macro": -0.07618796497365472,
+        "kappa": -0.040084593620286046
+      },
+      "likely_change": "analyte-specific HSV weighting enabled; confidence/distance abstain band enabled"
+    },
+    {
+      "file": "semiquant_gold_holdout_eval.json",
+      "accuracy": 0.208,
+      "f1_macro": 0.11239299453691999,
+      "kappa": 0.19137466307277629,
+      "coverage": 1.0,
+      "samples_evaluated": 250,
+      "samples_total": 250,
+      "delta_vs_baseline": {
+        "accuracy": -0.02400000000000002,
+        "f1_macro": -0.06204058447182244,
+        "kappa": -0.024298795643869497
+      },
+      "likely_change": "general experiment variant"
+    },
+    {
+      "file": "semiquant_gold_holdout_eval_event_centered_per_light.json",
+      "accuracy": 0.204,
+      "f1_macro": 0.14093368346034324,
+      "kappa": 0.18711806803699227,
+      "coverage": 1.0,
+      "samples_evaluated": 250,
+      "samples_total": 250,
+      "delta_vs_baseline": {
+        "accuracy": -0.028000000000000025,
+        "f1_macro": -0.03349989554839919,
+        "kappa": -0.028555390679653514
+      },
+      "likely_change": "event-center strategy variant"
+    },
+    {
+      "file": "semiquant_gold_holdout_eval_weighted_abstain_light_v1.json",
+      "accuracy": 0.22972972972972974,
+      "f1_macro": 0.1593808454919566,
+      "kappa": 0.21287613715885245,
+      "coverage": 0.592,
+      "samples_evaluated": 148,
+      "samples_total": 250,
+      "delta_vs_baseline": {
+        "accuracy": -0.0022702702702702693,
+        "f1_macro": -0.015052733516785821,
+        "kappa": -0.002797321557793331
+      },
+      "likely_change": "analyte-specific HSV weighting enabled; confidence/distance abstain band enabled"
+    },
+    {
+      "file": "semiquant_gold_holdout_eval_20260323_baseline_restored.json",
+      "accuracy": 0.232,
+      "f1_macro": 0.17443357900874243,
+      "kappa": 0.21567345871664578,
+      "coverage": 1.0,
+      "samples_evaluated": 250,
+      "samples_total": 250,
+      "delta_vs_baseline": {
+        "accuracy": 0.0,
+        "f1_macro": 0.0,
+        "kappa": 0.0
+      },
+      "likely_change": "baseline restored reference map"
+    },
+    {
+      "file": "semiquant_gold_holdout_eval_after_adaptive_grid.json",
+      "accuracy": 0.232,
+      "f1_macro": 0.17443357900874243,
+      "kappa": 0.21567345871664578,
+      "coverage": 1.0,
+      "samples_evaluated": 250,
+      "samples_total": 250,
+      "delta_vs_baseline": {
+        "accuracy": 0.0,
+        "f1_macro": 0.0,
+        "kappa": 0.0
+      },
+      "likely_change": "general experiment variant"
+    },
+    {
+      "file": "semiquant_gold_holdout_eval_event_centered.json",
+      "accuracy": 0.232,
+      "f1_macro": 0.17443357900874243,
+      "kappa": 0.21567345871664578,
+      "coverage": 1.0,
+      "samples_evaluated": 250,
+      "samples_total": 250,
+      "delta_vs_baseline": {
+        "accuracy": 0.0,
+        "f1_macro": 0.0,
+        "kappa": 0.0
+      },
+      "likely_change": "event-center strategy variant"
+    },
+    {
+      "file": "semiquant_gold_holdout_eval_gridlock.json",
+      "accuracy": 0.232,
+      "f1_macro": 0.17443357900874243,
+      "kappa": 0.21567345871664578,
+      "coverage": 1.0,
+      "samples_evaluated": 250,
+      "samples_total": 250,
+      "delta_vs_baseline": {
+        "accuracy": 0.0,
+        "f1_macro": 0.0,
+        "kappa": 0.0
+      },
+      "likely_change": "grid-locked localization experiment"
+    },
+    {
+      "file": "semiquant_gold_holdout_eval_legacy_noabstain.json",
+      "accuracy": 0.232,
+      "f1_macro": 0.17443357900874243,
+      "kappa": 0.21567345871664578,
+      "coverage": 1.0,
+      "samples_evaluated": 250,
+      "samples_total": 250,
+      "delta_vs_baseline": {
+        "accuracy": 0.0,
+        "f1_macro": 0.0,
+        "kappa": 0.0
+      },
+      "likely_change": "confidence/distance abstain band enabled; legacy equal HSV distance weights"
+    },
+    {
+      "file": "semiquant_gold_holdout_eval_per_pad_localized.json",
+      "accuracy": 0.232,
+      "f1_macro": 0.17443357900874243,
+      "kappa": 0.21567345871664578,
+      "coverage": 1.0,
+      "samples_evaluated": 250,
+      "samples_total": 250,
+      "delta_vs_baseline": {
+        "accuracy": 0.0,
+        "f1_macro": 0.0,
+        "kappa": 0.0
+      },
+      "likely_change": "general experiment variant"
+    },
+    {
+      "file": "semiquant_gold_holdout_eval_restored_prior.json",
+      "accuracy": 0.232,
+      "f1_macro": 0.17443357900874243,
+      "kappa": 0.21567345871664578,
+      "coverage": 1.0,
+      "samples_evaluated": 250,
+      "samples_total": 250,
+      "delta_vs_baseline": {
+        "accuracy": 0.0,
+        "f1_macro": 0.0,
+        "kappa": 0.0
+      },
+      "likely_change": "baseline restored reference map"
+    },
+    {
+      "file": "semiquant_gold_holdout_eval_weighted_noabstain_v1.json",
+      "accuracy": 0.236,
+      "f1_macro": 0.17820315275380635,
+      "kappa": 0.21973299344739128,
+      "coverage": 1.0,
+      "samples_evaluated": 250,
+      "samples_total": 250,
+      "delta_vs_baseline": {
+        "accuracy": 0.003999999999999976,
+        "f1_macro": 0.0037695737450639255,
+        "kappa": 0.004059534730745495
+      },
+      "likely_change": "analyte-specific HSV weighting enabled; confidence/distance abstain band enabled"
+    }
+  ],
+  "largest_drop": {
+    "file": "semiquant_gold_holdout_eval_neg_guard.json",
+    "delta_f1": -0.17443357900874243,
+    "delta_accuracy": -0.232,
+    "delta_kappa": -0.21567345871664578,
+    "likely_change": "general experiment variant"
+  },
+  "root_cause_call": "Largest reproducible full-coverage drop is tied to edited-colorwheel reference rebuild. Largest absolute drop overall appears when abstain is too strict, but that is mostly coverage loss rather than model drift."
+}

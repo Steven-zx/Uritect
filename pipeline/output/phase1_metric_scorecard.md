@@ -1,0 +1,29 @@
+# Phase 1 Customized Metric Scorecard
+
+Customized metrics are for Phase 1 feasibility framing only and must not be presented as final-model claims.
+
+|Metric|Value|80% Objective|Pass|
+|---|---:|---:|:---:|
+|overall_accuracy_strict_multiclass|0.232000|0.800000|NO|
+|Leukocytes_adjacent_accuracy|0.560000|0.800000|NO|
+|Leukocytes_coarse_normal_abnormal_accuracy|0.680000|0.800000|NO|
+|Nitrite_adjacent_accuracy|1.000000|0.800000|YES|
+|Nitrite_coarse_normal_abnormal_accuracy|0.400000|0.800000|NO|
+|Urobilinogen_adjacent_accuracy|0.560000|0.800000|NO|
+|Urobilinogen_coarse_normal_abnormal_accuracy|0.640000|0.800000|NO|
+|Protein_adjacent_accuracy|0.480000|0.800000|NO|
+|Protein_coarse_normal_abnormal_accuracy|0.800000|0.800000|YES|
+|pH_adjacent_accuracy|0.320000|0.800000|NO|
+|pH_coarse_normal_abnormal_accuracy|0.800000|0.800000|YES|
+|Blood_adjacent_accuracy|0.480000|0.800000|NO|
+|Blood_coarse_normal_abnormal_accuracy|0.680000|0.800000|NO|
+|Specific Gravity_adjacent_accuracy|0.480000|0.800000|NO|
+|Specific Gravity_coarse_normal_abnormal_accuracy|0.680000|0.800000|NO|
+|Ketone_adjacent_accuracy|0.600000|0.800000|NO|
+|Ketone_coarse_normal_abnormal_accuracy|0.800000|0.800000|YES|
+|Bilirubin_adjacent_accuracy|0.640000|0.800000|NO|
+|Bilirubin_coarse_normal_abnormal_accuracy|0.560000|0.800000|NO|
+|Glucose_adjacent_accuracy|0.520000|0.800000|NO|
+|Glucose_coarse_normal_abnormal_accuracy|0.800000|0.800000|YES|
+|overall_adjacent_accuracy|0.564000|0.800000|NO|
+|overall_coarse_normal_abnormal_accuracy|0.684000|0.800000|NO|
