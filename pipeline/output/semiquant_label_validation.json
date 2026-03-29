@@ -1,0 +1,8 @@
+{
+  "total_input_rows": 0,
+  "valid_rows": 0,
+  "invalid_rows": 0,
+  "dropped_missing_analyte_features": 0,
+  "invalid_examples": [],
+  "level_counts": {}
+}

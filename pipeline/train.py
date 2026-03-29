@@ -11,7 +11,7 @@ Outputs:
   pipeline/output/knn_reference_map.json
 
 Pipeline alignment:
-- Brute-force k-NN (k=5, Euclidean, distance-weighted)
+- Brute-force k-NN (k=5, Hue-Circular Euclidean, distance-weighted)
 - SMOTE augmentation toward a balanced 4,500-sample training library
 - Bayesian fusion with 8-symptom binary vector
 - Risk output: Low / Moderate / High
@@ -54,6 +54,43 @@ try:
     from check_training_readiness import evaluate_binary
 except Exception:
     evaluate_binary = None
+
+
+def _transform_hues_to_circular(X: np.ndarray) -> np.ndarray:
+    """
+    Transform hue values from [0, 360] to circular coordinates using (cos, sin).
+    
+    This converts positions 0,3,6,9,12,15,18,21,24,27 (hues) into their circular
+    equivalents. Euclidean distance in this space equals circular hue distance.
+    
+    Input:  (n_samples, 30) with hue at [0,3,6,9,12,15,18,21,24,27]
+    Output: (n_samples, 40) where each hue replaced by (cos_h, sin_h) pair
+    """
+    X = np.asarray(X, dtype=np.float32)
+    n_samples = X.shape[0]
+    
+    hue_cols = np.array([0, 3, 6, 9, 12, 15, 18, 21, 24, 27], dtype=int)
+    hue_rad = np.radians(X[:, hue_cols])
+    hue_cos = np.cos(hue_rad)
+    hue_sin = np.sin(hue_rad)
+    
+    sv_cols = np.array([i for i in range(30) if i not in hue_cols], dtype=int)
+    sv_data = X[:, sv_cols]
+    
+    result_cols = []
+    hue_idx = 0
+    sv_idx = 0
+    for i in range(40):
+        if i // 2 < len(hue_cols):
+            if i % 2 == 0:
+                result_cols.append(hue_cos[:, i // 2])
+            else:
+                result_cols.append(hue_sin[:, i // 2])
+        else:
+            result_cols.append(sv_data[:, sv_idx])
+            sv_idx += 1
+    
+    return np.column_stack(result_cols).astype(np.float32)
 
 
 def _load_smote() -> Any:
@@ -408,16 +445,19 @@ def train_binary_knn(
         print("[WARN] Training set too small after preprocessing for k=5.")
         return None
 
+    X_train_circular = _transform_hues_to_circular(X_train_fit)
+    X_eval_circular = _transform_hues_to_circular(X_eval)
+
     model = KNeighborsClassifier(
         n_neighbors=5,
         algorithm="brute",
         metric="euclidean",
         weights="distance",
     )
-    model.fit(X_train_fit, y_train_fit)
+    model.fit(X_train_circular, y_train_fit)
 
-    y_pred = model.predict(X_eval)
-    probabilities = model.predict_proba(X_eval)
+    y_pred = model.predict(X_eval_circular)
+    probabilities = model.predict_proba(X_eval_circular)
 
     abnormal_index = list(model.classes_).index(2)
     knn_prob_abnormal = probabilities[:, abnormal_index]
@@ -492,7 +532,7 @@ def train_binary_knn(
             "n_neighbors": 5,
             "algorithm": "brute",
             "weights": "distance",
-            "metric": "euclidean",
+            "metric": "circular_hue_euclidean",
             "feature_columns": feature_columns,
             "split_strategy": split_strategy,
             "smote": {
