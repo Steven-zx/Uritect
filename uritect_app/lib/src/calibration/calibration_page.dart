@@ -21,21 +21,57 @@ class CalibrationPage extends StatefulWidget {
 class _CalibrationPageState extends State<CalibrationPage> {
   static const List<int> _lightOptions = [2700, 4000, 5500];
   static const List<String> _splitOptions = ['train', 'val', 'test'];
-  static const List<String> _labelOptions = ['Normal', 'Abnormal'];
+  static const List<String> _collectionModeOptions = ['individual', 'burst'];
+  static const List<String> _analyteOptions = [
+    'Leukocytes',
+    'Nitrite',
+    'Urobilinogen',
+    'Protein',
+    'pH',
+    'Blood',
+    'Specific Gravity',
+    'Ketone',
+    'Bilirubin',
+    'Glucose',
+  ];
+  static const Map<String, List<String>> _levelOptions = {
+    'Leukocytes': ['Neg', 'Trace 15', 'Small 70', 'Moderate 125', 'Large 500'],
+    'Nitrite': ['Neg', 'Positive'],
+    'Urobilinogen': ['3.2', '16', '32', '64', '128'],
+    'Protein': ['Neg', 'Trace', '0.3', '1.0', '3.0', '>=20.0'],
+    'pH': ['5.0', '6.0', '6.5', '7.0', '7.5', '8.0', '8.5'],
+    'Blood': [
+      'Neg',
+      'Non-hemolyzed 10',
+      'Hemolyzed 10',
+      'Small 25',
+      'Moderate 80',
+      'Large 200',
+    ],
+    'Specific Gravity': ['1.000', '1.005', '1.010', '1.015', '1.020', '1.025', '1.030'],
+    'Ketone': ['Neg', 'Trace 0.5', 'Small 1.5', 'Moderate 4.0', '8.0', 'Large 16'],
+    'Bilirubin': ['Neg', 'Small 17', 'Moderate 50', 'Large 100'],
+    'Glucose': ['Neg', 'Trace 5', '15 +', '30 ++', '60 +++', '110 ++++'],
+  };
 
   final TextEditingController _batchIdController = TextEditingController();
+  final TextEditingController _participantIdController = TextEditingController();
+  final TextEditingController _sampleIdController = TextEditingController();
   final TextEditingController _notesController = TextEditingController();
   final image_picker.ImagePicker _imagePicker = image_picker.ImagePicker();
 
   List<XFile> _selectedImages = const [];
-  String _selectedLabel = 'Normal';
+  String _selectedCollectionMode = 'individual';
+  String _selectedAnalyte = 'Leukocytes';
+  String _selectedLevel = 'Neg';
   int _selectedLightKelvin = 4000;
   String _selectedSplit = 'train';
   String _statusText =
-      'Select a batch, add label, pick images, then build a training-ready package.';
+      'Select a batch, pick a semiquant analyte/level, then build a training-ready package.';
   String _latestZipPath = '';
   String _latestPackageFolderPath = '';
   String _latestEventId = '';
+  final List<String> _createdZipPaths = <String>[];
   bool _isProcessing = false;
   bool _isUploading = false;
   String _uploadStatusText = '';
@@ -53,6 +89,8 @@ class _CalibrationPageState extends State<CalibrationPage> {
   @override
   void dispose() {
     _batchIdController.dispose();
+    _participantIdController.dispose();
+    _sampleIdController.dispose();
     _notesController.dispose();
     _endpointController.dispose();
     super.dispose();
@@ -121,10 +159,13 @@ class _CalibrationPageState extends State<CalibrationPage> {
       return;
     }
 
-    final label = _selectedLabel;
     final batchId = _batchIdController.text.trim().isEmpty
         ? 'batch_unset'
         : _batchIdController.text.trim();
+    final participantId = _participantIdController.text.trim();
+    final sampleId = _sampleIdController.text.trim();
+    final notes = _notesController.text.trim();
+    final label = _buildSemiquantLabel();
 
     if (_selectedImages.isEmpty) {
       setState(() {
@@ -135,16 +176,12 @@ class _CalibrationPageState extends State<CalibrationPage> {
 
     setState(() {
       _isProcessing = true;
-      _statusText =
-          'Building package for ${_selectedImages.length} image(s). Please wait...';
+      _statusText = _selectedCollectionMode == 'individual'
+          ? 'Building one package per photo for ${_selectedImages.length} image(s). Please wait...'
+          : 'Building a burst package for ${_selectedImages.length} image(s). Please wait...';
     });
 
     try {
-      final now = DateTime.now();
-      final timestamp = now.toIso8601String();
-      final eventId = _buildEventId(batchId: batchId, label: label, timestamp: timestamp);
-      final notes = _notesController.text.trim();
-
       final baseDir = await getApplicationDocumentsDirectory();
       final datasetRoot = Directory('${baseDir.path}/uritect_training_dataset');
       final eventsRoot = Directory('${datasetRoot.path}/events');
@@ -164,146 +201,70 @@ class _CalibrationPageState extends State<CalibrationPage> {
         await manifestsRoot.create(recursive: true);
       }
 
-      final eventDir = Directory('${eventsRoot.path}/$eventId');
-      final imagesDir = Directory('${eventDir.path}/images');
-      await imagesDir.create(recursive: true);
-
-      final perBatchManifest = File('${eventDir.path}/batch_manifest.csv');
-      final perBatchIndex = File('${eventDir.path}/training_index.csv');
-      final globalManifest = File('${manifestsRoot.path}/training_manifest.csv');
-
-      if (!await globalManifest.exists()) {
-        await globalManifest.writeAsString(
-          'timestamp_iso8601,event_id,batch_id,label,split,photo_index,file_name,relative_image_path,source_image_path,light_kelvin,notes\n',
-          flush: true,
-        );
-      }
-
-      final batchManifestRows = <String>[
-        'timestamp_iso8601,event_id,batch_id,label,split,photo_index,file_name,relative_image_path,source_image_path,light_kelvin,notes',
-      ];
-      final trainingIndexRows = <String>[
-        'relative_image_path,label,split,event_id,batch_id,light_kelvin',
-      ];
-      final globalRows = <String>[];
-      final copiedFiles = <File>[];
-      var skippedFiles = 0;
-
-      for (var index = 0; index < _selectedImages.length; index++) {
-        final picked = _selectedImages[index];
-        final source = File(picked.path);
-        if (!await source.exists()) {
-          skippedFiles += 1;
-          continue;
+      final buildResults = <_BuildResult>[];
+      if (_selectedCollectionMode == 'individual') {
+        for (var index = 0; index < _selectedImages.length; index++) {
+          final result = await _buildPackageForImages(
+            images: [_selectedImages[index]],
+            batchId: batchId,
+            participantId: participantId,
+            sampleId: sampleId.isEmpty ? 'sample_${index + 1}' : sampleId,
+            label: label,
+            split: _selectedSplit,
+            lightKelvin: _selectedLightKelvin,
+            notes: notes,
+            eventsRoot: eventsRoot,
+            packagesRoot: packagesRoot,
+            manifestsRoot: manifestsRoot,
+            packageSuffix: index + 1,
+          );
+          buildResults.add(result);
         }
-
-        final ext = path.extension(source.path);
-        final safeExtension = ext.isEmpty ? '.jpg' : ext;
-        final fileName = '${(index + 1).toString().padLeft(3, '0')}$safeExtension';
-        final destination = File('${imagesDir.path}/$fileName');
-        await source.copy(destination.path);
-        copiedFiles.add(destination);
-
-        final relativeImagePath = 'events/$eventId/images/$fileName';
-        final row = [
-          timestamp,
-          eventId,
-          batchId,
-          label,
-          _selectedSplit,
-          (index + 1).toString(),
-          fileName,
-          relativeImagePath,
-          source.path,
-          _selectedLightKelvin.toString(),
-          notes,
-        ].map(_csvEscape).join(',');
-
-        batchManifestRows.add(row);
-        globalRows.add(row);
-
-        final indexRow = [
-          relativeImagePath,
-          label,
-          _selectedSplit,
-          eventId,
-          batchId,
-          _selectedLightKelvin.toString(),
-        ].map(_csvEscape).join(',');
-        trainingIndexRows.add(indexRow);
-      }
-
-      if (copiedFiles.isEmpty) {
-        throw StateError(
-          'No readable image files were found from your selection. Please re-pick files from a local folder.',
+      } else {
+        final result = await _buildPackageForImages(
+          images: _selectedImages,
+          batchId: batchId,
+          participantId: participantId,
+          sampleId: sampleId,
+          label: label,
+          split: _selectedSplit,
+          lightKelvin: _selectedLightKelvin,
+          notes: notes,
+          eventsRoot: eventsRoot,
+          packagesRoot: packagesRoot,
+          manifestsRoot: manifestsRoot,
         );
+        buildResults.add(result);
       }
 
-      await perBatchManifest.writeAsString(
-        '${batchManifestRows.join('\n')}\n',
-        flush: true,
-      );
-      await perBatchIndex.writeAsString(
-        '${trainingIndexRows.join('\n')}\n',
-        flush: true,
-      );
-      if (globalRows.isNotEmpty) {
-        await globalManifest.writeAsString(
-          '${globalRows.join('\n')}\n',
-          mode: FileMode.append,
-          flush: true,
-        );
-      }
-
-      final zipFile = File('${packagesRoot.path}/$eventId.zip');
-      final encoder = ZipFileEncoder();
-      encoder.create(zipFile.path);
-      await encoder.addFile(perBatchManifest, 'batch_manifest.csv');
-      await encoder.addFile(perBatchIndex, 'training_index.csv');
-
-      for (final copied in copiedFiles) {
-        await encoder.addFile(copied, 'images/${path.basename(copied.path)}');
-      }
-
-      await encoder.close();
-
-      if (!await zipFile.exists()) {
-        throw StateError('ZIP file was not created.');
-      }
-
-      final zipSize = await zipFile.length();
-      if (zipSize <= 0) {
-        throw StateError('ZIP file is empty.');
-      }
-
-      final zipBytes = await zipFile.readAsBytes();
-      final archive = ZipDecoder().decodeBytes(zipBytes, verify: true);
-      if (archive.files.isEmpty) {
-        throw StateError('ZIP archive has no entries.');
+      if (buildResults.isEmpty) {
+        throw StateError('No readable image files were found from your selection.');
       }
 
       if (!mounted) {
         return;
       }
 
+      final latestResult = buildResults.last;
       setState(() {
-        _latestZipPath = zipFile.path;
+        _createdZipPaths
+          ..clear()
+          ..addAll(buildResults.map((item) => item.zipFile.path));
+        _latestZipPath = latestResult.zipFile.path;
         _latestPackageFolderPath = packagesRoot.path;
-        _latestEventId = eventId;
+        _latestEventId = latestResult.eventId;
         _uploadStatusText = '';
         _statusText =
-            'Package ready: ${copiedFiles.length} image(s) prepared '
-            '(${archive.files.length} ZIP entries). '
-            '${skippedFiles > 0 ? 'Skipped $skippedFiles unreadable file(s). ' : ''}'
-            'ZIP: ${zipFile.path}';
+            'Package ready: ${buildResults.length} package(s), ${buildResults.fold<int>(0, (sum, item) => sum + item.imageCount)} image(s). '
+            'Latest ZIP: ${latestResult.zipFile.path}';
       });
 
-      if (!_isDesktopTarget) {
+      if (!_isDesktopTarget && buildResults.length == 1) {
         await SharePlus.instance.share(
           ShareParams(
-            files: [XFile(zipFile.path)],
-            text: 'Uritect dataset package $eventId',
-            subject: 'Uritect Training Package',
+            files: [XFile(latestResult.zipFile.path)],
+            text: 'Uritect semiquant dataset package ${latestResult.eventId}',
+            subject: 'Uritect Semiquant Package',
           ),
         );
       }
@@ -328,11 +289,175 @@ class _CalibrationPageState extends State<CalibrationPage> {
     required String batchId,
     required String label,
     required String timestamp,
+    int packageSuffix = 0,
   }) {
     final cleanBatchId = _sanitizeToken(batchId);
     final cleanLabel = _sanitizeToken(label);
     final cleanTimestamp = timestamp.replaceAll(':', '-').replaceAll('.', '-');
-    return '${cleanBatchId}_${cleanLabel}_$cleanTimestamp';
+    final suffix = packageSuffix <= 0 ? '' : '_${packageSuffix.toString().padLeft(3, '0')}';
+    return '${cleanBatchId}_${cleanLabel}_$cleanTimestamp$suffix';
+  }
+
+  String _buildSemiquantLabel() {
+    return '$_selectedAnalyte:$_selectedLevel';
+  }
+
+  List<String> _levelsForSelectedAnalyte() {
+    return _levelOptions[_selectedAnalyte] ?? const ['Neg'];
+  }
+
+  void _syncLevelSelection() {
+    final levels = _levelsForSelectedAnalyte();
+    if (!levels.contains(_selectedLevel)) {
+      _selectedLevel = levels.first;
+    }
+  }
+
+  Future<_BuildResult> _buildPackageForImages({
+    required List<XFile> images,
+    required String batchId,
+    required String participantId,
+    required String sampleId,
+    required String label,
+    required String split,
+    required int lightKelvin,
+    required String notes,
+    required Directory eventsRoot,
+    required Directory packagesRoot,
+    required Directory manifestsRoot,
+    int packageSuffix = 0,
+  }) async {
+    final timestamp = DateTime.now().toIso8601String();
+    final eventId = _buildEventId(
+      batchId: batchId,
+      label: label,
+      timestamp: timestamp,
+      packageSuffix: packageSuffix,
+    );
+
+    final eventDir = Directory('${eventsRoot.path}/$eventId');
+    final imagesDir = Directory('${eventDir.path}/images');
+    await imagesDir.create(recursive: true);
+
+    final perBatchManifest = File('${eventDir.path}/batch_manifest.csv');
+    final perBatchIndex = File('${eventDir.path}/training_index.csv');
+    final globalManifest = File('${manifestsRoot.path}/training_manifest.csv');
+
+    if (!await globalManifest.exists()) {
+      await globalManifest.writeAsString(
+        'timestamp_iso8601,event_id,batch_id,participant_id,sample_id,label,collection_mode,split,photo_index,file_name,relative_image_path,source_image_path,light_kelvin,notes\n',
+        flush: true,
+      );
+    }
+
+    final batchManifestRows = <String>[
+      'timestamp_iso8601,event_id,batch_id,participant_id,sample_id,label,collection_mode,split,photo_index,file_name,relative_image_path,source_image_path,light_kelvin,notes',
+    ];
+    final trainingIndexRows = <String>[
+      'relative_image_path,label,split,event_id,batch_id,participant_id,sample_id,collection_mode,light_kelvin',
+    ];
+    final globalRows = <String>[];
+    final copiedFiles = <File>[];
+    var skippedFiles = 0;
+
+    for (var index = 0; index < images.length; index++) {
+      final picked = images[index];
+      final source = File(picked.path);
+      if (!await source.exists()) {
+        skippedFiles += 1;
+        continue;
+      }
+
+      final ext = path.extension(source.path);
+      final safeExtension = ext.isEmpty ? '.jpg' : ext;
+      final fileName = '${(index + 1).toString().padLeft(3, '0')}$safeExtension';
+      final destination = File('${imagesDir.path}/$fileName');
+      await source.copy(destination.path);
+      copiedFiles.add(destination);
+
+      final relativeImagePath = 'events/$eventId/images/$fileName';
+      final row = [
+        timestamp,
+        eventId,
+        batchId,
+        participantId,
+        sampleId,
+        label,
+        _selectedCollectionMode,
+        split,
+        (index + 1).toString(),
+        fileName,
+        relativeImagePath,
+        source.path,
+        lightKelvin.toString(),
+        notes,
+      ].map(_csvEscape).join(',');
+
+      batchManifestRows.add(row);
+      globalRows.add(row);
+
+      final indexRow = [
+        relativeImagePath,
+        label,
+        split,
+        eventId,
+        batchId,
+        participantId,
+        sampleId,
+        _selectedCollectionMode,
+        lightKelvin.toString(),
+      ].map(_csvEscape).join(',');
+      trainingIndexRows.add(indexRow);
+    }
+
+    if (copiedFiles.isEmpty) {
+      throw StateError('No readable image files were found from your selection.');
+    }
+
+    await perBatchManifest.writeAsString('${batchManifestRows.join('\n')}\n', flush: true);
+    await perBatchIndex.writeAsString('${trainingIndexRows.join('\n')}\n', flush: true);
+    if (globalRows.isNotEmpty) {
+      await globalManifest.writeAsString(
+        '${globalRows.join('\n')}\n',
+        mode: FileMode.append,
+        flush: true,
+      );
+    }
+
+    final zipFile = File('${packagesRoot.path}/$eventId.zip');
+    final encoder = ZipFileEncoder();
+    encoder.create(zipFile.path);
+    await encoder.addFile(perBatchManifest, 'batch_manifest.csv');
+    await encoder.addFile(perBatchIndex, 'training_index.csv');
+
+    for (final copied in copiedFiles) {
+      await encoder.addFile(copied, 'images/${path.basename(copied.path)}');
+    }
+
+    await encoder.close();
+
+    if (!await zipFile.exists()) {
+      throw StateError('ZIP file was not created.');
+    }
+
+    final zipSize = await zipFile.length();
+    if (zipSize <= 0) {
+      throw StateError('ZIP file is empty.');
+    }
+
+    final zipBytes = await zipFile.readAsBytes();
+    final archive = ZipDecoder().decodeBytes(zipBytes, verify: true);
+    if (archive.files.isEmpty) {
+      throw StateError('ZIP archive has no entries.');
+    }
+
+    return _BuildResult(
+      eventId: eventId,
+      zipFile: zipFile,
+      imageCount: copiedFiles.length,
+      skippedFiles: skippedFiles,
+      archiveEntries: archive.files.length,
+    );
   }
 
   String _sanitizeToken(String raw) {
@@ -399,7 +524,12 @@ class _CalibrationPageState extends State<CalibrationPage> {
       final request = http.MultipartRequest('POST', uri)
         ..fields['event_id'] = _latestEventId
         ..fields['batch_id'] = _batchIdController.text.trim()
-        ..fields['label'] = _selectedLabel
+        ..fields['participant_id'] = _participantIdController.text.trim()
+        ..fields['sample_id'] = _sampleIdController.text.trim()
+        ..fields['collection_mode'] = _selectedCollectionMode
+        ..fields['analyte'] = _selectedAnalyte
+        ..fields['level'] = _selectedLevel
+        ..fields['label'] = _buildSemiquantLabel()
         ..fields['split'] = _selectedSplit
         ..fields['light_kelvin'] = _selectedLightKelvin.toString()
         ..files.add(
@@ -509,15 +639,42 @@ class _CalibrationPageState extends State<CalibrationPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Uritect Data Collection'),
+        title: const Text('Uritect Semiquant Collection'),
       ),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
           const Text(
-            'Camera capture is disabled. This app now collects existing images, labels them, and builds training-ready packages.',
+            'Use this screen to package semiquant strip photos with participant/sample metadata. Individual-photo mode is the default; burst mode stays available for same-sample bursts.',
           ),
           const SizedBox(height: 16),
+          DropdownButtonFormField<String>(
+            initialValue: _selectedCollectionMode,
+            items: _collectionModeOptions
+                .map(
+                  (value) => DropdownMenuItem(
+                    value: value,
+                    child: Text(value == 'individual' ? 'Individual photo each' : '10-photo burst bundle'),
+                  ),
+                )
+                .toList(growable: false),
+            onChanged: _isProcessing
+                ? null
+                : (value) {
+                    if (value == null) {
+                      return;
+                    }
+                    setState(() {
+                      _selectedCollectionMode = value;
+                    });
+                  },
+            decoration: const InputDecoration(
+              labelText: 'Collection Mode',
+              helperText: 'Prefer individual photo each for semiquant ground truth. Use burst only when the same urine sample is captured repeatedly.',
+              border: OutlineInputBorder(),
+            ),
+          ),
+          const SizedBox(height: 12),
           TextField(
             controller: _batchIdController,
             enabled: !_isProcessing,
@@ -528,9 +685,29 @@ class _CalibrationPageState extends State<CalibrationPage> {
             ),
           ),
           const SizedBox(height: 12),
+          TextField(
+            controller: _participantIdController,
+            enabled: !_isProcessing,
+            decoration: const InputDecoration(
+              labelText: 'Participant ID',
+              hintText: 'e.g., P001',
+              border: OutlineInputBorder(),
+            ),
+          ),
+          const SizedBox(height: 12),
+          TextField(
+            controller: _sampleIdController,
+            enabled: !_isProcessing,
+            decoration: const InputDecoration(
+              labelText: 'Sample ID',
+              hintText: 'e.g., P001-S1',
+              border: OutlineInputBorder(),
+            ),
+          ),
+          const SizedBox(height: 12),
           DropdownButtonFormField<String>(
-            initialValue: _selectedLabel,
-            items: _labelOptions
+            initialValue: _selectedAnalyte,
+            items: _analyteOptions
                 .map((value) => DropdownMenuItem(value: value, child: Text(value)))
                 .toList(growable: false),
             onChanged: _isProcessing
@@ -540,12 +717,34 @@ class _CalibrationPageState extends State<CalibrationPage> {
                       return;
                     }
                     setState(() {
-                      _selectedLabel = value;
+                      _selectedAnalyte = value;
+                      _syncLevelSelection();
                     });
                   },
             decoration: const InputDecoration(
-              labelText: 'Label',
-              helperText: 'Use binary labels only for current data collection.',
+              labelText: 'Analyte',
+              border: OutlineInputBorder(),
+            ),
+          ),
+          const SizedBox(height: 12),
+          DropdownButtonFormField<String>(
+            initialValue: _selectedLevel,
+            items: _levelsForSelectedAnalyte()
+                .map((value) => DropdownMenuItem(value: value, child: Text(value)))
+                .toList(growable: false),
+            onChanged: _isProcessing
+                ? null
+                : (value) {
+                    if (value == null) {
+                      return;
+                    }
+                    setState(() {
+                      _selectedLevel = value;
+                    });
+                  },
+            decoration: const InputDecoration(
+              labelText: 'Level',
+              helperText: 'This becomes the semiquant label written into the package.',
               border: OutlineInputBorder(),
             ),
           ),
@@ -607,7 +806,7 @@ class _CalibrationPageState extends State<CalibrationPage> {
             icon: const Icon(Icons.photo_library_outlined),
             label: Text(
               _selectedImages.isEmpty
-                  ? 'Pick Batch Images'
+                  ? 'Pick Photos'
                   : 'Picked ${_selectedImages.length} image(s) · Pick Again',
             ),
           ),
@@ -623,7 +822,51 @@ class _CalibrationPageState extends State<CalibrationPage> {
                 : const Icon(Icons.inventory_2_outlined),
             label: Text(_isProcessing ? 'Building Package...' : 'Build Training Package'),
           ),
-          if (_latestZipPath.isNotEmpty) ...[const SizedBox(height: 16), const Divider(), const SizedBox(height: 8), const Text('Upload to Pipeline', style: TextStyle(fontWeight: FontWeight.bold)), const SizedBox(height: 8), TextField(controller: _endpointController, enabled: !_isUploading && !_isProcessing, decoration: const InputDecoration(labelText: 'Pipeline Endpoint URL', hintText: 'https://your-server/api/upload', border: OutlineInputBorder()), keyboardType: TextInputType.url), const SizedBox(height: 8), FilledButton.icon(onPressed: _isUploading || _isProcessing ? null : _uploadPackage, icon: _isUploading ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white)) : const Icon(Icons.cloud_upload_outlined), label: Text(_isUploading ? 'Uploading...' : 'Upload Package')), if (_uploadStatusText.isNotEmpty) ...[const SizedBox(height: 8), Container(padding: const EdgeInsets.all(12), decoration: BoxDecoration(border: Border.all(color: Theme.of(context).dividerColor), borderRadius: BorderRadius.circular(8)), child: SelectableText(_uploadStatusText))], const SizedBox(height: 8)],
+          if (_latestZipPath.isNotEmpty) ...[
+            const SizedBox(height: 16),
+            const Divider(),
+            const SizedBox(height: 8),
+            const Text('Upload to Pipeline', style: TextStyle(fontWeight: FontWeight.bold)),
+            const SizedBox(height: 8),
+            TextField(
+              controller: _endpointController,
+              enabled: !_isUploading && !_isProcessing,
+              decoration: const InputDecoration(
+                labelText: 'Pipeline Endpoint URL',
+                hintText: 'https://your-server/api/upload',
+                border: OutlineInputBorder(),
+              ),
+              keyboardType: TextInputType.url,
+            ),
+            const SizedBox(height: 8),
+            FilledButton.icon(
+              onPressed: _isUploading || _isProcessing ? null : _uploadPackage,
+              icon: _isUploading
+                  ? const SizedBox(
+                      width: 16,
+                      height: 16,
+                      child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                    )
+                  : const Icon(Icons.cloud_upload_outlined),
+              label: Text(_isUploading ? 'Uploading...' : 'Upload Latest Package'),
+            ),
+            if (_uploadStatusText.isNotEmpty) ...[
+              const SizedBox(height: 8),
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Theme.of(context).dividerColor),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: SelectableText(_uploadStatusText),
+              ),
+            ],
+            if (_createdZipPaths.isNotEmpty) ...[
+              const SizedBox(height: 8),
+              Text('Created packages: ${_createdZipPaths.length}'),
+            ],
+            const SizedBox(height: 8),
+          ],
           if (_isDesktopTarget && _latestZipPath.isNotEmpty) ...[
             const SizedBox(height: 8),
             OutlinedButton.icon(
@@ -671,10 +914,26 @@ class _CalibrationPageState extends State<CalibrationPage> {
           ],
           const SizedBox(height: 12),
           const Text(
-            'Output includes: batch_manifest.csv, training_index.csv, and a ZIP package ready for your training pipeline upload.',
+            'Output includes: batch_manifest.csv, training_index.csv, and ZIP package(s) ready for your training pipeline upload.',
           ),
         ],
       ),
     );
   }
+}
+
+class _BuildResult {
+  const _BuildResult({
+    required this.eventId,
+    required this.zipFile,
+    required this.imageCount,
+    required this.skippedFiles,
+    required this.archiveEntries,
+  });
+
+  final String eventId;
+  final File zipFile;
+  final int imageCount;
+  final int skippedFiles;
+  final int archiveEntries;
 }
