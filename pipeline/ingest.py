@@ -185,7 +185,7 @@ def _split_name(raw: str) -> str:
     return "train"
 
 
-def process_zip(zip_path: pathlib.Path, pipeline: BurstFeaturePipeline) -> tuple[list[dict], int]:
+def process_zip(zip_path: pathlib.Path, pipeline: BurstFeaturePipeline, feature_space: str = "hsv") -> tuple[list[dict], int]:
     rows_out: list[dict] = []
     skipped_bursts = 0
 
@@ -279,7 +279,7 @@ def process_zip(zip_path: pathlib.Path, pipeline: BurstFeaturePipeline) -> tuple
 
             for analyte_name in ANALYTE_ORDER:
                 h, s, v = burst_result.features_by_pad[analyte_name]
-                col_h, col_s, col_v = feature_columns_for_analyte(analyte_name)
+                col_h, col_s, col_v = feature_columns_for_analyte(analyte_name, feature_space=feature_space)
                 common_row[col_h] = h
                 common_row[col_s] = s
                 common_row[col_v] = v
@@ -308,6 +308,23 @@ def process_zip(zip_path: pathlib.Path, pipeline: BurstFeaturePipeline) -> tuple
 
 
 def main() -> None:
+    import argparse
+
+    parser = argparse.ArgumentParser(description="Ingest Uritect training ZIPs into features.csv")
+    parser.add_argument(
+        "--feature-space",
+        choices=["hsv", "normalized_hsv", "lab"],
+        default="hsv",
+        help="Feature space to extract from the burst pipeline.",
+    )
+    parser.add_argument(
+        "--output",
+        type=pathlib.Path,
+        default=OUTPUT_DIR / "features.csv",
+        help="Output CSV path for the ingested features.",
+    )
+    args = parser.parse_args()
+
     if not PACKAGES_DIR.exists():
         print(f"Packages directory not found:\n  {PACKAGES_DIR}")
         print("Build at least one training package in the Uritect app first.")
@@ -320,13 +337,15 @@ def main() -> None:
 
     print(f"Found {len(zip_files)} ZIP(s) in:\n  {PACKAGES_DIR}\n")
 
-    pipeline = BurstFeaturePipeline()
+    from vision_pipeline import VisionPipelineConfig, all_feature_columns
+
+    pipeline = BurstFeaturePipeline(VisionPipelineConfig(feature_space=args.feature_space))
     all_rows: list[dict] = []
     total_skipped_bursts = 0
 
     for zip_file in zip_files:
         print(f"Processing {zip_file.name} ...")
-        rows, skipped_bursts = process_zip(zip_file, pipeline)
+        rows, skipped_bursts = process_zip(zip_file, pipeline, feature_space=args.feature_space)
         all_rows.extend(rows)
         total_skipped_bursts += skipped_bursts
         print(f"  -> {len(rows)} burst feature vector(s), skipped bursts: {skipped_bursts}")
@@ -339,7 +358,7 @@ def main() -> None:
         sys.exit(1)
 
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-    output_path = OUTPUT_DIR / "features.csv"
+    output_path = args.output
 
     fieldnames = [
         "event_id",
@@ -357,7 +376,7 @@ def main() -> None:
         "frames_used",
         "frames_skipped",
         "frame_errors",
-    ] + all_feature_columns(ANALYTE_ORDER)
+    ] + all_feature_columns(ANALYTE_ORDER, feature_space=args.feature_space)
 
     with open(output_path, "w", newline="", encoding="utf-8") as file:
         writer = csv.DictWriter(file, fieldnames=fieldnames, extrasaction="ignore")

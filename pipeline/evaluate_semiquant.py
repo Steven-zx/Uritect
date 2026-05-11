@@ -41,7 +41,8 @@ except ImportError as error:
     sys.exit(1)
 
 FEATURES_PATH = pathlib.Path(__file__).parent / "dataset" / "features.csv"
-MAP_PATH = pathlib.Path(__file__).parent / "output" / "knn_reference_map_20260323_baseline_restored.json"
+CURRENT_MAP_PATH = pathlib.Path(__file__).parent / "output" / "knn_reference_map.json"
+LEGACY_MAP_PATH = pathlib.Path(__file__).parent / "output" / "knn_reference_map_20260323_baseline_restored.json"
 OUTPUT_PATH = pathlib.Path(__file__).parent / "output" / "semiquant_evaluation_metrics.json"
 
 DEFAULT_ANALYTE_DISTANCE_WEIGHTS: dict[str, dict[str, float]] = {
@@ -101,7 +102,12 @@ class AbstainConfig:
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Evaluate semiquant performance metrics")
     parser.add_argument("--features", type=pathlib.Path, default=FEATURES_PATH, help="Path to features.csv")
-    parser.add_argument("--map", type=pathlib.Path, default=MAP_PATH, help="Path to knn_reference_map.json")
+    parser.add_argument(
+        "--map",
+        type=pathlib.Path,
+        default=None,
+        help="Path to knn_reference_map.json (defaults to the current training map if present).",
+    )
     parser.add_argument("--output", type=pathlib.Path, default=OUTPUT_PATH, help="Path for output JSON report")
     parser.add_argument(
         "--latency-runs",
@@ -717,7 +723,10 @@ def main() -> None:
     args = parse_args()
 
     features = load_features(args.features)
-    refs, map_centering = load_reference_map(args.map)
+    map_path = args.map
+    if map_path is None:
+        map_path = CURRENT_MAP_PATH if CURRENT_MAP_PATH.exists() else LEGACY_MAP_PATH
+    refs, map_centering = load_reference_map(map_path)
 
     rows = semiquant_rows(features)
     if not rows:
@@ -761,7 +770,7 @@ def main() -> None:
     )
     report["artifacts"] = {
         "features_path": str(args.features.resolve()),
-        "reference_map_path": str(args.map.resolve()),
+        "reference_map_path": str(map_path.resolve()),
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "event_hsv_centering": {
             "mode": args.event_center_hsv,

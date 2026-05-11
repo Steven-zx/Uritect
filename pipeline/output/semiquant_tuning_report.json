@@ -1,0 +1,109 @@
+{
+  "features_path": "C:\\Users\\acer\\Downloads\\Github\\Uritect\\pipeline\\dataset\\features.csv",
+  "reference_map_path": "C:\\Users\\acer\\Downloads\\Github\\Uritect\\pipeline\\output\\knn_reference_map_20260323_baseline_restored.json",
+  "candidate_count": 4,
+  "results": [
+    {
+      "event_center_hsv": "off",
+      "distance_weight_profile": "analyte-v1",
+      "accuracy": 0.22285714285714286,
+      "f1_macro": 0.11867291444086367,
+      "f1_weighted": 0.2157624240999682,
+      "cohen_kappa": 0.2058882683255675,
+      "latency_ms_per_run": 628.3576000000721,
+      "latency_ms_per_prediction": 0.06649286772487535
+    },
+    {
+      "event_center_hsv": "off",
+      "distance_weight_profile": "legacy",
+      "accuracy": 0.21883597883597883,
+      "f1_macro": 0.1155058863972452,
+      "f1_weighted": 0.20863451940511055,
+      "cohen_kappa": 0.20211282108857265,
+      "latency_ms_per_run": 545.817500000112,
+      "latency_ms_per_prediction": 0.05775846560847746
+    },
+    {
+      "event_center_hsv": "on",
+      "distance_weight_profile": "analyte-v1",
+      "accuracy": 0.20613756613756615,
+      "f1_macro": 0.11331867005771648,
+      "f1_weighted": 0.1983333935235057,
+      "cohen_kappa": 0.19007139043965293,
+      "latency_ms_per_run": 489.83659999998963,
+      "latency_ms_per_prediction": 0.05183456084655975
+    },
+    {
+      "event_center_hsv": "on",
+      "distance_weight_profile": "legacy",
+      "accuracy": 0.20687830687830688,
+      "f1_macro": 0.11305245267627267,
+      "f1_weighted": 0.20252015635822415,
+      "cohen_kappa": 0.19076423691784783,
+      "latency_ms_per_run": 438.01540000004024,
+      "latency_ms_per_prediction": 0.04635083597884024
+    }
+  ],
+  "best_overall": {
+    "accuracy": 0.22285714285714286,
+    "f1_macro": 0.11867291444086367,
+    "f1_weighted": 0.2157624240999682,
+    "cohen_kappa": 0.2058882683255675
+  },
+  "best_candidate": {
+    "event_center_hsv": "off",
+    "distance_weight_profile": "analyte-v1"
+  },
+  "best_per_analyte": {
+    "Leukocytes": {
+      "accuracy": 0.2740740740740741,
+      "f1_macro": 0.15626649620708905,
+      "cohen_kappa": 0.027328488005713747
+    },
+    "Nitrite": {
+      "accuracy": 0.42962962962962964,
+      "f1_macro": 0.3459586199457871,
+      "cohen_kappa": -0.014241253039109836
+    },
+    "Urobilinogen": {
+      "accuracy": 0.182010582010582,
+      "f1_macro": 0.12856874889642153,
+      "cohen_kappa": -0.012891229471372334
+    },
+    "Protein": {
+      "accuracy": 0.06455026455026455,
+      "f1_macro": 0.04840218046065658,
+      "cohen_kappa": -0.0037114422719937146
+    },
+    "pH": {
+      "accuracy": 0.0380952380952381,
+      "f1_macro": 0.029836603155237694,
+      "cohen_kappa": -0.007064652236455915
+    },
+    "Blood": {
+      "accuracy": 0.346031746031746,
+      "f1_macro": 0.15254185952034877,
+      "cohen_kappa": 0.06316772218907007
+    },
+    "Specific Gravity": {
+      "accuracy": 0.2,
+      "f1_macro": 0.1096381982392632,
+      "cohen_kappa": -0.010658012748873125
+    },
+    "Ketone": {
+      "accuracy": 0.14603174603174604,
+      "f1_macro": 0.11940555239924662,
+      "cohen_kappa": 0.019164878922105832
+    },
+    "Bilirubin": {
+      "accuracy": 0.491005291005291,
+      "f1_macro": 0.2578785461643396,
+      "cohen_kappa": 0.07205982324949012
+    },
+    "Glucose": {
+      "accuracy": 0.05714285714285714,
+      "f1_macro": 0.0603847609495223,
+      "cohen_kappa": 0.008511309750207086
+    }
+  }
+}

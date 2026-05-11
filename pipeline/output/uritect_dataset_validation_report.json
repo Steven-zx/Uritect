@@ -1,0 +1,36 @@
+{
+  "source_file": "pipeline\\dataset\\URITECT_DATASET.csv",
+  "raw_rows_read": 1048575,
+  "non_empty_rows": 175,
+  "unique_ids": 175,
+  "duplicate_ids": [],
+  "missing_ids_001_170": [],
+  "extra_ids_gt_170": [
+    "171",
+    "172",
+    "173",
+    "174",
+    "175"
+  ],
+  "issue_counts": {
+    "canonicalized": 1,
+    "invalid_value": 1
+  },
+  "issues": [
+    {
+      "line": 70,
+      "id": "069",
+      "column": "Leukocytes",
+      "issue": "canonicalized",
+      "from": "Moderate",
+      "to": "Moderate 125"
+    },
+    {
+      "line": 98,
+      "id": "097",
+      "column": "Nitrite",
+      "issue": "invalid_value",
+      "value": "Large"
+    }
+  ]
+}

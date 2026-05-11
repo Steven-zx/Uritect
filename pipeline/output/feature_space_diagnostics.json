@@ -1,0 +1,488 @@
+{
+  "features_path": "C:\\Users\\acer\\Downloads\\Github\\Uritect\\pipeline\\dataset\\features.csv",
+  "rows": 9450,
+  "feature_count": 30,
+  "analyte_count": 10,
+  "level_count": 54,
+  "sparse_groups_below_10": [],
+  "per_analyte_nearest_centroids": {
+    "Bilirubin": [
+      {
+        "level_a": "Large 100",
+        "level_b": "Moderate 50",
+        "distance": 0.05430978969300357
+      },
+      {
+        "level_a": "Large 100",
+        "level_b": "Neg",
+        "distance": 0.14312800303883583
+      },
+      {
+        "level_a": "Moderate 50",
+        "level_b": "Small 17",
+        "distance": 0.14415801367070302
+      },
+      {
+        "level_a": "Moderate 50",
+        "level_b": "Neg",
+        "distance": 0.15819451228954118
+      },
+      {
+        "level_a": "Large 100",
+        "level_b": "Small 17",
+        "distance": 0.19381154035954848
+      }
+    ],
+    "Blood": [
+      {
+        "level_a": "Hemolyzed 10",
+        "level_b": "Moderate 80",
+        "distance": 0.022184695132469047
+      },
+      {
+        "level_a": "Large 200",
+        "level_b": "Small 25",
+        "distance": 0.05849207017780215
+      },
+      {
+        "level_a": "Hemolyzed 10",
+        "level_b": "Small 25",
+        "distance": 0.07200488240522009
+      },
+      {
+        "level_a": "Moderate 80",
+        "level_b": "Small 25",
+        "distance": 0.09389295785001874
+      },
+      {
+        "level_a": "Hemolyzed 10",
+        "level_b": "Large 200",
+        "distance": 0.1257061133645377
+      }
+    ],
+    "Glucose": [
+      {
+        "level_a": "30 ++",
+        "level_b": "60 +++",
+        "distance": 0.03329988406085611
+      },
+      {
+        "level_a": "60 +++",
+        "level_b": "Trace 5",
+        "distance": 0.09771942774186707
+      },
+      {
+        "level_a": "110 ++++",
+        "level_b": "Trace 5",
+        "distance": 0.11066824395333201
+      },
+      {
+        "level_a": "30 ++",
+        "level_b": "Trace 5",
+        "distance": 0.11424893535142099
+      },
+      {
+        "level_a": "15 +",
+        "level_b": "Trace 5",
+        "distance": 0.12702570309007707
+      }
+    ],
+    "Ketone": [
+      {
+        "level_a": "8.0",
+        "level_b": "Small 1.5",
+        "distance": 0.05503831156081911
+      },
+      {
+        "level_a": "Neg",
+        "level_b": "Trace 0.5",
+        "distance": 0.05644032237413142
+      },
+      {
+        "level_a": "Moderate 4.0",
+        "level_b": "Small 1.5",
+        "distance": 0.06232331624933835
+      },
+      {
+        "level_a": "Large 16",
+        "level_b": "Moderate 4.0",
+        "distance": 0.06926264350428064
+      },
+      {
+        "level_a": "8.0",
+        "level_b": "Moderate 4.0",
+        "distance": 0.10924524571371048
+      }
+    ],
+    "Leukocytes": [
+      {
+        "level_a": "Moderate 125",
+        "level_b": "Small 70",
+        "distance": 0.038643127559438786
+      },
+      {
+        "level_a": "Large 500",
+        "level_b": "Small 70",
+        "distance": 0.05349667565272661
+      },
+      {
+        "level_a": "Large 500",
+        "level_b": "Moderate 125",
+        "distance": 0.054123053937864304
+      },
+      {
+        "level_a": "Neg",
+        "level_b": "Trace 15",
+        "distance": 0.05499042117242282
+      },
+      {
+        "level_a": "Large 500",
+        "level_b": "Trace 15",
+        "distance": 0.20258832408138777
+      }
+    ],
+    "Nitrite": [
+      {
+        "level_a": "Neg",
+        "level_b": "Positive",
+        "distance": 0.04842636658639199
+      }
+    ],
+    "Protein": [
+      {
+        "level_a": "0.3",
+        "level_b": "1.0",
+        "distance": 0.03456950015188902
+      },
+      {
+        "level_a": "Neg",
+        "level_b": "Trace",
+        "distance": 0.04143679828295007
+      },
+      {
+        "level_a": "1.0",
+        "level_b": ">=20.0",
+        "distance": 0.046101564919003316
+      },
+      {
+        "level_a": "0.3",
+        "level_b": ">=20.0",
+        "distance": 0.0636288097398748
+      },
+      {
+        "level_a": "0.3",
+        "level_b": "3.0",
+        "distance": 0.08244803776826594
+      }
+    ],
+    "Specific Gravity": [
+      {
+        "level_a": "1.025",
+        "level_b": "1.030",
+        "distance": 0.05039337796621255
+      },
+      {
+        "level_a": "1.010",
+        "level_b": "1.025",
+        "distance": 0.06678486146737722
+      },
+      {
+        "level_a": "1.020",
+        "level_b": "1.025",
+        "distance": 0.07867708738941154
+      },
+      {
+        "level_a": "1.020",
+        "level_b": "1.030",
+        "distance": 0.08982263289762497
+      },
+      {
+        "level_a": "1.015",
+        "level_b": "1.020",
+        "distance": 0.0902445880955743
+      }
+    ],
+    "Urobilinogen": [
+      {
+        "level_a": "128",
+        "level_b": "64",
+        "distance": 0.02997114251742041
+      },
+      {
+        "level_a": "16",
+        "level_b": "32",
+        "distance": 0.0900012073156761
+      },
+      {
+        "level_a": "3.2",
+        "level_b": "32",
+        "distance": 0.09039306363266102
+      },
+      {
+        "level_a": "128",
+        "level_b": "32",
+        "distance": 0.0942054174161567
+      },
+      {
+        "level_a": "32",
+        "level_b": "64",
+        "distance": 0.10367312033147641
+      }
+    ],
+    "pH": [
+      {
+        "level_a": "8.0",
+        "level_b": "8.5",
+        "distance": 0.03296420605172398
+      },
+      {
+        "level_a": "5.0",
+        "level_b": "6.5",
+        "distance": 0.03810751566027579
+      },
+      {
+        "level_a": "5.0",
+        "level_b": "6.0",
+        "distance": 0.056677704679660094
+      },
+      {
+        "level_a": "6.5",
+        "level_b": "7.5",
+        "distance": 0.07010134265428496
+      },
+      {
+        "level_a": "6.0",
+        "level_b": "7.0",
+        "distance": 0.0784237972751337
+      }
+    ]
+  },
+  "per_light_summary": {
+    "2700": {
+      "total_rows": 3260,
+      "top_groups": [
+        [
+          "Glucose:Neg",
+          264
+        ],
+        [
+          "Blood:Neg",
+          258
+        ],
+        [
+          "Ketone:Neg",
+          244
+        ],
+        [
+          "Protein:Neg",
+          240
+        ],
+        [
+          "Nitrite:Neg",
+          186
+        ],
+        [
+          "pH:6.0",
+          170
+        ],
+        [
+          "Urobilinogen:3.2",
+          168
+        ],
+        [
+          "Bilirubin:Small 17",
+          158
+        ],
+        [
+          "Leukocytes:Neg",
+          148
+        ],
+        [
+          "Nitrite:Positive",
+          140
+        ]
+      ]
+    },
+    "4000": {
+      "total_rows": 3120,
+      "top_groups": [
+        [
+          "Glucose:Neg",
+          254
+        ],
+        [
+          "Blood:Neg",
+          252
+        ],
+        [
+          "Ketone:Neg",
+          238
+        ],
+        [
+          "Protein:Neg",
+          236
+        ],
+        [
+          "Nitrite:Neg",
+          182
+        ],
+        [
+          "Urobilinogen:3.2",
+          166
+        ],
+        [
+          "pH:6.0",
+          164
+        ],
+        [
+          "Bilirubin:Small 17",
+          150
+        ],
+        [
+          "Leukocytes:Neg",
+          144
+        ],
+        [
+          "Nitrite:Positive",
+          130
+        ]
+      ]
+    },
+    "5500": {
+      "total_rows": 3070,
+      "top_groups": [
+        [
+          "Glucose:Neg",
+          275
+        ],
+        [
+          "Blood:Neg",
+          269
+        ],
+        [
+          "Ketone:Neg",
+          253
+        ],
+        [
+          "Protein:Neg",
+          245
+        ],
+        [
+          "Nitrite:Neg",
+          173
+        ],
+        [
+          "Urobilinogen:3.2",
+          173
+        ],
+        [
+          "pH:6.0",
+          170
+        ],
+        [
+          "Bilirubin:Small 17",
+          160
+        ],
+        [
+          "Leukocytes:Neg",
+          145
+        ],
+        [
+          "Leukocytes:Trace 15",
+          135
+        ]
+      ]
+    }
+  },
+  "pca": {
+    "enabled": true,
+    "n_components": 2,
+    "explained_variance_ratio": [
+      0.4829566776752472,
+      0.19753111898899078
+    ],
+    "total_explained_variance": 0.6804878115653992,
+    "sample_coordinates": [
+      [
+        -288.00732421875,
+        111.2510986328125
+      ],
+      [
+        -288.00732421875,
+        111.2510986328125
+      ],
+      [
+        -288.00732421875,
+        111.2510986328125
+      ],
+      [
+        -288.00732421875,
+        111.2510986328125
+      ],
+      [
+        -288.00732421875,
+        111.2510986328125
+      ],
+      [
+        -288.00732421875,
+        111.2510986328125
+      ],
+      [
+        -288.00732421875,
+        111.2510986328125
+      ],
+      [
+        -288.00732421875,
+        111.2510986328125
+      ],
+      [
+        -288.00732421875,
+        111.2510986328125
+      ],
+      [
+        -288.00732421875,
+        111.2510986328125
+      ],
+      [
+        202.49085998535156,
+        173.083251953125
+      ],
+      [
+        202.49085998535156,
+        173.083251953125
+      ],
+      [
+        202.49085998535156,
+        173.083251953125
+      ],
+      [
+        202.49085998535156,
+        173.083251953125
+      ],
+      [
+        202.49085998535156,
+        173.083251953125
+      ],
+      [
+        202.49085998535156,
+        173.083251953125
+      ],
+      [
+        202.49085998535156,
+        173.083251953125
+      ],
+      [
+        202.49085998535156,
+        173.083251953125
+      ],
+      [
+        202.49085998535156,
+        173.083251953125
+      ],
+      [
+        202.49085998535156,
+        173.083251953125
+      ]
+    ]
+  }
+}

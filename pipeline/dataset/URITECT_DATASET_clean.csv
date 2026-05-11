@@ -1,0 +1,176 @@
+ID,Leukocytes,Nitrite,Urobilinogen,Protein,pH,Blood,Specific Gravity,Ketone,Bilirubin,Glucose
+001,Neg,Neg,16,Neg,5.0,Neg,1.025,Trace 0.5,Neg,Neg
+002,Neg,Neg,16,Neg,5.0,Neg,1.030,Neg,Neg,Neg
+003,Trace 15,Neg,16,Neg,5.0,Neg,1.030,Neg,Small 17,Neg
+004,Neg,Neg,16,Neg,5.0,Neg,1.030,Neg,Neg,Neg
+005,Trace 15,Neg,16,Neg,5.0,Neg,1.030,Neg,Neg,Neg
+006,Trace 15,Neg,3.2,Trace,5.0,Neg,1.025,Neg,Moderate 50,Neg
+007,Neg,Neg,16,Neg,6.5,Neg,1.030,Neg,Neg,Neg
+008,Trace 15,Neg,3.2,Neg,5.0,Neg,1.030,Neg,Moderate 50,Neg
+009,Trace 15,Neg,3.2,Neg,5.0,Non-hemolyzed 10,1.030,Neg,Large 100,Neg
+010,Large 500,Neg,3.2,Neg,6.0,Neg,1.020,Neg,Neg,Neg
+011,Neg,Neg,16,Neg,5.0,Neg,1.005,Neg,Neg,Neg
+012,Neg,Neg,16,Neg,5.0,Neg,1.010,Neg,Neg,Neg
+013,Neg,Neg,16,Trace,5.0,Neg,1.015,Neg,Neg,Neg
+014,Trace 15,Neg,16,Neg,6.0,Neg,1.025,Neg,Small 17,Neg
+015,Neg,Neg,16,Trace,5.0,Neg,1.030,Neg,Moderate 50,Neg
+016,Trace 15,Neg,16,Trace,6.0,Neg,1.025,Neg,Small 17,Neg
+017,Neg,Neg,16,Trace,5.0,Neg,1.025,Trace 0.5,Small 17,Neg
+018,Trace 15,Neg,16,Neg,5.0,Neg,1.030,Neg,Small 17,Neg
+019,Neg,Neg,16,Neg,6.0,Neg,1.020,Neg,Small 17,Neg
+020,Neg,Neg,16,Neg,6.0,Neg,1.015,Neg,Small 17,Neg
+021,Neg,Neg,16,Neg,6.0,Neg,1.010,Neg,Neg,Neg
+022,Neg,Neg,16,Neg,5.0,Neg,1.010,Neg,Small 17,Neg
+023,Trace 15,Neg,16,Neg,5.0,Neg,1.010,Neg,Neg,Neg
+024,Neg,Neg,16,Neg,5.0,Neg,1.020,Trace 0.5,Neg,Neg
+025,Trace 15,Neg,16,Trace,6.0,Neg,1.025,Neg,Neg,Neg
+026,Trace 15,Neg,16,Neg,6.0,Neg,1.015,Neg,Neg,Neg
+027,Neg,Neg,16,Neg,5.0,Neg,1.015,Neg,Neg,Neg
+028,Trace 15,Neg,16,Neg,5.0,Neg,1.030,Neg,Moderate 50,Neg
+029,Neg,Neg,16,Neg,5.0,Neg,1.025,Trace 0.5,Small 17,Neg
+030,Trace 15,Neg,16,Trace,5.0,Neg,1.030,Neg,Small 17,Neg
+031,Neg,Neg,3.2,Neg,6.0,Neg,1.005,Neg,Neg,Neg
+032,Neg,Neg,3.2,Neg,6.0,Neg,1.020,Neg,Neg,Neg
+033,Neg,Neg,3.2,Neg,6.0,Neg,1.030,Neg,Small 17,Neg
+034,Neg,Neg,16,Neg,6.0,Neg,1.010,Neg,Neg,Neg
+035,Neg,Neg,3.2,Neg,6.0,Neg,1.010,Neg,Neg,Neg
+036,Neg,Neg,3.2,Neg,6.0,Neg,1.010,Neg,Neg,Neg
+037,Trace 15,Neg,3.2,Trace,6.0,Neg,1.030,Trace 0.5,Small 17,Neg
+038,Neg,Neg,16,Neg,6.0,Neg,1.030,Neg,Small 17,Neg
+039,Neg,Neg,16,Neg,5.0,Neg,1.030,Trace 0.5,Small 17,Neg
+040,Neg,Neg,16,Neg,5.0,Neg,1.025,Trace 0.5,Small 17,Neg
+041,Neg,Neg,16,Neg,6.0,Neg,1.030,Neg,Neg,Neg
+042,Trace 15,Neg,16,Trace,6.0,Neg,1.025,Neg,Small 17,Neg
+043,Neg,Neg,16,Neg,6.0,Neg,1.025,Neg,Neg,Neg
+044,Neg,Neg,16,Neg,6.5,Neg,1.015,Neg,Neg,Neg
+045,Neg,Neg,16,Trace,5.0,Neg,1.030,Trace 0.5,Small 17,Neg
+046,Neg,Neg,3.2,Trace,6.0,Non-hemolyzed 10,1.025,Neg,Small 17,Neg
+047,Neg,Neg,3.2,Neg,6.0,Neg,1.010,Neg,Neg,Neg
+048,Small 70,Neg,3.2,Neg,6.0,Neg,1.025,Neg,Moderate 50,Neg
+049,Neg,Neg,3.2,Neg,5.0,Neg,1.025,Neg,Small 17,Neg
+050,Neg,Neg,3.2,Neg,6.0,Neg,1.025,Neg,Neg,Neg
+051,Neg,Neg,3.2,Neg,5.0,Neg,1.025,Neg,Neg,Neg
+052,Trace 15,Neg,3.2,Neg,6.0,Neg,1.010,Neg,Neg,Neg
+053,Neg,Neg,3.2,Neg,6.0,Neg,1.025,Neg,Small 17,Neg
+054,Trace 15,Neg,16,Neg,6.0,Non-hemolyzed 10,1.030,Neg,Small 17,Neg
+055,Neg,Neg,3.2,Neg,5.0,Non-hemolyzed 10,1.025,Neg,Small 17,Neg
+056,Neg,Neg,3.2,Neg,6.0,Neg,1.010,Neg,Neg,Neg
+057,Neg,Neg,16,Neg,6.0,Neg,1.010,Small 1.5,Neg,Neg
+058,Trace 15,Neg,16,Neg,6.0,Neg,1.025,Neg,Moderate 50,Neg
+059,Neg,Neg,3.2,Neg,6.0,Neg,1.015,Neg,Neg,Neg
+060,Trace 15,Neg,3.2,Trace,6.0,Non-hemolyzed 10,1.030,Neg,Small 17,Neg
+061,Trace 15,Neg,3.2,Neg,5.0,Neg,1.025,Neg,Small 17,Neg
+062,Neg,Neg,3.2,Trace,6.0,Neg,1.025,Neg,Small 17,Neg
+063,Neg,Neg,3.2,Trace,6.0,Neg,1.030,Neg,Small 17,Neg
+064,Neg,Neg,3.2,Neg,6.0,Neg,1.030,Neg,Small 17,Neg
+065,Neg,Neg,3.2,Neg,5.0,Neg,1.010,Neg,Neg,Neg
+066,Neg,Neg,3.2,Neg,6.0,Neg,1.030,Neg,Small 17,Neg
+067,Neg,Neg,3.2,Neg,6.0,Neg,1.025,Neg,Small 17,Neg
+068,Neg,Neg,3.2,Trace,6.0,Neg,1.010,Neg,Neg,Neg
+069,Moderate 125,Neg,3.2,Neg,7.0,Neg,1.010,Neg,Neg,Neg
+070,Trace 15,Neg,32,Neg,6.0,Neg,1.030,Trace 0.5,Large 100,Neg
+071,Small 70,Neg,3.2,Neg,5.0,Non-hemolyzed 10,1.025,Trace 0.5,Small 17,Neg
+072,Small 70,Neg,3.2,Neg,5.0,Neg,1.030,Neg,Neg,Neg
+073,Neg,Neg,3.2,3.0,5.0,Non-hemolyzed 10,1.030,Trace 0.5,Small 17,Neg
+074,Neg,Neg,3.2,Neg,6.0,Non-hemolyzed 10,1.030,Trace 0.5,Neg,Neg
+075,Neg,Neg,3.2,Neg,6.0,Neg,1.015,Neg,Neg,Neg
+076,Neg,Neg,3.2,Neg,7.0,Neg,1.005,Neg,Neg,Neg
+077,Neg,Neg,3.2,Neg,6.0,Neg,1.020,Neg,Small 17,Neg
+078,Neg,Neg,3.2,Neg,7.0,Neg,1.030,Neg,Neg,Neg
+079,Neg,Neg,3.2,Neg,5.0,Neg,1.010,Neg,Neg,Neg
+080,Neg,Neg,3.2,Neg,5.0,Non-hemolyzed 10,1.010,Neg,Neg,Neg
+081,Neg,Neg,16,Neg,6.0,Neg,1.015,Neg,Neg,Neg
+082,Neg,Neg,3.2,Neg,6.0,Neg,1.010,Neg,Neg,Neg
+083,Neg,Neg,3.2,Neg,6.0,Neg,1.025,Neg,Small 17,Neg
+084,Neg,Neg,3.2,Neg,6.0,Neg,1.025,Neg,Neg,Neg
+085,Neg,Neg,3.2,Neg,6.0,Neg,1.020,Neg,Neg,Neg
+086,Neg,Neg,3.2,Neg,7.5,Neg,1.010,Neg,Neg,Neg
+087,Trace 15,Neg,3.2,Neg,5.0,Neg,1.020,Neg,Neg,Neg
+088,Neg,Neg,3.2,Neg,6.0,Neg,1.020,Neg,Neg,Neg
+089,Trace 15,Neg,3.2,Neg,6.5,Neg,1.010,Neg,Neg,Neg
+090,Neg,Neg,3.2,Neg,6.0,Neg,1.015,Neg,Neg,Neg
+091,Neg,Neg,3.2,Neg,6.0,Neg,1.010,Neg,Neg,Neg
+092,Neg,Neg,3.2,Neg,5.0,Neg,1.015,Neg,Neg,Neg
+093,Neg,Neg,3.2,Trace,6.0,Neg,1.030,Trace 0.5,Moderate 50,Neg
+094,Neg,Neg,3.2,Neg,6.0,Neg,1.015,Neg,Neg,Neg
+095,Neg,Neg,3.2,Neg,5.0,Neg,1.025,Trace 0.5,Neg,Neg
+096,Neg,Neg,3.2,Neg,7.0,Neg,1.015,Trace 0.5,Neg,Neg
+097,Trace 15,Positive,3.2,Neg,6.0,Neg,1.025,Neg,Small 17,Neg
+098,Trace 15,Positive,16,Trace,6.0,Neg,1.030,Neg,Small 17,Neg
+099,Trace 15,Positive,16,Neg,5.0,Neg,1.025,Neg,Small 17,Trace 5
+100,Trace 15,Positive,16,Neg,8.0,Neg,1.020,Neg,Small 17,Neg
+101,Trace 15,Positive,16,Neg,5.0,Neg,1.030,Neg,Small 17,Neg
+102,Trace 15,Positive,16,Neg,6.0,Neg,1.030,Neg,Small 17,Neg
+103,Trace 15,Positive,16,Trace,6.0,Neg,1.030,Neg,Small 17,Neg
+104,Trace 15,Positive,16,Neg,5.0,Neg,1.030,Neg,Small 17,Neg
+105,Trace 15,Positive,16,Neg,6.5,Neg,1.025,Neg,Small 17,Neg
+106,Trace 15,Positive,16,Neg,6.0,Neg,1.030,Neg,Small 17,Neg
+107,Trace 15,Positive,16,Neg,6.0,Neg,1.030,Neg,Small 17,Neg
+108,Trace 15,Positive,16,Neg,6.0,Neg,1.025,Neg,Small 17,Neg
+109,Trace 15,Positive,16,Neg,5.0,Neg,1.030,Neg,Small 17,Neg
+110,Trace 15,Positive,16,Neg,6.0,Neg,1.020,Neg,Small 17,Neg
+111,Trace 15,Positive,16,Neg,6.0,Neg,1.025,Neg,Small 17,Neg
+112,Trace 15,Positive,16,Neg,5.0,Neg,1.030,Neg,Small 17,Neg
+113,Trace 15,Positive,16,Neg,8.0,Neg,1.015,Neg,Small 17,Neg
+114,Trace 15,Positive,16,Trace,5.0,Neg,1.030,Neg,Small 17,Neg
+115,Trace 15,Positive,16,Neg,7.0,Neg,1.015,Trace 0.5,Neg,Neg
+116,Neg,Positive,16,Neg,6.0,Neg,1.030,Neg,Small 17,Neg
+117,Trace 15,Positive,16,Neg,6.0,Neg,1.030,Neg,Small 17,Neg
+118,Neg,Positive,16,Trace,8.5,Neg,1.005,Neg,Small 17,Neg
+119,Neg,Positive,16,Neg,6.0,Neg,1.030,Neg,Small 17,Neg
+120,Neg,Positive,16,Neg,5.0,Neg,1.025,Neg,Small 17,Neg
+121,Neg,Positive,16,Neg,6.0,Neg,1.025,Neg,Small 17,Neg
+122,Trace 15,Positive,16,Trace,5.0,Neg,1.030,Neg,Small 17,Neg
+123,Trace 15,Positive,16,Neg,6.0,Neg,1.030,Neg,Neg,Neg
+124,Trace 15,Positive,16,Neg,6.0,Neg,1.015,Neg,Neg,Neg
+125,Trace 15,Positive,16,Neg,6.0,Neg,1.025,Neg,Small 17,Neg
+126,Neg,Positive,16,Neg,6.0,Neg,1.030,Neg,Small 17,Neg
+127,Trace 15,Positive,16,Neg,6.0,Neg,1.030,Neg,Small 17,Neg
+128,Trace 15,Positive,16,Neg,6.0,Neg,1.030,Neg,Small 17,Neg
+129,Trace 15,Positive,3.2,Neg,6.0,Neg,1.020,Neg,Small 17,Neg
+130,Trace 15,Positive,3.2,Neg,6.5,Neg,1.030,Neg,Small 17,Neg
+131,Neg,Positive,3.2,Trace,6.0,Neg,1.030,Neg,Small 17,Neg
+132,Neg,Positive,3.2,Neg,6.0,Neg,1.030,Neg,Small 17,Neg
+133,Neg,Positive,3.2,Neg,6.0,Neg,1.015,Neg,Neg,Neg
+134,Trace 15,Positive,3.2,Neg,5.0,Neg,1.015,Neg,Small 17,Neg
+135,Neg,Neg,3.2,Neg,6.0,Neg,1.030,Neg,Small 17,30 ++
+136,Trace 15,Positive,3.2,Neg,6.0,Neg,1.030,Neg,Neg,Neg
+137,Neg,Positive,3.2,Neg,6.0,Neg,1.030,Neg,Neg,60 +++
+138,Neg,Neg,3.2,Neg,6.0,Neg,1.030,Neg,Neg,60 +++
+139,Neg,Positive,3.2,Neg,6.0,Neg,1.025,Neg,Small 17,Neg
+140,Neg,Positive,3.2,Neg,6.0,Neg,1.020,Neg,Neg,Neg
+141,Trace 15,Positive,3.2,Neg,6.0,Neg,1.025,Neg,Neg,Neg
+142,Trace 15,Positive,3.2,Neg,6.0,Neg,1.030,Neg,Small 17,Neg
+143,Trace 15,Positive,3.2,Neg,5.0,Neg,1.030,Neg,Small 17,Neg
+144,Trace 15,Positive,3.2,Neg,6.0,Neg,1.025,Neg,Small 17,Neg
+145,Trace 15,Positive,3.2,Neg,6.0,Neg,1.025,Neg,Small 17,Neg
+146,Neg,Positive,3.2,Neg,5.0,Neg,1.030,Neg,Small 17,Neg
+147,Trace 15,Positive,3.2,Neg,6.0,Neg,1.020,Neg,Small 17,Neg
+148,Trace 15,Positive,3.2,Neg,5.0,Neg,1.025,Neg,Small 17,Neg
+149,Trace 15,Positive,3.2,Neg,6.0,Neg,1.030,Neg,Small 17,Neg
+150,Neg,Positive,3.2,Neg,6.0,Neg,1.030,Neg,Small 17,Neg
+151,Trace 15,Positive,3.2,Neg,5.0,Neg,1.015,Neg,Small 17,Neg
+152,Trace 15,Positive,3.2,Neg,6.0,Neg,1.025,Neg,Small 17,Neg
+153,Neg,Positive,3.2,Neg,6.0,Neg,1.030,Neg,Neg,Neg
+154,Trace 15,Positive,3.2,Trace,6.5,Neg,1.030,Neg,Small 17,Neg
+155,Trace 15,Positive,3.2,Neg,6.0,Neg,1.015,Neg,Neg,Neg
+156,Trace 15,Positive,3.2,Neg,7.0,Neg,1.020,Neg,Small 17,Neg
+157,Trace 15,Positive,3.2,Neg,6.0,Neg,1.025,Neg,Small 17,Neg
+158,Trace 15,Positive,3.2,Neg,6.5,Neg,1.030,Neg,Small 17,Neg
+159,Trace 15,Positive,3.2,Neg,6.5,Neg,1.025,Neg,Small 17,Neg
+160,Trace 15,Positive,3.2,Neg,6.0,Neg,1.030,Neg,Small 17,Neg
+161,Trace 15,Positive,3.2,Neg,6.5,Neg,1.010,Neg,Small 17,Neg
+162,Trace 15,Positive,3.2,Neg,5.0,Neg,1.030,Neg,Small 17,Neg
+163,Trace 15,Positive,3.2,Neg,6.5,Neg,1.025,Neg,Small 17,Neg
+164,Trace 15,Positive,3.2,Neg,7.0,Neg,1.015,Neg,Small 17,Neg
+165,Trace 15,Positive,3.2,Trace,6.0,Neg,1.030,Neg,Small 17,Trace 5
+166,Trace 15,Positive,3.2,Neg,6.0,Neg,1.030,Neg,Small 17,Neg
+167,Trace 15,Positive,3.2,Neg,6.0,Neg,1.015,Neg,Small 17,Neg
+168,Trace 15,Positive,3.2,Neg,6.0,Neg,1.025,Neg,Small 17,Neg
+169,Trace 15,Positive,3.2,Neg,6.0,Neg,1.030,Neg,Small 17,Neg
+170,Trace 15,Positive,3.2,Neg,6.0,Neg,1.030,Neg,Small 17,Neg
+171,Trace 15,Positive,3.2,Neg,7.5,Neg,1.010,Neg,Small 17,Trace 5
+172,Trace 15,Positive,3.2,Neg,5.0,Neg,1.020,Neg,Small 17,Neg
+173,Trace 15,Positive,3.2,Neg,5.0,Neg,1.025,Neg,Small 17,Neg
+174,Trace 15,Positive,3.2,Neg,5.0,Neg,1.025,Neg,Small 17,Neg
+175,Trace 15,Positive,3.2,Neg,6.0,Neg,1.030,Neg,Small 17,Neg

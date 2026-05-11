@@ -1,8 +1,83 @@
 {
-  "total_input_rows": 0,
-  "valid_rows": 0,
+  "total_input_rows": 9450,
+  "valid_rows": 9450,
   "invalid_rows": 0,
   "dropped_missing_analyte_features": 0,
   "invalid_examples": [],
-  "level_counts": {}
+  "level_counts": {
+    "Bilirubin": {
+      "Large 100": 48,
+      "Moderate 50": 60,
+      "Neg": 369,
+      "Small 17": 468
+    },
+    "Blood": {
+      "Hemolyzed 10": 24,
+      "Large 200": 22,
+      "Moderate 80": 22,
+      "Neg": 779,
+      "Non-hemolyzed 10": 76,
+      "Small 25": 22
+    },
+    "Glucose": {
+      "110 ++++": 22,
+      "15 +": 24,
+      "30 ++": 34,
+      "60 +++": 34,
+      "Neg": 793,
+      "Trace 5": 38
+    },
+    "Ketone": {
+      "8.0": 22,
+      "Large 16": 22,
+      "Moderate 4.0": 22,
+      "Neg": 735,
+      "Small 1.5": 36,
+      "Trace 0.5": 108
+    },
+    "Leukocytes": {
+      "Large 500": 33,
+      "Moderate 125": 33,
+      "Neg": 437,
+      "Small 70": 47,
+      "Trace 15": 395
+    },
+    "Nitrite": {
+      "Neg": 541,
+      "Positive": 404
+    },
+    "Protein": {
+      "0.3": 24,
+      "1.0": 22,
+      "3.0": 28,
+      ">=20.0": 28,
+      "Neg": 721,
+      "Trace": 122
+    },
+    "Specific Gravity": {
+      "1.000": 22,
+      "1.005": 46,
+      "1.010": 110,
+      "1.015": 122,
+      "1.020": 93,
+      "1.025": 225,
+      "1.030": 327
+    },
+    "Urobilinogen": {
+      "128": 27,
+      "16": 351,
+      "3.2": 507,
+      "32": 33,
+      "64": 27
+    },
+    "pH": {
+      "5.0": 248,
+      "6.0": 504,
+      "6.5": 54,
+      "7.0": 54,
+      "7.5": 27,
+      "8.0": 31,
+      "8.5": 27
+    }
+  }
 }

@@ -131,6 +131,12 @@ def parse_args() -> argparse.Namespace:
         description="Train Uritect k-NN + Bayesian artifacts from features.csv",
     )
     parser.add_argument(
+        "--features",
+        type=pathlib.Path,
+        default=FEATURES_PATH,
+        help="Path to the features CSV produced by ingest.py.",
+    )
+    parser.add_argument(
         "--enforce-readiness",
         action="store_true",
         help="Fail early if binary class balance/readiness requirements are not met.",
@@ -220,13 +226,13 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def load_features() -> list[dict[str, str]]:
-    if not FEATURES_PATH.exists():
-        print(f"features.csv not found at:\n  {FEATURES_PATH}")
+def load_features(path: pathlib.Path) -> list[dict[str, str]]:
+    if not path.exists():
+        print(f"features.csv not found at:\n  {path}")
         print("Run ingest.py first.")
         sys.exit(1)
 
-    with open(FEATURES_PATH, newline="", encoding="utf-8") as file:
+    with open(path, newline="", encoding="utf-8") as file:
         rows = list(csv.DictReader(file))
 
     if not rows:
@@ -597,6 +603,26 @@ def _median_hsv(samples: list[tuple[float, float, float]]) -> tuple[float, float
     return round(_normalize_hue(h), 6), round(_clip_01(s), 6), round(_clip_01(v), 6)
 
 
+def _median_lab(samples: list[tuple[float, float, float]]) -> tuple[float, float, float]:
+    """Compute median LAB values. L, a, b are all linear (no circular adjustment)."""
+    l = float(median(sample[0] for sample in samples))
+    a = float(median(sample[1] for sample in samples))
+    b = float(median(sample[2] for sample in samples))
+    return round(l, 6), round(a, 6), round(b, 6)
+
+
+def _detect_feature_space(rows: list[dict[str, str]]) -> str:
+    """Detect feature space (hsv, normalized_hsv, lab) from rows header."""
+    if not rows:
+        return "hsv"
+    first_row_keys = set(rows[0].keys())
+    if any(col.endswith('_l') for col in first_row_keys):
+        return "lab"
+    if any(col.endswith('_h') for col in first_row_keys):
+        return "hsv"
+    return "hsv"
+
+
 def _circular_mean_deg(values: list[float]) -> float:
     if not values:
         return 0.0
@@ -608,13 +634,13 @@ def _circular_mean_deg(values: list[float]) -> float:
     return _normalize_hue(angle)
 
 
-def _row_event_anchor(row: dict[str, str]) -> tuple[float, float, float] | None:
+def _row_event_anchor(row: dict[str, str], feature_space: str = "hsv") -> tuple[float, float, float] | None:
     hues: list[float] = []
     sats: list[float] = []
     vals: list[float] = []
 
     for analyte_name in ANALYTE_ORDER:
-        col_h, col_s, col_v = feature_columns_for_analyte(analyte_name)
+        col_h, col_s, col_v = feature_columns_for_analyte(analyte_name, feature_space=feature_space)
         raw_h = row.get(col_h, "").strip()
         raw_s = row.get(col_s, "").strip()
         raw_v = row.get(col_v, "").strip()
@@ -635,7 +661,7 @@ def _row_event_anchor(row: dict[str, str]) -> tuple[float, float, float] | None:
     )
 
 
-def _compute_event_hsv_anchors(rows: list[dict[str, str]]) -> tuple[dict[str, tuple[float, float, float]], tuple[float, float, float]]:
+def _compute_event_hsv_anchors(rows: list[dict[str, str]], feature_space: str = "hsv") -> tuple[dict[str, tuple[float, float, float]], tuple[float, float, float]]:
     anchors_by_event: dict[str, tuple[float, float, float]] = {}
     hue_values: list[float] = []
     sat_values: list[float] = []
@@ -646,7 +672,7 @@ def _compute_event_hsv_anchors(rows: list[dict[str, str]]) -> tuple[dict[str, tu
         if not event_id or event_id in anchors_by_event:
             continue
 
-        anchor = _row_event_anchor(row)
+        anchor = _row_event_anchor(row, feature_space=feature_space)
         if anchor is None:
             continue
 
@@ -765,6 +791,7 @@ def _event_centered_hsv(
 
 def validate_and_normalize_semiquant_rows(
     rows: list[dict[str, str]],
+    feature_space: str = "hsv",
 ) -> tuple[list[dict[str, str]], dict[str, Any]]:
     normalized_rows: list[dict[str, str]] = []
     invalid_rows: list[dict[str, str]] = []
@@ -803,7 +830,7 @@ def validate_and_normalize_semiquant_rows(
             continue
 
         has_all_features = True
-        for feature_col in feature_columns_for_analyte(analyte):
+        for feature_col in feature_columns_for_analyte(analyte, feature_space=feature_space):
             if row.get(feature_col, "").strip() == "":
                 has_all_features = False
                 break
@@ -888,6 +915,7 @@ def _build_semiquant_groups(
     event_anchors: dict[str, tuple[float, float, float]] | None = None,
     target_anchor: tuple[float, float, float] | None = None,
     target_anchor_by_light: dict[str, tuple[float, float, float]] | None = None,
+    feature_space: str = "hsv",
 ) -> dict[tuple[str, str], list[tuple[float, float, float]]]:
     groups: dict[tuple[str, str], list[tuple[float, float, float]]] = defaultdict(list)
 
@@ -897,7 +925,7 @@ def _build_semiquant_groups(
         if analyte_name not in ANALYTE_ORDER or not level:
             continue
 
-        column_h, column_s, column_v = feature_columns_for_analyte(analyte_name)
+        column_h, column_s, column_v = feature_columns_for_analyte(analyte_name, feature_space=feature_space)
         raw_h = row.get(column_h, "").strip()
         raw_s = row.get(column_s, "").strip()
         raw_v = row.get(column_v, "").strip()
@@ -1025,6 +1053,7 @@ def build_semiquant_reference_map(
     event_anchors: dict[str, tuple[float, float, float]] | None = None,
     target_anchor: tuple[float, float, float] | None = None,
     target_anchor_by_light: dict[str, tuple[float, float, float]] | None = None,
+    feature_space: str = "hsv",
 ) -> tuple[dict[str, list[dict[str, Any]]], dict[str, Any]]:
     groups = _build_semiquant_groups(
         rows,
@@ -1032,6 +1061,7 @@ def build_semiquant_reference_map(
         event_anchors=event_anchors,
         target_anchor=target_anchor,
         target_anchor_by_light=target_anchor_by_light,
+        feature_space=feature_space,
     )
     groups_for_map, augmentation_summary = _augment_semiquant_groups_smote(
         groups=groups,
@@ -1039,6 +1069,13 @@ def build_semiquant_reference_map(
     )
 
     output: dict[str, list[dict[str, Any]]] = {}
+    
+    # Determine key names based on feature space
+    if feature_space == "lab":
+        key1, key2, key3 = "l", "a", "b"
+    else:  # hsv or normalized_hsv
+        key1, key2, key3 = "h", "s", "v"
+    
     for analyte_name in ANALYTE_ORDER:
         level_entries: list[dict[str, Any]] = []
         level_names = sorted(level for (analyte, level) in groups_for_map if analyte == analyte_name)
@@ -1049,25 +1086,42 @@ def build_semiquant_reference_map(
                 continue
 
             if prototype_mode == "library":
-                for h_raw, s_raw, v_raw in samples:
-                    level_entries.append(
-                        {
-                            "level": level,
-                            "h": round(_normalize_hue(float(h_raw)), 6),
-                            "s": round(_clip_01(float(s_raw)), 6),
-                            "v": round(_clip_01(float(v_raw)), 6),
-                            "weight": 1.0,
-                            "sample_count": 1,
-                        }
-                    )
+                for v1_raw, v2_raw, v3_raw in samples:
+                    if feature_space == "lab":
+                        # LAB values are already in correct range, just round
+                        level_entries.append(
+                            {
+                                "level": level,
+                                key1: round(float(v1_raw), 6),
+                                key2: round(float(v2_raw), 6),
+                                key3: round(float(v3_raw), 6),
+                                "weight": 1.0,
+                                "sample_count": 1,
+                            }
+                        )
+                    else:
+                        # HSV: normalize hue, clip saturation/value
+                        level_entries.append(
+                            {
+                                "level": level,
+                                key1: round(_normalize_hue(float(v1_raw)), 6),
+                                key2: round(_clip_01(float(v2_raw)), 6),
+                                key3: round(_clip_01(float(v3_raw)), 6),
+                                "weight": 1.0,
+                                "sample_count": 1,
+                            }
+                        )
             else:
-                h, s, v = _median_hsv(samples)
+                if feature_space == "lab":
+                    v1, v2, v3 = _median_lab(samples)
+                else:
+                    v1, v2, v3 = _median_hsv(samples)
                 level_entries.append(
                     {
                         "level": level,
-                        "h": h,
-                        "s": s,
-                        "v": v,
+                        key1: v1,
+                        key2: v2,
+                        key3: v3,
                         "weight": 1.0,
                         "sample_count": len(samples),
                     }
@@ -1095,12 +1149,15 @@ def merge_reference_maps(
 def main() -> None:
     args = parse_args()
 
-    rows = load_features()
-    print(f"Loaded {len(rows)} rows from:\n  {FEATURES_PATH}\n")
+    rows = load_features(args.features)
+    print(f"Loaded {len(rows)} rows from:\n  {args.features}\n")
+
+    # Detect feature space from the loaded rows early
+    feature_space = _detect_feature_space(rows)
 
     binary_rows, semiquant_rows, unknown_rows = split_rows_by_mode(rows)
 
-    normalized_semiquant_rows, semiquant_report = validate_and_normalize_semiquant_rows(semiquant_rows)
+    normalized_semiquant_rows, semiquant_report = validate_and_normalize_semiquant_rows(semiquant_rows, feature_space=feature_space)
     semiquant_report_path = pathlib.Path(args.semiquant_report_path)
     semiquant_report_path.parent.mkdir(parents=True, exist_ok=True)
     with open(semiquant_report_path, "w", encoding="utf-8") as report_file:
@@ -1176,7 +1233,7 @@ def main() -> None:
             )
 
     print("\n[2/3] Building app reference map ...")
-    event_anchors, semiquant_target_anchor = _compute_event_hsv_anchors(normalized_semiquant_rows)
+    event_anchors, semiquant_target_anchor = _compute_event_hsv_anchors(normalized_semiquant_rows, feature_space=feature_space)
     semiquant_light_target_anchors = _compute_light_target_anchors(normalized_semiquant_rows, event_anchors)
     calibration_anchor_overrides: dict[str, tuple[float, float, float]] = {}
     if args.calibration_anchors:
@@ -1197,6 +1254,7 @@ def main() -> None:
             if args.event_center_hsv and args.event_center_mode == "per-light"
             else None
         ),
+        feature_space=feature_space,
     )
     binary_map = build_binary_reference_map(binary_rows)
     merged_map = merge_reference_maps(semiquant_map, binary_map)
@@ -1206,11 +1264,11 @@ def main() -> None:
         sys.exit(1)
 
     payload = {
-        "version": "trained_v4_hsv",
+        "version": f"trained_v4_{feature_space}",
         "source": "uritect_training_pipeline",
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "total_samples": len(rows),
-        "reference_color_space": "hsv",
+        "reference_color_space": feature_space,
         "reference_strategy": "semiquant_preferred_with_binary_fallback",
         "event_hsv_centering": {
             "enabled": bool(args.event_center_hsv),

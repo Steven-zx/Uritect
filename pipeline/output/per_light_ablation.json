@@ -1,0 +1,4167 @@
+{
+  "features_path": "C:\\Users\\acer\\Downloads\\Github\\Uritect\\pipeline\\dataset\\features.csv",
+  "reference_map_path": "C:\\Users\\acer\\Downloads\\Github\\Uritect\\pipeline\\output\\knn_reference_map.json",
+  "event_center_hsv": {
+    "requested": "auto",
+    "enabled": true,
+    "target_mode": "per-light"
+  },
+  "distance_weight_profile": "legacy",
+  "lights": {
+    "2700": {
+      "samples_total": 3260,
+      "samples_evaluated": 3260,
+      "samples_dropped": 0,
+      "samples_abstained": 0,
+      "coverage": 1.0,
+      "overall": {
+        "accuracy": 0.3039877300613497,
+        "f1_macro": 0.20935098862453982,
+        "f1_weighted": 0.3290988722405122,
+        "cohen_kappa": 0.2879266145482865
+      },
+      "per_analyte": {
+        "Leukocytes": {
+          "samples": 326,
+          "accuracy": 0.36503067484662577,
+          "f1_macro": 0.269810336603663,
+          "f1_weighted": 0.33852573563575705,
+          "cohen_kappa": 0.1277563787710364,
+          "agreement": {
+            "macro_sensitivity": 0.33466713466713466,
+            "macro_specificity": 0.8285948953938065,
+            "per_level": {
+              "Neg": {
+                "tp": 13,
+                "fp": 9,
+                "fn": 135,
+                "tn": 169,
+                "sensitivity": 0.08783783783783784,
+                "specificity": 0.949438202247191
+              },
+              "Trace 15": {
+                "tp": 93,
+                "fp": 88,
+                "fn": 39,
+                "tn": 106,
+                "sensitivity": 0.7045454545454546,
+                "specificity": 0.5463917525773195
+              },
+              "Small 70": {
+                "tp": 3,
+                "fp": 7,
+                "fn": 15,
+                "tn": 301,
+                "sensitivity": 0.16666666666666666,
+                "specificity": 0.9772727272727273
+              },
+              "Moderate 125": {
+                "tp": 5,
+                "fp": 15,
+                "fn": 9,
+                "tn": 297,
+                "sensitivity": 0.35714285714285715,
+                "specificity": 0.9519230769230769
+              },
+              "Large 500": {
+                "tp": 5,
+                "fp": 88,
+                "fn": 9,
+                "tn": 224,
+                "sensitivity": 0.35714285714285715,
+                "specificity": 0.717948717948718
+              }
+            }
+          },
+          "confusion_matrix": {
+            "labels": [
+              "Neg",
+              "Trace 15",
+              "Small 70",
+              "Moderate 125",
+              "Large 500"
+            ],
+            "matrix": [
+              [
+                13,
+                80,
+                2,
+                3,
+                50
+              ],
+              [
+                6,
+                93,
+                2,
+                3,
+                28
+              ],
+              [
+                2,
+                3,
+                3,
+                3,
+                7
+              ],
+              [
+                1,
+                3,
+                2,
+                5,
+                3
+              ],
+              [
+                0,
+                2,
+                1,
+                6,
+                5
+              ]
+            ]
+          },
+          "support_per_level": {
+            "Large 500": 14,
+            "Moderate 125": 14,
+            "Neg": 148,
+            "Small 70": 18,
+            "Trace 15": 132
+          },
+          "soft_visual_probability": {
+            "mean": 0.24959478038856828,
+            "median": 0.2387939709502838,
+            "min": 0.2173714685342946,
+            "max": 0.5341520895903573
+          },
+          "confidence_margin": {
+            "mean": 0.037595679213238226,
+            "median": 0.021465808276440124,
+            "min": 1.2628977390627405e-05,
+            "max": 0.35442787238866724
+          },
+          "nearest_distance": {
+            "mean": 0.6476600456246692,
+            "median": 0.6963333543077421,
+            "min": 0.03272475195279833,
+            "max": 0.8609654344894628
+          },
+          "abstained_samples": 0
+        },
+        "Nitrite": {
+          "samples": 326,
+          "accuracy": 0.6533742331288344,
+          "f1_macro": 0.6531098450962851,
+          "f1_weighted": 0.651758528485478,
+          "cohen_kappa": 0.32543490203259473,
+          "agreement": {
+            "macro_sensitivity": 0.6706221198156681,
+            "macro_specificity": 0.6706221198156681,
+            "per_level": {
+              "Neg": {
+                "tp": 102,
+                "fp": 29,
+                "fn": 84,
+                "tn": 111,
+                "sensitivity": 0.5483870967741935,
+                "specificity": 0.7928571428571428
+              },
+              "Positive": {
+                "tp": 111,
+                "fp": 84,
+                "fn": 29,
+                "tn": 102,
+                "sensitivity": 0.7928571428571428,
+                "specificity": 0.5483870967741935
+              }
+            }
+          },
+          "confusion_matrix": {
+            "labels": [
+              "Neg",
+              "Positive"
+            ],
+            "matrix": [
+              [
+                102,
+                84
+              ],
+              [
+                29,
+                111
+              ]
+            ]
+          },
+          "support_per_level": {
+            "Neg": 186,
+            "Positive": 140
+          },
+          "soft_visual_probability": {
+            "mean": 0.5639927844601991,
+            "median": 0.5664579461006325,
+            "min": 0.5003901358664099,
+            "max": 0.7371521479550998
+          },
+          "confidence_margin": {
+            "mean": 0.1279855689203981,
+            "median": 0.13291589220126504,
+            "min": 0.0007802717328198039,
+            "max": 0.4743042959101996
+          },
+          "nearest_distance": {
+            "mean": 0.6741643575801621,
+            "median": 0.7284084920826426,
+            "min": 0.11924208054220474,
+            "max": 1.0277249067810805
+          },
+          "abstained_samples": 0
+        },
+        "Urobilinogen": {
+          "samples": 326,
+          "accuracy": 0.3343558282208589,
+          "f1_macro": 0.22435345809775803,
+          "f1_weighted": 0.3971919591990815,
+          "cohen_kappa": 0.08512234235166316,
+          "agreement": {
+            "macro_sensitivity": 0.2364285714285714,
+            "macro_specificity": 0.819963459638229,
+            "per_level": {
+              "3.2": {
+                "tp": 59,
+                "fp": 52,
+                "fn": 109,
+                "tn": 106,
+                "sensitivity": 0.35119047619047616,
+                "specificity": 0.6708860759493671
+              },
+              "16": {
+                "tp": 44,
+                "fp": 27,
+                "fn": 76,
+                "tn": 179,
+                "sensitivity": 0.36666666666666664,
+                "specificity": 0.8689320388349514
+              },
+              "32": {
+                "tp": 3,
+                "fp": 25,
+                "fn": 11,
+                "tn": 287,
+                "sensitivity": 0.21428571428571427,
+                "specificity": 0.9198717948717948
+              },
+              "64": {
+                "tp": 1,
+                "fp": 71,
+                "fn": 11,
+                "tn": 243,
+                "sensitivity": 0.08333333333333333,
+                "specificity": 0.7738853503184714
+              },
+              "128": {
+                "tp": 2,
+                "fp": 42,
+                "fn": 10,
+                "tn": 272,
+                "sensitivity": 0.16666666666666666,
+                "specificity": 0.8662420382165605
+              }
+            }
+          },
+          "confusion_matrix": {
+            "labels": [
+              "3.2",
+              "16",
+              "32",
+              "64",
+              "128"
+            ],
+            "matrix": [
+              [
+                59,
+                25,
+                13,
+                46,
+                25
+              ],
+              [
+                34,
+                44,
+                8,
+                22,
+                12
+              ],
+              [
+                6,
+                0,
+                3,
+                2,
+                3
+              ],
+              [
+                6,
+                0,
+                3,
+                1,
+                2
+              ],
+              [
+                6,
+                2,
+                1,
+                1,
+                2
+              ]
+            ]
+          },
+          "support_per_level": {
+            "128": 12,
+            "16": 120,
+            "3.2": 168,
+            "32": 14,
+            "64": 12
+          },
+          "soft_visual_probability": {
+            "mean": 0.26904957406129937,
+            "median": 0.2508231969466135,
+            "min": 0.20890260146922277,
+            "max": 0.5174926946718674
+          },
+          "confidence_margin": {
+            "mean": 0.043278571635733815,
+            "median": 0.017997514027527292,
+            "min": 0.00017970631474026333,
+            "max": 0.3246705379207153
+          },
+          "nearest_distance": {
+            "mean": 0.3185012207501608,
+            "median": 0.15904092616141674,
+            "min": 0.04219905743166823,
+            "max": 1.028002408066048
+          },
+          "abstained_samples": 0
+        },
+        "Protein": {
+          "samples": 326,
+          "accuracy": 0.1196319018404908,
+          "f1_macro": 0.10372025029837306,
+          "f1_weighted": 0.1502655662546717,
+          "cohen_kappa": 0.007952328441767742,
+          "agreement": {
+            "macro_sensitivity": 0.20575396825396824,
+            "macro_specificity": 0.8324719806042086,
+            "per_level": {
+              "Neg": {
+                "tp": 22,
+                "fp": 10,
+                "fn": 218,
+                "tn": 76,
+                "sensitivity": 0.09166666666666666,
+                "specificity": 0.8837209302325582
+              },
+              "Trace": {
+                "tp": 6,
+                "fp": 24,
+                "fn": 36,
+                "tn": 260,
+                "sensitivity": 0.14285714285714285,
+                "specificity": 0.9154929577464789
+              },
+              "0.3": {
+                "tp": 5,
+                "fp": 40,
+                "fn": 5,
+                "tn": 276,
+                "sensitivity": 0.5,
+                "specificity": 0.8734177215189873
+              },
+              "1.0": {
+                "tp": 0,
+                "fp": 27,
+                "fn": 10,
+                "tn": 289,
+                "sensitivity": 0.0,
+                "specificity": 0.9145569620253164
+              },
+              "3.0": {
+                "tp": 3,
+                "fp": 83,
+                "fn": 9,
+                "tn": 231,
+                "sensitivity": 0.25,
+                "specificity": 0.7356687898089171
+              },
+              ">=20.0": {
+                "tp": 3,
+                "fp": 103,
+                "fn": 9,
+                "tn": 211,
+                "sensitivity": 0.25,
+                "specificity": 0.6719745222929936
+              }
+            }
+          },
+          "confusion_matrix": {
+            "labels": [
+              "Neg",
+              "Trace",
+              "0.3",
+              "1.0",
+              "3.0",
+              ">=20.0"
+            ],
+            "matrix": [
+              [
+                22,
+                12,
+                22,
+                24,
+                74,
+                86
+              ],
+              [
+                3,
+                6,
+                9,
+                2,
+                7,
+                15
+              ],
+              [
+                1,
+                3,
+                5,
+                0,
+                0,
+                1
+              ],
+              [
+                2,
+                3,
+                4,
+                0,
+                1,
+                0
+              ],
+              [
+                1,
+                3,
+                3,
+                1,
+                3,
+                1
+              ],
+              [
+                3,
+                3,
+                2,
+                0,
+                1,
+                3
+              ]
+            ]
+          },
+          "support_per_level": {
+            "0.3": 10,
+            "1.0": 10,
+            "3.0": 12,
+            ">=20.0": 12,
+            "Neg": 240,
+            "Trace": 42
+          },
+          "soft_visual_probability": {
+            "mean": 0.2839542274885979,
+            "median": 0.2738656045108956,
+            "min": 0.17282866606121497,
+            "max": 0.6065049237003111
+          },
+          "confidence_margin": {
+            "mean": 0.06738097182822873,
+            "median": 0.04350990970996563,
+            "min": 0.00034144888602344325,
+            "max": 0.3870528480874224
+          },
+          "nearest_distance": {
+            "mean": 0.1317458443405861,
+            "median": 0.09892742102376861,
+            "min": 0.01128372946617096,
+            "max": 0.9504579350227895
+          },
+          "abstained_samples": 0
+        },
+        "pH": {
+          "samples": 326,
+          "accuracy": 0.21779141104294478,
+          "f1_macro": 0.1687730053351751,
+          "f1_weighted": 0.2527206502154477,
+          "cohen_kappa": 0.10329428515953676,
+          "agreement": {
+            "macro_sensitivity": 0.2586301187141523,
+            "macro_specificity": 0.8785051101296671,
+            "per_level": {
+              "5.0": {
+                "tp": 2,
+                "fp": 2,
+                "fn": 82,
+                "tn": 240,
+                "sensitivity": 0.023809523809523808,
+                "specificity": 0.9917355371900827
+              },
+              "6.0": {
+                "tp": 44,
+                "fp": 8,
+                "fn": 126,
+                "tn": 148,
+                "sensitivity": 0.25882352941176473,
+                "specificity": 0.9487179487179487
+              },
+              "6.5": {
+                "tp": 6,
+                "fp": 42,
+                "fn": 14,
+                "tn": 264,
+                "sensitivity": 0.3,
+                "specificity": 0.8627450980392157
+              },
+              "7.0": {
+                "tp": 14,
+                "fp": 135,
+                "fn": 4,
+                "tn": 173,
+                "sensitivity": 0.7777777777777778,
+                "specificity": 0.5616883116883117
+              },
+              "7.5": {
+                "tp": 2,
+                "fp": 60,
+                "fn": 8,
+                "tn": 256,
+                "sensitivity": 0.2,
+                "specificity": 0.810126582278481
+              },
+              "8.0": {
+                "tp": 2,
+                "fp": 4,
+                "fn": 10,
+                "tn": 310,
+                "sensitivity": 0.16666666666666666,
+                "specificity": 0.9872611464968153
+              },
+              "8.5": {
+                "tp": 1,
+                "fp": 4,
+                "fn": 11,
+                "tn": 310,
+                "sensitivity": 0.08333333333333333,
+                "specificity": 0.9872611464968153
+              }
+            }
+          },
+          "confusion_matrix": {
+            "labels": [
+              "5.0",
+              "6.0",
+              "6.5",
+              "7.0",
+              "7.5",
+              "8.0",
+              "8.5"
+            ],
+            "matrix": [
+              [
+                2,
+                5,
+                11,
+                44,
+                18,
+                2,
+                2
+              ],
+              [
+                2,
+                44,
+                15,
+                68,
+                38,
+                2,
+                1
+              ],
+              [
+                0,
+                2,
+                6,
+                8,
+                4,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                4,
+                14,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                4,
+                4,
+                2,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                4,
+                5,
+                0,
+                2,
+                1
+              ],
+              [
+                0,
+                1,
+                4,
+                6,
+                0,
+                0,
+                1
+              ]
+            ]
+          },
+          "support_per_level": {
+            "5.0": 84,
+            "6.0": 170,
+            "6.5": 20,
+            "7.0": 18,
+            "7.5": 10,
+            "8.0": 12,
+            "8.5": 12
+          },
+          "soft_visual_probability": {
+            "mean": 0.26026734140346547,
+            "median": 0.24185629373625533,
+            "min": 0.15821127261739754,
+            "max": 0.45314993603458975
+          },
+          "confidence_margin": {
+            "mean": 0.08031215301319487,
+            "median": 0.06077202915688312,
+            "min": 0.00022690349800549847,
+            "max": 0.283965142542087
+          },
+          "nearest_distance": {
+            "mean": 0.11840814521610774,
+            "median": 0.1066089338501573,
+            "min": 0.027649816370867233,
+            "max": 0.4938072387808264
+          },
+          "abstained_samples": 0
+        },
+        "Blood": {
+          "samples": 326,
+          "accuracy": 0.39570552147239263,
+          "f1_macro": 0.2349747555245755,
+          "f1_weighted": 0.495410888994935,
+          "cohen_kappa": 0.13255713436706484,
+          "agreement": {
+            "macro_sensitivity": 0.3286452565522333,
+            "macro_specificity": 0.890605401110406,
+            "per_level": {
+              "Neg": {
+                "tp": 107,
+                "fp": 1,
+                "fn": 151,
+                "tn": 67,
+                "sensitivity": 0.41472868217054265,
+                "specificity": 0.9852941176470589
+              },
+              "Non-hemolyzed 10": {
+                "tp": 10,
+                "fp": 112,
+                "fn": 18,
+                "tn": 186,
+                "sensitivity": 0.35714285714285715,
+                "specificity": 0.6241610738255033
+              },
+              "Hemolyzed 10": {
+                "tp": 4,
+                "fp": 44,
+                "fn": 6,
+                "tn": 272,
+                "sensitivity": 0.4,
+                "specificity": 0.8607594936708861
+              },
+              "Small 25": {
+                "tp": 5,
+                "fp": 27,
+                "fn": 5,
+                "tn": 289,
+                "sensitivity": 0.5,
+                "specificity": 0.9145569620253164
+              },
+              "Moderate 80": {
+                "tp": 0,
+                "fp": 7,
+                "fn": 10,
+                "tn": 309,
+                "sensitivity": 0.0,
+                "specificity": 0.9778481012658228
+              },
+              "Large 200": {
+                "tp": 3,
+                "fp": 6,
+                "fn": 7,
+                "tn": 310,
+                "sensitivity": 0.3,
+                "specificity": 0.9810126582278481
+              }
+            }
+          },
+          "confusion_matrix": {
+            "labels": [
+              "Neg",
+              "Non-hemolyzed 10",
+              "Hemolyzed 10",
+              "Small 25",
+              "Moderate 80",
+              "Large 200"
+            ],
+            "matrix": [
+              [
+                107,
+                111,
+                28,
+                8,
+                3,
+                1
+              ],
+              [
+                1,
+                10,
+                9,
+                4,
+                3,
+                1
+              ],
+              [
+                0,
+                1,
+                4,
+                5,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                4,
+                5,
+                0,
+                1
+              ],
+              [
+                0,
+                0,
+                2,
+                5,
+                0,
+                3
+              ],
+              [
+                0,
+                0,
+                1,
+                5,
+                1,
+                3
+              ]
+            ]
+          },
+          "support_per_level": {
+            "Hemolyzed 10": 10,
+            "Large 200": 10,
+            "Moderate 80": 10,
+            "Neg": 258,
+            "Non-hemolyzed 10": 28,
+            "Small 25": 10
+          },
+          "soft_visual_probability": {
+            "mean": 0.2967842771448781,
+            "median": 0.28128309608861174,
+            "min": 0.1825971643765734,
+            "max": 0.6351742666562472
+          },
+          "confidence_margin": {
+            "mean": 0.10417268085724023,
+            "median": 0.0782140650893311,
+            "min": 0.0015363589594950267,
+            "max": 0.5295231279413439
+          },
+          "nearest_distance": {
+            "mean": 0.16698562589040145,
+            "median": 0.13137775591561754,
+            "min": 0.01965453773626571,
+            "max": 0.5348692301149175
+          },
+          "abstained_samples": 0
+        },
+        "Specific Gravity": {
+          "samples": 326,
+          "accuracy": 0.27607361963190186,
+          "f1_macro": 0.19816178362800424,
+          "f1_weighted": 0.25504952785237783,
+          "cohen_kappa": 0.1312948827966216,
+          "agreement": {
+            "macro_sensitivity": 0.29445647994962454,
+            "macro_specificity": 0.877371375709135,
+            "per_level": {
+              "1.000": {
+                "tp": 7,
+                "fp": 44,
+                "fn": 3,
+                "tn": 272,
+                "sensitivity": 0.7,
+                "specificity": 0.8607594936708861
+              },
+              "1.005": {
+                "tp": 4,
+                "fp": 51,
+                "fn": 14,
+                "tn": 257,
+                "sensitivity": 0.2222222222222222,
+                "specificity": 0.8344155844155844
+              },
+              "1.010": {
+                "tp": 20,
+                "fp": 74,
+                "fn": 18,
+                "tn": 214,
+                "sensitivity": 0.5263157894736842,
+                "specificity": 0.7430555555555556
+              },
+              "1.015": {
+                "tp": 2,
+                "fp": 3,
+                "fn": 40,
+                "tn": 281,
+                "sensitivity": 0.047619047619047616,
+                "specificity": 0.9894366197183099
+              },
+              "1.020": {
+                "tp": 1,
+                "fp": 3,
+                "fn": 33,
+                "tn": 289,
+                "sensitivity": 0.029411764705882353,
+                "specificity": 0.9897260273972602
+              },
+              "1.025": {
+                "tp": 6,
+                "fp": 10,
+                "fn": 68,
+                "tn": 242,
+                "sensitivity": 0.08108108108108109,
+                "specificity": 0.9603174603174603
+              },
+              "1.030": {
+                "tp": 50,
+                "fp": 51,
+                "fn": 60,
+                "tn": 165,
+                "sensitivity": 0.45454545454545453,
+                "specificity": 0.7638888888888888
+              }
+            }
+          },
+          "confusion_matrix": {
+            "labels": [
+              "1.000",
+              "1.005",
+              "1.010",
+              "1.015",
+              "1.020",
+              "1.025",
+              "1.030"
+            ],
+            "matrix": [
+              [
+                7,
+                3,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                10,
+                4,
+                4,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                6,
+                5,
+                20,
+                0,
+                1,
+                0,
+                6
+              ],
+              [
+                6,
+                2,
+                18,
+                2,
+                0,
+                4,
+                10
+              ],
+              [
+                5,
+                10,
+                8,
+                2,
+                1,
+                2,
+                6
+              ],
+              [
+                7,
+                15,
+                14,
+                1,
+                2,
+                6,
+                29
+              ],
+              [
+                10,
+                16,
+                30,
+                0,
+                0,
+                4,
+                50
+              ]
+            ]
+          },
+          "support_per_level": {
+            "1.000": 10,
+            "1.005": 18,
+            "1.010": 38,
+            "1.015": 42,
+            "1.020": 34,
+            "1.025": 74,
+            "1.030": 110
+          },
+          "soft_visual_probability": {
+            "mean": 0.2636401365637351,
+            "median": 0.25733966335281167,
+            "min": 0.1563137403255592,
+            "max": 0.47108202402692667
+          },
+          "confidence_margin": {
+            "mean": 0.07950892350300619,
+            "median": 0.06123834101689132,
+            "min": 1.7030718381216836e-05,
+            "max": 0.29905108095149036
+          },
+          "nearest_distance": {
+            "mean": 0.1777161012453997,
+            "median": 0.12035168564594013,
+            "min": 0.029510660181735066,
+            "max": 0.7357795427258985
+          },
+          "abstained_samples": 0
+        },
+        "Ketone": {
+          "samples": 326,
+          "accuracy": 0.37116564417177916,
+          "f1_macro": 0.25002428552000155,
+          "f1_weighted": 0.4565953691476516,
+          "cohen_kappa": 0.12603965057278865,
+          "agreement": {
+            "macro_sensitivity": 0.32799211142610624,
+            "macro_specificity": 0.877833706170963,
+            "per_level": {
+              "Neg": {
+                "tp": 94,
+                "fp": 6,
+                "fn": 150,
+                "tn": 76,
+                "sensitivity": 0.38524590163934425,
+                "specificity": 0.926829268292683
+              },
+              "Trace 0.5": {
+                "tp": 14,
+                "fp": 95,
+                "fn": 24,
+                "tn": 193,
+                "sensitivity": 0.3684210526315789,
+                "specificity": 0.6701388888888888
+              },
+              "Small 1.5": {
+                "tp": 3,
+                "fp": 21,
+                "fn": 11,
+                "tn": 291,
+                "sensitivity": 0.21428571428571427,
+                "specificity": 0.9326923076923077
+              },
+              "Moderate 4.0": {
+                "tp": 5,
+                "fp": 53,
+                "fn": 5,
+                "tn": 263,
+                "sensitivity": 0.5,
+                "specificity": 0.8322784810126582
+              },
+              "8.0": {
+                "tp": 2,
+                "fp": 26,
+                "fn": 8,
+                "tn": 290,
+                "sensitivity": 0.2,
+                "specificity": 0.9177215189873418
+              },
+              "Large 16": {
+                "tp": 3,
+                "fp": 4,
+                "fn": 7,
+                "tn": 312,
+                "sensitivity": 0.3,
+                "specificity": 0.9873417721518988
+              }
+            }
+          },
+          "confusion_matrix": {
+            "labels": [
+              "Neg",
+              "Trace 0.5",
+              "Small 1.5",
+              "Moderate 4.0",
+              "8.0",
+              "Large 16"
+            ],
+            "matrix": [
+              [
+                94,
+                92,
+                11,
+                30,
+                15,
+                2
+              ],
+              [
+                6,
+                14,
+                6,
+                6,
+                5,
+                1
+              ],
+              [
+                0,
+                2,
+                3,
+                7,
+                2,
+                0
+              ],
+              [
+                0,
+                0,
+                1,
+                5,
+                3,
+                1
+              ],
+              [
+                0,
+                0,
+                3,
+                5,
+                2,
+                0
+              ],
+              [
+                0,
+                1,
+                0,
+                5,
+                1,
+                3
+              ]
+            ]
+          },
+          "support_per_level": {
+            "8.0": 10,
+            "Large 16": 10,
+            "Moderate 4.0": 10,
+            "Neg": 244,
+            "Small 1.5": 14,
+            "Trace 0.5": 38
+          },
+          "soft_visual_probability": {
+            "mean": 0.3108047467545766,
+            "median": 0.3179007273235112,
+            "min": 0.18957598466646888,
+            "max": 0.5523511231003111
+          },
+          "confidence_margin": {
+            "mean": 0.1057702731530961,
+            "median": 0.09469363004150771,
+            "min": 2.3039185308770804e-05,
+            "max": 0.41956372970068756
+          },
+          "nearest_distance": {
+            "mean": 0.1878035303468784,
+            "median": 0.11799119488980597,
+            "min": 0.036635580072699354,
+            "max": 0.645494960159409
+          },
+          "abstained_samples": 0
+        },
+        "Bilirubin": {
+          "samples": 326,
+          "accuracy": 0.25766871165644173,
+          "f1_macro": 0.2417372670616998,
+          "f1_weighted": 0.27680056667149766,
+          "cohen_kappa": 0.07793361383824227,
+          "agreement": {
+            "macro_sensitivity": 0.34794052642153905,
+            "macro_specificity": 0.7732769116418498,
+            "per_level": {
+              "Neg": {
+                "tp": 50,
+                "fp": 42,
+                "fn": 76,
+                "tn": 158,
+                "sensitivity": 0.3968253968253968,
+                "specificity": 0.79
+              },
+              "Small 17": {
+                "tp": 15,
+                "fp": 15,
+                "fn": 143,
+                "tn": 153,
+                "sensitivity": 0.0949367088607595,
+                "specificity": 0.9107142857142857
+              },
+              "Moderate 50": {
+                "tp": 11,
+                "fp": 141,
+                "fn": 11,
+                "tn": 163,
+                "sensitivity": 0.5,
+                "specificity": 0.5361842105263158
+              },
+              "Large 100": {
+                "tp": 8,
+                "fp": 44,
+                "fn": 12,
+                "tn": 262,
+                "sensitivity": 0.4,
+                "specificity": 0.8562091503267973
+              }
+            }
+          },
+          "confusion_matrix": {
+            "labels": [
+              "Neg",
+              "Small 17",
+              "Moderate 50",
+              "Large 100"
+            ],
+            "matrix": [
+              [
+                50,
+                11,
+                45,
+                20
+              ],
+              [
+                38,
+                15,
+                86,
+                19
+              ],
+              [
+                2,
+                4,
+                11,
+                5
+              ],
+              [
+                2,
+                0,
+                10,
+                8
+              ]
+            ]
+          },
+          "support_per_level": {
+            "Large 100": 20,
+            "Moderate 50": 22,
+            "Neg": 126,
+            "Small 17": 158
+          },
+          "soft_visual_probability": {
+            "mean": 0.3819294010312525,
+            "median": 0.3543425486056852,
+            "min": 0.28548245726102445,
+            "max": 0.6159102437920387
+          },
+          "confidence_margin": {
+            "mean": 0.11887983396026684,
+            "median": 0.08466719871337985,
+            "min": 0.0005793334196560473,
+            "max": 0.4315581627747942
+          },
+          "nearest_distance": {
+            "mean": 0.4350220127326168,
+            "median": 0.35998505354258636,
+            "min": 0.06265857907926975,
+            "max": 0.857817056853612
+          },
+          "abstained_samples": 0
+        },
+        "Glucose": {
+          "samples": 326,
+          "accuracy": 0.049079754601226995,
+          "f1_macro": 0.07668439716312057,
+          "f1_weighted": 0.016669929948222598,
+          "cohen_kappa": 0.010224868761262607,
+          "agreement": {
+            "macro_sensitivity": 0.21904761904761905,
+            "macro_specificity": 0.8350238017959537,
+            "per_level": {
+              "Neg": {
+                "tp": 0,
+                "fp": 0,
+                "fn": 264,
+                "tn": 62,
+                "sensitivity": 0.0,
+                "specificity": 1.0
+              },
+              "Trace 5": {
+                "tp": 1,
+                "fp": 0,
+                "fn": 13,
+                "tn": 312,
+                "sensitivity": 0.07142857142857142,
+                "specificity": 1.0
+              },
+              "15 +": {
+                "tp": 2,
+                "fp": 12,
+                "fn": 8,
+                "tn": 304,
+                "sensitivity": 0.2,
+                "specificity": 0.9620253164556962
+              },
+              "30 ++": {
+                "tp": 0,
+                "fp": 1,
+                "fn": 14,
+                "tn": 311,
+                "sensitivity": 0.0,
+                "specificity": 0.9967948717948718
+              },
+              "60 +++": {
+                "tp": 9,
+                "fp": 217,
+                "fn": 5,
+                "tn": 95,
+                "sensitivity": 0.6428571428571429,
+                "specificity": 0.30448717948717946
+              },
+              "110 ++++": {
+                "tp": 4,
+                "fp": 80,
+                "fn": 6,
+                "tn": 236,
+                "sensitivity": 0.4,
+                "specificity": 0.7468354430379747
+              }
+            }
+          },
+          "confusion_matrix": {
+            "labels": [
+              "Neg",
+              "Trace 5",
+              "15 +",
+              "30 ++",
+              "60 +++",
+              "110 ++++"
+            ],
+            "matrix": [
+              [
+                0,
+                0,
+                8,
+                0,
+                190,
+                66
+              ],
+              [
+                0,
+                1,
+                0,
+                1,
+                8,
+                4
+              ],
+              [
+                0,
+                0,
+                2,
+                0,
+                5,
+                3
+              ],
+              [
+                0,
+                0,
+                2,
+                0,
+                9,
+                3
+              ],
+              [
+                0,
+                0,
+                1,
+                0,
+                9,
+                4
+              ],
+              [
+                0,
+                0,
+                1,
+                0,
+                5,
+                4
+              ]
+            ]
+          },
+          "support_per_level": {
+            "110 ++++": 10,
+            "15 +": 10,
+            "30 ++": 14,
+            "60 +++": 14,
+            "Neg": 264,
+            "Trace 5": 14
+          },
+          "soft_visual_probability": {
+            "mean": 0.27881870949432735,
+            "median": 0.24938988817186475,
+            "min": 0.18866389832564123,
+            "max": 0.7200701941038488
+          },
+          "confidence_margin": {
+            "mean": 0.0813788045394308,
+            "median": 0.04336445419287316,
+            "min": 0.0011830286083938935,
+            "max": 0.6388021432580905
+          },
+          "nearest_distance": {
+            "mean": 0.4095181439992159,
+            "median": 0.4391689987828919,
+            "min": 0.0285682770863371,
+            "max": 0.7225695616744562
+          },
+          "abstained_samples": 0
+        }
+      },
+      "latency_benchmark_ms": {
+        "runs": 1,
+        "samples_per_run": 3260,
+        "total_predictions": 3260,
+        "total_elapsed_ms": 15.38050000090152,
+        "avg_elapsed_ms_per_run": 15.38050000090152,
+        "avg_elapsed_ms_per_prediction": 0.004717944785552613
+      }
+    },
+    "4000": {
+      "samples_total": 3120,
+      "samples_evaluated": 3120,
+      "samples_dropped": 0,
+      "samples_abstained": 0,
+      "coverage": 1.0,
+      "overall": {
+        "accuracy": 0.23205128205128206,
+        "f1_macro": 0.12351475841451566,
+        "f1_weighted": 0.2486810330075008,
+        "cohen_kappa": 0.21720287245095526
+      },
+      "per_analyte": {
+        "Leukocytes": {
+          "samples": 312,
+          "accuracy": 0.46794871794871795,
+          "f1_macro": 0.3199780804805537,
+          "f1_weighted": 0.4953029539481712,
+          "cohen_kappa": 0.21971797035072926,
+          "agreement": {
+            "macro_sensitivity": 0.3657986111111111,
+            "macro_specificity": 0.8508281573498965,
+            "per_level": {
+              "Neg": {
+                "tp": 92,
+                "fp": 48,
+                "fn": 52,
+                "tn": 120,
+                "sensitivity": 0.6388888888888888,
+                "specificity": 0.7142857142857143
+              },
+              "Trace 15": {
+                "tp": 43,
+                "fp": 31,
+                "fn": 85,
+                "tn": 153,
+                "sensitivity": 0.3359375,
+                "specificity": 0.8315217391304348
+              },
+              "Small 70": {
+                "tp": 3,
+                "fp": 37,
+                "fn": 13,
+                "tn": 259,
+                "sensitivity": 0.1875,
+                "specificity": 0.875
+              },
+              "Moderate 125": {
+                "tp": 5,
+                "fp": 17,
+                "fn": 7,
+                "tn": 283,
+                "sensitivity": 0.4166666666666667,
+                "specificity": 0.9433333333333334
+              },
+              "Large 500": {
+                "tp": 3,
+                "fp": 33,
+                "fn": 9,
+                "tn": 267,
+                "sensitivity": 0.25,
+                "specificity": 0.89
+              }
+            }
+          },
+          "confusion_matrix": {
+            "labels": [
+              "Neg",
+              "Trace 15",
+              "Small 70",
+              "Moderate 125",
+              "Large 500"
+            ],
+            "matrix": [
+              [
+                92,
+                17,
+                16,
+                5,
+                14
+              ],
+              [
+                46,
+                43,
+                21,
+                4,
+                14
+              ],
+              [
+                0,
+                4,
+                3,
+                4,
+                5
+              ],
+              [
+                2,
+                5,
+                0,
+                5,
+                0
+              ],
+              [
+                0,
+                5,
+                0,
+                4,
+                3
+              ]
+            ]
+          },
+          "support_per_level": {
+            "Large 500": 12,
+            "Moderate 125": 12,
+            "Neg": 144,
+            "Small 70": 16,
+            "Trace 15": 128
+          },
+          "soft_visual_probability": {
+            "mean": 0.3054948348793984,
+            "median": 0.29327364279659673,
+            "min": 0.21838271850026708,
+            "max": 0.8277907205481561
+          },
+          "confidence_margin": {
+            "mean": 0.08204884899781541,
+            "median": 0.047038420846300805,
+            "min": 1.1394192652419699e-05,
+            "max": 0.7732009143050566
+          },
+          "nearest_distance": {
+            "mean": 0.3200829856568882,
+            "median": 0.2046394334918386,
+            "min": 0.012507176561389109,
+            "max": 0.8887327474401345
+          },
+          "abstained_samples": 0
+        },
+        "Nitrite": {
+          "samples": 312,
+          "accuracy": 0.6666666666666666,
+          "f1_macro": 0.6578803087174729,
+          "f1_weighted": 0.6670181209846344,
+          "cohen_kappa": 0.3157894736842105,
+          "agreement": {
+            "macro_sensitivity": 0.6582417582417582,
+            "macro_specificity": 0.6582417582417582,
+            "per_level": {
+              "Neg": {
+                "tp": 129,
+                "fp": 51,
+                "fn": 53,
+                "tn": 79,
+                "sensitivity": 0.7087912087912088,
+                "specificity": 0.6076923076923076
+              },
+              "Positive": {
+                "tp": 79,
+                "fp": 53,
+                "fn": 51,
+                "tn": 129,
+                "sensitivity": 0.6076923076923076,
+                "specificity": 0.7087912087912088
+              }
+            }
+          },
+          "confusion_matrix": {
+            "labels": [
+              "Neg",
+              "Positive"
+            ],
+            "matrix": [
+              [
+                129,
+                53
+              ],
+              [
+                51,
+                79
+              ]
+            ]
+          },
+          "support_per_level": {
+            "Neg": 182,
+            "Positive": 130
+          },
+          "soft_visual_probability": {
+            "mean": 0.6262088548886517,
+            "median": 0.6161450740831431,
+            "min": 0.5015602067774645,
+            "max": 0.8815948746650397
+          },
+          "confidence_margin": {
+            "mean": 0.2524177097773035,
+            "median": 0.23229014816628624,
+            "min": 0.0031204135549289247,
+            "max": 0.7631897493300793
+          },
+          "nearest_distance": {
+            "mean": 0.375458626476184,
+            "median": 0.23315621664968159,
+            "min": 0.04243793680371738,
+            "max": 0.9638322638358326
+          },
+          "abstained_samples": 0
+        },
+        "Urobilinogen": {
+          "samples": 312,
+          "accuracy": 0.2724358974358974,
+          "f1_macro": 0.14758306281375835,
+          "f1_weighted": 0.24025600771782457,
+          "cohen_kappa": 0.0733239127021511,
+          "agreement": {
+            "macro_sensitivity": 0.3271824138659903,
+            "macro_specificity": 0.8157818702309313,
+            "per_level": {
+              "3.2": {
+                "tp": 8,
+                "fp": 10,
+                "fn": 158,
+                "tn": 136,
+                "sensitivity": 0.04819277108433735,
+                "specificity": 0.9315068493150684
+              },
+              "16": {
+                "tp": 67,
+                "fp": 77,
+                "fn": 47,
+                "tn": 121,
+                "sensitivity": 0.5877192982456141,
+                "specificity": 0.6111111111111112
+              },
+              "32": {
+                "tp": 0,
+                "fp": 6,
+                "fn": 12,
+                "tn": 294,
+                "sensitivity": 0.0,
+                "specificity": 0.98
+              },
+              "64": {
+                "tp": 0,
+                "fp": 2,
+                "fn": 10,
+                "tn": 300,
+                "sensitivity": 0.0,
+                "specificity": 0.9933774834437086
+              },
+              "128": {
+                "tp": 10,
+                "fp": 132,
+                "fn": 0,
+                "tn": 170,
+                "sensitivity": 1.0,
+                "specificity": 0.5629139072847682
+              }
+            }
+          },
+          "confusion_matrix": {
+            "labels": [
+              "3.2",
+              "16",
+              "32",
+              "64",
+              "128"
+            ],
+            "matrix": [
+              [
+                8,
+                74,
+                6,
+                0,
+                78
+              ],
+              [
+                10,
+                67,
+                0,
+                2,
+                35
+              ],
+              [
+                0,
+                3,
+                0,
+                0,
+                9
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                10
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                10
+              ]
+            ]
+          },
+          "support_per_level": {
+            "128": 10,
+            "16": 114,
+            "3.2": 166,
+            "32": 12,
+            "64": 10
+          },
+          "soft_visual_probability": {
+            "mean": 0.24179104411609345,
+            "median": 0.2383006388952989,
+            "min": 0.2084194285695201,
+            "max": 0.3715802062504882
+          },
+          "confidence_margin": {
+            "mean": 0.016937932990104074,
+            "median": 0.013693502844468991,
+            "min": 8.855801707619015e-05,
+            "max": 0.16763856212623834
+          },
+          "nearest_distance": {
+            "mean": 0.5229071688997644,
+            "median": 0.49779082946848874,
+            "min": 0.09948034302052229,
+            "max": 0.9045972466247195
+          },
+          "abstained_samples": 0
+        },
+        "Protein": {
+          "samples": 312,
+          "accuracy": 0.22435897435897437,
+          "f1_macro": 0.10632973218887347,
+          "f1_weighted": 0.30900734082589015,
+          "cohen_kappa": 0.05676594043573868,
+          "agreement": {
+            "macro_sensitivity": 0.22375854891465952,
+            "macro_specificity": 0.856493748934622,
+            "per_level": {
+              "Neg": {
+                "tp": 56,
+                "fp": 6,
+                "fn": 180,
+                "tn": 70,
+                "sensitivity": 0.23728813559322035,
+                "specificity": 0.9210526315789473
+              },
+              "Trace": {
+                "tp": 4,
+                "fp": 2,
+                "fn": 34,
+                "tn": 272,
+                "sensitivity": 0.10526315789473684,
+                "specificity": 0.9927007299270073
+              },
+              "0.3": {
+                "tp": 10,
+                "fp": 229,
+                "fn": 0,
+                "tn": 73,
+                "sensitivity": 1.0,
+                "specificity": 0.24172185430463577
+              },
+              "1.0": {
+                "tp": 0,
+                "fp": 2,
+                "fn": 8,
+                "tn": 302,
+                "sensitivity": 0.0,
+                "specificity": 0.993421052631579
+              },
+              "3.0": {
+                "tp": 0,
+                "fp": 0,
+                "fn": 10,
+                "tn": 302,
+                "sensitivity": 0.0,
+                "specificity": 1.0
+              },
+              ">=20.0": {
+                "tp": 0,
+                "fp": 3,
+                "fn": 10,
+                "tn": 299,
+                "sensitivity": 0.0,
+                "specificity": 0.9900662251655629
+              }
+            }
+          },
+          "confusion_matrix": {
+            "labels": [
+              "Neg",
+              "Trace",
+              "0.3",
+              "1.0",
+              "3.0",
+              ">=20.0"
+            ],
+            "matrix": [
+              [
+                56,
+                2,
+                175,
+                2,
+                0,
+                1
+              ],
+              [
+                6,
+                4,
+                27,
+                0,
+                0,
+                1
+              ],
+              [
+                0,
+                0,
+                10,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                7,
+                0,
+                0,
+                1
+              ],
+              [
+                0,
+                0,
+                10,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                10,
+                0,
+                0,
+                0
+              ]
+            ]
+          },
+          "support_per_level": {
+            "0.3": 10,
+            "1.0": 8,
+            "3.0": 10,
+            ">=20.0": 10,
+            "Neg": 236,
+            "Trace": 38
+          },
+          "soft_visual_probability": {
+            "mean": 0.2061360561496862,
+            "median": 0.1958903617292838,
+            "min": 0.1758231922871355,
+            "max": 0.4963399781701651
+          },
+          "confidence_margin": {
+            "mean": 0.01163212367127558,
+            "median": 0.004703574683669304,
+            "min": 1.2128648660375552e-05,
+            "max": 0.26246183210693486
+          },
+          "nearest_distance": {
+            "mean": 0.6076180239790995,
+            "median": 0.6761686886151084,
+            "min": 0.037564626303596034,
+            "max": 0.8130885646817737
+          },
+          "abstained_samples": 0
+        },
+        "pH": {
+          "samples": 312,
+          "accuracy": 0.08012820512820513,
+          "f1_macro": 0.03710739886280906,
+          "f1_weighted": 0.025542510208181136,
+          "cohen_kappa": 0.019147351356088138,
+          "agreement": {
+            "macro_sensitivity": 0.1803135888501742,
+            "macro_specificity": 0.8603262909860617,
+            "per_level": {
+              "5.0": {
+                "tp": 0,
+                "fp": 0,
+                "fn": 78,
+                "tn": 234,
+                "sensitivity": 0.0,
+                "specificity": 1.0
+              },
+              "6.0": {
+                "tp": 2,
+                "fp": 0,
+                "fn": 162,
+                "tn": 148,
+                "sensitivity": 0.012195121951219513,
+                "specificity": 1.0
+              },
+              "6.5": {
+                "tp": 0,
+                "fp": 2,
+                "fn": 18,
+                "tn": 292,
+                "sensitivity": 0.0,
+                "specificity": 0.9931972789115646
+              },
+              "7.0": {
+                "tp": 20,
+                "fp": 229,
+                "fn": 0,
+                "tn": 63,
+                "sensitivity": 1.0,
+                "specificity": 0.21575342465753425
+              },
+              "7.5": {
+                "tp": 0,
+                "fp": 2,
+                "fn": 12,
+                "tn": 298,
+                "sensitivity": 0.0,
+                "specificity": 0.9933333333333333
+              },
+              "8.0": {
+                "tp": 3,
+                "fp": 54,
+                "fn": 9,
+                "tn": 246,
+                "sensitivity": 0.25,
+                "specificity": 0.82
+              },
+              "8.5": {
+                "tp": 0,
+                "fp": 0,
+                "fn": 8,
+                "tn": 304,
+                "sensitivity": 0.0,
+                "specificity": 1.0
+              }
+            }
+          },
+          "confusion_matrix": {
+            "labels": [
+              "5.0",
+              "6.0",
+              "6.5",
+              "7.0",
+              "7.5",
+              "8.0",
+              "8.5"
+            ],
+            "matrix": [
+              [
+                0,
+                0,
+                0,
+                70,
+                0,
+                8,
+                0
+              ],
+              [
+                0,
+                2,
+                2,
+                123,
+                2,
+                35,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                12,
+                0,
+                6,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                20,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                9,
+                0,
+                3,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                9,
+                0,
+                3,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                6,
+                0,
+                2,
+                0
+              ]
+            ]
+          },
+          "support_per_level": {
+            "5.0": 78,
+            "6.0": 164,
+            "6.5": 18,
+            "7.0": 20,
+            "7.5": 12,
+            "8.0": 12,
+            "8.5": 8
+          },
+          "soft_visual_probability": {
+            "mean": 0.1722462932364798,
+            "median": 0.16922098455454632,
+            "min": 0.15325127663601115,
+            "max": 0.2831447202074566
+          },
+          "confidence_margin": {
+            "mean": 0.014807464983000016,
+            "median": 0.01356583330858488,
+            "min": 0.0001404149936030108,
+            "max": 0.08640717294929595
+          },
+          "nearest_distance": {
+            "mean": 0.6712263148319779,
+            "median": 0.7270251866556374,
+            "min": 0.05781824239386426,
+            "max": 0.8426175231847324
+          },
+          "abstained_samples": 0
+        },
+        "Blood": {
+          "samples": 312,
+          "accuracy": 0.16987179487179488,
+          "f1_macro": 0.08259939652112176,
+          "f1_weighted": 0.24284280194423966,
+          "cohen_kappa": -0.017322993252089747,
+          "agreement": {
+            "macro_sensitivity": 0.1554232804232804,
+            "macro_specificity": 0.8236064613613411,
+            "per_level": {
+              "Neg": {
+                "tp": 46,
+                "fp": 15,
+                "fn": 206,
+                "tn": 45,
+                "sensitivity": 0.18253968253968253,
+                "specificity": 0.75
+              },
+              "Non-hemolyzed 10": {
+                "tp": 0,
+                "fp": 4,
+                "fn": 26,
+                "tn": 282,
+                "sensitivity": 0.0,
+                "specificity": 0.986013986013986
+              },
+              "Hemolyzed 10": {
+                "tp": 5,
+                "fp": 225,
+                "fn": 5,
+                "tn": 77,
+                "sensitivity": 0.5,
+                "specificity": 0.25496688741721857
+              },
+              "Small 25": {
+                "tp": 2,
+                "fp": 15,
+                "fn": 6,
+                "tn": 289,
+                "sensitivity": 0.25,
+                "specificity": 0.9506578947368421
+              },
+              "Moderate 80": {
+                "tp": 0,
+                "fp": 0,
+                "fn": 8,
+                "tn": 304,
+                "sensitivity": 0.0,
+                "specificity": 1.0
+              },
+              "Large 200": {
+                "tp": 0,
+                "fp": 0,
+                "fn": 8,
+                "tn": 304,
+                "sensitivity": 0.0,
+                "specificity": 1.0
+              }
+            }
+          },
+          "confusion_matrix": {
+            "labels": [
+              "Neg",
+              "Non-hemolyzed 10",
+              "Hemolyzed 10",
+              "Small 25",
+              "Moderate 80",
+              "Large 200"
+            ],
+            "matrix": [
+              [
+                46,
+                4,
+                196,
+                6,
+                0,
+                0
+              ],
+              [
+                6,
+                0,
+                18,
+                2,
+                0,
+                0
+              ],
+              [
+                2,
+                0,
+                5,
+                3,
+                0,
+                0
+              ],
+              [
+                2,
+                0,
+                4,
+                2,
+                0,
+                0
+              ],
+              [
+                1,
+                0,
+                3,
+                4,
+                0,
+                0
+              ],
+              [
+                4,
+                0,
+                4,
+                0,
+                0,
+                0
+              ]
+            ]
+          },
+          "support_per_level": {
+            "Hemolyzed 10": 10,
+            "Large 200": 8,
+            "Moderate 80": 8,
+            "Neg": 252,
+            "Non-hemolyzed 10": 26,
+            "Small 25": 8
+          },
+          "soft_visual_probability": {
+            "mean": 0.20564687810904547,
+            "median": 0.1985530881286995,
+            "min": 0.18000050467682996,
+            "max": 0.4724893260699061
+          },
+          "confidence_margin": {
+            "mean": 0.01377525231769109,
+            "median": 0.0011954893962856372,
+            "min": 9.920131824167622e-05,
+            "max": 0.3220677380577667
+          },
+          "nearest_distance": {
+            "mean": 0.5928846467103029,
+            "median": 0.5900261854106901,
+            "min": 0.0717665431347043,
+            "max": 0.9291864450646036
+          },
+          "abstained_samples": 0
+        },
+        "Specific Gravity": {
+          "samples": 312,
+          "accuracy": 0.0641025641025641,
+          "f1_macro": 0.05645655306457558,
+          "f1_weighted": 0.06351371671568715,
+          "cohen_kappa": -0.019607843137255054,
+          "agreement": {
+            "macro_sensitivity": 0.10952380952380952,
+            "macro_specificity": 0.8544076690748518,
+            "per_level": {
+              "1.000": {
+                "tp": 4,
+                "fp": 86,
+                "fn": 4,
+                "tn": 218,
+                "sensitivity": 0.5,
+                "specificity": 0.7171052631578947
+              },
+              "1.005": {
+                "tp": 0,
+                "fp": 131,
+                "fn": 16,
+                "tn": 165,
+                "sensitivity": 0.0,
+                "specificity": 0.5574324324324325
+              },
+              "1.010": {
+                "tp": 0,
+                "fp": 10,
+                "fn": 40,
+                "tn": 262,
+                "sensitivity": 0.0,
+                "specificity": 0.9632352941176471
+              },
+              "1.015": {
+                "tp": 4,
+                "fp": 31,
+                "fn": 36,
+                "tn": 241,
+                "sensitivity": 0.1,
+                "specificity": 0.8860294117647058
+              },
+              "1.020": {
+                "tp": 0,
+                "fp": 0,
+                "fn": 32,
+                "tn": 280,
+                "sensitivity": 0.0,
+                "specificity": 1.0
+              },
+              "1.025": {
+                "tp": 12,
+                "fp": 32,
+                "fn": 60,
+                "tn": 208,
+                "sensitivity": 0.16666666666666666,
+                "specificity": 0.8666666666666667
+              },
+              "1.030": {
+                "tp": 0,
+                "fp": 2,
+                "fn": 104,
+                "tn": 206,
+                "sensitivity": 0.0,
+                "specificity": 0.9903846153846154
+              }
+            }
+          },
+          "confusion_matrix": {
+            "labels": [
+              "1.000",
+              "1.005",
+              "1.010",
+              "1.015",
+              "1.020",
+              "1.025",
+              "1.030"
+            ],
+            "matrix": [
+              [
+                4,
+                0,
+                0,
+                4,
+                0,
+                0,
+                0
+              ],
+              [
+                11,
+                0,
+                0,
+                5,
+                0,
+                0,
+                0
+              ],
+              [
+                8,
+                20,
+                0,
+                8,
+                0,
+                4,
+                0
+              ],
+              [
+                18,
+                10,
+                2,
+                4,
+                0,
+                6,
+                0
+              ],
+              [
+                12,
+                10,
+                2,
+                4,
+                0,
+                2,
+                2
+              ],
+              [
+                20,
+                35,
+                2,
+                3,
+                0,
+                12,
+                0
+              ],
+              [
+                17,
+                56,
+                4,
+                7,
+                0,
+                20,
+                0
+              ]
+            ]
+          },
+          "support_per_level": {
+            "1.000": 8,
+            "1.005": 16,
+            "1.010": 40,
+            "1.015": 40,
+            "1.020": 32,
+            "1.025": 72,
+            "1.030": 104
+          },
+          "soft_visual_probability": {
+            "mean": 0.1706959558879726,
+            "median": 0.16434112371969667,
+            "min": 0.14832448731443698,
+            "max": 0.3569515736707411
+          },
+          "confidence_margin": {
+            "mean": 0.007972612071205367,
+            "median": 0.0026188964146296734,
+            "min": 9.975097424685941e-05,
+            "max": 0.20112566349406544
+          },
+          "nearest_distance": {
+            "mean": 0.6898554317620188,
+            "median": 0.7291040144497559,
+            "min": 0.06403997931499225,
+            "max": 0.9420245072733423
+          },
+          "abstained_samples": 0
+        },
+        "Ketone": {
+          "samples": 312,
+          "accuracy": 0.10256410256410256,
+          "f1_macro": 0.05593746523880311,
+          "f1_weighted": 0.14699324884077486,
+          "cohen_kappa": -0.01991734186377725,
+          "agreement": {
+            "macro_sensitivity": 0.14320728291316526,
+            "macro_specificity": 0.8238941888112369,
+            "per_level": {
+              "Neg": {
+                "tp": 26,
+                "fp": 13,
+                "fn": 212,
+                "tn": 61,
+                "sensitivity": 0.1092436974789916,
+                "specificity": 0.8243243243243243
+              },
+              "Trace 0.5": {
+                "tp": 0,
+                "fp": 8,
+                "fn": 36,
+                "tn": 268,
+                "sensitivity": 0.0,
+                "specificity": 0.9710144927536232
+              },
+              "Small 1.5": {
+                "tp": 0,
+                "fp": 0,
+                "fn": 14,
+                "tn": 298,
+                "sensitivity": 0.0,
+                "specificity": 1.0
+              },
+              "Moderate 4.0": {
+                "tp": 2,
+                "fp": 25,
+                "fn": 6,
+                "tn": 279,
+                "sensitivity": 0.25,
+                "specificity": 0.9177631578947368
+              },
+              "8.0": {
+                "tp": 4,
+                "fp": 226,
+                "fn": 4,
+                "tn": 78,
+                "sensitivity": 0.5,
+                "specificity": 0.2565789473684211
+              },
+              "Large 16": {
+                "tp": 0,
+                "fp": 8,
+                "fn": 8,
+                "tn": 296,
+                "sensitivity": 0.0,
+                "specificity": 0.9736842105263158
+              }
+            }
+          },
+          "confusion_matrix": {
+            "labels": [
+              "Neg",
+              "Trace 0.5",
+              "Small 1.5",
+              "Moderate 4.0",
+              "8.0",
+              "Large 16"
+            ],
+            "matrix": [
+              [
+                26,
+                8,
+                0,
+                13,
+                183,
+                8
+              ],
+              [
+                5,
+                0,
+                0,
+                3,
+                28,
+                0
+              ],
+              [
+                2,
+                0,
+                0,
+                5,
+                7,
+                0
+              ],
+              [
+                2,
+                0,
+                0,
+                2,
+                4,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                4,
+                4,
+                0
+              ],
+              [
+                4,
+                0,
+                0,
+                0,
+                4,
+                0
+              ]
+            ]
+          },
+          "support_per_level": {
+            "8.0": 8,
+            "Large 16": 8,
+            "Moderate 4.0": 8,
+            "Neg": 238,
+            "Small 1.5": 14,
+            "Trace 0.5": 36
+          },
+          "soft_visual_probability": {
+            "mean": 0.2008735753804187,
+            "median": 0.19780939021570895,
+            "min": 0.17268995432303724,
+            "max": 0.3129254904109087
+          },
+          "confidence_margin": {
+            "mean": 0.005864920429544691,
+            "median": 0.0005525039739333049,
+            "min": 5.4007546939238704e-05,
+            "max": 0.12044372159543834
+          },
+          "nearest_distance": {
+            "mean": 0.6118722709667087,
+            "median": 0.6038581169281296,
+            "min": 0.08744665488324277,
+            "max": 0.9904953822162234
+          },
+          "abstained_samples": 0
+        },
+        "Bilirubin": {
+          "samples": 312,
+          "accuracy": 0.20512820512820512,
+          "f1_macro": 0.16332283251597318,
+          "f1_weighted": 0.2461694438915105,
+          "cohen_kappa": 0.042139143352314945,
+          "agreement": {
+            "macro_sensitivity": 0.2570136852394917,
+            "macro_specificity": 0.7663973584736608,
+            "per_level": {
+              "Neg": {
+                "tp": 14,
+                "fp": 8,
+                "fn": 110,
+                "tn": 180,
+                "sensitivity": 0.11290322580645161,
+                "specificity": 0.9574468085106383
+              },
+              "Small 17": {
+                "tp": 35,
+                "fp": 24,
+                "fn": 115,
+                "tn": 138,
+                "sensitivity": 0.23333333333333334,
+                "specificity": 0.8518518518518519
+              },
+              "Moderate 50": {
+                "tp": 15,
+                "fp": 200,
+                "fn": 7,
+                "tn": 90,
+                "sensitivity": 0.6818181818181818,
+                "specificity": 0.3103448275862069
+              },
+              "Large 100": {
+                "tp": 0,
+                "fp": 16,
+                "fn": 16,
+                "tn": 280,
+                "sensitivity": 0.0,
+                "specificity": 0.9459459459459459
+              }
+            }
+          },
+          "confusion_matrix": {
+            "labels": [
+              "Neg",
+              "Small 17",
+              "Moderate 50",
+              "Large 100"
+            ],
+            "matrix": [
+              [
+                14,
+                12,
+                88,
+                10
+              ],
+              [
+                8,
+                35,
+                103,
+                4
+              ],
+              [
+                0,
+                5,
+                15,
+                2
+              ],
+              [
+                0,
+                7,
+                9,
+                0
+              ]
+            ]
+          },
+          "support_per_level": {
+            "Large 100": 16,
+            "Moderate 50": 22,
+            "Neg": 124,
+            "Small 17": 150
+          },
+          "soft_visual_probability": {
+            "mean": 0.309382627663289,
+            "median": 0.2921592707055214,
+            "min": 0.2617931142269035,
+            "max": 0.9611766948635336
+          },
+          "confidence_margin": {
+            "mean": 0.051866157550473975,
+            "median": 0.02469066611319856,
+            "min": 0.000252068352095125,
+            "max": 0.9382623943657253
+          },
+          "nearest_distance": {
+            "mean": 0.7303425399951599,
+            "median": 0.7683648039730946,
+            "min": 0.0044058372652032345,
+            "max": 0.962606509449097
+          },
+          "abstained_samples": 0
+        },
+        "Glucose": {
+          "samples": 312,
+          "accuracy": 0.0673076923076923,
+          "f1_macro": 0.03979867720482726,
+          "f1_weighted": 0.05016418499809438,
+          "cohen_kappa": 0.013216242065907213,
+          "agreement": {
+            "macro_sensitivity": 0.20459317585301837,
+            "macro_specificity": 0.8385129312826245,
+            "per_level": {
+              "Neg": {
+                "tp": 7,
+                "fp": 0,
+                "fn": 247,
+                "tn": 58,
+                "sensitivity": 0.027559055118110236,
+                "specificity": 1.0
+              },
+              "Trace 5": {
+                "tp": 0,
+                "fp": 1,
+                "fn": 16,
+                "tn": 295,
+                "sensitivity": 0.0,
+                "specificity": 0.9966216216216216
+              },
+              "15 +": {
+                "tp": 2,
+                "fp": 29,
+                "fn": 8,
+                "tn": 273,
+                "sensitivity": 0.2,
+                "specificity": 0.9039735099337748
+              },
+              "30 ++": {
+                "tp": 0,
+                "fp": 0,
+                "fn": 12,
+                "tn": 300,
+                "sensitivity": 0.0,
+                "specificity": 1.0
+              },
+              "60 +++": {
+                "tp": 12,
+                "fp": 250,
+                "fn": 0,
+                "tn": 50,
+                "sensitivity": 1.0,
+                "specificity": 0.16666666666666666
+              },
+              "110 ++++": {
+                "tp": 0,
+                "fp": 11,
+                "fn": 8,
+                "tn": 293,
+                "sensitivity": 0.0,
+                "specificity": 0.9638157894736842
+              }
+            }
+          },
+          "confusion_matrix": {
+            "labels": [
+              "Neg",
+              "Trace 5",
+              "15 +",
+              "30 ++",
+              "60 +++",
+              "110 ++++"
+            ],
+            "matrix": [
+              [
+                7,
+                1,
+                18,
+                0,
+                218,
+                10
+              ],
+              [
+                0,
+                0,
+                5,
+                0,
+                11,
+                0
+              ],
+              [
+                0,
+                0,
+                2,
+                0,
+                8,
+                0
+              ],
+              [
+                0,
+                0,
+                2,
+                0,
+                9,
+                1
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                12,
+                0
+              ],
+              [
+                0,
+                0,
+                4,
+                0,
+                4,
+                0
+              ]
+            ]
+          },
+          "support_per_level": {
+            "110 ++++": 8,
+            "15 +": 10,
+            "30 ++": 12,
+            "60 +++": 12,
+            "Neg": 254,
+            "Trace 5": 16
+          },
+          "soft_visual_probability": {
+            "mean": 0.2337690085960541,
+            "median": 0.22745875391622788,
+            "min": 0.18489880746883605,
+            "max": 0.3396795841787462
+          },
+          "confidence_margin": {
+            "mean": 0.04202100681467904,
+            "median": 0.03907604018017609,
+            "min": 0.0006266555053049405,
+            "max": 0.13540440895508163
+          },
+          "nearest_distance": {
+            "mean": 0.56336021353028,
+            "median": 0.5720976238087294,
+            "min": 0.15186760858882764,
+            "max": 0.939480040544168
+          },
+          "abstained_samples": 0
+        }
+      },
+      "latency_benchmark_ms": {
+        "runs": 1,
+        "samples_per_run": 3120,
+        "total_predictions": 3120,
+        "total_elapsed_ms": 14.739200007170439,
+        "avg_elapsed_ms_per_run": 14.739200007170439,
+        "avg_elapsed_ms_per_prediction": 0.004724102566400781
+      }
+    },
+    "5500": {
+      "samples_total": 3070,
+      "samples_evaluated": 3070,
+      "samples_dropped": 0,
+      "samples_abstained": 0,
+      "coverage": 1.0,
+      "overall": {
+        "accuracy": 0.43224755700325734,
+        "f1_macro": 0.15582495558656842,
+        "f1_weighted": 0.38966024428313084,
+        "cohen_kappa": 0.407784886092046
+      },
+      "per_analyte": {
+        "Leukocytes": {
+          "samples": 307,
+          "accuracy": 0.43973941368078173,
+          "f1_macro": 0.33421475256769373,
+          "f1_weighted": 0.32322934819964905,
+          "cohen_kappa": 0.074068878445676,
+          "agreement": {
+            "macro_sensitivity": 0.43082817565576187,
+            "macro_specificity": 0.8116236179226213,
+            "per_level": {
+              "Neg": {
+                "tp": 5,
+                "fp": 3,
+                "fn": 140,
+                "tn": 159,
+                "sensitivity": 0.034482758620689655,
+                "specificity": 0.9814814814814815
+              },
+              "Trace 15": {
+                "tp": 120,
+                "fp": 145,
+                "fn": 15,
+                "tn": 27,
+                "sensitivity": 0.8888888888888888,
+                "specificity": 0.1569767441860465
+              },
+              "Small 70": {
+                "tp": 3,
+                "fp": 5,
+                "fn": 10,
+                "tn": 289,
+                "sensitivity": 0.23076923076923078,
+                "specificity": 0.9829931972789115
+              },
+              "Moderate 125": {
+                "tp": 3,
+                "fp": 5,
+                "fn": 4,
+                "tn": 295,
+                "sensitivity": 0.42857142857142855,
+                "specificity": 0.9833333333333333
+              },
+              "Large 500": {
+                "tp": 4,
+                "fp": 14,
+                "fn": 3,
+                "tn": 286,
+                "sensitivity": 0.5714285714285714,
+                "specificity": 0.9533333333333334
+              }
+            }
+          },
+          "confusion_matrix": {
+            "labels": [
+              "Neg",
+              "Trace 15",
+              "Small 70",
+              "Moderate 125",
+              "Large 500"
+            ],
+            "matrix": [
+              [
+                5,
+                134,
+                0,
+                2,
+                4
+              ],
+              [
+                1,
+                120,
+                5,
+                1,
+                8
+              ],
+              [
+                1,
+                7,
+                3,
+                0,
+                2
+              ],
+              [
+                1,
+                3,
+                0,
+                3,
+                0
+              ],
+              [
+                0,
+                1,
+                0,
+                2,
+                4
+              ]
+            ]
+          },
+          "support_per_level": {
+            "Large 500": 7,
+            "Moderate 125": 7,
+            "Neg": 145,
+            "Small 70": 13,
+            "Trace 15": 135
+          },
+          "soft_visual_probability": {
+            "mean": 0.33706131884387036,
+            "median": 0.32878351047276766,
+            "min": 0.22065854764990558,
+            "max": 0.755814711187796
+          },
+          "confidence_margin": {
+            "mean": 0.1515170276011557,
+            "median": 0.1457487268182826,
+            "min": 0.0005571308604143121,
+            "max": 0.6855902371257561
+          },
+          "nearest_distance": {
+            "mean": 0.3090876633590144,
+            "median": 0.27771145284222454,
+            "min": 0.025555493651819854,
+            "max": 0.859477625237326
+          },
+          "abstained_samples": 0
+        },
+        "Nitrite": {
+          "samples": 307,
+          "accuracy": 0.4527687296416938,
+          "f1_macro": 0.4073359073359073,
+          "f1_weighted": 0.38649025945442883,
+          "cohen_kappa": -0.007343749999999982,
+          "agreement": {
+            "macro_sensitivity": 0.49594512984211886,
+            "macro_specificity": 0.49594512984211886,
+            "per_level": {
+              "Neg": {
+                "tp": 27,
+                "fp": 22,
+                "fn": 146,
+                "tn": 112,
+                "sensitivity": 0.15606936416184972,
+                "specificity": 0.835820895522388
+              },
+              "Positive": {
+                "tp": 112,
+                "fp": 146,
+                "fn": 22,
+                "tn": 27,
+                "sensitivity": 0.835820895522388,
+                "specificity": 0.15606936416184972
+              }
+            }
+          },
+          "confusion_matrix": {
+            "labels": [
+              "Neg",
+              "Positive"
+            ],
+            "matrix": [
+              [
+                27,
+                146
+              ],
+              [
+                22,
+                112
+              ]
+            ]
+          },
+          "support_per_level": {
+            "Neg": 173,
+            "Positive": 134
+          },
+          "soft_visual_probability": {
+            "mean": 0.6519318065637744,
+            "median": 0.6455349715848273,
+            "min": 0.5018180999183164,
+            "max": 0.9360287929301301
+          },
+          "confidence_margin": {
+            "mean": 0.3038636131275487,
+            "median": 0.2910699431696547,
+            "min": 0.003636199836632825,
+            "max": 0.8720575858602602
+          },
+          "nearest_distance": {
+            "mean": 0.33712228421396256,
+            "median": 0.2950716340490081,
+            "min": 0.020225570611824964,
+            "max": 0.9465809800887812
+          },
+          "abstained_samples": 0
+        },
+        "Urobilinogen": {
+          "samples": 307,
+          "accuracy": 0.4527687296416938,
+          "f1_macro": 0.15917906998243506,
+          "f1_weighted": 0.43340525334262425,
+          "cohen_kappa": 0.07820989419502433,
+          "agreement": {
+            "macro_sensitivity": 0.16401363568993627,
+            "macro_specificity": 0.8244668293249681,
+            "per_level": {
+              "3.2": {
+                "tp": 133,
+                "fp": 67,
+                "fn": 40,
+                "tn": 67,
+                "sensitivity": 0.7687861271676301,
+                "specificity": 0.5
+              },
+              "16": {
+                "tp": 6,
+                "fp": 22,
+                "fn": 111,
+                "tn": 168,
+                "sensitivity": 0.05128205128205128,
+                "specificity": 0.8842105263157894
+              },
+              "32": {
+                "tp": 0,
+                "fp": 13,
+                "fn": 7,
+                "tn": 287,
+                "sensitivity": 0.0,
+                "specificity": 0.9566666666666667
+              },
+              "64": {
+                "tp": 0,
+                "fp": 18,
+                "fn": 5,
+                "tn": 284,
+                "sensitivity": 0.0,
+                "specificity": 0.9403973509933775
+              },
+              "128": {
+                "tp": 0,
+                "fp": 48,
+                "fn": 5,
+                "tn": 254,
+                "sensitivity": 0.0,
+                "specificity": 0.8410596026490066
+              }
+            }
+          },
+          "confusion_matrix": {
+            "labels": [
+              "3.2",
+              "16",
+              "32",
+              "64",
+              "128"
+            ],
+            "matrix": [
+              [
+                133,
+                12,
+                7,
+                2,
+                19
+              ],
+              [
+                61,
+                6,
+                6,
+                15,
+                29
+              ],
+              [
+                3,
+                3,
+                0,
+                1,
+                0
+              ],
+              [
+                1,
+                4,
+                0,
+                0,
+                0
+              ],
+              [
+                2,
+                3,
+                0,
+                0,
+                0
+              ]
+            ]
+          },
+          "support_per_level": {
+            "128": 5,
+            "16": 117,
+            "3.2": 173,
+            "32": 7,
+            "64": 5
+          },
+          "soft_visual_probability": {
+            "mean": 0.33515909503706953,
+            "median": 0.32201457461164895,
+            "min": 0.21129094689600403,
+            "max": 0.6296595049482899
+          },
+          "confidence_margin": {
+            "mean": 0.10982575718359429,
+            "median": 0.07486093066159538,
+            "min": 3.509508027244035e-07,
+            "max": 0.49800696337246647
+          },
+          "nearest_distance": {
+            "mean": 0.2453594879812198,
+            "median": 0.14696029934534485,
+            "min": 0.02916601775779541,
+            "max": 0.9008151506371046
+          },
+          "abstained_samples": 0
+        },
+        "Protein": {
+          "samples": 307,
+          "accuracy": 0.7133550488599348,
+          "f1_macro": 0.14935897435897436,
+          "f1_weighted": 0.6744800801804058,
+          "cohen_kappa": -0.044702242846094586,
+          "agreement": {
+            "macro_sensitivity": 0.15555555555555556,
+            "macro_specificity": 0.8259060501828508,
+            "per_level": {
+              "Neg": {
+                "tp": 217,
+                "fp": 58,
+                "fn": 28,
+                "tn": 4,
+                "sensitivity": 0.8857142857142857,
+                "specificity": 0.06451612903225806
+              },
+              "Trace": {
+                "tp": 2,
+                "fp": 21,
+                "fn": 40,
+                "tn": 244,
+                "sensitivity": 0.047619047619047616,
+                "specificity": 0.9207547169811321
+              },
+              "0.3": {
+                "tp": 0,
+                "fp": 3,
+                "fn": 4,
+                "tn": 300,
+                "sensitivity": 0.0,
+                "specificity": 0.9900990099009901
+              },
+              "1.0": {
+                "tp": 0,
+                "fp": 0,
+                "fn": 4,
+                "tn": 303,
+                "sensitivity": 0.0,
+                "specificity": 1.0
+              },
+              "3.0": {
+                "tp": 0,
+                "fp": 4,
+                "fn": 6,
+                "tn": 297,
+                "sensitivity": 0.0,
+                "specificity": 0.9867109634551495
+              },
+              ">=20.0": {
+                "tp": 0,
+                "fp": 2,
+                "fn": 6,
+                "tn": 299,
+                "sensitivity": 0.0,
+                "specificity": 0.9933554817275747
+              }
+            }
+          },
+          "confusion_matrix": {
+            "labels": [
+              "Neg",
+              "Trace",
+              "0.3",
+              "1.0",
+              "3.0",
+              ">=20.0"
+            ],
+            "matrix": [
+              [
+                217,
+                20,
+                2,
+                0,
+                4,
+                2
+              ],
+              [
+                40,
+                2,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                4,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                4,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                6,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                4,
+                1,
+                1,
+                0,
+                0,
+                0
+              ]
+            ]
+          },
+          "support_per_level": {
+            "0.3": 4,
+            "1.0": 4,
+            "3.0": 6,
+            ">=20.0": 6,
+            "Neg": 245,
+            "Trace": 42
+          },
+          "soft_visual_probability": {
+            "mean": 0.3580677945663906,
+            "median": 0.357835893319499,
+            "min": 0.17718748493728845,
+            "max": 0.6900709237374614
+          },
+          "confidence_margin": {
+            "mean": 0.1198676589751083,
+            "median": 0.10957578456262468,
+            "min": 0.0011404137640599332,
+            "max": 0.5579550605829485
+          },
+          "nearest_distance": {
+            "mean": 0.14438650352127233,
+            "median": 0.11504039547942116,
+            "min": 0.016794871750461314,
+            "max": 0.7071392160770417
+          },
+          "abstained_samples": 0
+        },
+        "pH": {
+          "samples": 307,
+          "accuracy": 0.05537459283387622,
+          "f1_macro": 0.044125899939853434,
+          "f1_weighted": 0.03649939519191849,
+          "cohen_kappa": 0.022893893498397766,
+          "agreement": {
+            "macro_sensitivity": 0.20143150283369163,
+            "macro_specificity": 0.8611746920383501,
+            "per_level": {
+              "5.0": {
+                "tp": 2,
+                "fp": 0,
+                "fn": 84,
+                "tn": 221,
+                "sensitivity": 0.023255813953488372,
+                "specificity": 1.0
+              },
+              "6.0": {
+                "tp": 2,
+                "fp": 0,
+                "fn": 168,
+                "tn": 137,
+                "sensitivity": 0.011764705882352941,
+                "specificity": 1.0
+              },
+              "6.5": {
+                "tp": 6,
+                "fp": 43,
+                "fn": 10,
+                "tn": 248,
+                "sensitivity": 0.375,
+                "specificity": 0.852233676975945
+              },
+              "7.0": {
+                "tp": 0,
+                "fp": 7,
+                "fn": 16,
+                "tn": 284,
+                "sensitivity": 0.0,
+                "specificity": 0.9759450171821306
+              },
+              "7.5": {
+                "tp": 0,
+                "fp": 2,
+                "fn": 5,
+                "tn": 300,
+                "sensitivity": 0.0,
+                "specificity": 0.9933774834437086
+              },
+              "8.0": {
+                "tp": 7,
+                "fp": 238,
+                "fn": 0,
+                "tn": 62,
+                "sensitivity": 1.0,
+                "specificity": 0.20666666666666667
+              },
+              "8.5": {
+                "tp": 0,
+                "fp": 0,
+                "fn": 7,
+                "tn": 300,
+                "sensitivity": 0.0,
+                "specificity": 1.0
+              }
+            }
+          },
+          "confusion_matrix": {
+            "labels": [
+              "5.0",
+              "6.0",
+              "6.5",
+              "7.0",
+              "7.5",
+              "8.0",
+              "8.5"
+            ],
+            "matrix": [
+              [
+                2,
+                0,
+                12,
+                4,
+                0,
+                68,
+                0
+              ],
+              [
+                0,
+                2,
+                30,
+                2,
+                2,
+                134,
+                0
+              ],
+              [
+                0,
+                0,
+                6,
+                0,
+                0,
+                10,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                16,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                5,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                7,
+                0
+              ],
+              [
+                0,
+                0,
+                1,
+                1,
+                0,
+                5,
+                0
+              ]
+            ]
+          },
+          "support_per_level": {
+            "5.0": 86,
+            "6.0": 170,
+            "6.5": 16,
+            "7.0": 16,
+            "7.5": 5,
+            "8.0": 7,
+            "8.5": 7
+          },
+          "soft_visual_probability": {
+            "mean": 0.2811775095698612,
+            "median": 0.26417308729646205,
+            "min": 0.16470955149841696,
+            "max": 0.6768112620990079
+          },
+          "confidence_margin": {
+            "mean": 0.10202262308602164,
+            "median": 0.07756199502850394,
+            "min": 0.0012720146825536127,
+            "max": 0.5880679945918055
+          },
+          "nearest_distance": {
+            "mean": 0.1704013941082607,
+            "median": 0.15708136954465643,
+            "min": 0.016047327372850115,
+            "max": 0.7567124480685153
+          },
+          "abstained_samples": 0
+        },
+        "Blood": {
+          "samples": 307,
+          "accuracy": 0.8762214983713354,
+          "f1_macro": 0.22257126236183825,
+          "f1_weighted": 0.824853477042368,
+          "cohen_kappa": 0.06379905304550171,
+          "agreement": {
+            "macro_sensitivity": 0.20771375464684014,
+            "macro_specificity": 0.8410051531468936,
+            "per_level": {
+              "Neg": {
+                "tp": 268,
+                "fp": 36,
+                "fn": 1,
+                "tn": 2,
+                "sensitivity": 0.9962825278810409,
+                "specificity": 0.05263157894736842
+              },
+              "Non-hemolyzed 10": {
+                "tp": 0,
+                "fp": 0,
+                "fn": 22,
+                "tn": 285,
+                "sensitivity": 0.0,
+                "specificity": 1.0
+              },
+              "Hemolyzed 10": {
+                "tp": 0,
+                "fp": 0,
+                "fn": 4,
+                "tn": 303,
+                "sensitivity": 0.0,
+                "specificity": 1.0
+              },
+              "Small 25": {
+                "tp": 0,
+                "fp": 0,
+                "fn": 4,
+                "tn": 303,
+                "sensitivity": 0.0,
+                "specificity": 1.0
+              },
+              "Moderate 80": {
+                "tp": 1,
+                "fp": 0,
+                "fn": 3,
+                "tn": 303,
+                "sensitivity": 0.25,
+                "specificity": 1.0
+              },
+              "Large 200": {
+                "tp": 0,
+                "fp": 2,
+                "fn": 4,
+                "tn": 301,
+                "sensitivity": 0.0,
+                "specificity": 0.9933993399339934
+              }
+            }
+          },
+          "confusion_matrix": {
+            "labels": [
+              "Neg",
+              "Non-hemolyzed 10",
+              "Hemolyzed 10",
+              "Small 25",
+              "Moderate 80",
+              "Large 200"
+            ],
+            "matrix": [
+              [
+                268,
+                0,
+                0,
+                0,
+                0,
+                1
+              ],
+              [
+                22,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                3,
+                0,
+                0,
+                0,
+                0,
+                1
+              ],
+              [
+                4,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                3,
+                0,
+                0,
+                0,
+                1,
+                0
+              ],
+              [
+                4,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            ]
+          },
+          "support_per_level": {
+            "Hemolyzed 10": 4,
+            "Large 200": 4,
+            "Moderate 80": 4,
+            "Neg": 269,
+            "Non-hemolyzed 10": 22,
+            "Small 25": 4
+          },
+          "soft_visual_probability": {
+            "mean": 0.30256914110502253,
+            "median": 0.28284945797226924,
+            "min": 0.19246033442190943,
+            "max": 0.7603004961794496
+          },
+          "confidence_margin": {
+            "mean": 0.13350729763282704,
+            "median": 0.11056234961989478,
+            "min": 0.0007297144072239414,
+            "max": 0.6888180456655218
+          },
+          "nearest_distance": {
+            "mean": 0.2799230850345166,
+            "median": 0.2806904625338066,
+            "min": 0.02105440739120959,
+            "max": 0.5845978025817781
+          },
+          "abstained_samples": 0
+        },
+        "Specific Gravity": {
+          "samples": 307,
+          "accuracy": 0.2182410423452769,
+          "f1_macro": 0.09352892636753334,
+          "f1_weighted": 0.14040752443655943,
+          "cohen_kappa": 0.039186281541370604,
+          "agreement": {
+            "macro_sensitivity": 0.16414688985261405,
+            "macro_specificity": 0.8630550149431617,
+            "per_level": {
+              "1.000": {
+                "tp": 0,
+                "fp": 5,
+                "fn": 4,
+                "tn": 298,
+                "sensitivity": 0.0,
+                "specificity": 0.9834983498349835
+              },
+              "1.005": {
+                "tp": 0,
+                "fp": 2,
+                "fn": 12,
+                "tn": 293,
+                "sensitivity": 0.0,
+                "specificity": 0.9932203389830508
+              },
+              "1.010": {
+                "tp": 0,
+                "fp": 1,
+                "fn": 32,
+                "tn": 274,
+                "sensitivity": 0.0,
+                "specificity": 0.9963636363636363
+              },
+              "1.015": {
+                "tp": 25,
+                "fp": 134,
+                "fn": 15,
+                "tn": 133,
+                "sensitivity": 0.625,
+                "specificity": 0.49812734082397003
+              },
+              "1.020": {
+                "tp": 0,
+                "fp": 0,
+                "fn": 27,
+                "tn": 280,
+                "sensitivity": 0.0,
+                "specificity": 1.0
+              },
+              "1.025": {
+                "tp": 40,
+                "fp": 98,
+                "fn": 39,
+                "tn": 130,
+                "sensitivity": 0.5063291139240507,
+                "specificity": 0.5701754385964912
+              },
+              "1.030": {
+                "tp": 2,
+                "fp": 0,
+                "fn": 111,
+                "tn": 194,
+                "sensitivity": 0.017699115044247787,
+                "specificity": 1.0
+              }
+            }
+          },
+          "confusion_matrix": {
+            "labels": [
+              "1.000",
+              "1.005",
+              "1.010",
+              "1.015",
+              "1.020",
+              "1.025",
+              "1.030"
+            ],
+            "matrix": [
+              [
+                0,
+                0,
+                0,
+                4,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                12,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                22,
+                0,
+                10,
+                0
+              ],
+              [
+                1,
+                0,
+                0,
+                25,
+                0,
+                14,
+                0
+              ],
+              [
+                0,
+                2,
+                0,
+                15,
+                0,
+                10,
+                0
+              ],
+              [
+                2,
+                0,
+                1,
+                36,
+                0,
+                40,
+                0
+              ],
+              [
+                2,
+                0,
+                0,
+                45,
+                0,
+                64,
+                2
+              ]
+            ]
+          },
+          "support_per_level": {
+            "1.000": 4,
+            "1.005": 12,
+            "1.010": 32,
+            "1.015": 40,
+            "1.020": 27,
+            "1.025": 79,
+            "1.030": 113
+          },
+          "soft_visual_probability": {
+            "mean": 0.26737401874096167,
+            "median": 0.2475736342710953,
+            "min": 0.15250580443443412,
+            "max": 0.7084538684464654
+          },
+          "confidence_margin": {
+            "mean": 0.05139485999275424,
+            "median": 0.025577934133385244,
+            "min": 0.0007403247127695523,
+            "max": 0.5875776139646238
+          },
+          "nearest_distance": {
+            "mean": 0.20496616113086896,
+            "median": 0.19810506331202024,
+            "min": 0.013100067466300356,
+            "max": 0.9585766211947447
+          },
+          "abstained_samples": 0
+        },
+        "Ketone": {
+          "samples": 307,
+          "accuracy": 0.749185667752443,
+          "f1_macro": 0.14330218068535824,
+          "f1_weighted": 0.708575603519133,
+          "cohen_kappa": -0.03939673745767913,
+          "agreement": {
+            "macro_sensitivity": 0.15151515151515152,
+            "macro_specificity": 0.8256339064919923,
+            "per_level": {
+              "Neg": {
+                "tp": 230,
+                "fp": 52,
+                "fn": 23,
+                "tn": 2,
+                "sensitivity": 0.9090909090909091,
+                "specificity": 0.037037037037037035
+              },
+              "Trace 0.5": {
+                "tp": 0,
+                "fp": 2,
+                "fn": 34,
+                "tn": 271,
+                "sensitivity": 0.0,
+                "specificity": 0.9926739926739927
+              },
+              "Small 1.5": {
+                "tp": 0,
+                "fp": 0,
+                "fn": 8,
+                "tn": 299,
+                "sensitivity": 0.0,
+                "specificity": 1.0
+              },
+              "Moderate 4.0": {
+                "tp": 0,
+                "fp": 11,
+                "fn": 4,
+                "tn": 292,
+                "sensitivity": 0.0,
+                "specificity": 0.9636963696369637
+              },
+              "8.0": {
+                "tp": 0,
+                "fp": 4,
+                "fn": 4,
+                "tn": 299,
+                "sensitivity": 0.0,
+                "specificity": 0.9867986798679867
+              },
+              "Large 16": {
+                "tp": 0,
+                "fp": 8,
+                "fn": 4,
+                "tn": 295,
+                "sensitivity": 0.0,
+                "specificity": 0.9735973597359736
+              }
+            }
+          },
+          "confusion_matrix": {
+            "labels": [
+              "Neg",
+              "Trace 0.5",
+              "Small 1.5",
+              "Moderate 4.0",
+              "8.0",
+              "Large 16"
+            ],
+            "matrix": [
+              [
+                230,
+                2,
+                0,
+                10,
+                4,
+                7
+              ],
+              [
+                34,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                6,
+                0,
+                0,
+                1,
+                0,
+                1
+              ],
+              [
+                4,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                4,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                4,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            ]
+          },
+          "support_per_level": {
+            "8.0": 4,
+            "Large 16": 4,
+            "Moderate 4.0": 4,
+            "Neg": 253,
+            "Small 1.5": 8,
+            "Trace 0.5": 34
+          },
+          "soft_visual_probability": {
+            "mean": 0.28743417094322843,
+            "median": 0.27117269571917346,
+            "min": 0.1840465732922864,
+            "max": 0.5290271989172092
+          },
+          "confidence_margin": {
+            "mean": 0.09751795433293439,
+            "median": 0.08286306127230778,
+            "min": 5.5977339973922735e-05,
+            "max": 0.3632761013759483
+          },
+          "nearest_distance": {
+            "mean": 0.314084302219204,
+            "median": 0.2992087723047565,
+            "min": 0.06190545535525294,
+            "max": 0.8587576726075408
+          },
+          "abstained_samples": 0
+        },
+        "Bilirubin": {
+          "samples": 307,
+          "accuracy": 0.34527687296416937,
+          "f1_macro": 0.23217032429214657,
+          "f1_weighted": 0.36648108926870043,
+          "cohen_kappa": 0.0994702508646732,
+          "agreement": {
+            "macro_sensitivity": 0.30066964285714287,
+            "macro_specificity": 0.7824019794585294,
+            "per_level": {
+              "Neg": {
+                "tp": 68,
+                "fp": 74,
+                "fn": 51,
+                "tn": 114,
+                "sensitivity": 0.5714285714285714,
+                "specificity": 0.6063829787234043
+              },
+              "Small 17": {
+                "tp": 31,
+                "fp": 12,
+                "fn": 129,
+                "tn": 135,
+                "sensitivity": 0.19375,
+                "specificity": 0.9183673469387755
+              },
+              "Moderate 50": {
+                "tp": 7,
+                "fp": 114,
+                "fn": 9,
+                "tn": 177,
+                "sensitivity": 0.4375,
+                "specificity": 0.6082474226804123
+              },
+              "Large 100": {
+                "tp": 0,
+                "fp": 1,
+                "fn": 12,
+                "tn": 294,
+                "sensitivity": 0.0,
+                "specificity": 0.9966101694915255
+              }
+            }
+          },
+          "confusion_matrix": {
+            "labels": [
+              "Neg",
+              "Small 17",
+              "Moderate 50",
+              "Large 100"
+            ],
+            "matrix": [
+              [
+                68,
+                9,
+                42,
+                0
+              ],
+              [
+                58,
+                31,
+                70,
+                1
+              ],
+              [
+                8,
+                1,
+                7,
+                0
+              ],
+              [
+                8,
+                2,
+                2,
+                0
+              ]
+            ]
+          },
+          "support_per_level": {
+            "Large 100": 12,
+            "Moderate 50": 16,
+            "Neg": 119,
+            "Small 17": 160
+          },
+          "soft_visual_probability": {
+            "mean": 0.363405817643517,
+            "median": 0.34184825996849577,
+            "min": 0.27046008807710625,
+            "max": 0.7742271101782277
+          },
+          "confidence_margin": {
+            "mean": 0.11176639704958505,
+            "median": 0.09323762792703752,
+            "min": 0.003449392156364195,
+            "max": 0.682728771937723
+          },
+          "nearest_distance": {
+            "mean": 0.49093837742977164,
+            "median": 0.45478827584926357,
+            "min": 0.04948226643571415,
+            "max": 0.8685298796591803
+          },
+          "abstained_samples": 0
+        },
+        "Glucose": {
+          "samples": 307,
+          "accuracy": 0.019543973941368076,
+          "f1_macro": 0.02487451474915313,
+          "f1_weighted": 0.002180412195520925,
+          "cohen_kappa": -0.008732957088432025,
+          "agreement": {
+            "macro_sensitivity": 0.20833333333333334,
+            "macro_specificity": 0.8235274300841455,
+            "per_level": {
+              "Neg": {
+                "tp": 0,
+                "fp": 2,
+                "fn": 275,
+                "tn": 30,
+                "sensitivity": 0.0,
+                "specificity": 0.9375
+              },
+              "Trace 5": {
+                "tp": 0,
+                "fp": 0,
+                "fn": 8,
+                "tn": 299,
+                "sensitivity": 0.0,
+                "specificity": 1.0
+              },
+              "15 +": {
+                "tp": 4,
+                "fp": 53,
+                "fn": 0,
+                "tn": 250,
+                "sensitivity": 1.0,
+                "specificity": 0.8250825082508251
+              },
+              "30 ++": {
+                "tp": 0,
+                "fp": 5,
+                "fn": 8,
+                "tn": 294,
+                "sensitivity": 0.0,
+                "specificity": 0.9832775919732442
+              },
+              "60 +++": {
+                "tp": 2,
+                "fp": 211,
+                "fn": 6,
+                "tn": 88,
+                "sensitivity": 0.25,
+                "specificity": 0.29431438127090304
+              },
+              "110 ++++": {
+                "tp": 0,
+                "fp": 30,
+                "fn": 4,
+                "tn": 273,
+                "sensitivity": 0.0,
+                "specificity": 0.900990099009901
+              }
+            }
+          },
+          "confusion_matrix": {
+            "labels": [
+              "Neg",
+              "Trace 5",
+              "15 +",
+              "30 ++",
+              "60 +++",
+              "110 ++++"
+            ],
+            "matrix": [
+              [
+                0,
+                0,
+                37,
+                4,
+                206,
+                28
+              ],
+              [
+                0,
+                0,
+                3,
+                1,
+                2,
+                2
+              ],
+              [
+                0,
+                0,
+                4,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                5,
+                0,
+                3,
+                0
+              ],
+              [
+                2,
+                0,
+                4,
+                0,
+                2,
+                0
+              ],
+              [
+                0,
+                0,
+                4,
+                0,
+                0,
+                0
+              ]
+            ]
+          },
+          "support_per_level": {
+            "110 ++++": 4,
+            "15 +": 4,
+            "30 ++": 8,
+            "60 +++": 8,
+            "Neg": 275,
+            "Trace 5": 8
+          },
+          "soft_visual_probability": {
+            "mean": 0.26202085797258884,
+            "median": 0.26300039572036726,
+            "min": 0.18784286463204355,
+            "max": 0.4148000640100419
+          },
+          "confidence_margin": {
+            "mean": 0.042984291166710334,
+            "median": 0.041544478236591686,
+            "min": 0.0001816948076604763,
+            "max": 0.17469618483568694
+          },
+          "nearest_distance": {
+            "mean": 0.4173176892631892,
+            "median": 0.4058367255208929,
+            "min": 0.08759343637145024,
+            "max": 0.7962486589893651
+          },
+          "abstained_samples": 0
+        }
+      },
+      "latency_benchmark_ms": {
+        "runs": 1,
+        "samples_per_run": 3070,
+        "total_predictions": 3070,
+        "total_elapsed_ms": 14.638099994044751,
+        "avg_elapsed_ms_per_run": 14.638099994044751,
+        "avg_elapsed_ms_per_prediction": 0.0047681107472458475
+      }
+    }
+  },
+  "overall": {
+    "accuracy": 0.28899470899470897,
+    "f1_macro": 0.15740168757141965,
+    "f1_weighted": 0.31791852373681995,
+    "cohen_kappa": 0.26909325664884076
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "feature_space": "lab",
+  "accuracy": 0.343,
+  "f1_macro": 0.1396,
+  "cohen_kappa": 0.2329,
+  "samples_evaluated": 9450
+}

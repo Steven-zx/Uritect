@@ -1,0 +1,11 @@
+{
+  "source": "pipeline\\dataset\\URITECT_DATASET_clean.csv",
+  "locked_output": "pipeline\\dataset\\URITECT_DATASET_locked_v1.csv",
+  "rows": 175,
+  "unique_ids": 175,
+  "id_min": "001",
+  "id_max": "175",
+  "duplicate_ids": [],
+  "issue_counts": {},
+  "issues": []
+}

@@ -1,0 +1,117 @@
+{
+  "samples_total": 9450,
+  "samples_evaluated": 0,
+  "samples_dropped": 9450,
+  "samples_abstained": 0,
+  "coverage": 0.0,
+  "overall": {
+    "accuracy": 0.0,
+    "f1_macro": 0.0,
+    "f1_weighted": 0.0,
+    "cohen_kappa": 1.0
+  },
+  "per_analyte": {},
+  "latency_benchmark_ms": {
+    "runs": 1,
+    "samples_per_run": 0,
+    "total_predictions": 0,
+    "total_elapsed_ms": 0.0,
+    "avg_elapsed_ms_per_run": 0.0,
+    "avg_elapsed_ms_per_prediction": 0.0
+  },
+  "artifacts": {
+    "features_path": "C:\\Users\\acer\\Downloads\\Github\\Uritect\\pipeline\\dataset\\features_lab.csv",
+    "reference_map_path": "C:\\Users\\acer\\Downloads\\Github\\Uritect\\pipeline\\output\\knn_reference_map.json",
+    "generated_at": "2026-05-05T18:13:22.263434+00:00",
+    "event_hsv_centering": {
+      "mode": "auto",
+      "enabled": false,
+      "target_mode": "global",
+      "target_anchor": {
+        "h": 59.48834238260966,
+        "s": 0.3735764883211679,
+        "v": 0.3423016927007299
+      },
+      "target_anchor_by_light": {
+        "2700": {
+          "h": 58.00091296175607,
+          "s": 0.3119546630769231,
+          "v": 0.2158722312820513
+        },
+        "4000": {
+          "h": 60.671719660162964,
+          "s": 0.5306323832432432,
+          "v": 0.4197040308108108
+        },
+        "5500": {
+          "h": 59.918493093039416,
+          "s": 0.27215336547619046,
+          "v": 0.40381545714285716
+        }
+      },
+      "events_with_anchor": 0
+    },
+    "distance_weighting": {
+      "profile": "legacy",
+      "overrides_path": null,
+      "weights": {
+        "Bilirubin": {
+          "h": 1.0,
+          "s": 1.0,
+          "v": 1.0
+        },
+        "Blood": {
+          "h": 1.0,
+          "s": 1.0,
+          "v": 1.0
+        },
+        "Glucose": {
+          "h": 1.0,
+          "s": 1.0,
+          "v": 1.0
+        },
+        "Ketone": {
+          "h": 1.0,
+          "s": 1.0,
+          "v": 1.0
+        },
+        "Leukocytes": {
+          "h": 1.0,
+          "s": 1.0,
+          "v": 1.0
+        },
+        "Nitrite": {
+          "h": 1.0,
+          "s": 1.0,
+          "v": 1.0
+        },
+        "Protein": {
+          "h": 1.0,
+          "s": 1.0,
+          "v": 1.0
+        },
+        "Specific Gravity": {
+          "h": 1.0,
+          "s": 1.0,
+          "v": 1.0
+        },
+        "Urobilinogen": {
+          "h": 1.0,
+          "s": 1.0,
+          "v": 1.0
+        },
+        "pH": {
+          "h": 1.0,
+          "s": 1.0,
+          "v": 1.0
+        }
+      }
+    },
+    "abstain_band": {
+      "enabled": false,
+      "min_confidence": 0.0,
+      "min_margin": 0.0,
+      "max_distance": 999.0
+    }
+  }
+}

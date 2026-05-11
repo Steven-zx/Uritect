@@ -49,16 +49,42 @@ def analyte_to_key(analyte_name: str) -> str:
     return analyte_name.lower().replace(" ", "_")
 
 
-def feature_columns_for_analyte(analyte_name: str) -> tuple[str, str, str]:
+def feature_columns_for_analyte(analyte_name: str, feature_space: str = "hsv") -> tuple[str, str, str]:
     key = analyte_to_key(analyte_name)
-    return f"{key}_h", f"{key}_s", f"{key}_v"
+    if feature_space in {"hsv", "normalized_hsv"}:
+        return f"{key}_h", f"{key}_s", f"{key}_v"
+    if feature_space == "lab":
+        return f"{key}_l", f"{key}_a", f"{key}_b"
+    # Fallback to generic triple
+    return f"{key}_x1", f"{key}_x2", f"{key}_x3"
 
 
-def all_feature_columns(analytes: Iterable[str] = ANALYTE_ORDER) -> list[str]:
+def all_feature_columns(analytes: Iterable[str] = ANALYTE_ORDER, feature_space: str = "hsv") -> list[str]:
     columns: list[str] = []
     for analyte in analytes:
-        columns.extend(feature_columns_for_analyte(analyte))
+        columns.extend(feature_columns_for_analyte(analyte, feature_space=feature_space))
     return columns
+
+
+def _normalize_hue(hue: float) -> float:
+    normalized = hue % 360.0
+    if normalized < 0:
+        normalized += 360.0
+    return normalized
+
+
+def _clip_01(value: float) -> float:
+    return min(max(value, 0.0), 1.0)
+
+
+def _circular_mean_deg(values: list[float]) -> float:
+    if not values:
+        return 0.0
+    sin_sum = float(np.sum(np.sin(np.radians(np.asarray(values, dtype=np.float32)))))
+    cos_sum = float(np.sum(np.cos(np.radians(np.asarray(values, dtype=np.float32)))))
+    if abs(sin_sum) < 1e-12 and abs(cos_sum) < 1e-12:
+        return _normalize_hue(float(values[0]))
+    return _normalize_hue(float(np.degrees(np.arctan2(sin_sum, cos_sum))))
 
 
 @dataclass(frozen=True)
@@ -87,6 +113,7 @@ class VisionPipelineConfig:
     per_pad_y_refine_px: int = 6
     per_pad_y_step_px: int = 2
     per_pad_max_step_deviation_px: int = 8
+    feature_space: str = "hsv"
 
     def validate(self) -> None:
         if len(self.pad_offsets_mm) != len(self.analyte_order):
@@ -122,6 +149,8 @@ class VisionPipelineConfig:
             raise ValueError("per_pad_y_step_px must be > 0")
         if self.per_pad_max_step_deviation_px < 0:
             raise ValueError("per_pad_max_step_deviation_px must be >= 0")
+        if self.feature_space not in {"hsv", "normalized_hsv", "lab"}:
+            raise ValueError("feature_space must be one of: hsv, normalized_hsv, lab")
 
 
 @dataclass
@@ -645,18 +674,47 @@ class TemporalMedianCleaner:
 
 
 class HSVFeatureExtractor:
-    def extract_pad_feature(self, pad_bgr: np.ndarray) -> tuple[float, float, float]:
+    def __init__(self, config: VisionPipelineConfig) -> None:
+        self.config = config
+
+    def _raw_pad_feature(self, pad_bgr: np.ndarray) -> tuple[float, float, float]:
         hsv = cv2.cvtColor(pad_bgr, cv2.COLOR_BGR2HSV).astype(np.float32)
         h = float(np.mean(hsv[:, :, 0]) * 2.0)  # OpenCV H is 0..179
         s = float(np.mean(hsv[:, :, 1]) / 255.0)
         v = float(np.mean(hsv[:, :, 2]) / 255.0)
         return round(h, 6), round(s, 6), round(v, 6)
 
+    def _normalize_feature_space(self, features_by_pad: dict[str, tuple[float, float, float]]) -> dict[str, tuple[float, float, float]]:
+        hue_values = [h for h, _, _ in features_by_pad.values()]
+        sat_values = [s for _, s, _ in features_by_pad.values()]
+        val_values = [v for _, _, v in features_by_pad.values()]
+
+        hue_anchor = _circular_mean_deg(hue_values)
+        sat_anchor = float(np.mean(np.array(sat_values, dtype=np.float32))) if sat_values else 0.0
+        val_anchor = float(np.mean(np.array(val_values, dtype=np.float32))) if val_values else 0.0
+
+        normalized: dict[str, tuple[float, float, float]] = {}
+        for analyte_name, (h, s, v) in features_by_pad.items():
+            normalized[analyte_name] = (
+                round(_normalize_hue(h - hue_anchor), 6),
+                round(_clip_01(0.5 + (s - sat_anchor)), 6),
+                round(_clip_01(0.5 + (v - val_anchor)), 6),
+            )
+        return normalized
+
+    def extract_pad_feature(self, pad_bgr: np.ndarray) -> tuple[float, float, float]:
+        return self._raw_pad_feature(pad_bgr)
+
     def extract(self, cleaned_pads: dict[str, np.ndarray]) -> dict[str, tuple[float, float, float]]:
-        return {
+        features_by_pad = {
             analyte_name: self.extract_pad_feature(pad_bgr)
             for analyte_name, pad_bgr in cleaned_pads.items()
         }
+
+        if self.config.feature_space == "normalized_hsv":
+            return self._normalize_feature_space(features_by_pad)
+
+        return features_by_pad
 
     def flatten(
         self,
@@ -670,6 +728,40 @@ class HSVFeatureExtractor:
         return flat
 
 
+class LABFeatureExtractor:
+    def __init__(self, config: VisionPipelineConfig) -> None:
+        self.config = config
+
+    def _raw_pad_feature(self, pad_bgr: np.ndarray) -> tuple[float, float, float]:
+        lab = cv2.cvtColor(pad_bgr, cv2.COLOR_BGR2LAB).astype(np.float32)
+        # OpenCV L: 0..255, a: 0..255 (128 center), b: 0..255 (128 center)
+        L = float(np.mean(lab[:, :, 0]) / 255.0 * 100.0)
+        a = float(np.mean(lab[:, :, 1]) - 128.0)
+        b = float(np.mean(lab[:, :, 2]) - 128.0)
+        return round(L, 6), round(a, 6), round(b, 6)
+
+    def extract_pad_feature(self, pad_bgr: np.ndarray) -> tuple[float, float, float]:
+        return self._raw_pad_feature(pad_bgr)
+
+    def extract(self, cleaned_pads: dict[str, np.ndarray]) -> dict[str, tuple[float, float, float]]:
+        features_by_pad = {
+            analyte_name: self.extract_pad_feature(pad_bgr)
+            for analyte_name, pad_bgr in cleaned_pads.items()
+        }
+        return features_by_pad
+
+    def flatten(
+        self,
+        features_by_pad: dict[str, tuple[float, float, float]],
+        analyte_order: Iterable[str],
+    ) -> list[float]:
+        flat: list[float] = []
+        for analyte_name in analyte_order:
+            L, a, b = features_by_pad[analyte_name]
+            flat.extend([L, a, b])
+        return flat
+
+
 class BurstFeaturePipeline:
     def __init__(self, config: VisionPipelineConfig | None = None) -> None:
         self.config = config or VisionPipelineConfig()
@@ -678,7 +770,10 @@ class BurstFeaturePipeline:
         self.awb = AdaptiveWhiteBalancer(self.config)
         self.slicer = GridSlicer(self.config)
         self.cleaner = TemporalMedianCleaner()
-        self.extractor = HSVFeatureExtractor()
+        if self.config.feature_space == "lab":
+            self.extractor = LABFeatureExtractor(self.config)
+        else:
+            self.extractor = HSVFeatureExtractor(self.config)
 
     def process_burst(self, frames_bgr: list[np.ndarray]) -> BurstProcessingResult:
         if not frames_bgr:
