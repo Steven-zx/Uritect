@@ -26,8 +26,7 @@ ANALYTE_ORDER: tuple[str, ...] = (
     "pH",
     "Blood",
     "Specific Gravity",
-    "Ketone",
-    "Bilirubin",
+    "Ketone",    "Bilirubin",
     "Glucose",
 )
 

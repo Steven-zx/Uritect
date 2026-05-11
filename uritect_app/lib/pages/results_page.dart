@@ -1,0 +1,125 @@
+import 'package:flutter/material.dart';
+
+import '../config/theme.dart';
+import '../models/dipstick_results_data.dart';
+import '../widgets/common_widgets.dart';
+import '../widgets/dipstick_results_table.dart';
+import 'symptom_checklist_page.dart';
+
+class ResultsPage extends StatelessWidget {
+  const ResultsPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: AppColors.bgMain,
+      body: SafeArea(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(12, 8, 12, 0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const AppLogo(),
+                  Column(
+                    children: [
+                      Text(
+                        'Dipstick Results',
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                              color: AppColors.primaryMain,
+                              fontWeight: FontWeight.w700,
+                              fontSize: 20,
+                            ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        'Analyte Measurements',
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              fontSize: 12,
+                              color: AppColors.textSecondary,
+                            ),
+                      ),
+                    ],
+                  ),
+                  IconButton(
+                    onPressed: () {},
+                    icon: const Icon(Icons.help_outline_rounded, size: 20),
+                    color: AppColors.primaryMain,
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 16),
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.fromLTRB(8, 0, 8, 16),
+                child: Column(
+                  children: [
+                    const DipstickResultsTable(rows: sampleDipstickRows),
+                    const SizedBox(height: 24),
+                    SizedBox(
+                      width: double.infinity,
+                      height: 52,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) => const SymptomChecklistPage(),
+                            ),
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.primaryMain,
+                          foregroundColor: Colors.white,
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(18),
+                          ),
+                        ),
+                        child: const Text(
+                          'ADD SYMPTOMS',
+                          style: TextStyle(
+                            fontSize: 17,
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: 0.3,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 14),
+                    SizedBox(
+                      width: double.infinity,
+                      height: 52,
+                      child: OutlinedButton(
+                        onPressed: () => Navigator.of(context).popUntil((route) => route.isFirst),
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: AppColors.primaryMain,
+                          side: BorderSide(color: AppColors.border, width: 1.4),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(18),
+                          ),
+                          backgroundColor: AppColors.bgCard,
+                        ),
+                        child: const Text(
+                          'NEW SCAN',
+                          style: TextStyle(
+                            fontSize: 17,
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: 0.3,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
