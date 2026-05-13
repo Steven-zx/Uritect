@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../config/theme.dart';
-import '../models/dipstick_results_data.dart';
 import '../widgets/common_widgets.dart';
 import '../widgets/dipstick_results_table.dart';
 import 'symptom_checklist_page.dart';
@@ -29,18 +28,18 @@ class ResultsPage extends StatelessWidget {
                       Text(
                         'Dipstick Results',
                         style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                              color: AppColors.primaryMain,
-                              fontWeight: FontWeight.w700,
-                              fontSize: 20,
-                            ),
+                          color: AppColors.primaryMain,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 20,
+                        ),
                       ),
                       const SizedBox(height: 4),
                       Text(
                         'Analyte Measurements',
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              fontSize: 12,
-                              color: AppColors.textSecondary,
-                            ),
+                          fontSize: 12,
+                          color: AppColors.textSecondary,
+                        ),
                       ),
                     ],
                   ),
@@ -49,7 +48,10 @@ class ResultsPage extends StatelessWidget {
                     icon: const Icon(Icons.help_outline_rounded, size: 20),
                     color: AppColors.primaryMain,
                     padding: EdgeInsets.zero,
-                    constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
+                    constraints: const BoxConstraints(
+                      minWidth: 32,
+                      minHeight: 32,
+                    ),
                   ),
                 ],
               ),
@@ -60,7 +62,8 @@ class ResultsPage extends StatelessWidget {
                 padding: const EdgeInsets.fromLTRB(8, 0, 8, 16),
                 child: Column(
                   children: [
-                    if (scanResult.padsUnavailable != null && scanResult.padsUnavailable! > 0)
+                    if (scanResult.padsUnavailable != null &&
+                        scanResult.padsUnavailable! > 0)
                       Container(
                         width: double.infinity,
                         padding: const EdgeInsets.all(12),
@@ -68,19 +71,27 @@ class ResultsPage extends StatelessWidget {
                         decoration: BoxDecoration(
                           color: const Color(0xFFFFF3CD),
                           borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: const Color(0xFFFFE69C), width: 1),
+                          border: Border.all(
+                            color: const Color(0xFFFFE69C),
+                            width: 1,
+                          ),
                         ),
                         child: Row(
                           children: [
-                            const Icon(Icons.warning_rounded, size: 20, color: Color(0xFFFF9800)),
+                            const Icon(
+                              Icons.warning_rounded,
+                              size: 20,
+                              color: Color(0xFFFF9800),
+                            ),
                             const SizedBox(width: 8),
                             Expanded(
                               child: Text(
                                 'Detected: ${scanResult.padsDetected ?? 0}/${(scanResult.padsDetected ?? 0) + (scanResult.padsUnavailable ?? 0)} pads',
-                                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                  color: const Color(0xFF856404),
-                                  fontWeight: FontWeight.w600,
-                                ),
+                                style: Theme.of(context).textTheme.bodySmall
+                                    ?.copyWith(
+                                      color: const Color(0xFF856404),
+                                      fontWeight: FontWeight.w600,
+                                    ),
                               ),
                             ),
                           ],
@@ -99,9 +110,8 @@ class ResultsPage extends StatelessWidget {
                         ),
                         child: Text(
                           'No analyte values were returned for this scan.',
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                color: AppColors.textSecondary,
-                              ),
+                          style: Theme.of(context).textTheme.bodyMedium
+                              ?.copyWith(color: AppColors.textSecondary),
                         ),
                       ),
                     const SizedBox(height: 24),
@@ -112,7 +122,8 @@ class ResultsPage extends StatelessWidget {
                         onPressed: () {
                           Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (_) => SymptomChecklistPage(scanResult: scanResult),
+                              builder: (_) =>
+                                  SymptomChecklistPage(scanResult: scanResult),
                             ),
                           );
                         },
@@ -139,7 +150,9 @@ class ResultsPage extends StatelessWidget {
                       width: double.infinity,
                       height: 52,
                       child: OutlinedButton(
-                        onPressed: () => Navigator.of(context).popUntil((route) => route.isFirst),
+                        onPressed: () => Navigator.of(
+                          context,
+                        ).popUntil((route) => route.isFirst),
                         style: OutlinedButton.styleFrom(
                           foregroundColor: AppColors.primaryMain,
                           side: BorderSide(color: AppColors.border, width: 1.4),

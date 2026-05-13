@@ -29,7 +29,10 @@ class ScanResult {
     this.padsUnavailable,
   });
 
-  factory ScanResult.empty({required String imagePath, String id = 'scan_pending'}) {
+  factory ScanResult.empty({
+    required String imagePath,
+    String id = 'scan_pending',
+  }) {
     return ScanResult(
       id: id,
       date: DateTime.now(),
@@ -68,9 +71,54 @@ class ScanResult {
       riskBucket: riskBucket ?? this.riskBucket,
       modelVersion: modelVersion ?? this.modelVersion,
       rows: rows ?? this.rows,
-      screeningProbabilities: screeningProbabilities ?? this.screeningProbabilities,
+      screeningProbabilities:
+          screeningProbabilities ?? this.screeningProbabilities,
       padsDetected: padsDetected ?? this.padsDetected,
       padsUnavailable: padsUnavailable ?? this.padsUnavailable,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'date': date.toIso8601String(),
+      'imagePath': imagePath,
+      'status': status,
+      'confidence': confidence,
+      'posteriorProbability': posteriorProbability,
+      'riskBucket': riskBucket,
+      'modelVersion': modelVersion,
+      'rows': rows.map((row) => row.toJson()).toList(),
+      'screeningProbabilities': screeningProbabilities,
+      'padsDetected': padsDetected,
+      'padsUnavailable': padsUnavailable,
+    };
+  }
+
+  factory ScanResult.fromJson(Map<String, dynamic> json) {
+    final rawRows = json['rows'] as List<dynamic>? ?? const [];
+    final rawProbabilities =
+        json['screeningProbabilities'] as Map<String, dynamic>? ?? const {};
+    return ScanResult(
+      id: json['id'] as String? ?? 'scan_missing',
+      date: DateTime.tryParse(json['date'] as String? ?? '') ?? DateTime.now(),
+      imagePath: json['imagePath'] as String? ?? '',
+      status: json['status'] as String? ?? 'moderate',
+      confidence: (json['confidence'] as num?)?.toDouble() ?? 0.0,
+      posteriorProbability:
+          (json['posteriorProbability'] as num?)?.toDouble() ?? 0.0,
+      riskBucket: json['riskBucket'] as String? ?? 'Moderate',
+      modelVersion: json['modelVersion'] as String? ?? 'unknown',
+      rows: rawRows
+          .whereType<Map<String, dynamic>>()
+          .map(DipstickResultRow.fromJson)
+          .toList(),
+      screeningProbabilities: {
+        for (final entry in rawProbabilities.entries)
+          entry.key: (entry.value as num?)?.toDouble() ?? 0.0,
+      },
+      padsDetected: (json['padsDetected'] as num?)?.toInt(),
+      padsUnavailable: (json['padsUnavailable'] as num?)?.toInt(),
     );
   }
 }

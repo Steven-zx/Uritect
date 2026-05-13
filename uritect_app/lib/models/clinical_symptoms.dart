@@ -3,7 +3,8 @@ import 'dart:math';
 class ClinicalSymptom {
   final String id;
   final String label;
-  final String category; // 'lut' = Lower Urinary Tract, 'renal' = Renal/Systemic
+  final String
+  category; // 'lut' = Lower Urinary Tract, 'renal' = Renal/Systemic
   final String iconCode; // For UI rendering
   final double likelihoodRatioPositive; // LR+ when symptom is present
   final double likelihoodRatioNegative; // LR- when symptom is absent
@@ -94,12 +95,28 @@ class ClinicalChecklistResult {
 
   const ClinicalChecklistResult({required this.selectedSymptoms});
 
+  Map<String, dynamic> toJson() {
+    return {'selectedSymptoms': selectedSymptoms};
+  }
+
+  factory ClinicalChecklistResult.fromJson(Map<String, dynamic> json) {
+    final raw = json['selectedSymptoms'] as Map<String, dynamic>? ?? const {};
+    return ClinicalChecklistResult(
+      selectedSymptoms: {
+        for (final symptom in clinicalSymptoms)
+          symptom.id: raw[symptom.id] == true,
+      },
+    );
+  }
+
   /// Compute Bayesian log-odds contribution from selected symptoms using LRs.
   double computeLogOddsContribution() {
     double totalLogOdds = 0.0;
     for (final symptom in clinicalSymptoms) {
       final isSelected = selectedSymptoms[symptom.id] ?? false;
-      final lr = isSelected ? symptom.likelihoodRatioPositive : symptom.likelihoodRatioNegative;
+      final lr = isSelected
+          ? symptom.likelihoodRatioPositive
+          : symptom.likelihoodRatioNegative;
       totalLogOdds += log(lr.clamp(1e-6, 1e6)); // Avoid log(0)
     }
     return totalLogOdds;

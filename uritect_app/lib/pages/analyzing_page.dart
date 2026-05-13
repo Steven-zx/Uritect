@@ -16,30 +16,18 @@ class AnalyzingPage extends StatefulWidget {
   State<AnalyzingPage> createState() => _AnalyzingPageState();
 }
 
-class _AnalyzingPageState extends State<AnalyzingPage> with TickerProviderStateMixin {
-  late AnimationController _progressController;
-  Timer? _transitionTimer;
-  double _currentProgress = 0.0;
+class _AnalyzingPageState extends State<AnalyzingPage> {
+  Timer? _progressTimer;
+  double _currentProgress = 1.0;
+  double _targetProgress = 8.0;
   String _currentStage = 'starting';
   late Future<ScanResult> _scanResultFuture;
   final ScanAnalysisService _scanAnalysisService = const ScanAnalysisService();
-  bool _animationInProgress = false;
 
   @override
   void initState() {
     super.initState();
-
-    _progressController = AnimationController(
-      duration: const Duration(milliseconds: 350),
-      vsync: this,
-    );
-
-    _progressController.addListener(() {
-      if (!mounted) return;
-      setState(() {
-        _currentProgress = _progressController.value * 100.0;
-      });
-    });
+    _startProgressLoop();
 
     _scanResultFuture = _scanAnalysisService.analyze(
       imagePath: widget.imagePath,
@@ -47,47 +35,85 @@ class _AnalyzingPageState extends State<AnalyzingPage> with TickerProviderStateM
         if (!mounted) return;
         setState(() {
           _currentStage = stage;
-        });
-        final safeTarget = (progress / 100.0).clamp(0.0, 1.0).toDouble();
-        if (_animationInProgress || safeTarget <= _progressController.value) {
-          return;
-        }
-        _animationInProgress = true;
-        _progressController.animateTo(
-          safeTarget,
-          duration: Duration(milliseconds: (150 + (safeTarget * 200)).round()),
-          curve: Curves.easeOut,
-        ).then((_) {
-          _animationInProgress = false;
-        }).catchError((_) {
-          _animationInProgress = false;
+          _targetProgress = _stageTarget(progress, stage);
         });
       },
     );
-    _scanResultFuture.then((scanResult) async {
-      if (!mounted) return;
-      _animationInProgress = true;
-      await _progressController.animateTo(1.0, duration: const Duration(milliseconds: 400), curve: Curves.easeOut);
-      if (!mounted) return;
-      _animationInProgress = false;
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => ResultsPage(scanResult: scanResult)),
-      );
-    }).catchError((error) {
-      _animationInProgress = false;
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Scan analysis failed: $error')),
-      );
-      Navigator.of(context).pop();
-    });
+    _scanResultFuture
+        .then((scanResult) async {
+          if (!mounted) return;
+          setState(() {
+            _currentStage = 'complete';
+            _targetProgress = 100.0;
+          });
+          await _finishProgress();
+          if (!mounted) return;
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (_) => ResultsPage(scanResult: scanResult),
+            ),
+          );
+        })
+        .catchError((error) {
+          if (!mounted) return;
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Scan analysis failed: $error')),
+          );
+          Navigator.of(context).pop();
+        });
   }
 
   @override
   void dispose() {
-    _progressController.dispose();
-    _transitionTimer?.cancel();
+    _progressTimer?.cancel();
     super.dispose();
+  }
+
+  void _startProgressLoop() {
+    _progressTimer = Timer.periodic(const Duration(milliseconds: 80), (_) {
+      if (!mounted || _currentProgress >= _targetProgress) {
+        return;
+      }
+
+      final distance = _targetProgress - _currentProgress;
+      final step = distance > 35
+          ? 1.6
+          : distance > 15
+          ? 1.0
+          : distance > 4
+          ? 0.45
+          : 0.16;
+      setState(() {
+        _currentProgress = (_currentProgress + step).clamp(
+          1.0,
+          _targetProgress,
+        );
+      });
+    });
+  }
+
+  Future<void> _finishProgress() async {
+    while (mounted && _currentProgress < 100.0) {
+      setState(() {
+        _currentProgress = (_currentProgress + 2.5).clamp(1.0, 100.0);
+      });
+      await Future<void>.delayed(const Duration(milliseconds: 24));
+    }
+    await Future<void>.delayed(const Duration(milliseconds: 180));
+  }
+
+  double _stageTarget(double reportedProgress, String stage) {
+    final reported = reportedProgress.clamp(1.0, 100.0).toDouble();
+    final stageTarget = switch (stage) {
+      'loading_reference_map' => 18.0,
+      'preparing_image' || 'decoding_image' => 32.0,
+      'locating_marker' => 95.0,
+      'classifying_pads' => 96.0,
+      'finalizing_results' => 98.0,
+      'complete' => 100.0,
+      _ => reported,
+    };
+    return stageTarget > _targetProgress ? stageTarget : _targetProgress;
   }
 
   @override
@@ -103,20 +129,20 @@ class _AnalyzingPageState extends State<AnalyzingPage> with TickerProviderStateM
               Text(
                 'Analyzing',
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      color: AppColors.primaryMain,
-                      fontWeight: FontWeight.w700,
-                      fontSize: 20,
-                    ),
+                  color: AppColors.primaryMain,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 20,
+                ),
               ),
               const SizedBox(height: 10),
               Text(
-                'Please wait while we analyze\nthe dipstick and related data',
+                'Please wait while Uritect reads\nthe dipstick on this device',
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: AppColors.textSecondary,
-                      fontSize: 12,
-                      height: 1.25,
-                    ),
+                  color: AppColors.textSecondary,
+                  fontSize: 12,
+                  height: 1.25,
+                ),
               ),
               const Spacer(),
               Center(
@@ -153,11 +179,12 @@ class _AnalyzingPageState extends State<AnalyzingPage> with TickerProviderStateM
               ),
               const SizedBox(height: 44),
               Text(
-                _currentStage == 'complete' ? 'Finalizing result...' : 'Analyzing $_currentStage...',
+                _stageText(_currentStage, _currentProgress),
+                textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: AppColors.textSecondary,
-                      fontSize: 12,
-                    ),
+                  color: AppColors.textSecondary,
+                  fontSize: 12,
+                ),
               ),
               const Spacer(flex: 2),
             ],
@@ -165,6 +192,43 @@ class _AnalyzingPageState extends State<AnalyzingPage> with TickerProviderStateM
         ),
       ),
     );
+  }
+
+  String _stageText(String stage, double progress) {
+    if (stage == 'locating_marker') {
+      if (progress < 48) {
+        return 'Finding the marker and strip...';
+      }
+      if (progress < 66) {
+        return 'Locating the reagent pads...';
+      }
+      if (progress < 82) {
+        return 'Reading the reagent pad colors...';
+      }
+      if (progress < 94) {
+        return 'Comparing colors with offline references...';
+      }
+      return 'Waiting for the final scan result...';
+    }
+
+    switch (stage) {
+      case 'starting':
+        return 'Preparing the scan...';
+      case 'loading_reference_map':
+        return 'Loading offline reference data...';
+      case 'preparing_image':
+      case 'decoding_image':
+        return 'Preparing the captured image...';
+      case 'locating_marker':
+        return 'Finding the marker and strip...';
+      case 'classifying_pads':
+        return 'Reading the reagent pad colors...';
+      case 'finalizing_results':
+      case 'complete':
+        return 'Finalizing the dipstick results...';
+      default:
+        return 'Analyzing the dipstick...';
+    }
   }
 }
 

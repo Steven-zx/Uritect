@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:isolate';
 import 'dart:math' as math;
 
 import 'package:flutter/services.dart';
@@ -42,76 +43,38 @@ class LocalScanAnalysisService {
     void Function(double progress, String stage)? onProgress,
   }) async {
     onProgress?.call(5, 'loading_reference_map');
-    final referenceMap = await _ReferenceMap.load();
-
-    onProgress?.call(18, 'decoding_image');
-    final imageBytes = await File(imagePath).readAsBytes();
-    final decoded = img.decodeImage(imageBytes);
-    if (decoded == null) {
-      throw StateError('Could not decode captured image on device.');
-    }
-    final baseImage = img.bakeOrientation(decoded);
-
-    onProgress?.call(32, 'locating_marker');
-    final extraction = _extractBestPadFeatures(
-      baseImage,
-      referenceMap.featureSpace,
+    final referenceText = await rootBundle.loadString(
+      'assets/knn_reference_map.json',
     );
 
-    onProgress?.call(68, 'classifying_pads');
-    final rows = <DipstickResultRow>[];
-    final screeningProbabilities = <String, double>{};
-
-    for (final analyte in _analyteOrder) {
-      final observed = extraction.featuresByAnalyte[analyte];
-      final prediction = observed == null
-          ? null
-          : referenceMap.predict(analyte: analyte, observed: observed);
-      final level = prediction?.level ?? 'Unavailable';
-      final probability = _screeningProbability(
-        level,
-        prediction?.confidence ?? 0.0,
-      );
-      final code = _codeForAnalyte(analyte);
-
-      rows.add(
-        DipstickResultRow(
-          code: code,
-          name: analyte,
-          result: _normalizeDisplayLevel(level),
-          referenceRange: _referenceRanges[analyte] ?? 'Reference unavailable',
-          status: probability >= 0.5
-              ? DipstickResultStatus.moderate
-              : DipstickResultStatus.negative,
-        ),
-      );
-
-      if (code == 'GLU' || code == 'LEU' || code == 'PRO' || code == 'NIT') {
-        screeningProbabilities[code] = probability;
-      }
+    onProgress?.call(18, 'preparing_image');
+    if (!await File(imagePath).exists()) {
+      throw StateError('Captured image was not found on this device.');
     }
 
-    final knnAbnormalProbability = screeningProbabilities.isEmpty
-        ? 0.0
-        : screeningProbabilities.values.reduce((a, b) => a + b) /
-              screeningProbabilities.length;
-    final riskBucket = _riskBucket(knnAbnormalProbability);
+    onProgress?.call(32, 'locating_marker');
+    final resultJson = await Isolate.run(
+      () => _analyzeScanInBackground(imagePath, referenceText),
+    );
 
+    onProgress?.call(92, 'finalizing_results');
+    final scanResult = ScanResult.fromJson(resultJson);
     onProgress?.call(100, 'complete');
-    return ScanResult(
-      id: 'scan_${DateTime.now().millisecondsSinceEpoch}',
-      date: DateTime.now(),
-      imagePath: imagePath,
-      status: riskBucket.toLowerCase(),
-      confidence: knnAbnormalProbability,
-      posteriorProbability: knnAbnormalProbability,
-      riskBucket: riskBucket,
-      modelVersion: '${referenceMap.version}_edge',
-      rows: rows,
-      screeningProbabilities: screeningProbabilities,
-      padsDetected: extraction.featuresByAnalyte.length,
-      padsUnavailable:
-          _analyteOrder.length - extraction.featuresByAnalyte.length,
+    return scanResult;
+  }
+
+  img.Image _imageForAnalysis(img.Image image) {
+    const maxSide = 900;
+    final currentMaxSide = math.max(image.width, image.height);
+    if (currentMaxSide <= maxSide) {
+      return image;
+    }
+    final scale = maxSide / currentMaxSide;
+    return img.copyResize(
+      image,
+      width: math.max(1, (image.width * scale).round()),
+      height: math.max(1, (image.height * scale).round()),
+      interpolation: img.Interpolation.average,
     );
   }
 
@@ -129,7 +92,7 @@ class LocalScanAnalysisService {
     _FeatureExtraction? best;
     for (final variant in variants) {
       final candidates = _markerCandidates(variant.image);
-      for (final candidate in candidates.take(8)) {
+      for (final candidate in candidates.take(3)) {
         final extraction = _extractPadFeatures(
           variant.image,
           featureSpace,
@@ -162,7 +125,7 @@ class LocalScanAnalysisService {
     final padSize = math.max(6, (5.0 * pixelsPerMm).round());
 
     final markerPatch = _markerCenterPatch(image, marker);
-    final gains = _awbGains(markerPatch);
+    final gains = _computeGains(image, markerPatch);
     final grid = _findBestPadGrid(
       image: image,
       marker: marker,
@@ -288,10 +251,10 @@ class LocalScanAnalysisService {
     required List<double> gains,
   }) {
     final expectedX = (marker.left + (32.0 * pixelsPerMm)).round();
-    final xSearch = math.max(padSize * 8, marker.width).round();
-    final ySearch = math.max(padSize * 18, marker.height * 4).round();
-    final xStep = math.max(3, padSize ~/ 3);
-    final yStep = math.max(3, padSize ~/ 3);
+    final xSearch = math.max(padSize * 6, marker.width * 0.8).round();
+    final ySearch = math.max(padSize * 14, marker.height * 3).round();
+    final xStep = math.max(4, padSize ~/ 2);
+    final yStep = math.max(4, padSize ~/ 2);
 
     _PadGrid? best;
     for (var xShift = -xSearch; xShift <= xSearch; xShift += xStep) {
@@ -427,17 +390,13 @@ class LocalScanAnalysisService {
     return bestY;
   }
 
-  double _singlePadLockScore(
-    img.Image image,
-    _Rect rect,
-    List<double> gainPatch,
-  ) {
-    final gains = _computeGains(image, gainPatch);
+  double _singlePadLockScore(img.Image image, _Rect rect, List<double> gains) {
     final hues = <double>[];
     final sats = <double>[];
     final vals = <double>[];
-    for (var y = rect.top; y < rect.top + rect.height; y += 2) {
-      for (var x = rect.left; x < rect.left + rect.width; x += 2) {
+    final step = math.max(2, math.min(rect.width, rect.height) ~/ 8);
+    for (var y = rect.top; y < rect.top + rect.height; y += step) {
+      for (var x = rect.left; x < rect.left + rect.width; x += step) {
         final rgb = _correctedRgb(image.getPixel(x, y), gains);
         final hsv = _rgbToHsv(rgb[0], rgb[1], rgb[2]);
         hues.add(hsv[0]);
@@ -569,8 +528,9 @@ class LocalScanAnalysisService {
     final y1 = rect.top + rect.height - 1;
     final borderBand = math.max(2, math.min(rect.width, rect.height) ~/ 5);
 
-    for (var y = y0; y <= y1; y++) {
-      for (var x = x0; x <= x1; x++) {
+    final step = math.max(1, math.min(rect.width, rect.height) ~/ 28);
+    for (var y = y0; y <= y1; y += step) {
+      for (var x = x0; x <= x1; x += step) {
         final value =
             _luma(
               image.getPixel(
@@ -613,30 +573,15 @@ class LocalScanAnalysisService {
     );
   }
 
-  List<double> _awbGains(_Rect markerPatch) {
-    // The Python pipeline uses marker-center AWB. The Dart extractor applies
-    // the same channel-gain idea, with gains computed lazily by callers that
-    // can access the image pixels.
-    return [
-      1.0,
-      1.0,
-      1.0,
-      markerPatch.left.toDouble(),
-      markerPatch.top.toDouble(),
-      markerPatch.width.toDouble(),
-      markerPatch.height.toDouble(),
-    ];
-  }
-
-  List<double> _meanLab(img.Image image, _Rect rect, List<double> gainPatch) {
-    final gains = _computeGains(image, gainPatch);
+  List<double> _meanLab(img.Image image, _Rect rect, List<double> gains) {
     var sumL = 0.0;
     var sumA = 0.0;
     var sumB = 0.0;
     var count = 0;
 
-    for (var y = rect.top; y < rect.top + rect.height; y++) {
-      for (var x = rect.left; x < rect.left + rect.width; x++) {
+    final step = _colorSampleStep(rect);
+    for (var y = rect.top; y < rect.top + rect.height; y += step) {
+      for (var x = rect.left; x < rect.left + rect.width; x += step) {
         final rgb = _correctedRgb(image.getPixel(x, y), gains);
         final lab = _rgbToLab(rgb[0], rgb[1], rgb[2]);
         sumL += lab[0];
@@ -648,16 +593,16 @@ class LocalScanAnalysisService {
     return [sumL / count, sumA / count, sumB / count];
   }
 
-  List<double> _meanHsv(img.Image image, _Rect rect, List<double> gainPatch) {
-    final gains = _computeGains(image, gainPatch);
+  List<double> _meanHsv(img.Image image, _Rect rect, List<double> gains) {
     var sinH = 0.0;
     var cosH = 0.0;
     var sumS = 0.0;
     var sumV = 0.0;
     var count = 0;
 
-    for (var y = rect.top; y < rect.top + rect.height; y++) {
-      for (var x = rect.left; x < rect.left + rect.width; x++) {
+    final step = _colorSampleStep(rect);
+    for (var y = rect.top; y < rect.top + rect.height; y += step) {
+      for (var x = rect.left; x < rect.left + rect.width; x += step) {
         final rgb = _correctedRgb(image.getPixel(x, y), gains);
         final hsv = _rgbToHsv(rgb[0], rgb[1], rgb[2]);
         sinH += math.sin(hsv[0] * math.pi / 180.0);
@@ -671,12 +616,12 @@ class LocalScanAnalysisService {
     return [hue < 0 ? hue + 360.0 : hue, sumS / count, sumV / count];
   }
 
-  double _meanSaturation(img.Image image, _Rect rect, List<double> gainPatch) {
-    final gains = _computeGains(image, gainPatch);
+  double _meanSaturation(img.Image image, _Rect rect, List<double> gains) {
     var sum = 0.0;
     var count = 0;
-    for (var y = rect.top; y < rect.top + rect.height; y += 2) {
-      for (var x = rect.left; x < rect.left + rect.width; x += 2) {
+    final step = math.max(2, _colorSampleStep(rect));
+    for (var y = rect.top; y < rect.top + rect.height; y += step) {
+      for (var x = rect.left; x < rect.left + rect.width; x += step) {
         final rgb = _correctedRgb(image.getPixel(x, y), gains);
         sum += _rgbToHsv(rgb[0], rgb[1], rgb[2])[1];
         count++;
@@ -685,14 +630,7 @@ class LocalScanAnalysisService {
     return count == 0 ? 0.0 : sum / count;
   }
 
-  List<double> _computeGains(img.Image image, List<double> patch) {
-    final rect = _Rect(
-      left: patch[3].round(),
-      top: patch[4].round(),
-      width: patch[5].round(),
-      height: patch[6].round(),
-      area: patch[5].round() * patch[6].round(),
-    );
+  List<double> _computeGains(img.Image image, _Rect rect) {
     var r = 0.0;
     var g = 0.0;
     var b = 0.0;
@@ -715,6 +653,9 @@ class LocalScanAnalysisService {
     final target = math.max(r, math.max(g, b));
     return [target / r, target / g, target / b];
   }
+
+  int _colorSampleStep(_Rect rect) =>
+      math.max(1, math.min(rect.width, rect.height) ~/ 12);
 
   List<double> _correctedRgb(img.Pixel pixel, List<double> gains) {
     return [
@@ -772,6 +713,78 @@ class LocalScanAnalysisService {
   }
 }
 
+Map<String, dynamic> _analyzeScanInBackground(
+  String imagePath,
+  String referenceText,
+) {
+  final service = const LocalScanAnalysisService();
+  final referenceMap = _ReferenceMap.fromText(referenceText);
+  final imageBytes = File(imagePath).readAsBytesSync();
+  final decoded = img.decodeImage(imageBytes);
+  if (decoded == null) {
+    throw StateError('Could not decode captured image on device.');
+  }
+
+  final baseImage = service._imageForAnalysis(img.bakeOrientation(decoded));
+  final extraction = service._extractBestPadFeatures(
+    baseImage,
+    referenceMap.featureSpace,
+  );
+
+  final rows = <DipstickResultRow>[];
+  final screeningProbabilities = <String, double>{};
+
+  for (final analyte in _analyteOrder) {
+    final observed = extraction.featuresByAnalyte[analyte];
+    final prediction = observed == null
+        ? null
+        : referenceMap.predict(analyte: analyte, observed: observed);
+    final level = prediction?.level ?? 'Unavailable';
+    final probability = _screeningProbability(
+      level,
+      prediction?.confidence ?? 0.0,
+    );
+    final code = _codeForAnalyte(analyte);
+
+    rows.add(
+      DipstickResultRow(
+        code: code,
+        name: analyte,
+        result: _normalizeDisplayLevel(level),
+        referenceRange: _referenceRanges[analyte] ?? 'Reference unavailable',
+        status: probability >= 0.5
+            ? DipstickResultStatus.moderate
+            : DipstickResultStatus.negative,
+      ),
+    );
+
+    if (code == 'GLU' || code == 'LEU' || code == 'PRO' || code == 'NIT') {
+      screeningProbabilities[code] = probability;
+    }
+  }
+
+  final knnAbnormalProbability = screeningProbabilities.isEmpty
+      ? 0.0
+      : screeningProbabilities.values.reduce((a, b) => a + b) /
+            screeningProbabilities.length;
+  final riskBucket = _riskBucket(knnAbnormalProbability);
+
+  return ScanResult(
+    id: 'scan_${DateTime.now().millisecondsSinceEpoch}',
+    date: DateTime.now(),
+    imagePath: imagePath,
+    status: riskBucket.toLowerCase(),
+    confidence: knnAbnormalProbability,
+    posteriorProbability: knnAbnormalProbability,
+    riskBucket: riskBucket,
+    modelVersion: '${referenceMap.version}_edge',
+    rows: rows,
+    screeningProbabilities: screeningProbabilities,
+    padsDetected: extraction.featuresByAnalyte.length,
+    padsUnavailable: _analyteOrder.length - extraction.featuresByAnalyte.length,
+  ).toJson();
+}
+
 class _ReferenceMap {
   final String version;
   final String featureSpace;
@@ -785,8 +798,7 @@ class _ReferenceMap {
     required this.referencesByAnalyte,
   });
 
-  static Future<_ReferenceMap> load() async {
-    final text = await rootBundle.loadString('assets/knn_reference_map.json');
+  static _ReferenceMap fromText(String text) {
     final payload = jsonDecode(text) as Map<String, dynamic>;
     final featureSpace = (payload['reference_color_space'] as String? ?? 'hsv')
         .toLowerCase();

@@ -14,6 +14,28 @@ class DipstickResultRow {
     required this.referenceRange,
     required this.status,
   });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'code': code,
+      'name': name,
+      'result': result,
+      'referenceRange': referenceRange,
+      'status': status.name,
+    };
+  }
+
+  factory DipstickResultRow.fromJson(Map<String, dynamic> json) {
+    return DipstickResultRow(
+      code: json['code'] as String? ?? '',
+      name: json['name'] as String? ?? '',
+      result: json['result'] as String? ?? 'Unavailable',
+      referenceRange: json['referenceRange'] as String? ?? '',
+      status: json['status'] == DipstickResultStatus.moderate.name
+          ? DipstickResultStatus.moderate
+          : DipstickResultStatus.negative,
+    );
+  }
 }
 
 enum DipstickResultStatus { moderate, negative }

@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import '../config/theme.dart';
 import '../models/clinical_symptoms.dart';
 import '../models/scan_model.dart';
+import '../models/screening_fusion.dart';
+import '../services/scan_history_service.dart';
 import '../widgets/common_widgets.dart';
 import 'overall_results_page.dart';
 
@@ -17,6 +19,8 @@ class SymptomChecklistPage extends StatefulWidget {
 
 class _SymptomChecklistPageState extends State<SymptomChecklistPage> {
   late Map<String, bool> selectedSymptoms;
+  final ScanHistoryService _historyService = const ScanHistoryService();
+  bool _isSaving = false;
 
   @override
   void initState() {
@@ -25,15 +29,67 @@ class _SymptomChecklistPageState extends State<SymptomChecklistPage> {
   }
 
   void _toggleSymptom(String id) {
+    if (_isSaving) return;
     setState(() {
       selectedSymptoms[id] = !(selectedSymptoms[id] ?? false);
     });
   }
 
+  Future<void> _continueToOverallResults() async {
+    if (_isSaving) return;
+    setState(() {
+      _isSaving = true;
+    });
+
+    final checklistResult = ClinicalChecklistResult(
+      selectedSymptoms: Map<String, bool>.from(selectedSymptoms),
+    );
+    final screeningAnalytes =
+        ScreeningFusionEngine.buildAnalytesFromProbabilities(
+          widget.scanResult.screeningProbabilities,
+        );
+    final fusionResult = const ScreeningFusionEngine().fuse(
+      analytes: screeningAnalytes,
+      checklist: checklistResult,
+    );
+
+    try {
+      final savedRecord = await _historyService.saveCompletedScan(
+        scanResult: widget.scanResult,
+        checklistResult: checklistResult,
+        fusionResult: fusionResult,
+      );
+      if (!mounted) return;
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (_) => OverallResultsPage(
+            scanResult: savedRecord.scanResult,
+            clinicalChecklistResult: savedRecord.checklistResult,
+          ),
+        ),
+      );
+    } catch (error) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Could not save scan history: $error')),
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isSaving = false;
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final lutSymptoms = clinicalSymptoms.where((s) => s.category == 'lut').toList();
-    final renalSymptoms = clinicalSymptoms.where((s) => s.category == 'renal').toList();
+    final lutSymptoms = clinicalSymptoms
+        .where((s) => s.category == 'lut')
+        .toList();
+    final renalSymptoms = clinicalSymptoms
+        .where((s) => s.category == 'renal')
+        .toList();
 
     return Scaffold(
       backgroundColor: AppColors.bgMain,
@@ -54,7 +110,8 @@ class _SymptomChecklistPageState extends State<SymptomChecklistPage> {
                         children: [
                           Text(
                             'Symptom Checklist',
-                            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                            style: Theme.of(context).textTheme.titleLarge
+                                ?.copyWith(
                                   color: AppColors.primaryMain,
                                   fontWeight: FontWeight.w700,
                                   fontSize: 20,
@@ -64,7 +121,8 @@ class _SymptomChecklistPageState extends State<SymptomChecklistPage> {
                           Text(
                             'Select the symptoms observed\nin the patient.',
                             textAlign: TextAlign.center,
-                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            style: Theme.of(context).textTheme.bodyMedium
+                                ?.copyWith(
                                   fontSize: 12,
                                   color: AppColors.textSecondary,
                                   height: 1.25,
@@ -78,7 +136,10 @@ class _SymptomChecklistPageState extends State<SymptomChecklistPage> {
                       icon: const Icon(Icons.help_outline_rounded, size: 20),
                       color: AppColors.primaryMain,
                       padding: EdgeInsets.zero,
-                      constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
+                      constraints: const BoxConstraints(
+                        minWidth: 32,
+                        minHeight: 32,
+                      ),
                     ),
                   ],
                 ),
@@ -92,13 +153,23 @@ class _SymptomChecklistPageState extends State<SymptomChecklistPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // Category 1: Lower Urinary Tract Symptoms
-                      _buildCategoryHeader(context, 'Lower Urinary Tract Symptoms'),
+                      _buildCategoryHeader(
+                        context,
+                        'Lower Urinary Tract Symptoms',
+                      ),
                       const SizedBox(height: 12),
-                      ...lutSymptoms.map((symptom) => _buildSymptomTile(context, symptom)),
+                      ...lutSymptoms.map(
+                        (symptom) => _buildSymptomTile(context, symptom),
+                      ),
                       const SizedBox(height: 28),
-                      _buildCategoryHeader(context, 'Upper Urinary Tract Symptoms'),
+                      _buildCategoryHeader(
+                        context,
+                        'Upper Urinary Tract Symptoms',
+                      ),
                       const SizedBox(height: 12),
-                      ...renalSymptoms.map((symptom) => _buildSymptomTile(context, symptom)),
+                      ...renalSymptoms.map(
+                        (symptom) => _buildSymptomTile(context, symptom),
+                      ),
                       const SizedBox(height: 28),
                     ],
                   ),
@@ -111,19 +182,7 @@ class _SymptomChecklistPageState extends State<SymptomChecklistPage> {
                   width: double.infinity,
                   height: 52,
                   child: ElevatedButton(
-                    onPressed: () {
-                      final checklistResult = ClinicalChecklistResult(
-                        selectedSymptoms: selectedSymptoms,
-                      );
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (_) => OverallResultsPage(
-                            scanResult: widget.scanResult,
-                            clinicalChecklistResult: checklistResult,
-                          ),
-                        ),
-                      );
-                    },
+                    onPressed: _isSaving ? null : _continueToOverallResults,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.primaryMain,
                       foregroundColor: Colors.white,
@@ -132,8 +191,8 @@ class _SymptomChecklistPageState extends State<SymptomChecklistPage> {
                         borderRadius: BorderRadius.circular(18),
                       ),
                     ),
-                    child: const Text(
-                      'CONTINUE',
+                    child: Text(
+                      _isSaving ? 'SAVING...' : 'CONTINUE',
                       style: TextStyle(
                         fontSize: 17,
                         fontWeight: FontWeight.w700,
@@ -156,18 +215,14 @@ class _SymptomChecklistPageState extends State<SymptomChecklistPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Divider(
-            height: 1,
-            color: AppColors.border,
-            thickness: 1,
-          ),
+          Divider(height: 1, color: AppColors.border, thickness: 1),
           const SizedBox(height: 10),
           Text(
             label,
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.primaryMain,
+              fontSize: 13,
+              fontWeight: FontWeight.w600,
+              color: AppColors.primaryMain,
             ),
           ),
         ],
@@ -212,10 +267,10 @@ class _SymptomChecklistPageState extends State<SymptomChecklistPage> {
                 child: Text(
                   symptom.label,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        color: AppColors.textPrimary,
-                      ),
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.textPrimary,
+                  ),
                 ),
               ),
               Checkbox(
@@ -223,10 +278,14 @@ class _SymptomChecklistPageState extends State<SymptomChecklistPage> {
                 onChanged: (_) => _toggleSymptom(symptom.id),
                 activeColor: AppColors.primaryMain,
                 side: BorderSide(
-                  color: isSelected ? AppColors.primaryMain : const Color(0xFFCDD5DC),
+                  color: isSelected
+                      ? AppColors.primaryMain
+                      : const Color(0xFFCDD5DC),
                   width: 2,
                 ),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(6),
+                ),
               ),
             ],
           ),
