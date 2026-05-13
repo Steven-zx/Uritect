@@ -198,6 +198,12 @@ def parse_args() -> argparse.Namespace:
         ),
     )
     parser.add_argument(
+        "--semiquant-knn-k",
+        type=int,
+        default=31,
+        help="K used by the app semiquant weighted KNN predictor (default: 31).",
+    )
+    parser.add_argument(
         "--event-center-hsv",
         action="store_true",
         help=(
@@ -1233,6 +1239,10 @@ def main() -> None:
             )
 
     print("\n[2/3] Building app reference map ...")
+    event_center_enabled = bool(args.event_center_hsv and feature_space in {"hsv", "normalized_hsv"})
+    if args.event_center_hsv and not event_center_enabled:
+        print("  [INFO] Event HSV centering skipped because feature space is LAB.")
+
     event_anchors, semiquant_target_anchor = _compute_event_hsv_anchors(normalized_semiquant_rows, feature_space=feature_space)
     semiquant_light_target_anchors = _compute_light_target_anchors(normalized_semiquant_rows, event_anchors)
     calibration_anchor_overrides: dict[str, tuple[float, float, float]] = {}
@@ -1246,12 +1256,12 @@ def main() -> None:
         normalized_semiquant_rows,
         augment_target_per_level=args.semiquant_augment_target_per_level,
         prototype_mode=args.semiquant_prototype_mode,
-        event_center_hsv=args.event_center_hsv,
-        event_anchors=event_anchors if args.event_center_hsv else None,
-        target_anchor=semiquant_target_anchor if args.event_center_hsv else None,
+        event_center_hsv=event_center_enabled,
+        event_anchors=event_anchors if event_center_enabled else None,
+        target_anchor=semiquant_target_anchor if event_center_enabled else None,
         target_anchor_by_light=(
             merged_light_anchors
-            if args.event_center_hsv and args.event_center_mode == "per-light"
+            if event_center_enabled and args.event_center_mode == "per-light"
             else None
         ),
         feature_space=feature_space,
@@ -1271,7 +1281,7 @@ def main() -> None:
         "reference_color_space": feature_space,
         "reference_strategy": "semiquant_preferred_with_binary_fallback",
         "event_hsv_centering": {
-            "enabled": bool(args.event_center_hsv),
+            "enabled": event_center_enabled,
             "mode": args.event_center_mode,
             "target_anchor": {
                 "h": semiquant_target_anchor[0],
@@ -1297,6 +1307,10 @@ def main() -> None:
             "events_with_anchor": len(event_anchors),
         },
         "semiquant_prototype_mode": args.semiquant_prototype_mode,
+        "semiquant_knn": {
+            "k": max(1, int(args.semiquant_knn_k)),
+            "weights": "inverse_distance",
+        },
         "semiquant_augmentation": semiquant_augmentation_summary,
         "pipeline_sequence": [
             "geometric_rectification",

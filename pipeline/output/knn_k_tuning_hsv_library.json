@@ -1,0 +1,108 @@
+{
+  "feature_space": "hsv",
+  "prototype_mode": "library",
+  "augmentation": "off",
+  "vote": "inverse_distance",
+  "results": [
+    {
+      "features": "pipeline\\dataset\\features.csv",
+      "k": 1,
+      "accuracy": 0.4636363636363636,
+      "precision_macro": 0.2518142777606935,
+      "recall_macro": 0.24997828694379962,
+      "f1_macro": 0.23200581728173642,
+      "f1_weighted": 0.47526189124543333,
+      "cohen_kappa": 0.44246167805731323
+    },
+    {
+      "features": "pipeline\\dataset\\features.csv",
+      "k": 3,
+      "accuracy": 0.4898181818181818,
+      "precision_macro": 0.26056113232587585,
+      "recall_macro": 0.2564086426525182,
+      "f1_macro": 0.23713385969628656,
+      "f1_weighted": 0.4931526205383197,
+      "cohen_kappa": 0.4689260992298294
+    },
+    {
+      "features": "pipeline\\dataset\\features.csv",
+      "k": 5,
+      "accuracy": 0.5,
+      "precision_macro": 0.26491240124167525,
+      "recall_macro": 0.26683305174424626,
+      "f1_macro": 0.24164635869413117,
+      "f1_weighted": 0.49589473398229555,
+      "cohen_kappa": 0.47900320922153494
+    },
+    {
+      "features": "pipeline\\dataset\\features.csv",
+      "k": 7,
+      "accuracy": 0.5061818181818182,
+      "precision_macro": 0.2560999501065313,
+      "recall_macro": 0.2604425153173059,
+      "f1_macro": 0.23487535729278863,
+      "f1_weighted": 0.49669949198456725,
+      "cohen_kappa": 0.4850564367336346
+    },
+    {
+      "features": "pipeline\\dataset\\features.csv",
+      "k": 9,
+      "accuracy": 0.5118181818181818,
+      "precision_macro": 0.25560883591262235,
+      "recall_macro": 0.2620119778052747,
+      "f1_macro": 0.23544666087117191,
+      "f1_weighted": 0.4990761988328995,
+      "cohen_kappa": 0.49066723802005074
+    },
+    {
+      "features": "pipeline\\dataset\\features.csv",
+      "k": 11,
+      "accuracy": 0.5103636363636364,
+      "precision_macro": 0.24172494405130845,
+      "recall_macro": 0.2516890099948094,
+      "f1_macro": 0.2259790128677303,
+      "f1_weighted": 0.4944160518220654,
+      "cohen_kappa": 0.48891449031575385
+    },
+    {
+      "features": "pipeline\\dataset\\features.csv",
+      "k": 15,
+      "accuracy": 0.5052727272727273,
+      "precision_macro": 0.2263092848161099,
+      "recall_macro": 0.23958700041447392,
+      "f1_macro": 0.21283060015773742,
+      "f1_weighted": 0.48468103658128453,
+      "cohen_kappa": 0.48321759385269913
+    },
+    {
+      "features": "pipeline\\dataset\\features.csv",
+      "k": 21,
+      "accuracy": 0.5125454545454545,
+      "precision_macro": 0.22117569786481253,
+      "recall_macro": 0.23350448997687814,
+      "f1_macro": 0.20635847397678914,
+      "f1_weighted": 0.4823875666976042,
+      "cohen_kappa": 0.49000688959677097
+    },
+    {
+      "features": "pipeline\\dataset\\features.csv",
+      "k": 31,
+      "accuracy": 0.5247272727272727,
+      "precision_macro": 0.19741621263007786,
+      "recall_macro": 0.22271357722943685,
+      "f1_macro": 0.19197616588389635,
+      "f1_weighted": 0.476817127317958,
+      "cohen_kappa": 0.5013635331477531
+    }
+  ],
+  "selected": {
+    "features": "pipeline\\dataset\\features.csv",
+    "k": 31,
+    "accuracy": 0.5247272727272727,
+    "precision_macro": 0.19741621263007786,
+    "recall_macro": 0.22271357722943685,
+    "f1_macro": 0.19197616588389635,
+    "f1_weighted": 0.476817127317958,
+    "cohen_kappa": 0.5013635331477531
+  }
+}

@@ -6,11 +6,19 @@ import 'package:http/http.dart' as http;
 
 import '../models/dipstick_results_data.dart';
 import '../models/scan_model.dart';
+import 'local_scan_analysis_service.dart';
 
 class ScanAnalysisService {
   const ScanAnalysisService();
 
-  static const String _physicalDeviceDefaultAndroidServer = 'http://192.168.1.213:8000';
+  static const bool _useDevScanServer = bool.fromEnvironment(
+    'USE_DEV_SCAN_SERVER',
+  );
+  static const LocalScanAnalysisService _localAnalyzer =
+      LocalScanAnalysisService();
+
+  static const String _physicalDeviceDefaultAndroidServer =
+      'http://192.168.1.213:8000';
   static const String _emulatorDefaultAndroidServer = 'http://10.0.2.2:8000';
   static const String _desktopDefaultServer = 'http://127.0.0.1:8000';
 
@@ -31,7 +39,9 @@ class ScanAnalysisService {
     final client = HttpClient()..connectionTimeout = const Duration(seconds: 2);
     try {
       final request = await client.getUrl(serverBaseUri.resolve('/health'));
-      final response = await request.close().timeout(const Duration(seconds: 2));
+      final response = await request.close().timeout(
+        const Duration(seconds: 2),
+      );
       await response.drain<void>();
       return response.statusCode == 200;
     } on Exception {
@@ -50,24 +60,34 @@ class ScanAnalysisService {
 
     if (Platform.isAndroid) {
       final candidates = <Uri>[
-        Uri.parse(_looksLikeAndroidEmulator()
-            ? _emulatorDefaultAndroidServer
-            : _physicalDeviceDefaultAndroidServer),
-        Uri.parse(_looksLikeAndroidEmulator()
-            ? _physicalDeviceDefaultAndroidServer
-            : _emulatorDefaultAndroidServer),
+        Uri.parse(
+          _looksLikeAndroidEmulator()
+              ? _emulatorDefaultAndroidServer
+              : _physicalDeviceDefaultAndroidServer,
+        ),
+        Uri.parse(
+          _looksLikeAndroidEmulator()
+              ? _physicalDeviceDefaultAndroidServer
+              : _emulatorDefaultAndroidServer,
+        ),
       ];
 
       for (final candidate in candidates) {
-        print('[ScanService] Probing Android scan server candidate: $candidate');
+        print(
+          '[ScanService] Probing Android scan server candidate: $candidate',
+        );
         if (await _probeServer(candidate)) {
-          print('[ScanService] Using reachable Android scan server: $candidate');
+          print(
+            '[ScanService] Using reachable Android scan server: $candidate',
+          );
           return candidate;
         }
       }
 
       final fallback = candidates.first;
-      print('[ScanService] No Android candidate responded on /health, falling back to: $fallback');
+      print(
+        '[ScanService] No Android candidate responded on /health, falling back to: $fallback',
+      );
       return fallback;
     }
 
@@ -95,7 +115,9 @@ class ScanAnalysisService {
   Directory _findWorkspaceRoot() {
     var directory = Directory.current.absolute;
     while (true) {
-      final candidate = File('${directory.path}${Platform.pathSeparator}pipeline${Platform.pathSeparator}scan_dipstick.py');
+      final candidate = File(
+        '${directory.path}${Platform.pathSeparator}pipeline${Platform.pathSeparator}scan_dipstick.py',
+      );
       if (candidate.existsSync()) {
         return directory;
       }
@@ -110,7 +132,9 @@ class ScanAnalysisService {
   }
 
   String _resolvePythonExecutable(Directory root) {
-    final venvPython = File('${root.path}${Platform.pathSeparator}.venv${Platform.pathSeparator}Scripts${Platform.pathSeparator}python.exe');
+    final venvPython = File(
+      '${root.path}${Platform.pathSeparator}.venv${Platform.pathSeparator}Scripts${Platform.pathSeparator}python.exe',
+    );
     if (venvPython.existsSync()) {
       return venvPython.path;
     }
@@ -118,38 +142,50 @@ class ScanAnalysisService {
   }
 
   DipstickResultStatus _statusFromProbability(double probability) {
-    return probability >= 0.5 ? DipstickResultStatus.moderate : DipstickResultStatus.negative;
+    return probability >= 0.5
+        ? DipstickResultStatus.moderate
+        : DipstickResultStatus.negative;
   }
 
   ScanResult _scanResultFromJson(Map<String, dynamic> payload) {
-    final rowsJson = (payload['analytes'] as List<dynamic>? ?? const <dynamic>[]);
-    final rows = rowsJson.map((item) {
-      final row = item as Map<String, dynamic>;
-      return DipstickResultRow(
-        code: row['code'] as String? ?? '',
-        name: row['name'] as String? ?? '',
-        result: row['display_value'] as String? ?? 'Unavailable',
-        referenceRange: row['reference_range'] as String? ?? 'Reference unavailable',
-        status: _statusFromProbability((row['abnormal_probability'] as num?)?.toDouble() ?? 0.0),
-      );
-    }).toList(growable: false);
+    final rowsJson =
+        (payload['analytes'] as List<dynamic>? ?? const <dynamic>[]);
+    final rows = rowsJson
+        .map((item) {
+          final row = item as Map<String, dynamic>;
+          return DipstickResultRow(
+            code: row['code'] as String? ?? '',
+            name: row['name'] as String? ?? '',
+            result: row['display_value'] as String? ?? 'Unavailable',
+            referenceRange:
+                row['reference_range'] as String? ?? 'Reference unavailable',
+            status: _statusFromProbability(
+              (row['abnormal_probability'] as num?)?.toDouble() ?? 0.0,
+            ),
+          );
+        })
+        .toList(growable: false);
 
     final screeningProbabilities = <String, double>{};
     final screeningJson = payload['screening_probabilities'];
     if (screeningJson is Map<String, dynamic>) {
       for (final entry in screeningJson.entries) {
-        screeningProbabilities[entry.key] = (entry.value as num?)?.toDouble() ?? 0.0;
+        screeningProbabilities[entry.key] =
+            (entry.value as num?)?.toDouble() ?? 0.0;
       }
     }
 
     final scanId = payload['id'] as String? ?? 'scan_pending';
     final imagePath = payload['image_path'] as String? ?? '';
-    final modelVersion = payload['model_version'] as String? ?? 'trained_v4_hsv';
+    final modelVersion =
+        payload['model_version'] as String? ?? 'trained_v4_hsv';
     final riskBucket = payload['risk_bucket'] as String? ?? 'Moderate';
-    final posteriorProbability = (payload['posterior_probability'] as num?)?.toDouble() ?? 0.0;
-    final confidence = (payload['confidence'] as num?)?.toDouble() ?? posteriorProbability;
-  final padsDetected = payload['pads_detected'] as int?;
-  final padsUnavailable = payload['pads_unavailable'] as int?;
+    final posteriorProbability =
+        (payload['posterior_probability'] as num?)?.toDouble() ?? 0.0;
+    final confidence =
+        (payload['confidence'] as num?)?.toDouble() ?? posteriorProbability;
+    final padsDetected = payload['pads_detected'] as int?;
+    final padsUnavailable = payload['pads_unavailable'] as int?;
 
     return ScanResult(
       id: scanId,
@@ -171,6 +207,13 @@ class ScanAnalysisService {
     required String imagePath,
     void Function(double progress, String stage)? onProgress,
   }) async {
+    if (!_useDevScanServer) {
+      return _localAnalyzer.analyze(
+        imagePath: imagePath,
+        onProgress: onProgress,
+      );
+    }
+
     final progressCallback = onProgress;
     final serverBaseUri = await _resolveScanServerBaseUri();
     final uri = serverBaseUri.resolve('/scan');
@@ -178,51 +221,69 @@ class ScanAnalysisService {
     try {
       final bytes = await file.readAsBytes();
       final request = http.MultipartRequest('POST', uri);
-      
+
       // Ask server for async processing so we can receive progress events.
       request.headers['Prefer'] = 'respond-async';
       print('[scan_analysis] Setting Prefer header to: respond-async');
-      
-      final filename = file.uri.pathSegments.isNotEmpty ? file.uri.pathSegments.last : 'upload.jpg';
-      request.files.add(http.MultipartFile.fromBytes('file', bytes, filename: filename));
-      
-      final streamedResponse = await request.send().timeout(const Duration(seconds: 10));
+
+      final filename = file.uri.pathSegments.isNotEmpty
+          ? file.uri.pathSegments.last
+          : 'upload.jpg';
+      request.files.add(
+        http.MultipartFile.fromBytes('file', bytes, filename: filename),
+      );
+
+      final streamedResponse = await request.send().timeout(
+        const Duration(seconds: 10),
+      );
       final response = await http.Response.fromStream(streamedResponse);
-      
+
       print('[scan_analysis] Response status: ${response.statusCode}');
       print('[scan_analysis] Response headers: ${response.headers}');
-      
+
       final respBody = response.body;
       if (response.statusCode == 202) {
         final decoded = jsonDecode(respBody) as Map<String, dynamic>?;
         final scanId = decoded?['id'] as String?;
         if (scanId == null) {
-          throw StateError('Scan server accepted async request but returned no id.');
+          throw StateError(
+            'Scan server accepted async request but returned no id.',
+          );
         }
 
-        print('[scan_analysis] Got scan_id: $scanId, connecting to SSE endpoint');
+        print(
+          '[scan_analysis] Got scan_id: $scanId, connecting to SSE endpoint',
+        );
 
         // Connect to SSE endpoint and wait for result event
         final eventsUri = serverBaseUri.resolve('/scan_events/$scanId');
         print('[scan_analysis] SSE URI: $eventsUri');
-        
+
         final httpClient = HttpClient();
         httpClient.connectionTimeout = const Duration(seconds: 10);
-        
+
         try {
           final eventsRequest = await httpClient.getUrl(eventsUri);
           print('[scan_analysis] SSE request created, sending...');
-          
-          final eventsResponse = await eventsRequest.close().timeout(const Duration(seconds: 10));
-          print('[scan_analysis] SSE response status: ${eventsResponse.statusCode}');
-          
+
+          final eventsResponse = await eventsRequest.close().timeout(
+            const Duration(seconds: 10),
+          );
+          print(
+            '[scan_analysis] SSE response status: ${eventsResponse.statusCode}',
+          );
+
           if (eventsResponse.statusCode != 200) {
-            throw StateError('Failed to subscribe to scan events: HTTP ${eventsResponse.statusCode}');
+            throw StateError(
+              'Failed to subscribe to scan events: HTTP ${eventsResponse.statusCode}',
+            );
           }
 
           // Read stream and parse SSE-style data lines starting with 'data: '
           print('[scan_analysis] Waiting for SSE events...');
-          final bodyStream = eventsResponse.transform(utf8.decoder).transform(const LineSplitter());
+          final bodyStream = eventsResponse
+              .transform(utf8.decoder)
+              .transform(const LineSplitter());
           var lastError = '';
           await for (final line in bodyStream) {
             if (line.startsWith('data: ')) {
@@ -231,7 +292,7 @@ class ScanAnalysisService {
                 final ev = jsonDecode(jsonText) as Map<String, dynamic>;
                 final type = ev['type'] as String? ?? 'progress';
                 print('[scan_analysis] Received event type: $type');
-                
+
                 if (type == 'progress') {
                   final stage = ev['stage'] as String? ?? 'processing';
                   final progress = (ev['progress'] as num?)?.toDouble() ?? 0.0;
@@ -253,7 +314,8 @@ class ScanAnalysisService {
                 }
               } catch (e) {
                 print('[scan_analysis] Error processing SSE event: $e');
-                if (e is StateError && e.message.startsWith('Scan analysis failed:')) {
+                if (e is StateError &&
+                    e.message.startsWith('Scan analysis failed:')) {
                   rethrow;
                 }
               }
@@ -275,7 +337,9 @@ class ScanAnalysisService {
       }
 
       if (response.statusCode != 200) {
-        throw StateError('${_connectionGuidance(serverBaseUri)} HTTP ${response.statusCode}: $respBody');
+        throw StateError(
+          '${_connectionGuidance(serverBaseUri)} HTTP ${response.statusCode}: $respBody',
+        );
       }
 
       final decoded = jsonDecode(respBody);
@@ -288,12 +352,12 @@ class ScanAnalysisService {
       return _scanResultFromJson(decoded);
     } catch (e) {
       print('[scan_analysis] Caught exception: $e');
-      
+
       // If the error is from server analysis, don't show connection guidance
       if (e is StateError && e.message.startsWith('Scan analysis failed:')) {
         rethrow;
       }
-      
+
       if (!_supportsLocalPythonFallback()) {
         throw StateError(_connectionGuidance(serverBaseUri));
       }
@@ -301,22 +365,22 @@ class ScanAnalysisService {
       // Fallback: spawn python script (legacy behavior)
       final root = _findWorkspaceRoot();
       final pythonExecutable = _resolvePythonExecutable(root);
-      final mapPath = '${root.path}${Platform.pathSeparator}pipeline${Platform.pathSeparator}output${Platform.pathSeparator}knn_reference_map.json';
-      final legacyMapPath = '${root.path}${Platform.pathSeparator}pipeline${Platform.pathSeparator}output${Platform.pathSeparator}knn_reference_map_20260323_baseline_restored.json';
-      final resolvedMapPath = File(mapPath).existsSync() ? mapPath : legacyMapPath;
+      final mapPath =
+          '${root.path}${Platform.pathSeparator}pipeline${Platform.pathSeparator}output${Platform.pathSeparator}knn_reference_map.json';
+      final legacyMapPath =
+          '${root.path}${Platform.pathSeparator}pipeline${Platform.pathSeparator}output${Platform.pathSeparator}knn_reference_map_20260323_baseline_restored.json';
+      final resolvedMapPath = File(mapPath).existsSync()
+          ? mapPath
+          : legacyMapPath;
 
-      final result = await Process.run(
-        pythonExecutable,
-        [
-          '-m',
-          'pipeline.scan_dipstick',
-          '--image',
-          imagePath,
-          '--map',
-          resolvedMapPath,
-        ],
-        workingDirectory: root.path,
-      );
+      final result = await Process.run(pythonExecutable, [
+        '-m',
+        'pipeline.scan_dipstick',
+        '--image',
+        imagePath,
+        '--map',
+        resolvedMapPath,
+      ], workingDirectory: root.path);
 
       if (result.exitCode != 0) {
         throw StateError('Scan analysis failed: ${result.stderr} (fallback)');
@@ -329,7 +393,9 @@ class ScanAnalysisService {
 
       final decoded = jsonDecode(stdoutText);
       if (decoded is! Map<String, dynamic>) {
-        throw StateError('Scan analysis returned an invalid payload (fallback).');
+        throw StateError(
+          'Scan analysis returned an invalid payload (fallback).',
+        );
       }
 
       progressCallback?.call(100.0, 'complete');

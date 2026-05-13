@@ -33,7 +33,10 @@ class OverallResultsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final engine = ScreeningFusionEngine();
-    final screeningAnalytes = ScreeningFusionEngine.buildAnalytesFromProbabilities(scanResult.screeningProbabilities);
+    final screeningAnalytes =
+        ScreeningFusionEngine.buildAnalytesFromProbabilities(
+          scanResult.screeningProbabilities,
+        );
     final fusionResult = engine.fuse(
       analytes: screeningAnalytes,
       checklist: clinicalChecklistResult,
@@ -41,7 +44,9 @@ class OverallResultsPage extends StatelessWidget {
 
     final tableRows = scanResult.rows;
 
-    final selectedCount = clinicalChecklistResult.selectedSymptoms.values.where((v) => v).length;
+    final selectedCount = clinicalChecklistResult.selectedSymptoms.values
+        .where((v) => v)
+        .length;
 
     return Scaffold(
       backgroundColor: AppColors.bgMain,
@@ -60,7 +65,8 @@ class OverallResultsPage extends StatelessWidget {
                       children: [
                         Text(
                           'Results',
-                          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          style: Theme.of(context).textTheme.titleLarge
+                              ?.copyWith(
                                 color: AppColors.primaryMain,
                                 fontWeight: FontWeight.w700,
                                 fontSize: 20,
@@ -70,7 +76,8 @@ class OverallResultsPage extends StatelessWidget {
                         Text(
                           'Dipstick analysis and risk\nassessment',
                           textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          style: Theme.of(context).textTheme.bodyMedium
+                              ?.copyWith(
                                 fontSize: 12,
                                 color: AppColors.textSecondary,
                               ),
@@ -82,7 +89,10 @@ class OverallResultsPage extends StatelessWidget {
                       icon: const Icon(Icons.help_outline_rounded, size: 20),
                       color: AppColors.primaryMain,
                       padding: EdgeInsets.zero,
-                      constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
+                      constraints: const BoxConstraints(
+                        minWidth: 32,
+                        minHeight: 32,
+                      ),
                     ),
                   ],
                 ),
@@ -100,7 +110,8 @@ class OverallResultsPage extends StatelessWidget {
                 width: double.infinity,
                 height: 52,
                 child: ElevatedButton(
-                  onPressed: () => Navigator.of(context).popUntil((route) => route.isFirst),
+                  onPressed: () =>
+                      Navigator.of(context).popUntil((route) => route.isFirst),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primaryMain,
                     foregroundColor: Colors.white,
@@ -144,31 +155,31 @@ class OverallResultsPage extends StatelessWidget {
                 Text(
                   'Risk Level',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        color: AppColors.textSecondary,
-                        fontSize: 26,
-                        fontWeight: FontWeight.w600,
-                      ),
+                    color: AppColors.textSecondary,
+                    fontSize: 26,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
                 Text(
                   '${fusionResult.riskBucket} Risk',
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        color: fusionResult.riskBucket == 'Low'
-                            ? AppColors.statusLow
-                            : fusionResult.riskBucket == 'Moderate'
-                                ? const Color(0xFFEB8C00)
-                                : AppColors.statusHigh,
-                        fontSize: 35,
-                        fontWeight: FontWeight.w700,
-                      ),
+                    color: fusionResult.riskBucket == 'Low'
+                        ? AppColors.statusLow
+                        : fusionResult.riskBucket == 'Moderate'
+                        ? const Color(0xFFEB8C00)
+                        : AppColors.statusHigh,
+                    fontSize: 35,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
                 const SizedBox(height: 2),
                 Text(
                   'Posterior risk: ${(fusionResult.posteriorProbability * 100).toStringAsFixed(1)}%.\nUse with dipstick and checklist context.',
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: AppColors.textSecondary,
-                        fontSize: 18,
-                        height: 1.2,
-                      ),
+                    color: AppColors.textSecondary,
+                    fontSize: 18,
+                    height: 1.2,
+                  ),
                 ),
               ],
             ),
@@ -192,7 +203,11 @@ class OverallResultsPage extends StatelessWidget {
     );
   }
 
-  Widget _conditionCard(BuildContext context, ScreeningFusionResult fusionResult, int selectedCount) {
+  Widget _conditionCard(
+    BuildContext context,
+    ScreeningFusionResult fusionResult,
+    int selectedCount,
+  ) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
@@ -206,35 +221,35 @@ class OverallResultsPage extends StatelessWidget {
           Text(
             'Possible Condition',
             style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                  color: AppColors.primaryMain,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w700,
-                ),
+              color: AppColors.primaryMain,
+              fontSize: 16,
+              fontWeight: FontWeight.w700,
+            ),
           ),
           Text(
             fusionResult.riskBucket == 'High'
                 ? 'Elevated UTI Screening Concern'
                 : 'Urinary Tract Infection (UTI)',
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  color: const Color(0xFF004E7A),
-                  fontSize: 25,
-                  fontWeight: FontWeight.w700,
-                ),
+              color: const Color(0xFF004E7A),
+              fontSize: 25,
+              fontWeight: FontWeight.w700,
+            ),
           ),
           Text(
             'Based on the 4-pad screening set and clinical checklist',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: AppColors.textSecondary,
-                  fontSize: 15,
-                ),
+              color: AppColors.textSecondary,
+              fontSize: 15,
+            ),
           ),
           const SizedBox(height: 4),
           Text(
             'Symptoms reported: $selectedCount/${clinicalSymptoms.length}',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: AppColors.textSecondary,
-                  fontSize: 12,
-                ),
+              color: AppColors.textSecondary,
+              fontSize: 12,
+            ),
           ),
         ],
       ),
@@ -256,10 +271,10 @@ class OverallResultsPage extends StatelessWidget {
           Text(
             'Checklist Answers',
             style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                  color: AppColors.primaryMain,
-                  fontSize: 13,
-                  fontWeight: FontWeight.w700,
-                ),
+              color: AppColors.primaryMain,
+              fontSize: 13,
+              fontWeight: FontWeight.w700,
+            ),
           ),
           const SizedBox(height: 8),
           for (final symptom in clinicalSymptoms)
@@ -272,7 +287,9 @@ class OverallResultsPage extends StatelessWidget {
                         ? Icons.check_circle_rounded
                         : Icons.cancel_rounded,
                     size: 16,
-                    color: clinicalChecklistResult.selectedSymptoms[symptom.id] == true
+                    color:
+                        clinicalChecklistResult.selectedSymptoms[symptom.id] ==
+                            true
                         ? AppColors.statusLow
                         : AppColors.textSecondary,
                   ),
@@ -281,21 +298,26 @@ class OverallResultsPage extends StatelessWidget {
                     child: Text(
                       symptom.label.replaceAll('\n', ' '),
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: AppColors.textPrimary,
-                            fontSize: 12,
-                            fontWeight: FontWeight.w500,
-                          ),
+                        color: AppColors.textPrimary,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ),
                   Text(
-                    clinicalChecklistResult.selectedSymptoms[symptom.id] == true ? 'Yes' : 'No',
+                    clinicalChecklistResult.selectedSymptoms[symptom.id] == true
+                        ? 'Yes'
+                        : 'No',
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: clinicalChecklistResult.selectedSymptoms[symptom.id] == true
-                              ? AppColors.primaryMain
-                              : AppColors.textSecondary,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w700,
-                        ),
+                      color:
+                          clinicalChecklistResult.selectedSymptoms[symptom
+                                  .id] ==
+                              true
+                          ? AppColors.primaryMain
+                          : AppColors.textSecondary,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                 ],
               ),

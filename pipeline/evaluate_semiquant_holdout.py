@@ -21,7 +21,7 @@ from collections import defaultdict
 from datetime import datetime, timezone
 from typing import Any
 
-from sklearn.metrics import accuracy_score, cohen_kappa_score, f1_score
+from sklearn.metrics import accuracy_score, cohen_kappa_score, f1_score, precision_score, recall_score
 from sklearn.model_selection import GroupShuffleSplit
 
 from semiquant_schema import ANALYTE_ORDER, canonicalize_level
@@ -40,6 +40,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--repeats", type=int, default=5)
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--semiquant-augment-target-per-level", type=int, default=120)
+    parser.add_argument("--semiquant-knn-k", type=int, default=1)
     parser.add_argument(
         "--semiquant-prototype-mode",
         choices=["median", "library"],
@@ -74,6 +75,24 @@ def _hsv_distance(a_h: float, a_s: float, a_v: float, b_h: float, b_s: float, b_
     return math.sqrt((hue_delta * hue_delta) + (saturation_delta * saturation_delta) + (value_delta * value_delta))
 
 
+def _feature_distance(a: list[float], b: list[float], feature_space: str) -> float:
+    if feature_space in {"hsv", "normalized_hsv"}:
+        return _hsv_distance(a[0], a[1], a[2], b[0], b[1], b[2])
+    d0 = a[0] - b[0]
+    d1 = a[1] - b[1]
+    d2 = a[2] - b[2]
+    return math.sqrt((d0 * d0) + (d1 * d1) + (d2 * d2))
+
+
+def detect_feature_space(rows: list[dict[str, str]]) -> str:
+    if not rows:
+        return "hsv"
+    keys = set(rows[0].keys())
+    if any(key.endswith("_l") for key in keys):
+        return "lab"
+    return "hsv"
+
+
 def load_rows(path: pathlib.Path) -> list[dict[str, str]]:
     with open(path, newline="", encoding="utf-8") as file:
         rows = list(csv.DictReader(file))
@@ -98,42 +117,54 @@ def load_rows(path: pathlib.Path) -> list[dict[str, str]]:
     return out
 
 
-def predict_level(row: dict[str, str], ref_map: dict[str, list[dict[str, Any]]]) -> str | None:
+def predict_level(
+    row: dict[str, str],
+    ref_map: dict[str, list[dict[str, Any]]],
+    feature_space: str,
+    knn_k: int,
+) -> str | None:
     analyte = row["analyte"]
     refs = ref_map.get(analyte, [])
     if not refs:
         return None
 
-    col_h, col_s, col_v = feature_columns_for_analyte(analyte)
+    col_h, col_s, col_v = feature_columns_for_analyte(analyte, feature_space=feature_space)
     raw_h = row.get(col_h, "").strip()
     raw_s = row.get(col_s, "").strip()
     raw_v = row.get(col_v, "").strip()
     if not raw_h or not raw_s or not raw_v:
         return None
 
-    h = _normalize_hue(_safe_float(raw_h))
-    s = _clip_01(_safe_float(raw_s))
-    v = _clip_01(_safe_float(raw_v))
+    observed = [_safe_float(raw_h), _safe_float(raw_s), _safe_float(raw_v)]
+    if feature_space in {"hsv", "normalized_hsv"}:
+        observed = [_normalize_hue(observed[0]), _clip_01(observed[1]), _clip_01(observed[2])]
 
-    best_level: str | None = None
-    best_distance = float("inf")
+    distances: list[tuple[str, float]] = []
 
     for ref in refs:
-        if "h" not in ref or "s" not in ref or "v" not in ref:
+        if feature_space == "lab":
+            keys = ("l", "a", "b")
+        else:
+            keys = ("h", "s", "v")
+        if any(key not in ref for key in keys):
             continue
-        distance = _hsv_distance(
-            h,
-            s,
-            v,
-            _normalize_hue(_safe_float(ref["h"])),
-            _clip_01(_safe_float(ref["s"])),
-            _clip_01(_safe_float(ref["v"])),
-        )
-        if distance < best_distance:
-            best_distance = distance
-            best_level = str(ref.get("level", "")).strip()
+        ref_values = [_safe_float(ref[key]) for key in keys]
+        if feature_space in {"hsv", "normalized_hsv"}:
+            ref_values = [_normalize_hue(ref_values[0]), _clip_01(ref_values[1]), _clip_01(ref_values[2])]
+        distances.append((
+            str(ref.get("level", "")).strip(),
+            _feature_distance(observed, ref_values, feature_space),
+        ))
 
-    return best_level
+    if not distances:
+        return None
+
+    distances.sort(key=lambda item: item[1])
+    votes: dict[str, float] = defaultdict(float)
+    for level, distance in distances[: max(1, min(knn_k, len(distances)))]:
+        votes[level] += 1.0 / (distance + 1e-9)
+
+    return max(votes.items(), key=lambda item: item[1])[0]
 
 
 def evaluate_split(
@@ -141,14 +172,17 @@ def evaluate_split(
     test_rows: list[dict[str, str]],
     augment_target: int,
     prototype_mode: str,
+    feature_space: str,
+    knn_k: int,
 ) -> dict[str, Any]:
-    train_norm, train_report = validate_and_normalize_semiquant_rows(train_rows)
-    test_norm, test_report = validate_and_normalize_semiquant_rows(test_rows)
+    train_norm, train_report = validate_and_normalize_semiquant_rows(train_rows, feature_space=feature_space)
+    test_norm, test_report = validate_and_normalize_semiquant_rows(test_rows, feature_space=feature_space)
 
     ref_map, _summary = build_semiquant_reference_map(
         rows=train_norm,
         augment_target_per_level=augment_target,
         prototype_mode=prototype_mode,
+        feature_space=feature_space,
     )
 
     y_true: list[str] = []
@@ -159,7 +193,7 @@ def evaluate_split(
 
     dropped = 0
     for row in test_norm:
-        pred_level = predict_level(row, ref_map)
+        pred_level = predict_level(row, ref_map, feature_space, knn_k)
         if pred_level is None:
             dropped += 1
             continue
@@ -195,6 +229,8 @@ def evaluate_split(
         "ok": True,
         "overall": {
             "accuracy": float(accuracy_score(y_true, y_pred)),
+            "precision_macro": float(precision_score(y_true, y_pred, average="macro", zero_division=0)),
+            "recall_macro": float(recall_score(y_true, y_pred, average="macro", zero_division=0)),
             "f1_macro": float(f1_score(y_true, y_pred, average="macro", zero_division=0)),
             "f1_weighted": float(f1_score(y_true, y_pred, average="weighted", zero_division=0)),
             "cohen_kappa": float(cohen_kappa_score(y_true, y_pred, labels=labels_union)),
@@ -218,6 +254,7 @@ def main() -> None:
         raise SystemExit("No usable semiquant rows found in features.csv")
 
     groups = [row.get("event_id", "") for row in rows]
+    feature_space = detect_feature_space(rows)
     splitter = GroupShuffleSplit(
         n_splits=args.repeats,
         test_size=args.test_size,
@@ -235,6 +272,8 @@ def main() -> None:
             test_rows=test_rows,
             augment_target=args.semiquant_augment_target_per_level,
             prototype_mode=args.semiquant_prototype_mode,
+            feature_space=feature_space,
+            knn_k=args.semiquant_knn_k,
         )
         report["split_index"] = split_index
         split_reports.append(report)
@@ -243,7 +282,14 @@ def main() -> None:
     if not ok_reports:
         raise SystemExit("All holdout splits failed")
 
-    metric_names = ["accuracy", "f1_macro", "f1_weighted", "cohen_kappa"]
+    metric_names = [
+        "accuracy",
+        "precision_macro",
+        "recall_macro",
+        "f1_macro",
+        "f1_weighted",
+        "cohen_kappa",
+    ]
     summary_metrics: dict[str, dict[str, float]] = {}
 
     for metric in metric_names:
@@ -264,6 +310,8 @@ def main() -> None:
             "seed": args.seed,
             "semiquant_augment_target_per_level": args.semiquant_augment_target_per_level,
             "semiquant_prototype_mode": args.semiquant_prototype_mode,
+            "semiquant_knn_k": args.semiquant_knn_k,
+            "feature_space": feature_space,
             "splitter": "GroupShuffleSplit(event_id)",
         },
         "dataset": {
@@ -281,6 +329,8 @@ def main() -> None:
     print(f"Saved holdout report -> {args.output.resolve()}")
     print("Holdout summary (mean across splits):")
     print(f"  Accuracy:    {summary_metrics['accuracy']['mean']:.4f}")
+    print(f"  Precision:   {summary_metrics['precision_macro']['mean']:.4f}")
+    print(f"  Recall:      {summary_metrics['recall_macro']['mean']:.4f}")
     print(f"  F1 macro:    {summary_metrics['f1_macro']['mean']:.4f}")
     print(f"  F1 weighted: {summary_metrics['f1_weighted']['mean']:.4f}")
     print(f"  Kappa:       {summary_metrics['cohen_kappa']['mean']:.4f}")

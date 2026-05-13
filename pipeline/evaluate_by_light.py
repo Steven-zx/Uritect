@@ -81,6 +81,8 @@ def main() -> None:
         target_v=map_centering.target_v,
         mode=map_centering.mode,
         target_by_light=map_centering.target_by_light,
+        feature_space=map_centering.feature_space,
+        knn_k=map_centering.knn_k,
     )
     distance_weights = _load_distance_weights(args.distance_weight_profile, args.distance_weights_json)
     abstain_config = AbstainConfig(enabled=False, min_confidence=0.0, min_margin=0.0, max_distance=999.0)
@@ -121,7 +123,7 @@ def main() -> None:
             # behavior with a small local import to avoid a duplicate implementation.
             from evaluate_semiquant import build_event_anchors
 
-            event_anchors = build_event_anchors(subset)
+            event_anchors = build_event_anchors(subset, centering_config.feature_space)
 
         metrics = evaluate(
             subset,

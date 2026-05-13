@@ -77,6 +77,7 @@ class EventCenteringConfig:
         mode: str = "global",
         target_by_light: dict[str, tuple[float, float, float]] | None = None,
         feature_space: str = "hsv",
+        knn_k: int = 1,
     ):
         self.enabled = enabled
         self.target_h = target_h
@@ -85,6 +86,7 @@ class EventCenteringConfig:
         self.mode = mode
         self.target_by_light = target_by_light or {}
         self.feature_space = feature_space
+        self.knn_k = max(1, int(knn_k))
 
 
 class AbstainConfig:
@@ -325,6 +327,7 @@ def load_reference_map(path: pathlib.Path) -> tuple[dict[str, list[LevelRef]], E
         mode=str(center_payload.get("mode", "global") or "global"),
         target_by_light=target_by_light,
         feature_space=feature_space,
+        knn_k=int(payload.get("semiquant_knn", {}).get("k", 1)) if isinstance(payload.get("semiquant_knn", {}), dict) else 1,
     )
     refs: dict[str, list[LevelRef]] = {}
 
@@ -383,7 +386,13 @@ def semiquant_rows(rows: list[dict[str, str]]) -> list[dict[str, str]]:
     return out
 
 
-def build_event_anchors(rows: list[dict[str, str]]) -> dict[str, tuple[float, float, float]]:
+def build_event_anchors(
+    rows: list[dict[str, str]],
+    feature_space: str = "hsv",
+) -> dict[str, tuple[float, float, float]]:
+    if feature_space not in {"hsv", "normalized_hsv"}:
+        return {}
+
     anchors: dict[str, tuple[float, float, float]] = {}
 
     for row in rows:
@@ -395,7 +404,10 @@ def build_event_anchors(rows: list[dict[str, str]]) -> dict[str, tuple[float, fl
         sats: list[float] = []
         vals: list[float] = []
         for analyte_name in ANALYTE_ORDER:
-            col_h, col_s, col_v = feature_columns_for_analyte(analyte_name)
+            col_h, col_s, col_v = feature_columns_for_analyte(
+                analyte_name,
+                feature_space=feature_space,
+            )
             raw_h = row.get(col_h, "").strip()
             raw_s = row.get(col_s, "").strip()
             raw_v = row.get(col_v, "").strip()
@@ -504,6 +516,7 @@ def predict_one(
     distance_weights: dict[str, tuple[float, float, float]],
     abstain_config: AbstainConfig,
     feature_space: str = "hsv",
+    knn_k: int = 1,
 ) -> tuple[str | None, float, float, float, bool]:
     candidates = refs.get(analyte, [])
     if not candidates:
@@ -528,16 +541,27 @@ def predict_one(
         distances.append((ref.level, d))
 
     distances.sort(key=lambda item: item[1])
+    neighbors = distances[: max(1, min(knn_k, len(distances)))]
     best_level, best_distance = distances[0]
 
-    inv_scores = [1.0 / (distance + 1e-9) for _, distance in distances]
-    inv_score_sum = sum(inv_scores)
-    if inv_score_sum <= 0:
+    votes: dict[str, float] = defaultdict(float)
+    nearest_distance_by_level: dict[str, float] = {}
+    for level, distance in neighbors:
+        votes[level] += 1.0 / (distance + 1e-9)
+        nearest_distance_by_level[level] = min(
+            distance,
+            nearest_distance_by_level.get(level, float("inf")),
+        )
+
+    vote_sum = sum(votes.values())
+    if vote_sum <= 0:
         return None, 0.0, float(best_distance), 0.0, True
 
-    probabilities = [score / inv_score_sum for score in inv_scores]
-    confidence = float(probabilities[0])
-    second_confidence = float(probabilities[1]) if len(probabilities) > 1 else 0.0
+    ranked_votes = sorted(votes.items(), key=lambda item: item[1], reverse=True)
+    best_level = ranked_votes[0][0]
+    best_distance = nearest_distance_by_level.get(best_level, best_distance)
+    confidence = float(ranked_votes[0][1] / vote_sum)
+    second_confidence = float(ranked_votes[1][1] / vote_sum) if len(ranked_votes) > 1 else 0.0
     confidence_margin = confidence - second_confidence
 
     should_abstain = False
@@ -580,7 +604,10 @@ def evaluate(
         if analyte not in ANALYTE_ORDER:
             continue
 
-        col_h, col_s, col_v = feature_columns_for_analyte(analyte)
+        col_h, col_s, col_v = feature_columns_for_analyte(
+            analyte,
+            feature_space=centering_config.feature_space,
+        )
         raw_h = row.get(col_h, "").strip()
         raw_s = row.get(col_s, "").strip()
         raw_v = row.get(col_v, "").strip()
@@ -607,6 +634,7 @@ def evaluate(
             distance_weights,
             abstain_config,
             feature_space=centering_config.feature_space,
+            knn_k=centering_config.knn_k,
         )
         if was_abstained:
             abstained += 1
@@ -727,7 +755,10 @@ def benchmark_latency(
         analyte = row["analyte"].strip()
         if analyte not in ANALYTE_ORDER:
             continue
-        col_h, col_s, col_v = feature_columns_for_analyte(analyte)
+        col_h, col_s, col_v = feature_columns_for_analyte(
+            analyte,
+            feature_space=centering_config.feature_space,
+        )
         raw_h = row.get(col_h, "").strip()
         raw_s = row.get(col_s, "").strip()
         raw_v = row.get(col_v, "").strip()
@@ -758,7 +789,17 @@ def benchmark_latency(
     total_predictions = 0
     for _ in range(runs):
         for analyte, h, s, v in observed_samples:
-            predict_one(analyte, h, s, v, refs, distance_weights, abstain_config, feature_space="hsv")
+            predict_one(
+                analyte,
+                h,
+                s,
+                v,
+                refs,
+                distance_weights,
+                abstain_config,
+                feature_space=centering_config.feature_space,
+                knn_k=centering_config.knn_k,
+            )
             total_predictions += 1
     elapsed_ms = (time.perf_counter() - start) * 1000.0
 
@@ -794,8 +835,10 @@ def main() -> None:
         target_v=map_centering.target_v,
         mode=map_centering.mode,
         target_by_light=map_centering.target_by_light,
+        feature_space=map_centering.feature_space,
+        knn_k=map_centering.knn_k,
     )
-    event_anchors = build_event_anchors(rows) if use_centering else {}
+    event_anchors = build_event_anchors(rows, centering_config.feature_space) if use_centering else {}
     distance_weights = _load_distance_weights(args.distance_weight_profile, args.distance_weights_json)
     abstain_config = AbstainConfig(
         enabled=args.abstain_band == "on",

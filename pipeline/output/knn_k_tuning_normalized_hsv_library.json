@@ -1,0 +1,118 @@
+{
+  "feature_space": "normalized_hsv_file",
+  "prototype_mode": "library",
+  "augmentation": "off",
+  "vote": "inverse_distance",
+  "results": [
+    {
+      "features": "pipeline\\dataset\\features_normalized_hsv.csv",
+      "rows_total": 9450,
+      "k": 1,
+      "accuracy": 0.56421718120423,
+      "precision_macro": 0.26556546051061447,
+      "recall_macro": 0.26054471697719306,
+      "f1_macro": 0.2543745215842398,
+      "f1_weighted": 0.5679553519055586,
+      "cohen_kappa": 0.542041907131349
+    },
+    {
+      "features": "pipeline\\dataset\\features_normalized_hsv.csv",
+      "rows_total": 9450,
+      "k": 3,
+      "accuracy": 0.5643662913941228,
+      "precision_macro": 0.25213174855520154,
+      "recall_macro": 0.24322994984227903,
+      "f1_macro": 0.2408720166708338,
+      "f1_weighted": 0.5647865172502048,
+      "cohen_kappa": 0.5418800152467709
+    },
+    {
+      "features": "pipeline\\dataset\\features_normalized_hsv.csv",
+      "rows_total": 9450,
+      "k": 5,
+      "accuracy": 0.5936868591131473,
+      "precision_macro": 0.2721438540169263,
+      "recall_macro": 0.26004785666229374,
+      "f1_macro": 0.2581567162280331,
+      "f1_weighted": 0.5872510929932907,
+      "cohen_kappa": 0.5721814906441741
+    },
+    {
+      "features": "pipeline\\dataset\\features_normalized_hsv.csv",
+      "rows_total": 9450,
+      "k": 7,
+      "accuracy": 0.5986713443114655,
+      "precision_macro": 0.26504067322417524,
+      "recall_macro": 0.25404436859964136,
+      "f1_macro": 0.2518342452710536,
+      "f1_weighted": 0.5868211435853123,
+      "cohen_kappa": 0.5770368961804896
+    },
+    {
+      "features": "pipeline\\dataset\\features_normalized_hsv.csv",
+      "rows_total": 9450,
+      "k": 9,
+      "accuracy": 0.6044406626715803,
+      "precision_macro": 0.2556407449981505,
+      "recall_macro": 0.24792529292636023,
+      "f1_macro": 0.24414825799587828,
+      "f1_weighted": 0.5875189058169373,
+      "cohen_kappa": 0.5828000599736062
+    },
+    {
+      "features": "pipeline\\dataset\\features_normalized_hsv.csv",
+      "rows_total": 9450,
+      "k": 11,
+      "accuracy": 0.6133006564381599,
+      "precision_macro": 0.2556439483405349,
+      "recall_macro": 0.24451532990410235,
+      "f1_macro": 0.24015420453532818,
+      "f1_weighted": 0.5920943274548691,
+      "cohen_kappa": 0.5918246591106302
+    },
+    {
+      "features": "pipeline\\dataset\\features_normalized_hsv.csv",
+      "rows_total": 9450,
+      "k": 15,
+      "accuracy": 0.6196452297791509,
+      "precision_macro": 0.2633592808602582,
+      "recall_macro": 0.24313573421788273,
+      "f1_macro": 0.23957886204124043,
+      "f1_weighted": 0.5938552068969766,
+      "cohen_kappa": 0.5982340881903765
+    },
+    {
+      "features": "pipeline\\dataset\\features_normalized_hsv.csv",
+      "rows_total": 9450,
+      "k": 21,
+      "accuracy": 0.6232249754470752,
+      "precision_macro": 0.2456143891881372,
+      "recall_macro": 0.2402153492298365,
+      "f1_macro": 0.2324965338861391,
+      "f1_weighted": 0.5915390923778754,
+      "cohen_kappa": 0.6017026642727424
+    },
+    {
+      "features": "pipeline\\dataset\\features_normalized_hsv.csv",
+      "rows_total": 9450,
+      "k": 31,
+      "accuracy": 0.6326691802222252,
+      "precision_macro": 0.25001981868187917,
+      "recall_macro": 0.23932634334297836,
+      "f1_macro": 0.23048536693289504,
+      "f1_weighted": 0.5932017526858344,
+      "cohen_kappa": 0.6112327113324317
+    }
+  ],
+  "selected": {
+    "features": "pipeline\\dataset\\features_normalized_hsv.csv",
+    "rows_total": 9450,
+    "k": 31,
+    "accuracy": 0.6326691802222252,
+    "precision_macro": 0.25001981868187917,
+    "recall_macro": 0.23932634334297836,
+    "f1_macro": 0.23048536693289504,
+    "f1_weighted": 0.5932017526858344,
+    "cohen_kappa": 0.6112327113324317
+  }
+}
