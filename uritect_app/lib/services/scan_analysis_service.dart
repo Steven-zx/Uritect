@@ -301,7 +301,6 @@ class ScanAnalysisService {
       // Fallback: spawn python script (legacy behavior)
       final root = _findWorkspaceRoot();
       final pythonExecutable = _resolvePythonExecutable(root);
-      final scriptPath = '${root.path}${Platform.pathSeparator}pipeline${Platform.pathSeparator}scan_dipstick.py';
       final mapPath = '${root.path}${Platform.pathSeparator}pipeline${Platform.pathSeparator}output${Platform.pathSeparator}knn_reference_map.json';
       final legacyMapPath = '${root.path}${Platform.pathSeparator}pipeline${Platform.pathSeparator}output${Platform.pathSeparator}knn_reference_map_20260323_baseline_restored.json';
       final resolvedMapPath = File(mapPath).existsSync() ? mapPath : legacyMapPath;
@@ -309,7 +308,8 @@ class ScanAnalysisService {
       final result = await Process.run(
         pythonExecutable,
         [
-          scriptPath,
+          '-m',
+          'pipeline.scan_dipstick',
           '--image',
           imagePath,
           '--map',

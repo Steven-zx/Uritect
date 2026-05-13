@@ -202,7 +202,7 @@ class _CaptureDipstickPageState extends State<CaptureDipstickPage> {
                           children: [
                             Image.file(
                               File(_pendingImagePath!),
-                              fit: BoxFit.cover,
+                              fit: BoxFit.contain,
                             ),
                             Align(
                               alignment: Alignment.topRight,

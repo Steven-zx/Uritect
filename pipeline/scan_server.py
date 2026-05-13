@@ -21,7 +21,15 @@ import asyncio
 import uuid
 import json
 
-from .scan_dipstick import run_scan
+try:
+    from .scan_dipstick import run_scan
+except ImportError:
+    import sys
+
+    workspace_root = Path(__file__).resolve().parent.parent
+    if str(workspace_root) not in sys.path:
+        sys.path.insert(0, str(workspace_root))
+    from pipeline.scan_dipstick import run_scan
 
 
 app = FastAPI(title="Uritect Scan Bridge")
@@ -156,4 +164,4 @@ async def debug_trigger_async():
 
 
 if __name__ == "__main__":
-    uvicorn.run("scan_server:app", host="127.0.0.1", port=8000, log_level="info")
+    uvicorn.run(app, host="127.0.0.1", port=8000, log_level="info")

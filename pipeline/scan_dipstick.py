@@ -21,28 +21,47 @@ from pathlib import Path
 from typing import Any
 
 import cv2
+import numpy as np
+from PIL import Image, ImageOps
 
-from .bayesian_fusion_lr import BayesianFusionLREngine
-from .evaluate_semiquant import (
-    AbstainConfig,
-    EventCenteringConfig,
-    _load_distance_weights,
-    apply_event_centering,
-    load_reference_map,
-    predict_one,
-)
-from .semiquant_schema import ANALYTE_LEVEL_SCHEMA, canonicalize_level
-from .vision_pipeline import ANALYTE_ORDER, BurstFeaturePipeline, VisionPipelineConfig, analyte_to_key
+try:
+    from .bayesian_fusion_lr import BayesianFusionLREngine
+    from .evaluate_semiquant import (
+        AbstainConfig,
+        EventCenteringConfig,
+        _load_distance_weights,
+        apply_event_centering,
+        load_reference_map,
+        predict_one,
+    )
+    from .vision_pipeline import ANALYTE_ORDER, BurstFeaturePipeline, VisionPipelineConfig, analyte_to_key
+except ImportError:
+    import sys
+
+    workspace_root = Path(__file__).resolve().parent.parent
+    if str(workspace_root) not in sys.path:
+        sys.path.insert(0, str(workspace_root))
+
+    from pipeline.bayesian_fusion_lr import BayesianFusionLREngine
+    from pipeline.evaluate_semiquant import (
+        AbstainConfig,
+        EventCenteringConfig,
+        _load_distance_weights,
+        apply_event_centering,
+        load_reference_map,
+        predict_one,
+    )
+    from pipeline.vision_pipeline import ANALYTE_ORDER, BurstFeaturePipeline, VisionPipelineConfig, analyte_to_key
 
 
 REFERENCE_RANGES = {
     "Leukocytes": "Negative",
     "Nitrite": "Negative",
-    "Urobilinogen": "0.2 - 1.0 mg/dL",
+    "Urobilinogen": "3.2 - 128",
     "Protein": "Negative",
-    "pH": "4.5 - 8.0",
+    "pH": "5.0 - 8.5",
     "Blood": "Negative",
-    "Specific Gravity": "1.005 - 1.030",
+    "Specific Gravity": "1.000 - 1.030",
     "Ketone": "Negative",
     "Bilirubin": "Negative",
     "Glucose": "Negative",
@@ -109,6 +128,94 @@ def _reference_map_path(root: Path) -> Path:
     raise FileNotFoundError("No KNN reference map found in pipeline/output.")
 
 
+def _load_exif_corrected_bgr(image_path: Path) -> np.ndarray:
+    with Image.open(image_path) as image:
+        corrected = ImageOps.exif_transpose(image).convert("RGB")
+        rgb = np.asarray(corrected)
+    return cv2.cvtColor(rgb, cv2.COLOR_RGB2BGR)
+
+
+def _iter_bgr_orientation_variants(image_path: Path) -> list[tuple[str, np.ndarray]]:
+    raw = cv2.imread(str(image_path))
+    if raw is None:
+        raise ValueError(f"Failed to decode image: {image_path}")
+
+    variants: list[tuple[str, np.ndarray]] = []
+    try:
+        exif_bgr = _load_exif_corrected_bgr(image_path)
+        variants.append(("exif", exif_bgr))
+        if raw.shape != exif_bgr.shape or float(np.mean(cv2.absdiff(raw, exif_bgr))) > 1.0:
+            variants.append(("raw", raw))
+    except Exception:
+        variants.append(("raw", raw))
+
+    expanded: list[tuple[str, np.ndarray]] = []
+    seen_shapes: set[tuple[str, tuple[int, int, int]]] = set()
+    rotations = (
+        ("", None),
+        ("_rot90_cw", cv2.ROTATE_90_CLOCKWISE),
+        ("_rot180", cv2.ROTATE_180),
+        ("_rot90_ccw", cv2.ROTATE_90_COUNTERCLOCKWISE),
+    )
+    for name, image_bgr in variants:
+        for suffix, rotation in rotations:
+            candidate = image_bgr if rotation is None else cv2.rotate(image_bgr, rotation)
+            key = (name + suffix, candidate.shape)
+            if key in seen_shapes:
+                continue
+            seen_shapes.add(key)
+            expanded.append((name + suffix, candidate))
+    return expanded
+
+
+def _burst_quality_score(pipeline: BurstFeaturePipeline, burst: Any) -> float:
+    features = list(burst.features_by_pad.values())
+    if not features:
+        return -float("inf")
+
+    hue_values = np.array([h for h, _, _ in features], dtype=np.float32)
+    sat_values = np.array([s for _, s, _ in features], dtype=np.float32)
+    val_values = np.array([v for _, _, v in features], dtype=np.float32)
+    loc_scores = [result.local_score for result in pipeline.slicer.last_pad_localization.values()]
+    loc_mean = float(np.mean(np.array(loc_scores, dtype=np.float32))) if loc_scores else 0.0
+    usable_values = float(np.mean((val_values > 0.04) & (val_values < 0.98)))
+    colored_pads = float(np.sum(sat_values > 0.035))
+    return (
+        float(np.mean(sat_values)) * 18.0
+        + float(np.std(hue_values)) / 60.0
+        + usable_values * 3.0
+        + colored_pads * 0.15
+        + loc_mean * 0.15
+    )
+
+
+def _process_best_orientation(image_path: Path, config: VisionPipelineConfig) -> tuple[Any, str, float]:
+    failures: list[str] = []
+    best: tuple[float, Any, str] | None = None
+
+    for variant_name, image_bgr in _iter_bgr_orientation_variants(image_path):
+        pipeline = BurstFeaturePipeline(config)
+        try:
+            burst = pipeline.process_burst([image_bgr])
+        except Exception as error:
+            failures.append(f"{variant_name}: {str(error)[:120]}")
+            continue
+
+        score = _burst_quality_score(pipeline, burst)
+        if variant_name in {"exif", "raw"} and score >= 4.0:
+            return burst, variant_name, score
+
+        if best is None or score > best[0]:
+            best = (score, burst, variant_name)
+
+    if best is None:
+        joined = "; ".join(failures[:6])
+        raise ValueError(f"No valid scan orientation processed. {joined}")
+
+    score, burst, variant_name = best
+    return burst, variant_name, score
+
+
 def main() -> None:
     args = parse_args()
     payload = run_scan(args.image.resolve(), map_path=args.map, distance_weight_profile=args.distance_weight_profile)
@@ -140,12 +247,7 @@ def run_scan(
             pass
 
     refs, map_centering = load_reference_map(map_path)
-
-    config = VisionPipelineConfig(feature_space="hsv")
-    pipeline = BurstFeaturePipeline(config)
-    image_bgr = cv2.imread(str(image_path))
-    if image_bgr is None:
-        raise ValueError(f"Failed to decode image: {image_path}")
+    feature_space = map_centering.feature_space
 
     if progress_callback:
         try:
@@ -153,7 +255,8 @@ def run_scan(
         except Exception:
             pass
 
-    burst = pipeline.process_burst([image_bgr])
+    config = VisionPipelineConfig(feature_space=feature_space)
+    burst, orientation_variant, orientation_quality = _process_best_orientation(image_path, config)
     if progress_callback:
         try:
             progress_callback("features_extracted", 50)
@@ -203,6 +306,7 @@ def run_scan(
                 refs,
                 distance_weights,
                 abstain_config,
+                feature_space=feature_space,
             )
 
             if predicted_level is None or was_abstained:
@@ -274,6 +378,9 @@ def run_scan(
         "model_version": map_path.name,
         "reference_map_path": str(map_path),
         "pipeline_version": "vision_pipeline_hsv_knn",
+        "feature_space": feature_space,
+        "image_orientation_variant": orientation_variant,
+        "image_orientation_quality": round(float(orientation_quality), 6),
         "frames_total": burst.frames_total,
         "frames_used": burst.frames_used,
         "frames_skipped": burst.frames_skipped,

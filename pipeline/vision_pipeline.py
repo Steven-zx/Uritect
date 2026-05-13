@@ -252,6 +252,109 @@ class MacroMarkerRectifier:
             return float("inf")
         return max(side_lengths) / shortest
 
+    def _marker_pattern_score(self, image_bgr: np.ndarray, quad: np.ndarray) -> float:
+        ordered = self._order_corners(quad)
+        size = 120
+        dst = np.array(
+            [[0, 0], [size - 1, 0], [size - 1, size - 1], [0, size - 1]],
+            dtype=np.float32,
+        )
+        homography = cv2.getPerspectiveTransform(ordered, dst)
+        patch = cv2.warpPerspective(image_bgr, homography, (size, size), flags=cv2.INTER_LINEAR)
+        gray = cv2.cvtColor(patch, cv2.COLOR_BGR2GRAY).astype(np.float32) / 255.0
+
+        border = np.concatenate(
+            [
+                gray[:24, :].reshape(-1),
+                gray[-24:, :].reshape(-1),
+                gray[:, :24].reshape(-1),
+                gray[:, -24:].reshape(-1),
+            ]
+        )
+        center = gray[42:78, 42:78].reshape(-1)
+        if center.size == 0 or border.size == 0:
+            return -float("inf")
+
+        border_median = float(np.median(border))
+        center_median = float(np.median(center))
+        return ((1.0 - border_median) * 1.2) + (center_median * 0.9) + ((center_median - border_median) * 1.8)
+
+    def _detect_marker_by_dark_square_pattern(self, image_bgr: np.ndarray, gray: np.ndarray) -> np.ndarray | None:
+        image_height, image_width = gray.shape
+        image_area = float(image_width * image_height)
+        border_margin_px = max(
+            1.0,
+            min(float(image_width), float(image_height)) * float(self.config.border_reject_margin_ratio) * 0.5,
+        )
+        min_area = max(180.0, min(self.config.min_marker_area_px * 0.5, image_area * 0.00008))
+        max_area = image_area * min(0.45, float(self.config.max_marker_area_ratio) * 1.8)
+
+        blur = cv2.GaussianBlur(gray, (5, 5), 0)
+        percentile_threshold = int(np.percentile(blur, 18))
+        percentile_threshold = max(35, min(150, percentile_threshold))
+        _, dark_percentile = cv2.threshold(blur, percentile_threshold, 255, cv2.THRESH_BINARY_INV)
+        _, dark_otsu = cv2.threshold(blur, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
+        adaptive_dark = cv2.adaptiveThreshold(
+            blur,
+            255,
+            cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
+            cv2.THRESH_BINARY_INV,
+            41,
+            7,
+        )
+
+        kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (5, 5))
+        best_quad: np.ndarray | None = None
+        best_score = -float("inf")
+
+        for binary_map in (dark_percentile, dark_otsu, adaptive_dark):
+            closed = cv2.morphologyEx(binary_map, cv2.MORPH_CLOSE, kernel, iterations=2)
+            contours, _ = cv2.findContours(closed, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
+            for contour in sorted(contours, key=cv2.contourArea, reverse=True)[:160]:
+                contour_area = float(cv2.contourArea(contour))
+                if contour_area < min_area:
+                    continue
+
+                rect = cv2.minAreaRect(contour)
+                (_, _), (width_px, height_px), _ = rect
+                if width_px <= 4.0 or height_px <= 4.0:
+                    continue
+
+                rect_area = float(width_px * height_px)
+                if rect_area < min_area or rect_area > max_area:
+                    continue
+
+                aspect_ratio = max(width_px, height_px) / max(1.0, min(width_px, height_px))
+                if aspect_ratio > self.config.max_quad_side_ratio:
+                    continue
+
+                box = cv2.boxPoints(rect).astype(np.float32)
+                ordered = self._order_corners(box)
+                if self._touches_image_border(
+                    ordered,
+                    image_width=image_width,
+                    image_height=image_height,
+                    margin_px=border_margin_px,
+                ):
+                    continue
+
+                fill_ratio = contour_area / max(rect_area, 1.0)
+                if fill_ratio < 0.18:
+                    continue
+
+                pattern_score = self._marker_pattern_score(image_bgr, ordered)
+                if pattern_score < 1.15:
+                    continue
+
+                area_score = min(rect_area / max(image_area * 0.035, 1.0), 1.5)
+                score = pattern_score + area_score - (abs(1.0 - aspect_ratio) * 0.35)
+                if score > best_score:
+                    best_score = score
+                    best_quad = ordered
+
+        return best_quad
+
     def detect_marker_corners(self, image_bgr: np.ndarray) -> np.ndarray:
         gray = cv2.cvtColor(image_bgr, cv2.COLOR_BGR2GRAY)
         image_height, image_width = gray.shape
@@ -383,6 +486,9 @@ class MacroMarkerRectifier:
 
                 box = cv2.boxPoints(rect).astype(np.float32)
                 consider_quad(box, max(area, rect_area * 0.75))
+
+        if best_quad is None:
+            best_quad = self._detect_marker_by_dark_square_pattern(image_bgr, gray)
 
         if best_quad is None:
             raise ValueError("Macro-Marker with 4-corner contour was not detected. Check marker visibility, lighting, and focus.")
@@ -869,9 +975,15 @@ class BurstFeaturePipeline:
                     burst_pad_crops[analyte_name].append(crop)
 
                 used += 1
-            except ValueError as error:  # Marker detection error
-                marker_detection_failures += 1
-                frame_errors.append(f"frame_{index + 1} [marker]: {str(error)[:60]}")
+            except ValueError as error:
+                message = str(error)
+                if "Macro-Marker" in message:
+                    marker_detection_failures += 1
+                    label = "marker"
+                else:
+                    other_failures += 1
+                    label = "processing"
+                frame_errors.append(f"frame_{index + 1} [{label}]: {message[:90]}")
             except Exception as error:  # Other errors
                 other_failures += 1
                 frame_errors.append(f"frame_{index + 1} [other]: {str(error)[:60]}")

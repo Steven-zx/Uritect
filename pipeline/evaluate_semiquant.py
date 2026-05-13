@@ -76,6 +76,7 @@ class EventCenteringConfig:
         target_v: float,
         mode: str = "global",
         target_by_light: dict[str, tuple[float, float, float]] | None = None,
+        feature_space: str = "hsv",
     ):
         self.enabled = enabled
         self.target_h = target_h
@@ -83,6 +84,7 @@ class EventCenteringConfig:
         self.target_v = target_v
         self.mode = mode
         self.target_by_light = target_by_light or {}
+        self.feature_space = feature_space
 
 
 class AbstainConfig:
@@ -206,6 +208,27 @@ def _hsv_distance(
     )
 
 
+def _feature_distance(
+    a1: float,
+    a2: float,
+    a3: float,
+    b1: float,
+    b2: float,
+    b3: float,
+    w1: float,
+    w2: float,
+    w3: float,
+    feature_space: str = "hsv",
+) -> float:
+    if feature_space in {"hsv", "normalized_hsv"}:
+        return _hsv_distance(a1, a2, a3, b1, b2, b3, w1, w2, w3)
+
+    d1 = a1 - b1
+    d2 = a2 - b2
+    d3 = a3 - b3
+    return math.sqrt((w1 * d1 * d1) + (w2 * d2 * d2) + (w3 * d3 * d3))
+
+
 def _load_distance_weights(
     profile: str,
     overrides_path: pathlib.Path | None,
@@ -277,6 +300,9 @@ def load_reference_map(path: pathlib.Path) -> tuple[dict[str, list[LevelRef]], E
         payload = json.load(file)
 
     analytes_payload = payload.get("analytes", {})
+    feature_space = str(payload.get("reference_color_space", "hsv") or "hsv").strip().lower()
+    if feature_space not in {"hsv", "normalized_hsv", "lab"}:
+        feature_space = "hsv"
     center_payload = payload.get("event_hsv_centering", {}) if isinstance(payload, dict) else {}
     center_target = center_payload.get("target_anchor", {}) if isinstance(center_payload, dict) else {}
     center_by_light_payload = center_payload.get("target_anchor_by_light", {}) if isinstance(center_payload, dict) else {}
@@ -298,6 +324,7 @@ def load_reference_map(path: pathlib.Path) -> tuple[dict[str, list[LevelRef]], E
         target_v=_clip_01(_safe_float(center_target.get("v", 0.0))),
         mode=str(center_payload.get("mode", "global") or "global"),
         target_by_light=target_by_light,
+        feature_space=feature_space,
     )
     refs: dict[str, list[LevelRef]] = {}
 
@@ -314,15 +341,25 @@ def load_reference_map(path: pathlib.Path) -> tuple[dict[str, list[LevelRef]], E
             if level is None:
                 continue
 
-            if "h" not in item or "s" not in item or "v" not in item:
-                continue
+            if feature_space == "lab":
+                if "l" not in item or "a" not in item or "b" not in item:
+                    continue
+                v1 = _safe_float(item.get("l"))
+                v2 = _safe_float(item.get("a"))
+                v3 = _safe_float(item.get("b"))
+            else:
+                if "h" not in item or "s" not in item or "v" not in item:
+                    continue
+                v1 = _normalize_hue(_safe_float(item.get("h")))
+                v2 = _clip_01(_safe_float(item.get("s")))
+                v3 = _clip_01(_safe_float(item.get("v")))
 
             level_refs.append(
                 LevelRef(
                     level=level,
-                    h=_normalize_hue(_safe_float(item.get("h"))),
-                    s=_clip_01(_safe_float(item.get("s"))),
-                    v=_clip_01(_safe_float(item.get("v"))),
+                    h=v1,
+                    s=v2,
+                    v=v3,
                 )
             )
 
@@ -389,6 +426,9 @@ def apply_event_centering(
     event_anchors: dict[str, tuple[float, float, float]] | None,
     config: EventCenteringConfig,
 ) -> tuple[float, float, float]:
+    if config.feature_space not in {"hsv", "normalized_hsv"}:
+        return h, s, v
+
     h0 = _normalize_hue(h)
     s0 = _clip_01(s)
     v0 = _clip_01(v)
@@ -463,6 +503,7 @@ def predict_one(
     refs: dict[str, list[LevelRef]],
     distance_weights: dict[str, tuple[float, float, float]],
     abstain_config: AbstainConfig,
+    feature_space: str = "hsv",
 ) -> tuple[str | None, float, float, float, bool]:
     candidates = refs.get(analyte, [])
     if not candidates:
@@ -472,7 +513,18 @@ def predict_one(
 
     distances: list[tuple[str, float]] = []
     for ref in candidates:
-        d = _hsv_distance(observed_h, observed_s, observed_v, ref.h, ref.s, ref.v, w_h, w_s, w_v)
+        d = _feature_distance(
+            observed_h,
+            observed_s,
+            observed_v,
+            ref.h,
+            ref.s,
+            ref.v,
+            w_h,
+            w_s,
+            w_v,
+            feature_space=feature_space,
+        )
         distances.append((ref.level, d))
 
     distances.sort(key=lambda item: item[1])
@@ -554,6 +606,7 @@ def evaluate(
             refs,
             distance_weights,
             abstain_config,
+            feature_space=centering_config.feature_space,
         )
         if was_abstained:
             abstained += 1
@@ -705,7 +758,7 @@ def benchmark_latency(
     total_predictions = 0
     for _ in range(runs):
         for analyte, h, s, v in observed_samples:
-            predict_one(analyte, h, s, v, refs, distance_weights, abstain_config)
+            predict_one(analyte, h, s, v, refs, distance_weights, abstain_config, feature_space="hsv")
             total_predictions += 1
     elapsed_ms = (time.perf_counter() - start) * 1000.0
 
