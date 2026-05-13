@@ -31,35 +31,52 @@ class ScreeningFusionResult {
 }
 
 class ScreeningFusionEngine {
-  static List<ScreeningAnalyteResult> get defaultAnalytes {
-    double p(String code, double fallback) => knnProbabilities[code]?.clamp(0.0, 1.0) ?? fallback;
+  static String displayValueForProbability(double probability) {
+    if (probability < 0.25) {
+      return 'Negative';
+    }
+    if (probability < 0.50) {
+      return 'Trace';
+    }
+    if (probability < 0.75) {
+      return 'Moderate';
+    }
+    return 'High';
+  }
+
+  static List<ScreeningAnalyteResult> buildAnalytesFromProbabilities(Map<String, double> probabilities) {
+    double p(String code, double fallback) => probabilities[code]?.clamp(0.0, 1.0) ?? fallback;
 
     return [
       ScreeningAnalyteResult(
         code: 'GLU',
         name: 'Glucose',
         abnormalProbability: p('GLU', 0.10),
-        displayValue: 'Negative',
+        displayValue: displayValueForProbability(p('GLU', 0.10)),
       ),
       ScreeningAnalyteResult(
         code: 'LEU',
         name: 'Leukocytes',
         abnormalProbability: p('LEU', 0.66),
-        displayValue: 'Moderate',
+        displayValue: displayValueForProbability(p('LEU', 0.66)),
       ),
       ScreeningAnalyteResult(
         code: 'PRO',
         name: 'Protein',
         abnormalProbability: p('PRO', 0.14),
-        displayValue: 'Negative',
+        displayValue: displayValueForProbability(p('PRO', 0.14)),
       ),
       ScreeningAnalyteResult(
         code: 'NIT',
         name: 'Nitrite',
         abnormalProbability: p('NIT', 0.12),
-        displayValue: 'Negative',
+        displayValue: displayValueForProbability(p('NIT', 0.12)),
       ),
     ];
+  }
+
+  static List<ScreeningAnalyteResult> get defaultAnalytes {
+    return buildAnalytesFromProbabilities(knnProbabilities);
   }
 
   final double priorAbnormal;

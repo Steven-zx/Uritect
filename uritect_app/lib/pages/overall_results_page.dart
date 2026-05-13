@@ -2,16 +2,18 @@ import 'package:flutter/material.dart';
 
 import '../config/theme.dart';
 import '../models/clinical_symptoms.dart';
-import '../models/dipstick_results_data.dart';
+import '../models/scan_model.dart';
 import '../models/screening_fusion.dart';
 import '../widgets/common_widgets.dart';
 import '../widgets/dipstick_results_table.dart';
 
 class OverallResultsPage extends StatelessWidget {
+  final ScanResult scanResult;
   final ClinicalChecklistResult clinicalChecklistResult;
 
   const OverallResultsPage({
     super.key,
+    required this.scanResult,
     required this.clinicalChecklistResult,
   });
 
@@ -31,22 +33,13 @@ class OverallResultsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final engine = ScreeningFusionEngine();
-    final fusionResult = engine.fuse(checklist: clinicalChecklistResult);
-    final referenceByCode = {
-      for (final row in sampleDipstickRows) row.code: row.referenceRange,
-    };
+    final screeningAnalytes = ScreeningFusionEngine.buildAnalytesFromProbabilities(scanResult.screeningProbabilities);
+    final fusionResult = engine.fuse(
+      analytes: screeningAnalytes,
+      checklist: clinicalChecklistResult,
+    );
 
-    final tableRows = fusionResult.analytes.map((analyte) {
-      return DipstickResultRow(
-        code: analyte.code,
-        name: analyte.name,
-        result: analyte.displayValue,
-        referenceRange: referenceByCode[analyte.code] ?? 'Reference unavailable',
-        status: analyte.abnormalProbability >= 0.5
-            ? DipstickResultStatus.moderate
-            : DipstickResultStatus.negative,
-      );
-    }).toList(growable: false);
+    final tableRows = scanResult.rows;
 
     final selectedCount = clinicalChecklistResult.selectedSymptoms.values.where((v) => v).length;
 

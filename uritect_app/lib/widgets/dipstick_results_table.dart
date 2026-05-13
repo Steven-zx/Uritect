@@ -100,20 +100,27 @@ class _DipstickResultTableRow extends StatelessWidget {
             child: Row(
               children: [
                 Container(
-                  width: 28,
-                  height: 28,
+                  width: 32,
+                  height: 32,
                   decoration: BoxDecoration(
-                    color: dipstickCodeColor(row.code).withValues(alpha: 0.16),
+                    color: dipstickCodeColor(row.code).withValues(alpha: 0.15),
                     shape: BoxShape.circle,
+                    border: Border.all(
+                      color: dipstickCodeColor(row.code).withValues(alpha: 0.3),
+                      width: 1.5,
+                    ),
                   ),
                   alignment: Alignment.center,
                   child: Text(
-                    row.code,
+                    row.code.length > 3 ? row.code.substring(0, 2) : row.code,
                     style: TextStyle(
                       color: dipstickCodeColor(row.code),
-                      fontSize: 10,
-                      fontWeight: FontWeight.w700,
+                      fontSize: 11,
+                      fontWeight: FontWeight.w800,
+                      letterSpacing: -0.3,
+                      height: 1.0,
                     ),
+                    textAlign: TextAlign.center,
                   ),
                 ),
                 const SizedBox(width: 8),

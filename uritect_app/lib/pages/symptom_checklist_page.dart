@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 
 import '../config/theme.dart';
 import '../models/clinical_symptoms.dart';
+import '../models/scan_model.dart';
 import '../widgets/common_widgets.dart';
 import 'overall_results_page.dart';
 
 class SymptomChecklistPage extends StatefulWidget {
-  const SymptomChecklistPage({super.key});
+  final ScanResult scanResult;
+
+  const SymptomChecklistPage({super.key, required this.scanResult});
 
   @override
   State<SymptomChecklistPage> createState() => _SymptomChecklistPageState();
@@ -115,6 +118,7 @@ class _SymptomChecklistPageState extends State<SymptomChecklistPage> {
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (_) => OverallResultsPage(
+                            scanResult: widget.scanResult,
                             clinicalChecklistResult: checklistResult,
                           ),
                         ),

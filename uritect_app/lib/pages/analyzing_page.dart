@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../config/theme.dart';
+import '../models/scan_model.dart';
+import '../services/scan_analysis_service.dart';
 import 'results_page.dart';
 
 class AnalyzingPage extends StatefulWidget {
@@ -16,41 +18,68 @@ class AnalyzingPage extends StatefulWidget {
 
 class _AnalyzingPageState extends State<AnalyzingPage> with TickerProviderStateMixin {
   late AnimationController _progressController;
-  late Animation<double> _progressAnimation;
   Timer? _transitionTimer;
   double _currentProgress = 0.0;
+  String _currentStage = 'starting';
+  late Future<ScanResult> _scanResultFuture;
+  final ScanAnalysisService _scanAnalysisService = const ScanAnalysisService();
+  bool _animationInProgress = false;
 
   @override
   void initState() {
     super.initState();
 
-    // Animate from 0 to 100 over 3 seconds
     _progressController = AnimationController(
-      duration: const Duration(seconds: 3),
+      duration: const Duration(milliseconds: 350),
       vsync: this,
     );
 
-    _progressAnimation = Tween<double>(begin: 0.0, end: 100.0).animate(
-      CurvedAnimation(parent: _progressController, curve: Curves.easeInOutQuad),
-    );
-
-    _progressAnimation.addListener(() {
+    _progressController.addListener(() {
+      if (!mounted) return;
       setState(() {
-        _currentProgress = _progressAnimation.value;
+        _currentProgress = _progressController.value * 100.0;
       });
     });
 
-    _progressController.forward();
-
-    // Transition to results page after animation + 1 second
-    _transitionTimer = Timer(const Duration(seconds: 4), () {
-      if (mounted) {
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(
-            builder: (_) => const ResultsPage(),
-          ),
-        );
-      }
+    _scanResultFuture = _scanAnalysisService.analyze(
+      imagePath: widget.imagePath,
+      onProgress: (progress, stage) {
+        if (!mounted) return;
+        setState(() {
+          _currentStage = stage;
+        });
+        final safeTarget = (progress / 100.0).clamp(0.0, 1.0).toDouble();
+        if (_animationInProgress || safeTarget <= _progressController.value) {
+          return;
+        }
+        _animationInProgress = true;
+        _progressController.animateTo(
+          safeTarget,
+          duration: Duration(milliseconds: (150 + (safeTarget * 200)).round()),
+          curve: Curves.easeOut,
+        ).then((_) {
+          _animationInProgress = false;
+        }).catchError((_) {
+          _animationInProgress = false;
+        });
+      },
+    );
+    _scanResultFuture.then((scanResult) async {
+      if (!mounted) return;
+      _animationInProgress = true;
+      await _progressController.animateTo(1.0, duration: const Duration(milliseconds: 400), curve: Curves.easeOut);
+      if (!mounted) return;
+      _animationInProgress = false;
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (_) => ResultsPage(scanResult: scanResult)),
+      );
+    }).catchError((error) {
+      _animationInProgress = false;
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Scan analysis failed: $error')),
+      );
+      Navigator.of(context).pop();
     });
   }
 
@@ -124,7 +153,7 @@ class _AnalyzingPageState extends State<AnalyzingPage> with TickerProviderStateM
               ),
               const SizedBox(height: 44),
               Text(
-                'Analyzing indicators...',
+                _currentStage == 'complete' ? 'Finalizing result...' : 'Analyzing $_currentStage...',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: AppColors.textSecondary,
                       fontSize: 12,

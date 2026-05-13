@@ -19,7 +19,7 @@ class AppLogo extends StatelessWidget {
       width: size,
       height: size,
       child: Image.asset(
-        'assets/photos/logo.png',
+        'assets/photos/min urilogo.png',
         fit: fit,
       ),
     );

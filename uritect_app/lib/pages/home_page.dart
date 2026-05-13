@@ -112,10 +112,78 @@ class HomePage extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildFrameIcon(
-                icon: Icons.water_drop_rounded,
-                iconSize: 42,
-                size: 80,
+              SizedBox(
+                width: 80,
+                height: 80,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Positioned(
+                      top: 0,
+                      left: 0,
+                      child: Container(
+                        width: 16,
+                        height: 16,
+                        decoration: const BoxDecoration(
+                          border: Border(
+                            top: BorderSide(color: AppColors.primaryMain, width: 3),
+                            left: BorderSide(color: AppColors.primaryMain, width: 3),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      top: 0,
+                      right: 0,
+                      child: Container(
+                        width: 16,
+                        height: 16,
+                        decoration: const BoxDecoration(
+                          border: Border(
+                            top: BorderSide(color: AppColors.primaryMain, width: 3),
+                            right: BorderSide(color: AppColors.primaryMain, width: 3),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      bottom: 0,
+                      left: 0,
+                      child: Container(
+                        width: 16,
+                        height: 16,
+                        decoration: const BoxDecoration(
+                          border: Border(
+                            bottom: BorderSide(color: AppColors.primaryMain, width: 3),
+                            left: BorderSide(color: AppColors.primaryMain, width: 3),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      bottom: 0,
+                      right: 0,
+                      child: Container(
+                        width: 16,
+                        height: 16,
+                        decoration: const BoxDecoration(
+                          border: Border(
+                            bottom: BorderSide(color: AppColors.primaryMain, width: 3),
+                            right: BorderSide(color: AppColors.primaryMain, width: 3),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Center(
+                      child: Image.asset(
+                        'assets/photos/dipstick icon.png',
+                        width: 50,
+                        height: 50,
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                  ],
+                ),
               ),
               const SizedBox(width: 16),
               Expanded(

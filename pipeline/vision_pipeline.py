@@ -277,6 +277,27 @@ class MacroMarkerRectifier:
         best_quad: np.ndarray | None = None
         best_area = 0.0
 
+        def consider_quad(candidate_quad: np.ndarray, area: float) -> None:
+            nonlocal best_quad, best_area
+            if area < self.config.min_marker_area_px or area > max_allowed_area:
+                return
+
+            quad = self._order_corners(candidate_quad.astype(np.float32))
+            if self._touches_image_border(
+                quad,
+                image_width=image_width,
+                image_height=image_height,
+                margin_px=border_margin_px,
+            ):
+                return
+
+            if self._quad_side_ratio(quad) > self.config.max_quad_side_ratio:
+                return
+
+            if area > best_area:
+                best_area = area
+                best_quad = quad
+
         for binary_map in (edges, adaptive):
             contours, _ = cv2.findContours(binary_map, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
             for contour in sorted(contours, key=cv2.contourArea, reverse=True)[:120]:
@@ -293,27 +314,78 @@ class MacroMarkerRectifier:
                 if not cv2.isContourConvex(approx):
                     continue
 
+                consider_quad(approx.reshape(4, 2).astype(np.float32), area)
+
+            if best_quad is not None:
+                break
+
+        # Fallback: if strict detection failed, try relaxed thresholds
+        if best_quad is None:
+            relaxed_edges = cv2.Canny(blur, 30, 100)  # Lower thresholds
+            contours, _ = cv2.findContours(relaxed_edges, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+            for contour in sorted(contours, key=cv2.contourArea, reverse=True)[:50]:
+                area = float(cv2.contourArea(contour))
+                if area < self.config.min_marker_area_px * 0.7:  # Relaxed min area
+                    continue
+                if area > max_allowed_area * 1.5:  # Relaxed max area
+                    continue
+
+                peri = cv2.arcLength(contour, True)
+                approx = cv2.approxPolyDP(contour, 0.03 * peri, True)  # Relaxed DP epsilon
+                if len(approx) != 4:
+                    continue
+                if not cv2.isContourConvex(approx):
+                    continue
+
                 quad = self._order_corners(approx.reshape(4, 2).astype(np.float32))
                 if self._touches_image_border(
                     quad,
                     image_width=image_width,
                     image_height=image_height,
-                    margin_px=border_margin_px,
+                    margin_px=border_margin_px * 0.5,  # Relaxed border margin
                 ):
                     continue
 
-                if self._quad_side_ratio(quad) > self.config.max_quad_side_ratio:
+                if self._quad_side_ratio(quad) > self.config.max_quad_side_ratio * 1.2:  # Relaxed ratio
                     continue
 
                 if area > best_area:
                     best_area = area
                     best_quad = quad
 
-            if best_quad is not None:
-                break
+        if best_quad is None:
+            inverted = cv2.bitwise_not(gray)
+            _, otsu = cv2.threshold(inverted, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+            kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (5, 5))
+            closed = cv2.morphologyEx(otsu, cv2.MORPH_CLOSE, kernel, iterations=2)
+            contours, _ = cv2.findContours(closed, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
+            for contour in sorted(contours, key=cv2.contourArea, reverse=True)[:40]:
+                area = float(cv2.contourArea(contour))
+                if area < self.config.min_marker_area_px * 0.6:
+                    continue
+
+                rect = cv2.minAreaRect(contour)
+                (_, _), (width_px, height_px), _ = rect
+                if width_px <= 1.0 or height_px <= 1.0:
+                    continue
+
+                rect_area = float(width_px * height_px)
+                if rect_area <= 0.0:
+                    continue
+
+                fill_ratio = area / rect_area
+                aspect_ratio = max(width_px, height_px) / min(width_px, height_px)
+                if fill_ratio < 0.35:
+                    continue
+                if aspect_ratio > self.config.max_quad_side_ratio * 1.6:
+                    continue
+
+                box = cv2.boxPoints(rect).astype(np.float32)
+                consider_quad(box, max(area, rect_area * 0.75))
 
         if best_quad is None:
-            raise ValueError("Macro-Marker with 4-corner contour was not detected.")
+            raise ValueError("Macro-Marker with 4-corner contour was not detected. Check marker visibility, lighting, and focus.")
 
         return best_quad
 
@@ -784,6 +856,8 @@ class BurstFeaturePipeline:
 
         frame_errors: list[str] = []
         used = 0
+        marker_detection_failures = 0
+        other_failures = 0
 
         for index, frame_bgr in enumerate(frames_bgr):
             try:
@@ -795,13 +869,18 @@ class BurstFeaturePipeline:
                     burst_pad_crops[analyte_name].append(crop)
 
                 used += 1
-            except Exception as error:  # intentionally broad for robust burst handling
-                frame_errors.append(f"frame_{index + 1}: {error}")
+            except ValueError as error:  # Marker detection error
+                marker_detection_failures += 1
+                frame_errors.append(f"frame_{index + 1} [marker]: {str(error)[:60]}")
+            except Exception as error:  # Other errors
+                other_failures += 1
+                frame_errors.append(f"frame_{index + 1} [other]: {str(error)[:60]}")
 
         if used == 0:
+            error_summary = f"Marker: {marker_detection_failures}, Other: {other_failures}"
             raise ValueError(
-                "No valid frames were processed in burst. "
-                "Check marker visibility and grid calibration."
+                f"No valid frames processed. {error_summary}. "
+                f"Ensure marker is visible, well-lit, and in focus. Check dipstick orientation."
             )
 
         cleaned_pads = self.cleaner.clean(burst_pad_crops)

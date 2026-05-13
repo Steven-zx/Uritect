@@ -1,5 +1,8 @@
 # Thesis Project Foundation (Working Brief)
 
+
+C:\Users\acer\AppData\Local\Android\sdk\ndk\28.2.13676358 
+
 ## Proposed Title
 **A Hybrid Illumination-Invariant, Multimodal Smartphone-Based Urinalysis Screening System Using Colorimetric Strip Analysis and Clinical Symptom Integration**
 

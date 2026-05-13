@@ -33,8 +33,8 @@ except ImportError:
     sys.exit(1)
 
 try:
-    from semiquant_schema import ANALYTE_LEVEL_SCHEMA, ANALYTE_ORDER, canonicalize_level
-    from vision_pipeline import feature_columns_for_analyte
+    from .semiquant_schema import ANALYTE_LEVEL_SCHEMA, ANALYTE_ORDER, canonicalize_level
+    from .vision_pipeline import feature_columns_for_analyte
 except ImportError as error:
     print(f"Failed to import pipeline modules: {error}")
     print("Run from repository root: python pipeline/evaluate_semiquant.py")
