@@ -37,7 +37,7 @@ const List<DipstickResultRow> sampleDipstickRows = [
     code: 'URO',
     name: 'Urobilinogen',
     result: 'Negative',
-    referenceRange: '0.2 - 1.0 mg/dL',
+    referenceRange: '3.2 - 128',
     status: DipstickResultStatus.negative,
   ),
   DipstickResultRow(
@@ -51,7 +51,7 @@ const List<DipstickResultRow> sampleDipstickRows = [
     code: 'pH',
     name: 'pH',
     result: 'Negative',
-    referenceRange: '4.5 - 8.0',
+    referenceRange: '5.0 - 8.5',
     status: DipstickResultStatus.negative,
   ),
   DipstickResultRow(
@@ -65,7 +65,7 @@ const List<DipstickResultRow> sampleDipstickRows = [
     code: 'SG',
     name: 'Specific Gravity',
     result: 'Negative',
-    referenceRange: '1.005-1030',
+    referenceRange: '1.000 - 1.030',
     status: DipstickResultStatus.negative,
   ),
   DipstickResultRow(

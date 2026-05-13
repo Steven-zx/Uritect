@@ -1,27 +1,9 @@
-INFO:     192.168.1.213:51730 - "GET /health HTTP/1.1" 200 OK
-INFO:     192.168.1.213:51741 - "GET /health HTTP/1.1" 200 OK
+INFO:     192.168.1.213:60018 - "GET /health HTTP/1.1" 200 OK
 [SCAN_SERVER] POST /scan - prefer_header='', force_param=None, respond_async=False
-[SCAN_SERVER] All request headers: {'host': '127.0.0.1:8000', 'user-agent': 'curl/8.19.0', 'accept': '*/*', 'content-length': '2456610', 'content-type': 'multipart/form-data; boundary=------------------------TudLgdJ8KW8ixNgPAIptUm', 'expect': '100-continue'}
-INFO:     127.0.0.1:63734 - "POST /scan HTTP/1.1" 200 OK
-INFO:     192.168.1.216:38660 - "GET /health HTTP/1.1" 200 OK
+[SCAN_SERVER] All request headers: {'host': '127.0.0.1:8000', 'user-agent': 'curl/8.19.0', 'accept': '*/*', 'content-length': '2456610', 'content-type': 'multipart/form-data; boundary=------------------------u3DdLtZzZcqLntkEqvJQP4', 'expect': '100-continue'}
+INFO:     127.0.0.1:60017 - "POST /scan HTTP/1.1" 200 OK
+INFO:     192.168.1.213:61443 - "GET /health HTTP/1.1" 200 OK
 [SCAN_SERVER] POST /scan - prefer_header='respond-async', force_param=None, respond_async=True
-[SCAN_SERVER] All request headers: {'user-agent': 'Dart/3.11 (dart:io)', 'content-type': 'multipart/form-data; boundary=dart-http-boundary-Zl9bprn.SfxX3Kj8v5LqALee092SkNLRSUxSgaNWEM-dp2h0x3C', 'prefer': 'respond-async', 'accept-encoding': 'gzip', 'content-length': '1270621', 'host': '192.168.1.213:8000'}
-INFO:     192.168.1.216:38666 - "POST /scan HTTP/1.1" 202 Accepted
-INFO:     192.168.1.216:57278 - "GET /health HTTP/1.1" 200 OK
-[SCAN_SERVER] POST /scan - prefer_header='respond-async', force_param=None, respond_async=True
-[SCAN_SERVER] All request headers: {'user-agent': 'Dart/3.11 (dart:io)', 'content-type': 'multipart/form-data; boundary=dart-http-boundary-unJrGMaUEVwNoImN-CAd0KDBxpFQFJ.FzLp4Bo6tCLYluDqt-xB', 'prefer': 'respond-async', 'accept-encoding': 'gzip', 'content-length': '1270621', 'host': '192.168.1.213:8000'}
-INFO:     192.168.1.216:57292 - "POST /scan HTTP/1.1" 202 Accepted
-INFO:     192.168.1.216:57302 - "GET /scan_events/94b37766-0134-4971-8b7b-1617fa160296 HTTP/1.1" 200 OK
-INFO:     192.168.1.216:55002 - "GET /health HTTP/1.1" 200 OK
-[SCAN_SERVER] POST /scan - prefer_header='respond-async', force_param=None, respond_async=True
-[SCAN_SERVER] All request headers: {'user-agent': 'Dart/3.11 (dart:io)', 'content-type': 'multipart/form-data; boundary=dart-http-boundary-4Mu7WGDQ7u4FpBmbXjvN5kkgtKOBxAEZS9utl8iveQ8x042sFBE', 'prefer': 'respond-async', 'accept-encoding': 'gzip', 'content-length': '1270621', 'host': '192.168.1.213:8000'}
-INFO:     192.168.1.216:55016 - "POST /scan HTTP/1.1" 202 Accepted
-INFO:     192.168.1.216:58828 - "GET /health HTTP/1.1" 200 OK
-[SCAN_SERVER] POST /scan - prefer_header='respond-async', force_param=None, respond_async=True
-[SCAN_SERVER] All request headers: {'user-agent': 'Dart/3.11 (dart:io)', 'content-type': 'multipart/form-data; boundary=dart-http-boundary-21qYZ+LDq3jAbJ2mumn9hNkaD.PhqceNOYIx3c.oAwpSZPwkLNc', 'prefer': 'respond-async', 'accept-encoding': 'gzip', 'content-length': '1270621', 'host': '192.168.1.213:8000'}
-INFO:     192.168.1.216:58830 - "POST /scan HTTP/1.1" 202 Accepted
-INFO:     192.168.1.216:50290 - "GET /health HTTP/1.1" 200 OK
-[SCAN_SERVER] POST /scan - prefer_header='respond-async', force_param=None, respond_async=True
-[SCAN_SERVER] All request headers: {'user-agent': 'Dart/3.11 (dart:io)', 'content-type': 'multipart/form-data; boundary=dart-http-boundary-C7EPhIlPBXhppL.95bvyBw.WqoMO5c2ly1BkDPSijSTama5p7x.', 'prefer': 'respond-async', 'accept-encoding': 'gzip', 'content-length': '1270621', 'host': '192.168.1.213:8000'}
-INFO:     192.168.1.216:50302 - "POST /scan HTTP/1.1" 202 Accepted
-INFO:     192.168.1.216:50304 - "GET /scan_events/d815832d-bd41-4fb6-9078-b9cb9e7e0d94 HTTP/1.1" 200 OK
+[SCAN_SERVER] All request headers: {'user-agent': 'Dart/3.11 (dart:io)', 'content-type': 'multipart/form-data; boundary=dart-http-boundary-gO6HX9M0IX2bVzJulhE2_rmcD_hSTx.6IyBG4DwB_70yhItYH_4', 'prefer': 'respond-async', 'accept-encoding': 'gzip', 'content-length': '1270621', 'host': '192.168.1.213:8000'}
+INFO:     192.168.1.216:39856 - "POST /scan HTTP/1.1" 202 Accepted
+INFO:     192.168.1.216:39858 - "GET /scan_events/15cb457b-809e-4edb-8570-9a9e3869150b HTTP/1.1" 200 OK

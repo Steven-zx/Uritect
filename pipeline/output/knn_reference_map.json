@@ -1,13 +1,13 @@
 {
   "version": "trained_v4_lab",
   "source": "uritect_training_pipeline",
-  "generated_at": "2026-05-05T18:13:08.796928+00:00",
-  "total_samples": 9450,
+  "generated_at": "2026-05-13T11:03:03.399200+00:00",
+  "total_samples": 5480,
   "reference_color_space": "lab",
   "reference_strategy": "semiquant_preferred_with_binary_fallback",
   "event_hsv_centering": {
-    "enabled": false,
-    "mode": "global",
+    "enabled": true,
+    "mode": "per-light",
     "target_anchor": {
       "h": 59.48834238260966,
       "s": 0.3735764883211679,
@@ -52,67 +52,67 @@
     "Leukocytes": [
       {
         "level": "Large 500",
-        "l": 42.344471,
-        "a": 0.925598,
+        "l": 33.439771,
+        "a": 0.832675,
         "b": 0.0,
         "weight": 1.0,
-        "sample_count": 33
+        "sample_count": 30
       },
       {
         "level": "Moderate 125",
-        "l": 49.028706,
+        "l": 39.679177,
         "a": 1.0,
         "b": 0.0,
         "weight": 1.0,
-        "sample_count": 33
+        "sample_count": 30
       },
       {
         "level": "Neg",
-        "l": 16.76549,
+        "l": 17.369997,
         "a": 1.0,
         "b": 0.0,
         "weight": 1.0,
-        "sample_count": 437
+        "sample_count": 233
       },
       {
         "level": "Small 70",
-        "l": 43.370979,
-        "a": 0.679993,
+        "l": 40.660029,
+        "a": 0.439272,
         "b": 0.0,
         "weight": 1.0,
-        "sample_count": 47
+        "sample_count": 40
       },
       {
         "level": "Trace 15",
-        "l": 17.503372,
+        "l": 21.366377,
         "a": 1.0,
         "b": 0.0,
         "weight": 1.0,
-        "sample_count": 395
+        "sample_count": 215
       }
     ],
     "Nitrite": [
       {
         "level": "Neg",
-        "l": 18.601568,
+        "l": 21.113012,
         "a": 1.0,
         "b": 0.0,
         "weight": 1.0,
-        "sample_count": 541
+        "sample_count": 309
       },
       {
         "level": "Positive",
-        "l": 18.859608,
+        "l": 27.579898,
         "a": 1.0,
         "b": 0.0,
         "weight": 1.0,
-        "sample_count": 404
+        "sample_count": 239
       }
     ],
     "Urobilinogen": [
       {
         "level": "128",
-        "l": 64.255058,
+        "l": 74.469358,
         "a": 0.0,
         "b": 0.0,
         "weight": 1.0,
@@ -120,32 +120,32 @@
       },
       {
         "level": "16",
-        "l": 69.112473,
-        "a": 0.429199,
+        "l": 63.44411,
+        "a": 0.368157,
         "b": 0.0,
         "weight": 1.0,
-        "sample_count": 351
+        "sample_count": 193
       },
       {
         "level": "3.2",
-        "l": 74.088158,
-        "a": 0.183594,
+        "l": 71.489248,
+        "a": 0.171548,
         "b": 0.0,
         "weight": 1.0,
-        "sample_count": 507
+        "sample_count": 271
       },
       {
         "level": "32",
-        "l": 62.767059,
+        "l": 68.866189,
         "a": 0.0,
         "b": 0.0,
         "weight": 1.0,
-        "sample_count": 33
+        "sample_count": 30
       },
       {
         "level": "64",
-        "l": 65.360474,
-        "a": 0.282806,
+        "l": 73.006146,
+        "a": 0.285274,
         "b": 0.0,
         "weight": 1.0,
         "sample_count": 27
@@ -154,7 +154,7 @@
     "Protein": [
       {
         "level": "0.3",
-        "l": 67.128391,
+        "l": 73.983617,
         "a": 0.0,
         "b": 0.0,
         "weight": 1.0,
@@ -162,7 +162,7 @@
       },
       {
         "level": "1.0",
-        "l": 66.372318,
+        "l": 74.89099,
         "a": 0.0,
         "b": 0.0,
         "weight": 1.0,
@@ -170,141 +170,141 @@
       },
       {
         "level": "3.0",
-        "l": 75.736786,
+        "l": 72.818356,
         "a": 0.0,
         "b": 0.0,
         "weight": 1.0,
-        "sample_count": 28
+        "sample_count": 25
       },
       {
         "level": ">=20.0",
-        "l": 72.13153,
-        "a": 0.892197,
+        "l": 82.718879,
+        "a": 0.781594,
         "b": 0.0,
         "weight": 1.0,
         "sample_count": 28
       },
       {
         "level": "Neg",
-        "l": 79.515762,
+        "l": 76.471546,
         "a": 0.0,
-        "b": 0.0,
+        "b": 0.001528,
         "weight": 1.0,
-        "sample_count": 721
+        "sample_count": 376
       },
       {
         "level": "Trace",
-        "l": 78.649959,
+        "l": 77.849748,
         "a": 0.0,
-        "b": 0.000801,
+        "b": 0.021181,
         "weight": 1.0,
-        "sample_count": 122
+        "sample_count": 73
       }
     ],
     "pH": [
       {
         "level": "5.0",
-        "l": 82.651764,
+        "l": 75.665241,
         "a": 0.0,
-        "b": 0.373802,
+        "b": 0.347897,
         "weight": 1.0,
-        "sample_count": 248
+        "sample_count": 138
       },
       {
         "level": "6.0",
-        "l": 83.230743,
+        "l": 82.621303,
         "a": 0.0,
-        "b": 0.229996,
+        "b": 0.401736,
         "weight": 1.0,
-        "sample_count": 504
+        "sample_count": 263
       },
       {
         "level": "6.5",
-        "l": 83.636391,
+        "l": 79.792263,
         "a": 0.0,
-        "b": 0.936997,
+        "b": 0.419704,
         "weight": 1.0,
-        "sample_count": 54
+        "sample_count": 37
       },
       {
         "level": "7.0",
-        "l": 81.275612,
+        "l": 74.552603,
         "a": 0.0,
         "b": 0.0,
         "weight": 1.0,
-        "sample_count": 54
+        "sample_count": 37
       },
       {
         "level": "7.5",
-        "l": 81.709961,
+        "l": 72.993355,
         "a": 0.0,
         "b": 0.0,
         "weight": 1.0,
-        "sample_count": 27
+        "sample_count": 23
       },
       {
         "level": "8.0",
-        "l": 74.045334,
-        "a": 0.723999,
+        "l": 72.341505,
+        "a": 0.130632,
         "b": 0.0,
         "weight": 1.0,
-        "sample_count": 31
+        "sample_count": 25
       },
       {
         "level": "8.5",
-        "l": 73.110901,
-        "a": 0.0,
+        "l": 73.362796,
+        "a": 0.360554,
         "b": 0.0,
         "weight": 1.0,
-        "sample_count": 27
+        "sample_count": 25
       }
     ],
     "Blood": [
       {
         "level": "Hemolyzed 10",
-        "l": 48.928627,
+        "l": 67.606473,
         "a": 0.0,
-        "b": 0.0,
+        "b": 0.317788,
         "weight": 1.0,
         "sample_count": 24
       },
       {
         "level": "Large 200",
-        "l": 44.043293,
+        "l": 58.444974,
         "a": 0.0,
-        "b": 0.0,
+        "b": 0.215872,
         "weight": 1.0,
         "sample_count": 22
       },
       {
         "level": "Moderate 80",
-        "l": 53.789568,
+        "l": 55.596717,
         "a": 0.0,
-        "b": 0.0,
+        "b": 0.215872,
         "weight": 1.0,
         "sample_count": 22
       },
       {
         "level": "Neg",
-        "l": 86.175369,
+        "l": 81.477723,
         "a": 0.0,
-        "b": 0.427994,
+        "b": 0.52962,
         "weight": 1.0,
-        "sample_count": 779
+        "sample_count": 405
       },
       {
         "level": "Non-hemolyzed 10",
-        "l": 83.017563,
+        "l": 75.586751,
         "a": 0.0,
-        "b": 0.000999,
+        "b": 0.322375,
         "weight": 1.0,
-        "sample_count": 76
+        "sample_count": 53
       },
       {
         "level": "Small 25",
-        "l": 53.754745,
+        "l": 64.78801,
         "a": 0.0,
-        "b": 0.0,
+        "b": 0.300646,
         "weight": 1.0,
         "sample_count": 22
       }
@@ -312,193 +312,193 @@
     "Specific Gravity": [
       {
         "level": "1.000",
-        "l": 51.846506,
+        "l": 56.317699,
         "a": 0.0,
-        "b": 0.0,
+        "b": 0.031945,
         "weight": 1.0,
         "sample_count": 22
       },
       {
         "level": "1.005",
-        "l": 69.123527,
+        "l": 56.727832,
         "a": 0.0,
-        "b": 0.0,
+        "b": 0.29287,
         "weight": 1.0,
-        "sample_count": 46
+        "sample_count": 37
       },
       {
         "level": "1.010",
-        "l": 89.66996,
+        "l": 80.681245,
         "a": 0.0,
-        "b": 0.711197,
+        "b": 0.783332,
         "weight": 1.0,
-        "sample_count": 110
+        "sample_count": 65
       },
       {
         "level": "1.015",
-        "l": 88.793881,
+        "l": 80.087906,
         "a": 0.0,
-        "b": 0.434799,
+        "b": 0.419704,
         "weight": 1.0,
-        "sample_count": 122
+        "sample_count": 71
       },
       {
         "level": "1.020",
-        "l": 86.003456,
+        "l": 76.586556,
         "a": 0.0,
-        "b": 0.034805,
+        "b": 0.390401,
         "weight": 1.0,
-        "sample_count": 93
+        "sample_count": 56
       },
       {
         "level": "1.025",
-        "l": 88.91906,
+        "l": 83.354727,
         "a": 0.0,
-        "b": 0.543594,
+        "b": 0.660058,
         "weight": 1.0,
-        "sample_count": 225
+        "sample_count": 125
       },
       {
         "level": "1.030",
-        "l": 88.980392,
+        "l": 89.452216,
         "a": 0.0,
-        "b": 0.578796,
+        "b": 0.625815,
         "weight": 1.0,
-        "sample_count": 327
+        "sample_count": 172
       }
     ],
     "Ketone": [
       {
         "level": "8.0",
-        "l": 61.249645,
+        "l": 67.088153,
         "a": 0.0,
-        "b": 0.0,
+        "b": 0.215872,
         "weight": 1.0,
         "sample_count": 22
       },
       {
         "level": "Large 16",
-        "l": 52.040469,
+        "l": 65.639896,
         "a": 0.0,
-        "b": 0.0,
+        "b": 0.317788,
         "weight": 1.0,
         "sample_count": 22
       },
       {
         "level": "Moderate 4.0",
-        "l": 50.251686,
+        "l": 65.972771,
         "a": 0.0,
-        "b": 0.0,
+        "b": 0.317788,
         "weight": 1.0,
         "sample_count": 22
       },
       {
         "level": "Neg",
-        "l": 91.63781,
+        "l": 85.258955,
         "a": 0.0,
-        "b": 0.3284,
+        "b": 0.454461,
         "weight": 1.0,
-        "sample_count": 735
+        "sample_count": 383
       },
       {
         "level": "Small 1.5",
-        "l": 56.556083,
+        "l": 65.943801,
         "a": 0.0,
-        "b": 0.0,
+        "b": 0.403815,
         "weight": 1.0,
-        "sample_count": 36
+        "sample_count": 33
       },
       {
         "level": "Trace 0.5",
-        "l": 92.565804,
+        "l": 81.44681,
         "a": 0.0,
-        "b": 0.051201,
+        "b": 0.391105,
         "weight": 1.0,
-        "sample_count": 108
+        "sample_count": 66
       }
     ],
     "Bilirubin": [
       {
         "level": "Large 100",
-        "l": 72.563999,
+        "l": 38.265277,
         "a": 0.0,
-        "b": 0.0,
+        "b": 0.215872,
         "weight": 1.0,
-        "sample_count": 48
+        "sample_count": 43
       },
       {
         "level": "Moderate 50",
-        "l": 19.852314,
+        "l": 64.932177,
         "a": 0.0,
-        "b": 0.0,
+        "b": 0.215872,
         "weight": 1.0,
-        "sample_count": 60
+        "sample_count": 47
       },
       {
         "level": "Neg",
-        "l": 86.388863,
+        "l": 80.811777,
         "a": 0.0,
-        "b": 0.007202,
+        "b": 0.208442,
         "weight": 1.0,
-        "sample_count": 369
+        "sample_count": 206
       },
       {
         "level": "Small 17",
-        "l": 12.073568,
+        "l": 36.94751,
         "a": 0.0,
-        "b": 0.0,
+        "b": 0.095653,
         "weight": 1.0,
-        "sample_count": 468
+        "sample_count": 252
       }
     ],
     "Glucose": [
       {
         "level": "110 ++++",
-        "l": 18.118197,
+        "l": 48.978559,
         "a": 0.0,
-        "b": 0.0,
+        "b": 0.419704,
         "weight": 1.0,
         "sample_count": 22
       },
       {
         "level": "15 +",
-        "l": 14.016078,
+        "l": 39.760056,
         "a": 0.0,
-        "b": 0.0,
+        "b": 0.317788,
         "weight": 1.0,
         "sample_count": 24
       },
       {
         "level": "30 ++",
-        "l": 0.0,
+        "l": 36.054396,
         "a": 0.0,
-        "b": 0.0,
+        "b": 0.223255,
         "weight": 1.0,
-        "sample_count": 34
+        "sample_count": 31
       },
       {
         "level": "60 +++",
-        "l": 0.0,
+        "l": 35.828183,
         "a": 0.0,
-        "b": 0.0,
+        "b": 0.215872,
         "weight": 1.0,
-        "sample_count": 34
+        "sample_count": 28
       },
       {
         "level": "Neg",
-        "l": 0.0,
+        "l": 82.272368,
         "a": 0.0,
-        "b": 0.0,
+        "b": 0.015872,
         "weight": 1.0,
-        "sample_count": 793
+        "sample_count": 412
       },
       {
         "level": "Trace 5",
-        "l": 0.0,
+        "l": 33.701672,
         "a": 0.0,
-        "b": 0.0,
+        "b": 0.039535,
         "weight": 1.0,
-        "sample_count": 38
+        "sample_count": 31
       }
     ]
   }

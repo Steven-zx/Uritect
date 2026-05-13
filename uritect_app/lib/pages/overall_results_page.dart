@@ -93,6 +93,8 @@ class OverallResultsPage extends StatelessWidget {
               _conditionCard(context, fusionResult, selectedCount),
               const SizedBox(height: 12),
               DipstickResultsTable(rows: tableRows),
+              const SizedBox(height: 12),
+              _checklistAnswersCard(context),
               const SizedBox(height: 20),
               SizedBox(
                 width: double.infinity,
@@ -234,6 +236,70 @@ class OverallResultsPage extends StatelessWidget {
                   fontSize: 12,
                 ),
           ),
+        ],
+      ),
+    );
+  }
+
+  Widget _checklistAnswersCard(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.fromLTRB(12, 12, 12, 10),
+      decoration: BoxDecoration(
+        color: AppColors.bgCard,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: AppColors.border),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Checklist Answers',
+            style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                  color: AppColors.primaryMain,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w700,
+                ),
+          ),
+          const SizedBox(height: 8),
+          for (final symptom in clinicalSymptoms)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 7),
+              child: Row(
+                children: [
+                  Icon(
+                    clinicalChecklistResult.selectedSymptoms[symptom.id] == true
+                        ? Icons.check_circle_rounded
+                        : Icons.cancel_rounded,
+                    size: 16,
+                    color: clinicalChecklistResult.selectedSymptoms[symptom.id] == true
+                        ? AppColors.statusLow
+                        : AppColors.textSecondary,
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      symptom.label.replaceAll('\n', ' '),
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            color: AppColors.textPrimary,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                          ),
+                    ),
+                  ),
+                  Text(
+                    clinicalChecklistResult.selectedSymptoms[symptom.id] == true ? 'Yes' : 'No',
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: clinicalChecklistResult.selectedSymptoms[symptom.id] == true
+                              ? AppColors.primaryMain
+                              : AppColors.textSecondary,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w700,
+                        ),
+                  ),
+                ],
+              ),
+            ),
         ],
       ),
     );
