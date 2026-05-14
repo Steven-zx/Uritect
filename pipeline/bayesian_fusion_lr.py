@@ -25,15 +25,15 @@ class ClinicalSymptomLR:
 
 CLINICAL_SYMPTOMS_LR = [
     # Category 1: Lower Urinary Tract Symptoms
-    ClinicalSymptomLR('dysuria', 'Burning sensation while urinating', 'lut', 2.8, 0.35),
-    ClinicalSymptomLR('frequency', 'Frequent urination', 'lut', 2.2, 0.42),
-    ClinicalSymptomLR('suprapubic', 'Lower abdominal pain', 'lut', 2.0, 0.45),
-    ClinicalSymptomLR('hematuria', 'Visible hematuria', 'lut', 5.8, 0.92),
+    ClinicalSymptomLR('dysuria', 'Burning sensation while urinating', 'lut', 2.8, 0.95),
+    ClinicalSymptomLR('frequency', 'Frequency / Urgency', 'lut', 2.2, 0.95),
+    ClinicalSymptomLR('suprapubic', 'Lower abdominal pain', 'lut', 2.0, 0.95),
+    ClinicalSymptomLR('hematuria', 'Visible hematuria', 'lut', 5.8, 0.95),
     # Category 2: Renal & Systemic Red Flags
-    ClinicalSymptomLR('flank', 'Back pain', 'renal', 4.3, 0.62),
-    ClinicalSymptomLR('fever', 'Fever', 'renal', 3.8, 0.60),
-    ClinicalSymptomLR('edema', 'Peripheral edema', 'renal', 2.5, 0.72),
-    ClinicalSymptomLR('nausea', 'Nausea / Vomiting', 'renal', 2.2, 0.55),
+    ClinicalSymptomLR('flank', 'Back pain', 'renal', 5.0, 0.95),
+    ClinicalSymptomLR('fever', 'Fever / Chills', 'renal', 3.5, 0.95),
+    ClinicalSymptomLR('edema', 'Peripheral edema', 'renal', 2.5, 0.95),
+    ClinicalSymptomLR('nausea', 'Nausea / Vomiting', 'renal', 2.2, 0.95),
 ]
 
 
@@ -98,7 +98,7 @@ class BayesianFusionLREngine:
         posterior = self._probability_from_log_odds(log_odds)
         posterior = np.clip(posterior, 0.0, 1.0)
 
-        risk_bucket = 'Low' if posterior < 0.35 else 'Moderate' if posterior <= 0.70 else 'High'
+        risk_bucket = 'Low' if posterior < 0.30 else 'Moderate' if posterior <= 0.70 else 'High'
 
         return {
             'posterior_probability': float(posterior),

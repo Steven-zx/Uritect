@@ -95,7 +95,7 @@ class BayesianFusionEngine:
     @staticmethod
     def risk_bucket(posterior_probability: float) -> str:
         probability = float(posterior_probability)
-        if probability < 0.35:
+        if probability < 0.30:
             return "Low"
         if probability <= 0.70:
             return "Moderate"

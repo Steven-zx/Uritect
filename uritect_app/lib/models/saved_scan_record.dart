@@ -10,6 +10,9 @@ class SavedScanRecord {
   final double posteriorProbability;
   final String riskBucket;
   final double clinicalLogOddsContribution;
+  final bool hasEvidenceConflict;
+  final String? conflictTitle;
+  final String? conflictMessage;
 
   const SavedScanRecord({
     required this.id,
@@ -19,6 +22,9 @@ class SavedScanRecord {
     required this.posteriorProbability,
     required this.riskBucket,
     required this.clinicalLogOddsContribution,
+    this.hasEvidenceConflict = false,
+    this.conflictTitle,
+    this.conflictMessage,
   });
 
   factory SavedScanRecord.fromAnalysis({
@@ -34,6 +40,9 @@ class SavedScanRecord {
       posteriorProbability: fusionResult.posteriorProbability,
       riskBucket: fusionResult.riskBucket,
       clinicalLogOddsContribution: fusionResult.logOddsContribution,
+      hasEvidenceConflict: fusionResult.hasEvidenceConflict,
+      conflictTitle: fusionResult.conflictTitle,
+      conflictMessage: fusionResult.conflictMessage,
     );
   }
 
@@ -46,6 +55,9 @@ class SavedScanRecord {
       'posteriorProbability': posteriorProbability,
       'riskBucket': riskBucket,
       'clinicalLogOddsContribution': clinicalLogOddsContribution,
+      'hasEvidenceConflict': hasEvidenceConflict,
+      'conflictTitle': conflictTitle,
+      'conflictMessage': conflictMessage,
     };
   }
 
@@ -65,6 +77,9 @@ class SavedScanRecord {
       riskBucket: json['riskBucket'] as String? ?? 'Moderate',
       clinicalLogOddsContribution:
           (json['clinicalLogOddsContribution'] as num?)?.toDouble() ?? 0.0,
+      hasEvidenceConflict: json['hasEvidenceConflict'] == true,
+      conflictTitle: json['conflictTitle'] as String?,
+      conflictMessage: json['conflictMessage'] as String?,
     );
   }
 }

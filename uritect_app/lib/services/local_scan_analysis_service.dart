@@ -1045,7 +1045,7 @@ String _riskBucket(double probability) {
   if (probability >= 0.70) {
     return 'High';
   }
-  if (probability >= 0.35) {
+  if (probability >= 0.30) {
     return 'Moderate';
   }
   return 'Low';

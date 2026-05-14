@@ -21,6 +21,10 @@ class ClinicalSymptom {
 
 /// Reference set of 8 clinical symptoms with Bayesian LR values.
 /// LR+ > 1.0 increases post-test probability; LR- < 1.0 decreases it.
+/// Absence uses a mild shared LR- so missing symptoms moderate risk without
+/// overpowering objective dipstick findings.
+const double _absentSymptomLikelihoodRatio = 0.95;
+
 final List<ClinicalSymptom> clinicalSymptoms = [
   // Category 1: Lower Urinary Tract Symptoms (UTI Focus)
   ClinicalSymptom(
@@ -29,15 +33,15 @@ final List<ClinicalSymptom> clinicalSymptoms = [
     category: 'lut',
     iconCode: 'dysuria',
     likelihoodRatioPositive: 2.8, // Strong indicator of UTI
-    likelihoodRatioNegative: 0.35,
+    likelihoodRatioNegative: _absentSymptomLikelihoodRatio,
   ),
   ClinicalSymptom(
     id: 'frequency',
-    label: 'Frequent urination',
+    label: 'Frequency / Urgency',
     category: 'lut',
     iconCode: 'frequency',
     likelihoodRatioPositive: 2.2,
-    likelihoodRatioNegative: 0.42,
+    likelihoodRatioNegative: _absentSymptomLikelihoodRatio,
   ),
   ClinicalSymptom(
     id: 'suprapubic',
@@ -45,7 +49,7 @@ final List<ClinicalSymptom> clinicalSymptoms = [
     category: 'lut',
     iconCode: 'suprapubic',
     likelihoodRatioPositive: 2.0,
-    likelihoodRatioNegative: 0.45,
+    likelihoodRatioNegative: _absentSymptomLikelihoodRatio,
   ),
   ClinicalSymptom(
     id: 'hematuria',
@@ -53,7 +57,7 @@ final List<ClinicalSymptom> clinicalSymptoms = [
     category: 'lut',
     iconCode: 'hematuria',
     likelihoodRatioPositive: 5.8, // Very strong indicator
-    likelihoodRatioNegative: 0.92,
+    likelihoodRatioNegative: _absentSymptomLikelihoodRatio,
   ),
   // Category 2: Renal and Systemic "Red Flags"
   ClinicalSymptom(
@@ -61,16 +65,16 @@ final List<ClinicalSymptom> clinicalSymptoms = [
     label: 'Back pain',
     category: 'renal',
     iconCode: 'flank',
-    likelihoodRatioPositive: 4.3, // Suggests pyelonephritis
-    likelihoodRatioNegative: 0.62,
+    likelihoodRatioPositive: 5.0, // High-weight pyelonephritis indicator
+    likelihoodRatioNegative: _absentSymptomLikelihoodRatio,
   ),
   ClinicalSymptom(
     id: 'fever',
-    label: 'Fever',
+    label: 'Fever / Chills',
     category: 'renal',
     iconCode: 'fever',
-    likelihoodRatioPositive: 3.8, // Systemic infection marker
-    likelihoodRatioNegative: 0.60,
+    likelihoodRatioPositive: 3.5, // Systemic involvement marker
+    likelihoodRatioNegative: _absentSymptomLikelihoodRatio,
   ),
   ClinicalSymptom(
     id: 'edema',
@@ -78,7 +82,7 @@ final List<ClinicalSymptom> clinicalSymptoms = [
     category: 'renal',
     iconCode: 'edema',
     likelihoodRatioPositive: 2.5,
-    likelihoodRatioNegative: 0.72,
+    likelihoodRatioNegative: _absentSymptomLikelihoodRatio,
   ),
   ClinicalSymptom(
     id: 'nausea',
@@ -86,7 +90,7 @@ final List<ClinicalSymptom> clinicalSymptoms = [
     category: 'renal',
     iconCode: 'nausea',
     likelihoodRatioPositive: 2.2,
-    likelihoodRatioNegative: 0.55,
+    likelihoodRatioNegative: _absentSymptomLikelihoodRatio,
   ),
 ];
 

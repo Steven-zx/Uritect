@@ -99,6 +99,10 @@ class OverallResultsPage extends StatelessWidget {
               ),
               const SizedBox(height: 14),
               _riskCard(context, fusionResult),
+              if (fusionResult.hasEvidenceConflict) ...[
+                const SizedBox(height: 12),
+                _evidenceConflictCard(context, fusionResult),
+              ],
               const SizedBox(height: 12),
               _conditionCard(context, fusionResult, selectedCount),
               const SizedBox(height: 12),
@@ -133,6 +137,57 @@ class OverallResultsPage extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _evidenceConflictCard(
+    BuildContext context,
+    ScreeningFusionResult fusionResult,
+  ) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.fromLTRB(12, 12, 12, 12),
+      decoration: BoxDecoration(
+        color: const Color(0xFFFFF7E6),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: const Color(0xFFF2C36B)),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Icon(
+            Icons.error_outline_rounded,
+            color: Color(0xFFB36B00),
+            size: 22,
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  fusionResult.conflictTitle ?? 'Review needed',
+                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                    color: const Color(0xFF704600),
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  fusionResult.conflictMessage ??
+                      'Dipstick and checklist findings do not fully agree. Review the scan and patient context before making a decision.',
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: const Color(0xFF704600),
+                    fontSize: 12,
+                    height: 1.25,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
