@@ -14,6 +14,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Uritect',
+      debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
       home: const LandingPage(),
     );

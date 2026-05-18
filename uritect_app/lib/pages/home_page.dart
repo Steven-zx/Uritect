@@ -32,6 +32,42 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  Future<void> _deleteScanRecord(SavedScanRecord record) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Delete scan?'),
+        content: Text(
+          'Remove the scan from ${_formatDate(record.savedAt)} at ${_formatTime(record.savedAt)}?',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            style: TextButton.styleFrom(foregroundColor: AppColors.statusHigh),
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed != true) {
+      return;
+    }
+
+    final deleted = await _historyService.deleteRecord(record.id);
+    if (!mounted) return;
+    _refreshHistory();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(deleted ? 'Scan deleted.' : 'Scan was already removed.'),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -444,8 +480,15 @@ class _HomePageState extends State<HomePage> {
                 ),
               ],
             ),
-            const SizedBox(width: 8),
-            const Icon(Icons.chevron_right, size: 20, color: Color(0xFF1F2D3D)),
+            const SizedBox(width: 4),
+            IconButton(
+              onPressed: () => _deleteScanRecord(record),
+              icon: const Icon(Icons.delete_outline_rounded, size: 20),
+              color: AppColors.statusHigh,
+              padding: EdgeInsets.zero,
+              constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
+              tooltip: 'Delete scan',
+            ),
           ],
         ),
       ),

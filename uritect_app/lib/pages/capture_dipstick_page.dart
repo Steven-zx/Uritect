@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../config/theme.dart';
-import '../widgets/common_widgets.dart';
 import 'analyzing_page.dart';
 
 class CaptureDipstickPage extends StatefulWidget {
@@ -64,7 +63,8 @@ class _CaptureDipstickPageState extends State<CaptureDipstickPage> {
 
   Future<void> _capturePhoto() async {
     try {
-      if (_cameraController == null || !_cameraController!.value.isInitialized) {
+      if (_cameraController == null ||
+          !_cameraController!.value.isInitialized) {
         return;
       }
       final image = await _cameraController!.takePicture();
@@ -75,9 +75,9 @@ class _CaptureDipstickPageState extends State<CaptureDipstickPage> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error capturing photo: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error capturing photo: $e')));
       }
     }
   }
@@ -93,9 +93,9 @@ class _CaptureDipstickPageState extends State<CaptureDipstickPage> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error picking image: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error picking image: $e')));
       }
     }
   }
@@ -106,20 +106,104 @@ class _CaptureDipstickPageState extends State<CaptureDipstickPage> {
     });
   }
 
-  void _submitSelectedImage() {
-    if (_pendingImagePath == null) {
+  Future<void> _submitSelectedImage() async {
+    final imagePath = _pendingImagePath;
+    if (imagePath == null) {
       return;
     }
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => AnalyzingPage(imagePath: _pendingImagePath!),
+
+    final exitReason = await Navigator.of(context).push<ScanAnalysisExitReason>(
+      MaterialPageRoute(builder: (_) => AnalyzingPage(imagePath: imagePath)),
+    );
+    if (!mounted) return;
+    if (exitReason == ScanAnalysisExitReason.noDipstickFound) {
+      await _showNoDipstickDialog();
+    }
+  }
+
+  Future<void> _showNoDipstickDialog() {
+    return showDialog<void>(
+      context: context,
+      builder: (context) => Dialog(
+        insetPadding: const EdgeInsets.symmetric(horizontal: 28),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        backgroundColor: AppColors.bgCard,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(20, 22, 20, 18),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 54,
+                height: 54,
+                decoration: BoxDecoration(
+                  color: const Color(0xFFFFF3CD),
+                  borderRadius: BorderRadius.circular(18),
+                ),
+                child: const Icon(
+                  Icons.document_scanner_outlined,
+                  color: AppColors.statusModerate,
+                  size: 28,
+                ),
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'No dipstick found',
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  color: AppColors.textPrimary,
+                  fontSize: 19,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Make sure the full dipstick and black marker are visible, flat, and well lit before submitting.',
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: AppColors.textSecondary,
+                  fontSize: 13,
+                  height: 1.35,
+                ),
+              ),
+              const SizedBox(height: 20),
+              SizedBox(
+                width: double.infinity,
+                height: 48,
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    _clearPendingImage();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primaryMain,
+                    foregroundColor: Colors.white,
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                  ),
+                  child: const Text(
+                    'SCAN AGAIN',
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: 0.3,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
 
   Future<void> _toggleFlashlight() async {
     try {
-      if (_cameraController == null || !_cameraController!.value.isInitialized) {
+      if (_cameraController == null ||
+          !_cameraController!.value.isInitialized) {
         return;
       }
       if (_isFlashlightOn) {
@@ -136,6 +220,22 @@ class _CaptureDipstickPageState extends State<CaptureDipstickPage> {
         );
       }
     }
+  }
+
+  Widget _buildCameraFrame() {
+    final previewSize = _cameraController?.value.previewSize;
+    if (previewSize == null) {
+      return CameraPreview(_cameraController!);
+    }
+
+    return FittedBox(
+      fit: BoxFit.cover,
+      child: SizedBox(
+        width: previewSize.height,
+        height: previewSize.width,
+        child: CameraPreview(_cameraController!),
+      ),
+    );
   }
 
   @override
@@ -156,34 +256,43 @@ class _CaptureDipstickPageState extends State<CaptureDipstickPage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const AppLogo(),
+                  SizedBox(
+                    width: 64,
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: IconButton(
+                        onPressed: () => Navigator.of(context).maybePop(),
+                        icon: const Icon(Icons.arrow_back_rounded, size: 24),
+                        color: AppColors.primaryMain,
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints(
+                          minWidth: 40,
+                          minHeight: 40,
+                        ),
+                      ),
+                    ),
+                  ),
                   Column(
                     children: [
                       Text(
                         'Capture Dipstick',
                         style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                              color: AppColors.primaryMain,
-                              fontWeight: FontWeight.w700,
-                              fontSize: 20,
-                            ),
+                          color: AppColors.primaryMain,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 20,
+                        ),
                       ),
                       const SizedBox(height: 4),
                       Text(
                         'Place the dipstick within the frame',
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              fontSize: 12,
-                              color: AppColors.textSecondary,
-                            ),
+                          fontSize: 12,
+                          color: AppColors.textSecondary,
+                        ),
                       ),
                     ],
                   ),
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.help_outline_rounded, size: 20),
-                    color: AppColors.primaryMain,
-                    padding: EdgeInsets.zero,
-                    constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
-                  ),
+                  const SizedBox(width: 64),
                 ],
               ),
             ),
@@ -193,82 +302,32 @@ class _CaptureDipstickPageState extends State<CaptureDipstickPage> {
                 future: _initializeCameraFuture,
                 builder: (context, snapshot) {
                   if (_pendingImagePath != null) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(18),
-                        child: Stack(
-                          fit: StackFit.expand,
-                          children: [
-                            Image.file(
-                              File(_pendingImagePath!),
-                              fit: BoxFit.contain,
-                            ),
-                            Align(
-                              alignment: Alignment.topRight,
-                              child: Padding(
-                                padding: const EdgeInsets.all(10),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.black.withValues(alpha: 0.45),
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: IconButton(
-                                    onPressed: _clearPendingImage,
-                                    icon: const Icon(
-                                      Icons.close_rounded,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+                    return _ScanPreviewFrame(
+                      onClose: _clearPendingImage,
+                      child: Image.file(
+                        File(_pendingImagePath!),
+                        fit: BoxFit.cover,
                       ),
                     );
                   }
 
                   if (snapshot.connectionState == ConnectionState.done) {
                     if (_isCameraReady && _cameraController != null) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(18),
-                          child: CameraPreview(_cameraController!),
-                        ),
-                      );
+                      return _ScanPreviewFrame(child: _buildCameraFrame());
                     } else {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFD9D9D9),
-                            borderRadius: BorderRadius.circular(18),
-                            border: Border.all(color: const Color(0xFF0B88FF), width: 2),
-                          ),
-                          child: Center(
-                            child: Text(
-                              'Camera not available',
-                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                    color: AppColors.textSecondary,
-                                  ),
-                            ),
+                      return _ScanPreviewFrame(
+                        child: Center(
+                          child: Text(
+                            'Camera not available',
+                            style: Theme.of(context).textTheme.bodyMedium
+                                ?.copyWith(color: AppColors.textSecondary),
                           ),
                         ),
                       );
                     }
                   }
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFD9D9D9),
-                        borderRadius: BorderRadius.circular(18),
-                        border: Border.all(color: const Color(0xFF0B88FF), width: 2),
-                      ),
-                      child: const Center(child: CircularProgressIndicator()),
-                    ),
+                  return const _ScanPreviewFrame(
+                    child: Center(child: CircularProgressIndicator()),
                   );
                 },
               ),
@@ -312,10 +371,14 @@ class _CaptureDipstickPageState extends State<CaptureDipstickPage> {
                     onTap: _pickFromGallery,
                   ),
                   _CaptureButton(
-                    onTap: _pendingImagePath == null ? _capturePhoto : _clearPendingImage,
+                    onTap: _pendingImagePath == null
+                        ? _capturePhoto
+                        : _clearPendingImage,
                   ),
                   _CaptureToolButton(
-                    icon: _isFlashlightOn ? Icons.lightbulb_rounded : Icons.lightbulb_outline_rounded,
+                    icon: _isFlashlightOn
+                        ? Icons.lightbulb_rounded
+                        : Icons.lightbulb_outline_rounded,
                     onTap: _toggleFlashlight,
                     isActive: _isFlashlightOn,
                   ),
@@ -325,6 +388,78 @@ class _CaptureDipstickPageState extends State<CaptureDipstickPage> {
           ],
         ),
       ),
+    );
+  }
+}
+
+class _ScanPreviewFrame extends StatelessWidget {
+  static const double _frameAspectRatio = 0.82;
+  static const double _cornerRadius = 28;
+
+  final Widget child;
+  final VoidCallback? onClose;
+
+  const _ScanPreviewFrame({required this.child, this.onClose});
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final availableWidth = constraints.maxWidth - 16;
+        final idealHeight = availableWidth / _frameAspectRatio;
+        final frameHeight = idealHeight <= constraints.maxHeight
+            ? idealHeight
+            : constraints.maxHeight;
+        final frameWidth = frameHeight == idealHeight
+            ? availableWidth
+            : frameHeight * _frameAspectRatio;
+
+        return Center(
+          child: SizedBox(
+            width: frameWidth,
+            height: frameHeight,
+            child: Stack(
+              clipBehavior: Clip.none,
+              children: [
+                Positioned.fill(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(_cornerRadius),
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFD9D9D9),
+                        borderRadius: BorderRadius.circular(_cornerRadius),
+                        border: Border.all(
+                          color: const Color(0xFF0B88FF),
+                          width: 2,
+                        ),
+                      ),
+                      child: child,
+                    ),
+                  ),
+                ),
+                if (onClose != null)
+                  Positioned(
+                    top: -14,
+                    right: 8,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.black.withValues(alpha: 0.45),
+                        shape: BoxShape.circle,
+                      ),
+                      child: IconButton(
+                        onPressed: onClose,
+                        icon: const Icon(
+                          Icons.close_rounded,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

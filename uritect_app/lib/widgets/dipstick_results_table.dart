@@ -6,10 +6,7 @@ import '../models/dipstick_results_data.dart';
 class DipstickResultsTable extends StatelessWidget {
   final List<DipstickResultRow> rows;
 
-  const DipstickResultsTable({
-    super.key,
-    required this.rows,
-  });
+  const DipstickResultsTable({super.key, required this.rows});
 
   @override
   Widget build(BuildContext context) {
@@ -37,10 +34,10 @@ class DipstickResultsTable extends StatelessWidget {
                   child: Text(
                     'Parameter',
                     style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                          color: AppColors.primaryMain,
-                          fontWeight: FontWeight.w700,
-                          fontSize: 12,
-                        ),
+                      color: AppColors.primaryMain,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 12,
+                    ),
                   ),
                 ),
                 Expanded(
@@ -49,10 +46,10 @@ class DipstickResultsTable extends StatelessWidget {
                     'Result',
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                          color: AppColors.primaryMain,
-                          fontWeight: FontWeight.w700,
-                          fontSize: 12,
-                        ),
+                      color: AppColors.primaryMain,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 12,
+                    ),
                   ),
                 ),
                 Expanded(
@@ -61,10 +58,10 @@ class DipstickResultsTable extends StatelessWidget {
                     'Reference Range',
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                          color: AppColors.primaryMain,
-                          fontWeight: FontWeight.w700,
-                          fontSize: 12,
-                        ),
+                      color: AppColors.primaryMain,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 12,
+                    ),
                   ),
                 ),
               ],
@@ -115,9 +112,9 @@ class _DipstickResultTableRow extends StatelessWidget {
                     row.code.length > 3 ? row.code.substring(0, 2) : row.code,
                     style: TextStyle(
                       color: dipstickCodeColor(row.code),
-                      fontSize: 11,
-                      fontWeight: FontWeight.w800,
-                      letterSpacing: -0.3,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w900,
+                      letterSpacing: 0,
                       height: 1.0,
                     ),
                     textAlign: TextAlign.center,
@@ -128,10 +125,10 @@ class _DipstickResultTableRow extends StatelessWidget {
                   child: Text(
                     row.name,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: AppColors.textPrimary,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500,
-                        ),
+                      color: AppColors.textPrimary,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ),
               ],
@@ -140,18 +137,28 @@ class _DipstickResultTableRow extends StatelessWidget {
           Expanded(
             flex: 2,
             child: Center(
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-                decoration: BoxDecoration(
-                  color: badgeBackground,
-                  borderRadius: BorderRadius.circular(999),
-                ),
-                child: Text(
-                  row.result,
-                  style: TextStyle(
-                    color: badgeColor,
-                    fontSize: 11,
-                    fontWeight: FontWeight.w700,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 2),
+                child: SizedBox(
+                  width: double.infinity,
+                  height: 34,
+                  child: Container(
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: badgeBackground,
+                      borderRadius: BorderRadius.circular(999),
+                    ),
+                    child: Text(
+                      row.result,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: badgeColor,
+                        fontSize: 11,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -163,9 +170,9 @@ class _DipstickResultTableRow extends StatelessWidget {
               row.referenceRange,
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: AppColors.textSecondary,
-                    fontSize: 11,
-                  ),
+                color: AppColors.textSecondary,
+                fontSize: 11,
+              ),
             ),
           ),
         ],

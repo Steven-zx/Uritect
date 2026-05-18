@@ -18,10 +18,7 @@ class AppLogo extends StatelessWidget {
     return SizedBox(
       width: size,
       height: size,
-      child: Image.asset(
-        'assets/photos/min urilogo.png',
-        fit: fit,
-      ),
+      child: Image.asset('assets/photos/minUriLogo.png', fit: fit),
     );
   }
 }
@@ -114,11 +111,8 @@ class StatusBadge extends StatelessWidget {
   final String label;
   final String status; // 'low', 'moderate', 'high'
 
-  const StatusBadge({
-    required this.label,
-    required this.status,
-    Key? key,
-  }) : super(key: key);
+  const StatusBadge({required this.label, required this.status, Key? key})
+    : super(key: key);
 
   Color getStatusColor() {
     switch (status) {
@@ -140,9 +134,7 @@ class StatusBadge extends StatelessWidget {
       decoration: BoxDecoration(
         color: getStatusColor().withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: getStatusColor().withValues(alpha: 0.3),
-        ),
+        border: Border.all(color: getStatusColor().withValues(alpha: 0.3)),
       ),
       child: Text(
         label,

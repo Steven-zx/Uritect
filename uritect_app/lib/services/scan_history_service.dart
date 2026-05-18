@@ -105,4 +105,41 @@ class ScanHistoryService {
     );
     return record;
   }
+
+  Future<bool> deleteRecord(String recordId) async {
+    final records = await loadRecords();
+    SavedScanRecord? recordToDelete;
+    final remaining = <SavedScanRecord>[];
+
+    for (final record in records) {
+      if (record.id == recordId) {
+        recordToDelete = record;
+      } else {
+        remaining.add(record);
+      }
+    }
+
+    if (recordToDelete == null) {
+      return false;
+    }
+
+    final file = await _indexFile();
+    await file.writeAsString(
+      const JsonEncoder.withIndent(
+        '  ',
+      ).convert(remaining.map((item) => item.toJson()).toList()),
+      flush: true,
+    );
+
+    final imagePath = recordToDelete.scanResult.imagePath;
+    if (imagePath.isNotEmpty) {
+      final directory = await _historyDirectory();
+      final imageFile = File(imagePath);
+      if (imagePath.startsWith(directory.path) && await imageFile.exists()) {
+        await imageFile.delete();
+      }
+    }
+
+    return true;
+  }
 }

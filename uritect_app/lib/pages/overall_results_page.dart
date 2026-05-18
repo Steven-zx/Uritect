@@ -4,7 +4,6 @@ import '../config/theme.dart';
 import '../models/clinical_symptoms.dart';
 import '../models/scan_model.dart';
 import '../models/screening_fusion.dart';
-import '../widgets/common_widgets.dart';
 import '../widgets/dipstick_results_table.dart';
 
 class OverallResultsPage extends StatelessWidget {
@@ -60,7 +59,7 @@ class OverallResultsPage extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const AppLogo(),
+                    const SizedBox(width: 64),
                     Column(
                       children: [
                         Text(
@@ -84,16 +83,7 @@ class OverallResultsPage extends StatelessWidget {
                         ),
                       ],
                     ),
-                    IconButton(
-                      onPressed: () {},
-                      icon: const Icon(Icons.help_outline_rounded, size: 20),
-                      color: AppColors.primaryMain,
-                      padding: EdgeInsets.zero,
-                      constraints: const BoxConstraints(
-                        minWidth: 32,
-                        minHeight: 32,
-                      ),
-                    ),
+                    const SizedBox(width: 64),
                   ],
                 ),
               ),
@@ -195,7 +185,7 @@ class OverallResultsPage extends StatelessWidget {
   Widget _riskCard(BuildContext context, ScreeningFusionResult fusionResult) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+      padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
       decoration: BoxDecoration(
         color: AppColors.bgCard,
         borderRadius: BorderRadius.circular(12),
@@ -211,7 +201,7 @@ class OverallResultsPage extends StatelessWidget {
                   'Risk Level',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     color: AppColors.textSecondary,
-                    fontSize: 26,
+                    fontSize: 16,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -223,16 +213,16 @@ class OverallResultsPage extends StatelessWidget {
                         : fusionResult.riskBucket == 'Moderate'
                         ? const Color(0xFFEB8C00)
                         : AppColors.statusHigh,
-                    fontSize: 35,
+                    fontSize: 24,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
-                const SizedBox(height: 2),
+                const SizedBox(height: 1),
                 Text(
-                  'Posterior risk: ${(fusionResult.posteriorProbability * 100).toStringAsFixed(1)}%.\nUse with dipstick and checklist context.',
+                  'Posterior risk: ${(fusionResult.posteriorProbability * 100).toStringAsFixed(1)}%',
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: AppColors.textSecondary,
-                    fontSize: 18,
+                    fontSize: 12,
                     height: 1.2,
                   ),
                 ),
@@ -241,9 +231,9 @@ class OverallResultsPage extends StatelessWidget {
           ),
           const SizedBox(width: 12),
           Container(
-            width: 62,
-            height: 62,
-            padding: const EdgeInsets.all(8),
+            width: 48,
+            height: 48,
+            padding: const EdgeInsets.all(6),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(16),
@@ -265,7 +255,7 @@ class OverallResultsPage extends StatelessWidget {
   ) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+      padding: const EdgeInsets.fromLTRB(12, 9, 12, 9),
       decoration: BoxDecoration(
         color: const Color(0xFFEAF7F9),
         borderRadius: BorderRadius.circular(18),
@@ -277,28 +267,30 @@ class OverallResultsPage extends StatelessWidget {
             'Possible Condition',
             style: Theme.of(context).textTheme.labelSmall?.copyWith(
               color: AppColors.primaryMain,
-              fontSize: 16,
+              fontSize: 13,
               fontWeight: FontWeight.w700,
             ),
           ),
+          const SizedBox(height: 2),
           Text(
             fusionResult.riskBucket == 'High'
                 ? 'Elevated UTI Screening Concern'
                 : 'Urinary Tract Infection (UTI)',
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
               color: const Color(0xFF004E7A),
-              fontSize: 25,
+              fontSize: 17,
               fontWeight: FontWeight.w700,
             ),
           ),
+          const SizedBox(height: 2),
           Text(
             'Based on the 4-pad screening set and clinical checklist',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
               color: AppColors.textSecondary,
-              fontSize: 15,
+              fontSize: 12,
             ),
           ),
-          const SizedBox(height: 4),
+          const SizedBox(height: 2),
           Text(
             'Symptoms reported: $selectedCount/${clinicalSymptoms.length}',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(

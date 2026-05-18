@@ -135,7 +135,9 @@ class LocalScanAnalysisService {
     );
 
     final features = <String, List<double>>{};
+    final hues = <double>[];
     final saturationScores = <double>[];
+    final values = <double>[];
 
     for (var i = 0; i < _analyteOrder.length; i++) {
       final baseY = _padY(marker.top, pixelsPerMm, grid.globalYShift, i);
@@ -167,20 +169,37 @@ class LocalScanAnalysisService {
           ? _meanLab(image, roi, gains)
           : _meanHsv(image, roi, gains);
       features[_analyteOrder[i]] = feature;
-      saturationScores.add(_meanSaturation(image, roi, gains));
+      if (featureSpace == 'lab') {
+        saturationScores.add(_meanSaturation(image, roi, gains));
+      } else {
+        hues.add(feature[0]);
+        saturationScores.add(feature[1]);
+        values.add(feature[2]);
+      }
     }
 
-    final colorScore = saturationScores.isEmpty
+    final hueStd = hues.length < 2 ? 0.0 : _circularHueStd(hues);
+    final saturationMean = saturationScores.isEmpty
         ? 0.0
-        : saturationScores.reduce((a, b) => a + b) /
-              saturationScores.length *
-              18.0;
+        : saturationScores.reduce((a, b) => a + b) / saturationScores.length;
+    final saturationStd = _stdDev(saturationScores);
+    final valueStd = _stdDev(values);
+    final colorScore = saturationScores.isEmpty ? 0.0 : saturationMean * 18.0;
     final quality =
         markerCandidate.score + grid.score + colorScore + (features.length * 2);
     return _FeatureExtraction(
       variantName: variantName,
       featuresByAnalyte: features,
       qualityScore: quality,
+      markerScore: markerCandidate.score,
+      markerPatternScore: markerCandidate.patternScore,
+      markerFillRatio: markerCandidate.fillRatio,
+      markerAspectRatio: markerCandidate.normalizedAspect,
+      gridScore: grid.score,
+      hueStd: hueStd,
+      saturationMean: saturationMean,
+      saturationStd: saturationStd,
+      valueStd: valueStd,
     );
   }
 
@@ -217,16 +236,16 @@ class LocalScanAnalysisService {
         }
         final fill =
             component.area / math.max(1, component.width * component.height);
-        if (fill < 0.10) {
+        if (fill < 0.06 || fill > 0.96) {
           continue;
         }
         if (_touchesBorder(component, work.width, work.height)) {
           continue;
         }
 
-        final patternScore = _markerPatternScore(work, component);
+        final pattern = _markerPatternQuality(work, component);
         final score =
-            patternScore +
+            (pattern.score * 8.0) +
             math.min(component.area / (work.width * work.height * 0.04), 1.5);
         final scaled = _Rect(
           left: (component.left / scale).round(),
@@ -235,7 +254,15 @@ class LocalScanAnalysisService {
           height: (component.height / scale).round(),
           area: (component.area / (scale * scale)).round(),
         );
-        candidates.add(_MarkerCandidate(rect: scaled, score: score));
+        candidates.add(
+          _MarkerCandidate(
+            rect: scaled,
+            score: score,
+            patternScore: pattern.score,
+            fillRatio: fill,
+            normalizedAspect: normalizedAspect,
+          ),
+        );
       }
     }
 
@@ -435,6 +462,25 @@ class LocalScanAnalysisService {
     return math.sqrt(variance);
   }
 
+  double _circularHueStd(List<double> hues) {
+    if (hues.length < 2) {
+      return 0.0;
+    }
+
+    var sinSum = 0.0;
+    var cosSum = 0.0;
+    for (final hue in hues) {
+      final radians = hue * math.pi / 180.0;
+      sinSum += math.sin(radians);
+      cosSum += math.cos(radians);
+    }
+
+    final meanResultantLength =
+        math.sqrt((sinSum * sinSum) + (cosSum * cosSum)) / hues.length;
+    final safeLength = meanResultantLength.clamp(0.000001, 1.0);
+    return math.sqrt(-2.0 * math.log(safeLength)) * 180.0 / math.pi;
+  }
+
   int _darkThreshold(img.Image image) {
     var sum = 0.0;
     var count = 0;
@@ -519,7 +565,7 @@ class LocalScanAnalysisService {
         rect.top + rect.height >= height - margin;
   }
 
-  double _markerPatternScore(img.Image image, _Rect rect) {
+  _MarkerPatternQuality _markerPatternQuality(img.Image image, _Rect rect) {
     final border = <double>[];
     final center = <double>[];
     final x0 = rect.left;
@@ -554,11 +600,28 @@ class LocalScanAnalysisService {
       }
     }
     if (border.isEmpty || center.isEmpty) {
-      return 0.0;
+      return const _MarkerPatternQuality(
+        score: 0.0,
+        borderMean: 1.0,
+        centerMean: 0.0,
+        isValid: false,
+      );
     }
     final borderMean = border.reduce((a, b) => a + b) / border.length;
     final centerMean = center.reduce((a, b) => a + b) / center.length;
-    return (1.0 - borderMean) + centerMean + ((centerMean - borderMean) * 2.0);
+    final contrast = centerMean - borderMean;
+    final score = (1.0 - borderMean) + centerMean + (contrast * 2.0);
+    final isValid =
+        borderMean <= 0.70 &&
+        centerMean >= 0.28 &&
+        contrast >= 0.10 &&
+        score >= 1.10;
+    return _MarkerPatternQuality(
+      score: score,
+      borderMean: borderMean,
+      centerMean: centerMean,
+      isValid: isValid,
+    );
   }
 
   _Rect _markerCenterPatch(img.Image image, _Rect marker) {
@@ -730,6 +793,9 @@ Map<String, dynamic> _analyzeScanInBackground(
     baseImage,
     referenceMap.featureSpace,
   );
+  if (!_looksLikeReadableDipstick(extraction)) {
+    throw StateError('NO_DIPSTICK_FOUND');
+  }
 
   final rows = <DipstickResultRow>[];
   final screeningProbabilities = <String, double>{};
@@ -783,6 +849,21 @@ Map<String, dynamic> _analyzeScanInBackground(
     padsDetected: extraction.featuresByAnalyte.length,
     padsUnavailable: _analyteOrder.length - extraction.featuresByAnalyte.length,
   ).toJson();
+}
+
+bool _looksLikeReadableDipstick(_FeatureExtraction extraction) {
+  final hasEnoughPads = extraction.featuresByAnalyte.length >= 6;
+  final hasReadableMarker =
+      extraction.markerPatternScore >= 0.95 &&
+      extraction.markerFillRatio >= 0.06 &&
+      extraction.markerFillRatio <= 0.96 &&
+      extraction.markerAspectRatio <= 2.8;
+  final hasAnyStripSignal =
+      extraction.saturationMean >= 0.02 ||
+      extraction.saturationStd >= 0.012 ||
+      extraction.valueStd >= 0.025 ||
+      extraction.hueStd >= 5.0;
+  return hasEnoughPads && hasReadableMarker && hasAnyStripSignal;
 }
 
 class _ReferenceMap {
@@ -916,19 +997,60 @@ class _FeatureExtraction {
   final String variantName;
   final Map<String, List<double>> featuresByAnalyte;
   final double qualityScore;
+  final double markerScore;
+  final double markerPatternScore;
+  final double markerFillRatio;
+  final double markerAspectRatio;
+  final double gridScore;
+  final double hueStd;
+  final double saturationMean;
+  final double saturationStd;
+  final double valueStd;
 
   const _FeatureExtraction({
     required this.variantName,
     required this.featuresByAnalyte,
     required this.qualityScore,
+    required this.markerScore,
+    required this.markerPatternScore,
+    required this.markerFillRatio,
+    required this.markerAspectRatio,
+    required this.gridScore,
+    required this.hueStd,
+    required this.saturationMean,
+    required this.saturationStd,
+    required this.valueStd,
   });
 }
 
 class _MarkerCandidate {
   final _Rect rect;
   final double score;
+  final double patternScore;
+  final double fillRatio;
+  final double normalizedAspect;
 
-  const _MarkerCandidate({required this.rect, required this.score});
+  const _MarkerCandidate({
+    required this.rect,
+    required this.score,
+    required this.patternScore,
+    required this.fillRatio,
+    required this.normalizedAspect,
+  });
+}
+
+class _MarkerPatternQuality {
+  final double score;
+  final double borderMean;
+  final double centerMean;
+  final bool isValid;
+
+  const _MarkerPatternQuality({
+    required this.score,
+    required this.borderMean,
+    required this.centerMean,
+    required this.isValid,
+  });
 }
 
 class _PadGrid {

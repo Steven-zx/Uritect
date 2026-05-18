@@ -5,7 +5,6 @@ import '../models/clinical_symptoms.dart';
 import '../models/scan_model.dart';
 import '../models/screening_fusion.dart';
 import '../services/scan_history_service.dart';
-import '../widgets/common_widgets.dart';
 import 'overall_results_page.dart';
 
 class SymptomChecklistPage extends StatefulWidget {
@@ -104,7 +103,7 @@ class _SymptomChecklistPageState extends State<SymptomChecklistPage> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const AppLogo(),
+                    const SizedBox(width: 64),
                     Expanded(
                       child: Column(
                         children: [
@@ -131,16 +130,7 @@ class _SymptomChecklistPageState extends State<SymptomChecklistPage> {
                         ],
                       ),
                     ),
-                    IconButton(
-                      onPressed: () {},
-                      icon: const Icon(Icons.help_outline_rounded, size: 20),
-                      color: AppColors.primaryMain,
-                      padding: EdgeInsets.zero,
-                      constraints: const BoxConstraints(
-                        minWidth: 32,
-                        minHeight: 32,
-                      ),
-                    ),
+                    const SizedBox(width: 64),
                   ],
                 ),
               ),

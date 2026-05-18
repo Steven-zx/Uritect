@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../config/theme.dart';
-import '../widgets/common_widgets.dart';
+import 'capture_dipstick_page.dart';
 import '../widgets/dipstick_results_table.dart';
 import 'symptom_checklist_page.dart';
 import '../models/scan_model.dart';
@@ -22,7 +22,7 @@ class ResultsPage extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const AppLogo(),
+                  const SizedBox(width: 64),
                   Column(
                     children: [
                       Text(
@@ -43,16 +43,7 @@ class ResultsPage extends StatelessWidget {
                       ),
                     ],
                   ),
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.help_outline_rounded, size: 20),
-                    color: AppColors.primaryMain,
-                    padding: EdgeInsets.zero,
-                    constraints: const BoxConstraints(
-                      minWidth: 32,
-                      minHeight: 32,
-                    ),
-                  ),
+                  const SizedBox(width: 64),
                 ],
               ),
             ),
@@ -150,9 +141,14 @@ class ResultsPage extends StatelessWidget {
                       width: double.infinity,
                       height: 52,
                       child: OutlinedButton(
-                        onPressed: () => Navigator.of(
-                          context,
-                        ).popUntil((route) => route.isFirst),
+                        onPressed: () {
+                          Navigator.of(context).pushAndRemoveUntil(
+                            MaterialPageRoute(
+                              builder: (_) => const CaptureDipstickPage(),
+                            ),
+                            (route) => route.isFirst,
+                          );
+                        },
                         style: OutlinedButton.styleFrom(
                           foregroundColor: AppColors.primaryMain,
                           side: BorderSide(color: AppColors.border, width: 1.4),

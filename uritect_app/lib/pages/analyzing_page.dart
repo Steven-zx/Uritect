@@ -7,6 +7,8 @@ import '../models/scan_model.dart';
 import '../services/scan_analysis_service.dart';
 import 'results_page.dart';
 
+enum ScanAnalysisExitReason { noDipstickFound }
+
 class AnalyzingPage extends StatefulWidget {
   final String imagePath;
 
@@ -56,6 +58,10 @@ class _AnalyzingPageState extends State<AnalyzingPage> {
         })
         .catchError((error) {
           if (!mounted) return;
+          if (_isNoDipstickError(error)) {
+            Navigator.of(context).pop(ScanAnalysisExitReason.noDipstickFound);
+            return;
+          }
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Scan analysis failed: $error')),
           );
@@ -114,6 +120,13 @@ class _AnalyzingPageState extends State<AnalyzingPage> {
       _ => reported,
     };
     return stageTarget > _targetProgress ? stageTarget : _targetProgress;
+  }
+
+  bool _isNoDipstickError(Object error) {
+    final message = error.toString().toLowerCase();
+    return message.contains('no_dipstick_found') ||
+        message.contains('could not localize enough dipstick pads') ||
+        message.contains('no readable dipstick');
   }
 
   @override
