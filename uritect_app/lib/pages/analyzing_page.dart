@@ -3,11 +3,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../config/theme.dart';
+import '../models/scan_analysis_exit_reason.dart';
 import '../models/scan_model.dart';
 import '../services/scan_analysis_service.dart';
 import 'results_page.dart';
-
-enum ScanAnalysisExitReason { noDipstickFound }
 
 class AnalyzingPage extends StatefulWidget {
   final String imagePath;

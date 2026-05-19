@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../config/theme.dart';
+import '../models/scan_analysis_exit_reason.dart';
 import 'analyzing_page.dart';
 
 class CaptureDipstickPage extends StatefulWidget {
@@ -118,6 +119,8 @@ class _CaptureDipstickPageState extends State<CaptureDipstickPage> {
     if (!mounted) return;
     if (exitReason == ScanAnalysisExitReason.noDipstickFound) {
       await _showNoDipstickDialog();
+    } else if (exitReason == ScanAnalysisExitReason.scanAgain) {
+      _clearPendingImage();
     }
   }
 

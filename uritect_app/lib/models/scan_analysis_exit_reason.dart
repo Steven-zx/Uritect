@@ -1,0 +1,1 @@
+enum ScanAnalysisExitReason { noDipstickFound, scanAgain }

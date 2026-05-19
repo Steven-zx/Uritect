@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../config/theme.dart';
-import 'capture_dipstick_page.dart';
+import '../models/scan_analysis_exit_reason.dart';
 import '../widgets/dipstick_results_table.dart';
 import 'symptom_checklist_page.dart';
 import '../models/scan_model.dart';
@@ -142,12 +142,9 @@ class ResultsPage extends StatelessWidget {
                       height: 52,
                       child: OutlinedButton(
                         onPressed: () {
-                          Navigator.of(context).pushAndRemoveUntil(
-                            MaterialPageRoute(
-                              builder: (_) => const CaptureDipstickPage(),
-                            ),
-                            (route) => route.isFirst,
-                          );
+                          Navigator.of(
+                            context,
+                          ).pop(ScanAnalysisExitReason.scanAgain);
                         },
                         style: OutlinedButton.styleFrom(
                           foregroundColor: AppColors.primaryMain,
