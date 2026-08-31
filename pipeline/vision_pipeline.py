@@ -3,7 +3,7 @@
 Vision pipeline for urinalysis burst processing.
 
 Implements the sequence:
-1) Geometric rectification (Macro-Marker contour + perspective transform)
+1) Optional geometric rectification (Macro-Marker contour + perspective transform) or fallback resize
 2) Radiometric normalization (AWB using 10x10 marker-center patch)
 3) Spatial segmentation (fixed pad grid via marker-calibrated px/mm)
 4) Signal cleaning (temporal median across burst)
@@ -496,23 +496,41 @@ class MacroMarkerRectifier:
         return best_quad
 
     def rectify(self, image_bgr: np.ndarray) -> RectificationResult:
-        src = self.detect_marker_corners(image_bgr)
-        dst = self._destination_marker_corners()
+        try:
+            src = self.detect_marker_corners(image_bgr)
+            dst = self._destination_marker_corners()
 
-        homography = cv2.getPerspectiveTransform(src, dst)
-        rectified = cv2.warpPerspective(
-            image_bgr,
-            homography,
-            (self.config.output_width_px, self.config.output_height_px),
-            flags=cv2.INTER_LINEAR,
-        )
+            homography = cv2.getPerspectiveTransform(src, dst)
+            rectified = cv2.warpPerspective(
+                image_bgr,
+                homography,
+                (self.config.output_width_px, self.config.output_height_px),
+                flags=cv2.INTER_LINEAR,
+            )
 
-        return RectificationResult(
-            rectified_bgr=rectified,
-            marker_corners_src=src,
-            marker_corners_dst=dst,
-            homography=homography,
-        )
+            return RectificationResult(
+                rectified_bgr=rectified,
+                marker_corners_src=src,
+                marker_corners_dst=dst,
+                homography=homography,
+            )
+        except ValueError:
+            # Fallback when marker detection fails: resize image to canonical output
+            # size and continue without raising. This enables processing datasets
+            # that do not include a Macro-Marker.
+            rectified = cv2.resize(
+                image_bgr, (self.config.output_width_px, self.config.output_height_px),
+                interpolation=cv2.INTER_LINEAR,
+            )
+            dst = self._destination_marker_corners()
+            homography = np.eye(3, dtype=np.float32)
+            src = np.zeros((4, 2), dtype=np.float32)
+            return RectificationResult(
+                rectified_bgr=rectified,
+                marker_corners_src=src,
+                marker_corners_dst=dst,
+                homography=homography,
+            )
 
 
 class AdaptiveWhiteBalancer:

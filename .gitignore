@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Local virtual environment
+.venv/
+
+# Local datasets and raw capture archives
+new_uritect_dataset/
+*.zip
+
+# Generated validation smoke outputs
+pipeline/output/app_scan_batch_predictions_smoke.csv
+pipeline/output/app_scan_batch_validation_smoke.json
+
+# Flutter and platform build artifacts
+uritect_app/.dart_tool/
+uritect_app/.flutter-plugins
+uritect_app/.flutter-plugins-dependencies
+uritect_app/.idea/
+uritect_app/build/
+uritect_app/android/.gradle/
+uritect_app/android/.kotlin/
+uritect_app/android/local.properties
+uritect_app/ios/Flutter/Generated.xcconfig
+uritect_app/ios/Flutter/flutter_export_environment.sh
+uritect_app/ios/Flutter/ephemeral/
+uritect_app/linux/flutter/ephemeral/
+uritect_app/macos/Flutter/ephemeral/
+uritect_app/windows/flutter/ephemeral/

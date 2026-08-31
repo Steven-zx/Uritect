@@ -1,0 +1,112 @@
+{
+  "Bilirubin": {
+    "model_version": "optimized_semiquant_knn_v1_lauaan_20260830",
+    "k": 31,
+    "metric": "euclidean",
+    "feature_transform": "circular_scaled",
+    "feature_space": "normalized_hsv",
+    "n_samples": 1984,
+    "n_levels": 4,
+    "accuracy": 0.756,
+    "model_file": "bilirubin_knn_model.pkl"
+  },
+  "Blood": {
+    "model_version": "optimized_semiquant_knn_v1_lauaan_20260830",
+    "k": 31,
+    "metric": "chebyshev",
+    "feature_transform": "circular_scaled",
+    "feature_space": "normalized_hsv",
+    "n_samples": 1984,
+    "n_levels": 6,
+    "accuracy": 0.875,
+    "model_file": "blood_knn_model.pkl"
+  },
+  "Glucose": {
+    "model_version": "optimized_semiquant_knn_v1_lauaan_20260830",
+    "k": 31,
+    "metric": "chebyshev",
+    "feature_transform": "raw",
+    "feature_space": "normalized_hsv",
+    "n_samples": 1984,
+    "n_levels": 6,
+    "accuracy": 0.9108,
+    "model_file": "glucose_knn_model.pkl"
+  },
+  "Ketone": {
+    "model_version": "optimized_semiquant_knn_v1_lauaan_20260830",
+    "k": 31,
+    "metric": "chebyshev",
+    "feature_transform": "circular_scaled",
+    "feature_space": "normalized_hsv",
+    "n_samples": 1984,
+    "n_levels": 6,
+    "accuracy": 0.8307,
+    "model_file": "ketone_knn_model.pkl"
+  },
+  "Leukocytes": {
+    "model_version": "optimized_semiquant_knn_v1_lauaan_20260830",
+    "k": 31,
+    "metric": "chebyshev",
+    "feature_transform": "circular_scaled",
+    "feature_space": "normalized_hsv",
+    "n_samples": 1984,
+    "n_levels": 5,
+    "accuracy": 0.8196,
+    "model_file": "leukocytes_knn_model.pkl"
+  },
+  "Nitrite": {
+    "model_version": "optimized_semiquant_knn_v1_lauaan_20260830",
+    "k": 5,
+    "metric": "euclidean",
+    "feature_transform": "scaled",
+    "feature_space": "normalized_hsv",
+    "n_samples": 1984,
+    "n_levels": 2,
+    "accuracy": 0.9375,
+    "model_file": "nitrite_knn_model.pkl"
+  },
+  "Protein": {
+    "model_version": "optimized_semiquant_knn_v1_lauaan_20260830",
+    "k": 31,
+    "metric": "euclidean",
+    "feature_transform": "scaled",
+    "feature_space": "normalized_hsv",
+    "n_samples": 1984,
+    "n_levels": 6,
+    "accuracy": 0.874,
+    "model_file": "protein_knn_model.pkl"
+  },
+  "Specific Gravity": {
+    "model_version": "optimized_semiquant_knn_v1_lauaan_20260830",
+    "k": 21,
+    "metric": "manhattan",
+    "feature_transform": "raw",
+    "feature_space": "normalized_hsv",
+    "n_samples": 1984,
+    "n_levels": 7,
+    "accuracy": 0.56,
+    "model_file": "specific_gravity_knn_model.pkl"
+  },
+  "Urobilinogen": {
+    "model_version": "optimized_semiquant_knn_v1_lauaan_20260830",
+    "k": 31,
+    "metric": "manhattan",
+    "feature_transform": "circular_scaled",
+    "feature_space": "normalized_hsv",
+    "n_samples": 1984,
+    "n_levels": 5,
+    "accuracy": 0.9032,
+    "model_file": "urobilinogen_knn_model.pkl"
+  },
+  "pH": {
+    "model_version": "optimized_semiquant_knn_v1_lauaan_20260830",
+    "k": 31,
+    "metric": "euclidean",
+    "feature_transform": "circular_scaled",
+    "feature_space": "normalized_hsv",
+    "n_samples": 1984,
+    "n_levels": 7,
+    "accuracy": 0.743,
+    "model_file": "ph_knn_model.pkl"
+  }
+}

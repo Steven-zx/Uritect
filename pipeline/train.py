@@ -1143,13 +1143,11 @@ def merge_reference_maps(
     semiquant_map: dict[str, list[dict[str, Any]]],
     binary_map: dict[str, list[dict[str, Any]]],
 ) -> dict[str, list[dict[str, Any]]]:
-    merged: dict[str, list[dict[str, Any]]] = {}
-    for analyte_name in ANALYTE_ORDER:
-        if analyte_name in semiquant_map and semiquant_map[analyte_name]:
-            merged[analyte_name] = semiquant_map[analyte_name]
-        elif analyte_name in binary_map and binary_map[analyte_name]:
-            merged[analyte_name] = binary_map[analyte_name]
-    return merged
+    return {
+        analyte_name: semiquant_map[analyte_name]
+        for analyte_name in ANALYTE_ORDER
+        if analyte_name in semiquant_map and semiquant_map[analyte_name]
+    }
 
 
 def main() -> None:
@@ -1266,7 +1264,7 @@ def main() -> None:
         ),
         feature_space=feature_space,
     )
-    binary_map = build_binary_reference_map(binary_rows)
+    binary_map: dict[str, list[dict[str, Any]]] = {}
     merged_map = merge_reference_maps(semiquant_map, binary_map)
 
     if not merged_map:
@@ -1279,7 +1277,7 @@ def main() -> None:
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "total_samples": len(rows),
         "reference_color_space": feature_space,
-        "reference_strategy": "semiquant_preferred_with_binary_fallback",
+        "reference_strategy": "semiquant_only",
         "event_hsv_centering": {
             "enabled": event_center_enabled,
             "mode": args.event_center_mode,
@@ -1319,8 +1317,7 @@ def main() -> None:
             "burst_temporal_median",
             "mean_hsv_features",
             "smote_augmentation",
-            "knn_bruteforce_k5",
-            "bayesian_fusion_and_risk",
+            "semiquant_knn",
         ],
         "analytes": merged_map,
     }

@@ -1,22 +1,19 @@
 #!/usr/bin/env python3
-"""Run a single dipstick image through the vision + KNN pipeline and emit JSON.
+"""Run a single dipstick image through the semiquant vision + KNN pipeline.
 
-This is a runtime bridge for the Flutter app. It reuses the existing pipeline
-surface:
+This is the runtime bridge for the Flutter app's 10-parameter semiquant flow:
 1) geometric rectification
 2) marker-center AWB
 3) pad slicing
-4) HSV feature extraction
-5) KNN reference-map prediction
-6) provisional Bayesian visual fusion
-
-The final checklist-adjusted Bayesian fusion still happens in the app.
+4) normalized HSV feature extraction
+5) optimized per-analyte semiquant KNN prediction
 """
 
 from __future__ import annotations
 
 import argparse
 import json
+import pickle
 from pathlib import Path
 from typing import Any
 
@@ -25,7 +22,6 @@ import numpy as np
 from PIL import Image, ImageOps
 
 try:
-    from .bayesian_fusion_lr import BayesianFusionLREngine
     from .evaluate_semiquant import (
         AbstainConfig,
         EventCenteringConfig,
@@ -42,7 +38,6 @@ except ImportError:
     if str(workspace_root) not in sys.path:
         sys.path.insert(0, str(workspace_root))
 
-    from pipeline.bayesian_fusion_lr import BayesianFusionLREngine
     from pipeline.evaluate_semiquant import (
         AbstainConfig,
         EventCenteringConfig,
@@ -75,7 +70,7 @@ def parse_args() -> argparse.Namespace:
         "--map",
         type=Path,
         default=None,
-        help="Path to knn_reference_map.json (defaults to current or legacy reference map).",
+        help="Optional legacy knn_reference_map.json path. Omit to use optimized semiquant models.",
     )
     parser.add_argument(
         "--distance-weight-profile",
@@ -126,6 +121,78 @@ def _reference_map_path(root: Path) -> Path:
     if legacy.exists():
         return legacy
     raise FileNotFoundError("No KNN reference map found in pipeline/output.")
+
+
+def _optimized_models_dir(root: Path) -> Path:
+    return root / "pipeline" / "output" / "semiquant_models"
+
+
+def _load_optimized_models(models_dir: Path) -> tuple[dict[str, Any], dict[str, Any]]:
+    metadata_path = models_dir / "semiquant_models_metadata.json"
+    if not metadata_path.exists():
+        return {}, {}
+
+    with metadata_path.open(encoding="utf-8") as file:
+        metadata = json.load(file)
+
+    models: dict[str, Any] = {}
+    for analyte, info in metadata.items():
+        if not isinstance(info, dict):
+            continue
+        model_file = info.get("model_file")
+        if not model_file:
+            continue
+        model_path = models_dir / str(model_file)
+        if not model_path.exists():
+            continue
+        with model_path.open("rb") as file:
+            models[analyte] = pickle.load(file)
+
+    return models, metadata
+
+
+def _optimized_model_version(metadata: dict[str, Any]) -> str:
+    versions = {
+        str(info.get("model_version", "")).strip()
+        for info in metadata.values()
+        if isinstance(info, dict) and info.get("model_version")
+    }
+    if len(versions) == 1:
+        return versions.pop()
+    return "optimized_semiquant_knn_v1_lauaan_20260830"
+
+
+def _predict_with_optimized_model(
+    analyte: str,
+    h: float,
+    s: float,
+    v: float,
+    models: dict[str, Any],
+) -> tuple[str | None, float, float, float]:
+    model = models.get(analyte)
+    if model is None:
+        return None, 0.0, 0.0, 0.0
+
+    features = [[float(h), float(s), float(v)]]
+    predicted = str(model.predict(features)[0])
+
+    confidence = 1.0
+    margin = 1.0
+    if hasattr(model, "predict_proba"):
+        probabilities = model.predict_proba(features)[0]
+        ordered = sorted((float(value) for value in probabilities), reverse=True)
+        confidence = ordered[0] if ordered else 1.0
+        margin = ordered[0] - ordered[1] if len(ordered) > 1 else ordered[0]
+
+    distance = 0.0
+    if hasattr(model, "kneighbors"):
+        try:
+            distances, _ = model.kneighbors(features, n_neighbors=1)
+            distance = float(distances[0][0])
+        except Exception:
+            distance = 0.0
+
+    return predicted, confidence, distance, margin
 
 
 def _load_exif_corrected_bgr(image_path: Path) -> np.ndarray:
@@ -239,15 +306,30 @@ def run_scan(
         except Exception:
             pass
 
-    map_path = Path(map_path).resolve() if map_path is not None else _reference_map_path(root)
+    optimized_models, optimized_metadata = ({}, {})
+    models_dir = _optimized_models_dir(root)
+    if map_path is None:
+        optimized_models, optimized_metadata = _load_optimized_models(models_dir)
+
+    if map_path is not None:
+        map_path = Path(map_path).resolve()
+    elif optimized_models:
+        map_path = None
+    else:
+        map_path = _reference_map_path(root)
     if progress_callback:
         try:
             progress_callback("map_loaded", 10)
         except Exception:
             pass
 
-    refs, map_centering = load_reference_map(map_path)
-    feature_space = map_centering.feature_space
+    refs = {}
+    map_centering = None
+    if optimized_models:
+        feature_space = "normalized_hsv"
+    else:
+        refs, map_centering = load_reference_map(map_path)
+        feature_space = map_centering.feature_space
 
     if progress_callback:
         try:
@@ -266,16 +348,16 @@ def run_scan(
 
     distance_weights = _load_distance_weights(distance_weight_profile, None)
     abstain_config = AbstainConfig(enabled=False, min_confidence=0.0, min_margin=0.0, max_distance=999.0)
-    centering_config = EventCenteringConfig(
-        enabled=False,
-        target_h=map_centering.target_h,
-        target_s=map_centering.target_s,
-        target_v=map_centering.target_v,
-        mode=map_centering.mode,
-        target_by_light=map_centering.target_by_light,
-    )
-
-    screening_probabilities: dict[str, float] = {}
+    centering_config = None
+    if map_centering is not None:
+        centering_config = EventCenteringConfig(
+            enabled=False,
+            target_h=map_centering.target_h,
+            target_s=map_centering.target_s,
+            target_v=map_centering.target_v,
+            mode=map_centering.mode,
+            target_by_light=map_centering.target_by_light,
+        )
 
     for analyte in ANALYTE_ORDER:
         col = burst.features_by_pad.get(analyte)
@@ -289,25 +371,36 @@ def run_scan(
             h, s, v = 0.0, 0.0, 0.0
         else:
             h, s, v = col
-            h, s, v = apply_event_centering(
-                h,
-                s,
-                v,
-                event_id="",
-                light_kelvin="",
-                event_anchors={},
-                config=centering_config,
-            )
-            predicted_level, confidence, distance, margin, was_abstained = predict_one(
-                analyte,
-                h,
-                s,
-                v,
-                refs,
-                distance_weights,
-                abstain_config,
-                feature_space=feature_space,
-            )
+            if optimized_models:
+                predicted_level, confidence, distance, margin = _predict_with_optimized_model(
+                    analyte,
+                    h,
+                    s,
+                    v,
+                    optimized_models,
+                )
+                was_abstained = False
+            else:
+                if centering_config is not None:
+                    h, s, v = apply_event_centering(
+                        h,
+                        s,
+                        v,
+                        event_id="",
+                        light_kelvin="",
+                        event_anchors={},
+                        config=centering_config,
+                    )
+                predicted_level, confidence, distance, margin, was_abstained = predict_one(
+                    analyte,
+                    h,
+                    s,
+                    v,
+                    refs,
+                    distance_weights,
+                    abstain_config,
+                    feature_space=feature_space,
+                )
 
             if predicted_level is None or was_abstained:
                 level = "Unavailable"
@@ -350,12 +443,11 @@ def run_scan(
         
         feature_rows.append(row_data)
 
-        if code in {"GLU", "LEU", "PRO", "NIT"}:
-            screening_probabilities[code] = abnormal_probability
-
-    knn_abnormal_prob = sum(screening_probabilities.values()) / len(screening_probabilities) if screening_probabilities else 0.0
-    fusion_engine = BayesianFusionLREngine(prior_abnormal=0.5)
-    provisional_fusion = fusion_engine.fuse(knn_abnormal_prob=knn_abnormal_prob, selected_symptoms={})
+    average_confidence = (
+        sum(float(row["confidence"]) for row in feature_rows) / len(feature_rows)
+        if feature_rows
+        else 0.0
+    )
 
     if progress_callback:
         try:
@@ -371,13 +463,14 @@ def run_scan(
         "id": f"scan_{image_path.stem}",
         "date": None,
         "image_path": str(image_path),
-        "status": provisional_fusion["risk_bucket"].lower(),
-        "confidence": provisional_fusion["posterior_probability"],
-        "posterior_probability": provisional_fusion["posterior_probability"],
-        "risk_bucket": provisional_fusion["risk_bucket"],
-        "model_version": map_path.name,
-        "reference_map_path": str(map_path),
-        "pipeline_version": "vision_pipeline_hsv_knn",
+        "status": "complete",
+        "confidence": round(float(average_confidence), 6),
+        "posterior_probability": None,
+        "risk_bucket": None,
+        "model_version": _optimized_model_version(optimized_metadata) if optimized_models else map_path.name,
+        "reference_map_path": str(map_path) if map_path is not None else None,
+        "optimized_models_path": str(models_dir) if optimized_models else None,
+        "pipeline_version": "vision_pipeline_optimized_semiquant_knn" if optimized_models else "vision_pipeline_hsv_knn",
         "feature_space": feature_space,
         "image_orientation_variant": orientation_variant,
         "image_orientation_quality": round(float(orientation_quality), 6),
@@ -389,8 +482,8 @@ def run_scan(
         "pads_detected": pads_detected,
         "pads_unavailable": pads_unavailable,
         "analytes": feature_rows,
-        "screening_probabilities": screening_probabilities,
-        "provisional_visual_fusion": provisional_fusion,
+        "screening_probabilities": {},
+        "provisional_visual_fusion": None,
     }
 
     if progress_callback:

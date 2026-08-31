@@ -1,0 +1,82 @@
+{
+  "Bilirubin": {
+    "samples": 1984,
+    "levels": 4,
+    "best_k": 31,
+    "best_metric": "euclidean",
+    "feature_transform": "circular_scaled",
+    "accuracy": 0.756
+  },
+  "Blood": {
+    "samples": 1984,
+    "levels": 6,
+    "best_k": 31,
+    "best_metric": "chebyshev",
+    "feature_transform": "circular_scaled",
+    "accuracy": 0.875
+  },
+  "Glucose": {
+    "samples": 1984,
+    "levels": 6,
+    "best_k": 31,
+    "best_metric": "chebyshev",
+    "feature_transform": "raw",
+    "accuracy": 0.9108
+  },
+  "Ketone": {
+    "samples": 1984,
+    "levels": 6,
+    "best_k": 31,
+    "best_metric": "chebyshev",
+    "feature_transform": "circular_scaled",
+    "accuracy": 0.8307
+  },
+  "Leukocytes": {
+    "samples": 1984,
+    "levels": 5,
+    "best_k": 31,
+    "best_metric": "chebyshev",
+    "feature_transform": "circular_scaled",
+    "accuracy": 0.8196
+  },
+  "Nitrite": {
+    "samples": 1984,
+    "levels": 2,
+    "best_k": 5,
+    "best_metric": "euclidean",
+    "feature_transform": "scaled",
+    "accuracy": 0.9375
+  },
+  "Protein": {
+    "samples": 1984,
+    "levels": 6,
+    "best_k": 31,
+    "best_metric": "euclidean",
+    "feature_transform": "scaled",
+    "accuracy": 0.874
+  },
+  "Specific Gravity": {
+    "samples": 1984,
+    "levels": 7,
+    "best_k": 21,
+    "best_metric": "manhattan",
+    "feature_transform": "raw",
+    "accuracy": 0.56
+  },
+  "Urobilinogen": {
+    "samples": 1984,
+    "levels": 5,
+    "best_k": 31,
+    "best_metric": "manhattan",
+    "feature_transform": "circular_scaled",
+    "accuracy": 0.9032
+  },
+  "pH": {
+    "samples": 1984,
+    "levels": 7,
+    "best_k": 31,
+    "best_metric": "euclidean",
+    "feature_transform": "circular_scaled",
+    "accuracy": 0.743
+  }
+}

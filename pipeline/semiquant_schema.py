@@ -44,6 +44,8 @@ _LEVEL_ALIASES: dict[str, dict[str, str]] = {
         "negative": "Neg",
         "neg": "Neg",
         "trace": "Trace",
+        "1": "1.0",
+        "3": "3.0",
         "20": ">=20.0",
         "20.0": ">=20.0",
         ">20": ">=20.0",
@@ -66,6 +68,7 @@ _LEVEL_ALIASES: dict[str, dict[str, str]] = {
         "1.01": "1.010",
         "1.02": "1.020",
         "1.03": "1.030",
+        "1010.0": "1.010",
     },
     "Ketone": {
         "negative": "Neg",

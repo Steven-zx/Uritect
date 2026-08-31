@@ -13,6 +13,7 @@ class ScanAnalysisService {
 
   static const bool _useDevScanServer = bool.fromEnvironment(
     'USE_DEV_SCAN_SERVER',
+    defaultValue: true,
   );
   static const LocalScanAnalysisService _localAnalyzer =
       LocalScanAnalysisService();
@@ -179,7 +180,7 @@ class ScanAnalysisService {
     final imagePath = payload['image_path'] as String? ?? '';
     final modelVersion =
         payload['model_version'] as String? ?? 'trained_v4_hsv';
-    final riskBucket = payload['risk_bucket'] as String? ?? 'Moderate';
+    final riskBucket = payload['risk_bucket'] as String? ?? 'Complete';
     final posteriorProbability =
         (payload['posterior_probability'] as num?)?.toDouble() ?? 0.0;
     final confidence =
@@ -191,7 +192,7 @@ class ScanAnalysisService {
       id: scanId,
       date: DateTime.now(),
       imagePath: imagePath,
-      status: riskBucket.toLowerCase(),
+      status: payload['status'] as String? ?? riskBucket.toLowerCase(),
       confidence: confidence,
       posteriorProbability: posteriorProbability,
       riskBucket: riskBucket,
@@ -362,24 +363,15 @@ class ScanAnalysisService {
         throw StateError(_connectionGuidance(serverBaseUri));
       }
 
-      // Fallback: spawn python script (legacy behavior)
+      // Fallback: spawn the Python semiquant scanner directly on desktop.
       final root = _findWorkspaceRoot();
       final pythonExecutable = _resolvePythonExecutable(root);
-      final mapPath =
-          '${root.path}${Platform.pathSeparator}pipeline${Platform.pathSeparator}output${Platform.pathSeparator}knn_reference_map.json';
-      final legacyMapPath =
-          '${root.path}${Platform.pathSeparator}pipeline${Platform.pathSeparator}output${Platform.pathSeparator}knn_reference_map_20260323_baseline_restored.json';
-      final resolvedMapPath = File(mapPath).existsSync()
-          ? mapPath
-          : legacyMapPath;
 
       final result = await Process.run(pythonExecutable, [
         '-m',
         'pipeline.scan_dipstick',
         '--image',
         imagePath,
-        '--map',
-        resolvedMapPath,
       ], workingDirectory: root.path);
 
       if (result.exitCode != 0) {

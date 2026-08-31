@@ -8,8 +8,8 @@ Reads all training ZIPs from:
 Outputs:
   pipeline/dataset/features.csv
 
-This script implements burst-level vision preprocessing before feature extraction:
-1) Macro-marker contour detection + perspective rectification
+    This script implements burst-level vision preprocessing before feature extraction:
+1) Optional macro-marker contour detection + perspective rectification (fallback supported)
 2) AWB using marker-center 10x10 patch
 3) Grid-based 10-pad slicing using marker-calibrated px/mm
 4) Temporal median filtering across burst frames
@@ -353,7 +353,7 @@ def main() -> None:
     if not all_rows:
         print(
             "\nNo valid burst feature vectors were produced."
-            "\nEnsure Macro-Marker is visible and labels are valid."
+            "\nEnsure input images and labels are valid."
         )
         sys.exit(1)
 
