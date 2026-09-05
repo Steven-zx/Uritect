@@ -16,13 +16,14 @@ from statistics import mean
 sys.path.insert(0, str(pathlib.Path(__file__).parent / "pipeline"))
 
 from semiquant_schema import canonicalize_level
+from vision_pipeline import ANALYTE_ORDER
 
 def load_features(features_path: pathlib.Path) -> list[dict]:
     """Load feature CSV."""
     with open(features_path) as f:
         return list(csv.DictReader(f))
 
-def load_models(models_dir: pathlib.Path) -> dict:
+def load_models(models_dir: pathlib.Path) -> tuple[dict, dict]:
     """Load all per-analyte models."""
     models = {}
     
@@ -38,9 +39,23 @@ def load_models(models_dir: pathlib.Path) -> dict:
             models[analyte] = pickle.load(f)
     
     print(f"[OK] Loaded {len(models)} models from {models_dir}")
-    return models
+    return models, metadata
 
-def predict_semiquant(X: list, models: dict) -> dict:
+
+def _all30_vector(row: dict) -> list[float]:
+    columns = []
+    for analyte in ANALYTE_ORDER:
+        key = analyte.lower().replace(" ", "_")
+        columns.extend([f"{key}_h", f"{key}_s", f"{key}_v"])
+    return [float(row.get(column, 0) or 0) for column in columns]
+
+
+def predict_semiquant(
+    X: dict,
+    models: dict,
+    metadata: dict | None = None,
+    analytes: list[str] | None = None,
+) -> dict:
     """Predict all 10 analytes for a single sample."""
     analyte_feature_map = {
         "Leukocytes": ["leukocytes_h", "leukocytes_s", "leukocytes_v"],
@@ -57,12 +72,20 @@ def predict_semiquant(X: list, models: dict) -> dict:
     
     predictions = {}
     
-    for analyte, model in models.items():
+    target_analytes = analytes or list(models.keys())
+    for analyte in target_analytes:
+        model = models.get(analyte)
+        if model is None:
+            continue
         if analyte not in analyte_feature_map:
             continue
         
-        feat_cols = analyte_feature_map[analyte]
-        features = [X.get(col, 0) for col in feat_cols]
+        info = metadata.get(analyte, {}) if metadata else {}
+        if str(info.get("feature_set", "local")).lower() == "all30":
+            features = _all30_vector(X)
+        else:
+            feat_cols = analyte_feature_map[analyte]
+            features = [X.get(col, 0) for col in feat_cols]
         
         try:
             features = [float(f) for f in features]
@@ -73,7 +96,7 @@ def predict_semiquant(X: list, models: dict) -> dict:
     
     return predictions
 
-def evaluate_on_laua_an(rows: list[dict], models: dict) -> dict:
+def evaluate_on_laua_an(rows: list[dict], models: dict, metadata: dict | None = None) -> dict:
     """Evaluate models on Laua-an data (per-analyte accuracy)."""
     # Group by analyte
     analyte_data = defaultdict(lambda: {"predictions": [], "ground_truth": []})
@@ -92,7 +115,7 @@ def evaluate_on_laua_an(rows: list[dict], models: dict) -> dict:
             continue
         
         # Get prediction for this analyte
-        predictions = predict_semiquant(row, models)
+        predictions = predict_semiquant(row, models, metadata, analytes=[analyte_gt])
         pred_level = predictions.get(analyte_gt, "ERROR")
         
         analyte_data[analyte_gt]["ground_truth"].append(canonical_level)
@@ -166,7 +189,7 @@ def main():
         print("Run build_optimized_models.py first")
         sys.exit(1)
     
-    models = load_models(models_dir)
+    models, metadata = load_models(models_dir)
     print()
     
     # Load Laua-an features using normalized HSV
@@ -184,7 +207,7 @@ def main():
     print(f"[OK] Loaded {len(rows)} rows")
     
     # Evaluate
-    results = evaluate_on_laua_an(rows, models)
+    results = evaluate_on_laua_an(rows, models, metadata)
     
     # Summary
     print("\n" + "=" * 70)

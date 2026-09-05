@@ -1,0 +1,67 @@
+{
+  "generated_at": "2026-09-04T18:47:38.976888+00:00",
+  "labels": "pipeline\\dataset\\cabatuan_cleaned\\uritect_2026-7-17_Cabatuan\\uritect_2026-7-17_Cabatuan_sample_master_cleaned.csv",
+  "images_root": "pipeline\\dataset\\cabatuan_cleaned\\uritect_2026-7-17_Cabatuan\\photos",
+  "light": "Daylight",
+  "events_requested": 48,
+  "scan_errors": [],
+  "overall": {
+    "correct": 398,
+    "total": 480,
+    "accuracy": 0.8291666666666667
+  },
+  "macro_accuracy": 0.8291666666666667,
+  "per_analyte": {
+    "Bilirubin": {
+      "correct": 34,
+      "total": 48,
+      "accuracy": 0.7083333333333334
+    },
+    "Blood": {
+      "correct": 46,
+      "total": 48,
+      "accuracy": 0.9583333333333334
+    },
+    "Glucose": {
+      "correct": 46,
+      "total": 48,
+      "accuracy": 0.9583333333333334
+    },
+    "Ketone": {
+      "correct": 36,
+      "total": 48,
+      "accuracy": 0.75
+    },
+    "Leukocytes": {
+      "correct": 42,
+      "total": 48,
+      "accuracy": 0.875
+    },
+    "Nitrite": {
+      "correct": 47,
+      "total": 48,
+      "accuracy": 0.9791666666666666
+    },
+    "Protein": {
+      "correct": 39,
+      "total": 48,
+      "accuracy": 0.8125
+    },
+    "Specific Gravity": {
+      "correct": 28,
+      "total": 48,
+      "accuracy": 0.5833333333333334
+    },
+    "Urobilinogen": {
+      "correct": 35,
+      "total": 48,
+      "accuracy": 0.7291666666666666
+    },
+    "pH": {
+      "correct": 45,
+      "total": 48,
+      "accuracy": 0.9375
+    }
+  },
+  "error_counts": {}
+}

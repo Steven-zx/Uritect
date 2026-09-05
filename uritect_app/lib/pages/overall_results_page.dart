@@ -32,10 +32,9 @@ class OverallResultsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final engine = ScreeningFusionEngine();
-    final screeningAnalytes =
-        ScreeningFusionEngine.buildAnalytesFromProbabilities(
-          scanResult.screeningProbabilities,
-        );
+    final screeningAnalytes = ScreeningFusionEngine.buildAnalytesFromRows(
+      scanResult.rows,
+    );
     final fusionResult = engine.fuse(
       analytes: screeningAnalytes,
       checklist: clinicalChecklistResult,
@@ -73,7 +72,7 @@ class OverallResultsPage extends StatelessWidget {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          'Dipstick analysis and risk\nassessment',
+                          'Dipstick analysis and clinical\ninterpretation',
                           textAlign: TextAlign.center,
                           style: Theme.of(context).textTheme.bodyMedium
                               ?.copyWith(
@@ -198,7 +197,7 @@ class OverallResultsPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Risk Level',
+                  'Clinical Review Priority',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     color: AppColors.textSecondary,
                     fontSize: 16,
@@ -206,7 +205,7 @@ class OverallResultsPage extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  '${fusionResult.riskBucket} Risk',
+                  fusionResult.riskBucket,
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
                     color: fusionResult.riskBucket == 'Low'
                         ? AppColors.statusLow
@@ -219,7 +218,7 @@ class OverallResultsPage extends StatelessWidget {
                 ),
                 const SizedBox(height: 1),
                 Text(
-                  'Posterior risk: ${(fusionResult.posteriorProbability * 100).toStringAsFixed(1)}%',
+                  'No combined disease probability is calculated.',
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: AppColors.textSecondary,
                     fontSize: 12,
@@ -264,7 +263,7 @@ class OverallResultsPage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Possible Condition',
+            'Clinical Interpretation',
             style: Theme.of(context).textTheme.labelSmall?.copyWith(
               color: AppColors.primaryMain,
               fontSize: 13,
@@ -273,24 +272,64 @@ class OverallResultsPage extends StatelessWidget {
           ),
           const SizedBox(height: 2),
           Text(
-            fusionResult.riskBucket == 'High'
-                ? 'Elevated UTI Screening Concern'
-                : 'Urinary Tract Infection (UTI)',
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              color: const Color(0xFF004E7A),
-              fontSize: 17,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-          const SizedBox(height: 2),
-          Text(
-            'Based on the 4-pad screening set and clinical checklist',
+            'Separated evidence outputs',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
               color: AppColors.textSecondary,
               fontSize: 12,
             ),
           ),
-          const SizedBox(height: 2),
+          const SizedBox(height: 8),
+          for (final interpretation in fusionResult.interpretations)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(
+                    _iconForSeverity(interpretation.severity),
+                    size: 16,
+                    color: _colorForSeverity(interpretation.severity),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          interpretation.title,
+                          style:
+                              Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                    color: const Color(0xFF004E7A),
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                        ),
+                        Text(
+                          interpretation.message,
+                          style:
+                              Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                    color: AppColors.textSecondary,
+                                    fontSize: 11,
+                                    height: 1.25,
+                                  ),
+                        ),
+                        if (interpretation.evidence.isNotEmpty)
+                          Text(
+                            interpretation.evidence.join(' | '),
+                            style:
+                                Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                      color: AppColors.textSecondary,
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w600,
+                                      height: 1.25,
+                                    ),
+                          ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
           Text(
             'Symptoms reported: $selectedCount/${clinicalSymptoms.length}',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -301,6 +340,32 @@ class OverallResultsPage extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  IconData _iconForSeverity(String severity) {
+    switch (severity) {
+      case 'high':
+        return Icons.priority_high_rounded;
+      case 'moderate':
+        return Icons.report_problem_rounded;
+      case 'caution':
+        return Icons.info_outline_rounded;
+      default:
+        return Icons.check_circle_outline_rounded;
+    }
+  }
+
+  Color _colorForSeverity(String severity) {
+    switch (severity) {
+      case 'high':
+        return AppColors.statusHigh;
+      case 'moderate':
+        return const Color(0xFFEB8C00);
+      case 'caution':
+        return AppColors.primaryMain;
+      default:
+        return AppColors.statusLow;
+    }
   }
 
   Widget _checklistAnswersCard(BuildContext context) {

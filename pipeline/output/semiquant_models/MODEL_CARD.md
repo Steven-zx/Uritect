@@ -34,6 +34,15 @@ App runtime path:
 - `pipeline/scan_dipstick.py`
 - Preferred model source: `pipeline/output/semiquant_models`
 - Feature space: `normalized_hsv`
+- Primary Laua-an localization method: markerless strip localization
+- ROI method: vertical strip-edge detection plus 10-pad grid over the detected
+  reactive pad stack
+- AWB method: gray-world correction from low-saturation neutral strip/plastic
+  pixels around the detected strip
+
+Legacy macro-marker localization is retained only as a fallback for older
+images that still include the black/white marker. It is not the primary method
+for the Laua-an validation path.
 
 Next validation step:
 

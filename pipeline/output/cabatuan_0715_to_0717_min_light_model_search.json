@@ -1,0 +1,42 @@
+{
+  "Leukocytes": {
+    "feature_set": "local",
+    "model": "knn5s"
+  },
+  "Nitrite": {
+    "feature_set": "local",
+    "model": "dummy"
+  },
+  "Urobilinogen": {
+    "feature_set": "local",
+    "model": "dummy"
+  },
+  "Protein": {
+    "feature_set": "all30",
+    "model": "knn5s"
+  },
+  "pH": {
+    "feature_set": "local",
+    "model": "dummy"
+  },
+  "Blood": {
+    "feature_set": "all30",
+    "model": "knn5s"
+  },
+  "Specific Gravity": {
+    "feature_set": "all30",
+    "model": "rfdeep"
+  },
+  "Ketone": {
+    "feature_set": "all30",
+    "model": "rf"
+  },
+  "Bilirubin": {
+    "feature_set": "all30",
+    "model": "knn5s"
+  },
+  "Glucose": {
+    "feature_set": "all30",
+    "model": "knn5s"
+  }
+}

@@ -3,8 +3,7 @@ import 'dart:math';
 class ClinicalSymptom {
   final String id;
   final String label;
-  final String
-  category; // 'lut' = Lower Urinary Tract, 'renal' = Renal/Systemic
+  final String category; // 'uti', 'systemic', or 'followup'
   final String iconCode; // For UI rendering
   final double likelihoodRatioPositive; // LR+ when symptom is present
   final double likelihoodRatioNegative; // LR- when symptom is absent
@@ -19,78 +18,85 @@ class ClinicalSymptom {
   });
 }
 
-/// Reference set of 8 clinical symptoms with Bayesian LR values.
-/// LR+ > 1.0 increases post-test probability; LR- < 1.0 decreases it.
-/// Absence uses a mild shared LR- so missing symptoms moderate risk without
-/// overpowering objective dipstick findings.
-const double _absentSymptomLikelihoodRatio = 0.95;
+/// Conservative evidence set for clinical interpretation.
+///
+/// UTI symptom LR+ values are from Giesen et al. 2010, a systematic review of
+/// women with suspected uncomplicated UTI. Unsupported symptoms are kept as
+/// flags only with LR 1.00, and absent symptoms do not change odds.
+const double _neutralLikelihoodRatio = 1.00;
 
 final List<ClinicalSymptom> clinicalSymptoms = [
-  // Category 1: Lower Urinary Tract Symptoms (UTI Focus)
   ClinicalSymptom(
     id: 'dysuria',
     label: 'Burning sensation\nwhile urinating',
-    category: 'lut',
+    category: 'uti',
     iconCode: 'dysuria',
-    likelihoodRatioPositive: 2.8, // Strong indicator of UTI
-    likelihoodRatioNegative: _absentSymptomLikelihoodRatio,
+    likelihoodRatioPositive: 1.30,
+    likelihoodRatioNegative: _neutralLikelihoodRatio,
   ),
   ClinicalSymptom(
     id: 'frequency',
-    label: 'Frequency / Urgency',
-    category: 'lut',
+    label: 'Frequency',
+    category: 'uti',
     iconCode: 'frequency',
-    likelihoodRatioPositive: 2.2,
-    likelihoodRatioNegative: _absentSymptomLikelihoodRatio,
+    likelihoodRatioPositive: 1.10,
+    likelihoodRatioNegative: _neutralLikelihoodRatio,
+  ),
+  ClinicalSymptom(
+    id: 'urgency',
+    label: 'Urgency',
+    category: 'uti',
+    iconCode: 'frequency',
+    likelihoodRatioPositive: 1.22,
+    likelihoodRatioNegative: _neutralLikelihoodRatio,
   ),
   ClinicalSymptom(
     id: 'suprapubic',
     label: 'Lower abdominal pain',
-    category: 'lut',
+    category: 'uti',
     iconCode: 'suprapubic',
-    likelihoodRatioPositive: 2.0,
-    likelihoodRatioNegative: _absentSymptomLikelihoodRatio,
+    likelihoodRatioPositive: _neutralLikelihoodRatio,
+    likelihoodRatioNegative: _neutralLikelihoodRatio,
   ),
   ClinicalSymptom(
     id: 'hematuria',
     label: 'Visible hematuria',
-    category: 'lut',
+    category: 'uti',
     iconCode: 'hematuria',
-    likelihoodRatioPositive: 5.8, // Very strong indicator
-    likelihoodRatioNegative: _absentSymptomLikelihoodRatio,
+    likelihoodRatioPositive: 1.72,
+    likelihoodRatioNegative: _neutralLikelihoodRatio,
   ),
-  // Category 2: Renal and Systemic "Red Flags"
   ClinicalSymptom(
     id: 'flank',
     label: 'Back pain',
-    category: 'renal',
+    category: 'systemic',
     iconCode: 'flank',
-    likelihoodRatioPositive: 5.0, // High-weight pyelonephritis indicator
-    likelihoodRatioNegative: _absentSymptomLikelihoodRatio,
+    likelihoodRatioPositive: _neutralLikelihoodRatio,
+    likelihoodRatioNegative: _neutralLikelihoodRatio,
   ),
   ClinicalSymptom(
     id: 'fever',
     label: 'Fever / Chills',
-    category: 'renal',
+    category: 'systemic',
     iconCode: 'fever',
-    likelihoodRatioPositive: 3.5, // Systemic involvement marker
-    likelihoodRatioNegative: _absentSymptomLikelihoodRatio,
+    likelihoodRatioPositive: _neutralLikelihoodRatio,
+    likelihoodRatioNegative: _neutralLikelihoodRatio,
   ),
   ClinicalSymptom(
     id: 'edema',
     label: 'Peripheral edema',
-    category: 'renal',
+    category: 'followup',
     iconCode: 'edema',
-    likelihoodRatioPositive: 2.5,
-    likelihoodRatioNegative: _absentSymptomLikelihoodRatio,
+    likelihoodRatioPositive: _neutralLikelihoodRatio,
+    likelihoodRatioNegative: _neutralLikelihoodRatio,
   ),
   ClinicalSymptom(
     id: 'nausea',
     label: 'Nausea / Vomiting',
-    category: 'renal',
+    category: 'systemic',
     iconCode: 'nausea',
-    likelihoodRatioPositive: 2.2,
-    likelihoodRatioNegative: _absentSymptomLikelihoodRatio,
+    likelihoodRatioPositive: _neutralLikelihoodRatio,
+    likelihoodRatioNegative: _neutralLikelihoodRatio,
   ),
 ];
 
@@ -113,15 +119,24 @@ class ClinicalChecklistResult {
     );
   }
 
-  /// Compute Bayesian log-odds contribution from selected symptoms using LRs.
+  /// Compute a conservative UTI-only log-odds contribution from supported LRs.
   double computeLogOddsContribution() {
     double totalLogOdds = 0.0;
-    for (final symptom in clinicalSymptoms) {
+
+    for (final symptom in clinicalSymptoms.where((s) => s.category == 'uti')) {
+      if (symptom.id == 'frequency' || symptom.id == 'urgency') {
+        continue;
+      }
       final isSelected = selectedSymptoms[symptom.id] ?? false;
-      final lr = isSelected
-          ? symptom.likelihoodRatioPositive
-          : symptom.likelihoodRatioNegative;
-      totalLogOdds += log(lr.clamp(1e-6, 1e6)); // Avoid log(0)
+      final lr = isSelected ? symptom.likelihoodRatioPositive : 1.0;
+      totalLogOdds += log(lr.clamp(1e-6, 1e6));
+    }
+
+    final frequencySelected = selectedSymptoms['frequency'] == true;
+    final urgencySelected = selectedSymptoms['urgency'] == true;
+    if (frequencySelected || urgencySelected) {
+      final lr = urgencySelected ? 1.22 : 1.10;
+      totalLogOdds += log(lr);
     }
     return totalLogOdds;
   }

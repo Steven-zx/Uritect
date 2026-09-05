@@ -41,6 +41,7 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Validate app semiquant scans against labeled images.")
     parser.add_argument("--labels", type=pathlib.Path, default=DEFAULT_LABELS)
     parser.add_argument("--images-root", type=pathlib.Path, default=DEFAULT_IMAGES)
+    parser.add_argument("--models-dir", type=pathlib.Path, default=None)
     parser.add_argument("--output-json", type=pathlib.Path, default=DEFAULT_REPORT)
     parser.add_argument("--output-csv", type=pathlib.Path, default=DEFAULT_DETAILS)
     parser.add_argument(
@@ -59,20 +60,37 @@ def parse_args() -> argparse.Namespace:
 
 
 def _event_id_from_row(row: dict[str, str]) -> str:
-    return (row.get("ID") or row.get("id") or row.get("event_id") or "").strip()
+    return (
+        row.get("ID")
+        or row.get("id")
+        or row.get("participant_id")
+        or row.get("sample_id")
+        or row.get("event_id")
+        or ""
+    ).strip()
 
 
 def _label_for_analyte(row: dict[str, str], analyte: str) -> str | None:
-    raw = (row.get(analyte) or row.get(analyte.lower()) or "").strip()
+    key = analyte.lower().replace(" ", "_")
+    raw = (
+        row.get(analyte)
+        or row.get(analyte.lower())
+        or row.get(f"{key}_level")
+        or row.get(f"{key}_label")
+        or ""
+    ).strip()
     return canonicalize_level(analyte, raw)
 
 
-def load_expected(labels_path: pathlib.Path) -> list[dict[str, Any]]:
+def load_expected(labels_path: pathlib.Path, light: str | None = None) -> list[dict[str, Any]]:
     with labels_path.open(newline="", encoding="utf-8-sig") as file:
         rows = list(csv.DictReader(file))
 
     expected: list[dict[str, Any]] = []
     for row in rows:
+        row_light = (row.get("light_kelvin") or row.get("light") or "").strip()
+        if light and row_light and row_light.lower() != light.lower():
+            continue
         event_id = _event_id_from_row(row)
         if not event_id:
             continue
@@ -125,7 +143,7 @@ def main() -> None:
     if not args.images_root.exists():
         raise SystemExit(f"Images root not found: {args.images_root}")
 
-    expected_rows = load_expected(args.labels)
+    expected_rows = load_expected(args.labels, args.light)
     if args.max_events > 0:
         expected_rows = expected_rows[: args.max_events]
 
@@ -142,7 +160,7 @@ def main() -> None:
 
         print(f"[{index}/{len(expected_rows)}] Scanning event {event_id}: {image_path.name}")
         try:
-            payload = run_scan(image_path)
+            payload = run_scan(image_path, models_dir=args.models_dir)
         except Exception as error:
             errors.append({"event_id": event_id, "error": str(error)})
             continue

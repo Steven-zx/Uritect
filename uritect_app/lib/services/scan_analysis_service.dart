@@ -142,8 +142,14 @@ class ScanAnalysisService {
     return 'python';
   }
 
-  DipstickResultStatus _statusFromProbability(double probability) {
-    return probability >= 0.5
+  DipstickResultStatus _statusFromDisplayValue(String value) {
+    final normalized = value.trim().toLowerCase();
+    final isAbnormal =
+        normalized.isNotEmpty &&
+        normalized != 'unavailable' &&
+        normalized != 'neg' &&
+        normalized != 'negative';
+    return isAbnormal
         ? DipstickResultStatus.moderate
         : DipstickResultStatus.negative;
   }
@@ -154,15 +160,14 @@ class ScanAnalysisService {
     final rows = rowsJson
         .map((item) {
           final row = item as Map<String, dynamic>;
+          final displayValue = row['display_value'] as String? ?? 'Unavailable';
           return DipstickResultRow(
             code: row['code'] as String? ?? '',
             name: row['name'] as String? ?? '',
-            result: row['display_value'] as String? ?? 'Unavailable',
+            result: displayValue,
             referenceRange:
                 row['reference_range'] as String? ?? 'Reference unavailable',
-            status: _statusFromProbability(
-              (row['abnormal_probability'] as num?)?.toDouble() ?? 0.0,
-            ),
+            status: _statusFromDisplayValue(displayValue),
           );
         })
         .toList(growable: false);

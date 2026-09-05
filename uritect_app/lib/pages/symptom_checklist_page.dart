@@ -43,10 +43,9 @@ class _SymptomChecklistPageState extends State<SymptomChecklistPage> {
     final checklistResult = ClinicalChecklistResult(
       selectedSymptoms: Map<String, bool>.from(selectedSymptoms),
     );
-    final screeningAnalytes =
-        ScreeningFusionEngine.buildAnalytesFromProbabilities(
-          widget.scanResult.screeningProbabilities,
-        );
+    final screeningAnalytes = ScreeningFusionEngine.buildAnalytesFromRows(
+      widget.scanResult.rows,
+    );
     final fusionResult = const ScreeningFusionEngine().fuse(
       analytes: screeningAnalytes,
       checklist: checklistResult,
@@ -83,11 +82,14 @@ class _SymptomChecklistPageState extends State<SymptomChecklistPage> {
 
   @override
   Widget build(BuildContext context) {
-    final lutSymptoms = clinicalSymptoms
-        .where((s) => s.category == 'lut')
+    final utiSymptoms = clinicalSymptoms
+        .where((s) => s.category == 'uti')
         .toList();
-    final renalSymptoms = clinicalSymptoms
-        .where((s) => s.category == 'renal')
+    final systemicSymptoms = clinicalSymptoms
+        .where((s) => s.category == 'systemic')
+        .toList();
+    final followUpSymptoms = clinicalSymptoms
+        .where((s) => s.category == 'followup')
         .toList();
 
     return Scaffold(
@@ -142,22 +144,30 @@ class _SymptomChecklistPageState extends State<SymptomChecklistPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Category 1: Lower Urinary Tract Symptoms
                       _buildCategoryHeader(
                         context,
-                        'Lower Urinary Tract Symptoms',
+                        'Localized UTI Symptoms',
                       ),
                       const SizedBox(height: 12),
-                      ...lutSymptoms.map(
+                      ...utiSymptoms.map(
                         (symptom) => _buildSymptomTile(context, symptom),
                       ),
                       const SizedBox(height: 28),
                       _buildCategoryHeader(
                         context,
-                        'Upper Urinary Tract Symptoms',
+                        'Systemic Warning Symptoms',
                       ),
                       const SizedBox(height: 12),
-                      ...renalSymptoms.map(
+                      ...systemicSymptoms.map(
+                        (symptom) => _buildSymptomTile(context, symptom),
+                      ),
+                      const SizedBox(height: 28),
+                      _buildCategoryHeader(
+                        context,
+                        'Follow-up Indicators',
+                      ),
+                      const SizedBox(height: 12),
+                      ...followUpSymptoms.map(
                         (symptom) => _buildSymptomTile(context, symptom),
                       ),
                       const SizedBox(height: 28),

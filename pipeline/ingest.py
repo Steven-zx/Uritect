@@ -8,17 +8,17 @@ Reads all training ZIPs from:
 Outputs:
   pipeline/dataset/features.csv
 
-    This script implements burst-level vision preprocessing before feature extraction:
-1) Optional macro-marker contour detection + perspective rectification (fallback supported)
-2) AWB using marker-center 10x10 patch
-3) Grid-based 10-pad slicing using marker-calibrated px/mm
-4) Temporal median filtering across burst frames
-5) Mean HSV extraction for each of 10 pads
+This script implements vision preprocessing before feature extraction:
+1) Markerless Laua-an mode: strip-edge localization, 10-pad grid over the
+   detected pad stack, and neutral strip/plastic gray-world AWB
+2) Legacy marker mode: macro-marker contour detection, marker-center AWB, and
+   marker-anchored grid slicing
+3) Mean HSV/LAB extraction for each of 10 semiquant pads
 
 SUPPORTED LABEL FORMATS:
-  1) Binary (current): Normal | Abnormal
-    2) Semiquant (single): <AnalyteName>:<Level>
-    3) Semiquant (multi-analyte): one level column per analyte
+  1) Binary legacy: Normal | Abnormal
+  2) Semiquant (single): <AnalyteName>:<Level>
+  3) Semiquant (multi-analyte): one level column per analyte
          e.g., leukocytes_level, nitrite_level, ..., glucose_level
 """
 
@@ -33,6 +33,8 @@ from collections import Counter, defaultdict
 from dataclasses import dataclass
 from typing import Optional
 
+import cv2
+
 try:
     from vision_pipeline import (
         ANALYTE_ORDER,
@@ -41,6 +43,7 @@ try:
         feature_columns_for_analyte,
         all_feature_columns,
     )
+    from markerless_strip import MarkerlessStripConfig, extract_markerless_features
 except ImportError as error:
     print(f"Failed to import vision pipeline modules: {error}", file=sys.stderr)
     print("Run from repository root and ensure dependencies are installed.", file=sys.stderr)
@@ -185,7 +188,62 @@ def _split_name(raw: str) -> str:
     return "train"
 
 
-def process_zip(zip_path: pathlib.Path, pipeline: BurstFeaturePipeline, feature_space: str = "hsv") -> tuple[list[dict], int]:
+def _process_markerless_frames(
+    frames_bgr: list,
+    feature_space: str,
+):
+    best = None
+    errors: list[str] = []
+    for index, frame in enumerate(frames_bgr, start=1):
+        orientation_variants = [
+            ("raw", frame),
+        ]
+        for orientation_name, oriented_frame in orientation_variants:
+            try:
+                result = extract_markerless_features(
+                    oriented_frame,
+                    orientation=f"frame_{index}_{orientation_name}",
+                    config=MarkerlessStripConfig(feature_space=feature_space),
+                )
+            except Exception as error:
+                errors.append(f"frame_{index}_{orientation_name} [markerless]: {str(error)[:90]}")
+                continue
+            if best is None or result.quality_score > best.quality_score:
+                best = result
+            if result.quality_score >= 3.0:
+                break
+
+        if best is not None and best.orientation == f"frame_{index}_raw" and best.quality_score >= 3.0:
+            continue
+
+        for orientation_name, oriented_frame in (
+            ("rot90cw", cv2.rotate(frame, cv2.ROTATE_90_CLOCKWISE)),
+            ("rot180", cv2.rotate(frame, cv2.ROTATE_180)),
+            ("rot90ccw", cv2.rotate(frame, cv2.ROTATE_90_COUNTERCLOCKWISE)),
+        ):
+            try:
+                result = extract_markerless_features(
+                    oriented_frame,
+                    orientation=f"frame_{index}_{orientation_name}",
+                    config=MarkerlessStripConfig(feature_space=feature_space),
+                )
+            except Exception as error:
+                errors.append(f"frame_{index}_{orientation_name} [markerless]: {str(error)[:90]}")
+                continue
+            if best is None or result.quality_score > best.quality_score:
+                best = result
+
+    if best is None:
+        raise ValueError("; ".join(errors[:5]) or "Markerless strip localization failed.")
+    return best
+
+
+def process_zip(
+    zip_path: pathlib.Path,
+    pipeline: BurstFeaturePipeline,
+    feature_space: str = "hsv",
+    localization_mode: str = "auto",
+) -> tuple[list[dict], int]:
     rows_out: list[dict] = []
     skipped_bursts = 0
 
@@ -227,8 +285,8 @@ def process_zip(zip_path: pathlib.Path, pipeline: BurstFeaturePipeline, feature_
                     )
                     continue
 
-            rel_path = row.get("relative_image_path", "").strip()
-            image_name = "images/" + pathlib.Path(rel_path).name
+            rel_path = row.get("relative_image_path", "").strip().replace("\\", "/")
+            image_name = rel_path if rel_path.startswith("images/") else "images/" + pathlib.Path(rel_path).name
             if image_name not in names:
                 print(f"  [SKIP] {image_name} not found in ZIP")
                 continue
@@ -256,7 +314,15 @@ def process_zip(zip_path: pathlib.Path, pipeline: BurstFeaturePipeline, feature_
                 burst_frames.append(decode_image_bytes(encoded))
 
             try:
-                burst_result = pipeline.process_burst(burst_frames)
+                if localization_mode == "markerless":
+                    burst_result = _process_markerless_frames(burst_frames, feature_space)
+                elif localization_mode == "legacy_marker":
+                    burst_result = pipeline.process_burst(burst_frames)
+                else:
+                    try:
+                        burst_result = _process_markerless_frames(burst_frames, feature_space)
+                    except Exception:
+                        burst_result = pipeline.process_burst(burst_frames)
             except Exception as error:
                 skipped_bursts += 1
                 print(
@@ -318,24 +384,42 @@ def main() -> None:
         help="Feature space to extract from the burst pipeline.",
     )
     parser.add_argument(
+        "--localization-mode",
+        choices=["auto", "markerless", "legacy_marker"],
+        default="auto",
+        help=(
+            "ROI/AWB method. Use markerless for Laua-an validation; "
+            "legacy_marker is the old macro-marker pipeline."
+        ),
+    )
+    parser.add_argument(
         "--output",
         type=pathlib.Path,
         default=OUTPUT_DIR / "features.csv",
         help="Output CSV path for the ingested features.",
     )
+    parser.add_argument(
+        "--packages-dir",
+        type=pathlib.Path,
+        default=PACKAGES_DIR,
+        help="Directory containing training/holdout package ZIPs.",
+    )
     args = parser.parse_args()
 
-    if not PACKAGES_DIR.exists():
-        print(f"Packages directory not found:\n  {PACKAGES_DIR}")
+    packages_dir = args.packages_dir
+    if not packages_dir.exists():
+        print(f"Packages directory not found:\n  {packages_dir}")
         print("Build at least one training package in the Uritect app first.")
         sys.exit(1)
 
-    zip_files = sorted(PACKAGES_DIR.glob("*.zip"))
+    zip_files = sorted(packages_dir.glob("*.zip"))
     if not zip_files:
-        print(f"No ZIP files found in:\n  {PACKAGES_DIR}")
+        zip_files = sorted(packages_dir.rglob("*.zip"))
+    if not zip_files:
+        print(f"No ZIP files found in:\n  {packages_dir}")
         sys.exit(1)
 
-    print(f"Found {len(zip_files)} ZIP(s) in:\n  {PACKAGES_DIR}\n")
+    print(f"Found {len(zip_files)} ZIP(s) in:\n  {packages_dir}\n")
 
     from vision_pipeline import VisionPipelineConfig, all_feature_columns
 
@@ -345,7 +429,12 @@ def main() -> None:
 
     for zip_file in zip_files:
         print(f"Processing {zip_file.name} ...")
-        rows, skipped_bursts = process_zip(zip_file, pipeline, feature_space=args.feature_space)
+        rows, skipped_bursts = process_zip(
+            zip_file,
+            pipeline,
+            feature_space=args.feature_space,
+            localization_mode=args.localization_mode,
+        )
         all_rows.extend(rows)
         total_skipped_bursts += skipped_bursts
         print(f"  -> {len(rows)} burst feature vector(s), skipped bursts: {skipped_bursts}")

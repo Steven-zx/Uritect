@@ -52,7 +52,7 @@ class LocalScanAnalysisService {
       throw StateError('Captured image was not found on this device.');
     }
 
-    onProgress?.call(32, 'locating_marker');
+    onProgress?.call(32, 'locating_strip');
     final resultJson = await Isolate.run(
       () => _analyzeScanInBackground(imagePath, referenceText),
     );
@@ -107,7 +107,7 @@ class LocalScanAnalysisService {
 
     if (best == null || best.featuresByAnalyte.length < 6) {
       throw StateError(
-        'The app could not localize enough dipstick pads offline. Keep the black marker and full strip visible, flat, and well lit.',
+        'The app could not localize enough dipstick pads offline. Keep the full strip visible, flat, and well lit.',
       );
     }
     return best;
@@ -798,7 +798,7 @@ Map<String, dynamic> _analyzeScanInBackground(
   }
 
   final rows = <DipstickResultRow>[];
-  final screeningProbabilities = <String, double>{};
+  final confidenceValues = <double>[];
 
   for (final analyte in _analyteOrder) {
     final observed = extraction.featuresByAnalyte[analyte];
@@ -806,46 +806,39 @@ Map<String, dynamic> _analyzeScanInBackground(
         ? null
         : referenceMap.predict(analyte: analyte, observed: observed);
     final level = prediction?.level ?? 'Unavailable';
-    final probability = _screeningProbability(
-      level,
-      prediction?.confidence ?? 0.0,
-    );
+    final displayLevel = _normalizeDisplayLevel(level);
+    final confidence = prediction?.confidence ?? 0.0;
     final code = _codeForAnalyte(analyte);
+    confidenceValues.add(confidence);
 
     rows.add(
       DipstickResultRow(
         code: code,
         name: analyte,
-        result: _normalizeDisplayLevel(level),
+        result: displayLevel,
         referenceRange: _referenceRanges[analyte] ?? 'Reference unavailable',
-        status: probability >= 0.5
+        status: _isDisplayValueAbnormal(displayLevel)
             ? DipstickResultStatus.moderate
             : DipstickResultStatus.negative,
       ),
     );
-
-    if (code == 'GLU' || code == 'LEU' || code == 'PRO' || code == 'NIT') {
-      screeningProbabilities[code] = probability;
-    }
   }
 
-  final knnAbnormalProbability = screeningProbabilities.isEmpty
+  final averageConfidence = confidenceValues.isEmpty
       ? 0.0
-      : screeningProbabilities.values.reduce((a, b) => a + b) /
-            screeningProbabilities.length;
-  final riskBucket = _riskBucket(knnAbnormalProbability);
+      : confidenceValues.reduce((a, b) => a + b) / confidenceValues.length;
 
   return ScanResult(
     id: 'scan_${DateTime.now().millisecondsSinceEpoch}',
     date: DateTime.now(),
     imagePath: imagePath,
-    status: riskBucket.toLowerCase(),
-    confidence: knnAbnormalProbability,
-    posteriorProbability: knnAbnormalProbability,
-    riskBucket: riskBucket,
+    status: 'complete',
+    confidence: averageConfidence,
+    posteriorProbability: 0.0,
+    riskBucket: 'Complete',
     modelVersion: '${referenceMap.version}_edge',
     rows: rows,
-    screeningProbabilities: screeningProbabilities,
+    screeningProbabilities: const <String, double>{},
     padsDetected: extraction.featuresByAnalyte.length,
     padsUnavailable: _analyteOrder.length - extraction.featuresByAnalyte.length,
   ).toJson();
@@ -1139,38 +1132,12 @@ String _normalizeDisplayLevel(String level) {
   return normalized.isEmpty ? 'Unavailable' : normalized;
 }
 
-double _screeningProbability(String level, double confidence) {
+bool _isDisplayValueAbnormal(String level) {
   final normalized = level.trim().toLowerCase();
-  final safeConfidence = confidence.clamp(0.0, 1.0);
   if (normalized.isEmpty || normalized == 'unavailable') {
-    return 0.5;
+    return false;
   }
-  if (normalized == 'neg' || normalized == 'negative') {
-    return (0.18 - (safeConfidence * 0.10)).clamp(0.05, 0.30);
-  }
-  if (normalized.contains('trace')) {
-    return (0.30 + (safeConfidence * 0.12)).clamp(0.20, 0.45);
-  }
-  if (normalized.contains('moderate') || normalized.contains('125')) {
-    return (0.58 + (safeConfidence * 0.16)).clamp(0.45, 0.75);
-  }
-  if (normalized.contains('large') ||
-      normalized.contains('500') ||
-      normalized == 'high' ||
-      normalized == 'positive') {
-    return (0.82 + (safeConfidence * 0.10)).clamp(0.70, 0.95);
-  }
-  return safeConfidence;
-}
-
-String _riskBucket(double probability) {
-  if (probability >= 0.70) {
-    return 'High';
-  }
-  if (probability >= 0.30) {
-    return 'Moderate';
-  }
-  return 'Low';
+  return normalized != 'neg' && normalized != 'negative';
 }
 
 List<double> _rgbToHsv(double r, double g, double b) {

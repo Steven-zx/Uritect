@@ -161,7 +161,7 @@ class _CaptureDipstickPageState extends State<CaptureDipstickPage> {
               ),
               const SizedBox(height: 8),
               Text(
-                'Make sure the full dipstick and black marker are visible, flat, and well lit before submitting.',
+                'Make sure the full dipstick strip is visible, flat, and well lit before submitting.',
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: AppColors.textSecondary,
@@ -287,7 +287,7 @@ class _CaptureDipstickPageState extends State<CaptureDipstickPage> {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        'Place the dipstick within the frame',
+                        'Place the full dipstick strip within the frame',
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           fontSize: 12,
                           color: AppColors.textSecondary,

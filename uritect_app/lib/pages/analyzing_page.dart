@@ -112,6 +112,7 @@ class _AnalyzingPageState extends State<AnalyzingPage> {
     final stageTarget = switch (stage) {
       'loading_reference_map' => 18.0,
       'preparing_image' || 'decoding_image' => 32.0,
+      'locating_strip' => 95.0,
       'locating_marker' => 95.0,
       'classifying_pads' => 96.0,
       'finalizing_results' => 98.0,
@@ -207,9 +208,9 @@ class _AnalyzingPageState extends State<AnalyzingPage> {
   }
 
   String _stageText(String stage, double progress) {
-    if (stage == 'locating_marker') {
+    if (stage == 'locating_strip' || stage == 'locating_marker') {
       if (progress < 48) {
-        return 'Finding the marker and strip...';
+        return 'Finding the dipstick strip...';
       }
       if (progress < 66) {
         return 'Locating the reagent pads...';
@@ -231,8 +232,10 @@ class _AnalyzingPageState extends State<AnalyzingPage> {
       case 'preparing_image':
       case 'decoding_image':
         return 'Preparing the captured image...';
+      case 'locating_strip':
+        return 'Finding the dipstick strip...';
       case 'locating_marker':
-        return 'Finding the marker and strip...';
+        return 'Finding the dipstick strip...';
       case 'classifying_pads':
         return 'Reading the reagent pad colors...';
       case 'finalizing_results':

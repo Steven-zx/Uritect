@@ -8,11 +8,19 @@ __pycache__/
 
 # Local datasets and raw capture archives
 new_uritect_dataset/
+pipeline/dataset/cabatuan_cleaned/
 *.zip
 
 # Generated validation smoke outputs
 pipeline/output/app_scan_batch_predictions_smoke.csv
 pipeline/output/app_scan_batch_validation_smoke.json
+pipeline/dataset/cabatuan_holdout_features_normalized_hsv.csv
+pipeline/dataset/cabatuan_holdout_features_lab.csv
+pipeline/output/cabatuan_holdout_label_validation.json
+pipeline/output/*_roi_debug.jpg
+pipeline/output/cabatuan_cross_site_*.json
+pipeline/output/cabatuan_only_model_family_*.json
+pipeline/output/semiquant_models_cabatuan_*_candidate/
 
 # Flutter and platform build artifacts
 uritect_app/.dart_tool/

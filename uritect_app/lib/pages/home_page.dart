@@ -471,7 +471,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 const SizedBox(width: 7),
                 Text(
-                  '${record.riskBucket} Risk',
+                  '${record.riskBucket} Priority',
                   style: Theme.of(context).textTheme.labelSmall?.copyWith(
                     color: statusColor,
                     fontSize: 12,
@@ -522,6 +522,8 @@ class _HomePageState extends State<HomePage> {
         return AppColors.statusHigh;
       case 'Moderate':
         return AppColors.statusModerate;
+      case 'Caution':
+        return AppColors.primaryMain;
       default:
         return AppColors.statusLow;
     }
@@ -533,6 +535,8 @@ class _HomePageState extends State<HomePage> {
         return const Color(0xFFFAD2CE);
       case 'Moderate':
         return const Color(0xFFFFE8BF);
+      case 'Caution':
+        return const Color(0xFFEAF6FB);
       default:
         return const Color(0xFFDDF7E7);
     }
@@ -544,6 +548,8 @@ class _HomePageState extends State<HomePage> {
         return Icons.error_outline;
       case 'Moderate':
         return Icons.warning_amber_rounded;
+      case 'Caution':
+        return Icons.info_outline_rounded;
       default:
         return Icons.check;
     }

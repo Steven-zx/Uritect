@@ -2,24 +2,33 @@
 """Run a single dipstick image through the semiquant vision + KNN pipeline.
 
 This is the runtime bridge for the Flutter app's 10-parameter semiquant flow:
-1) geometric rectification
-2) marker-center AWB
-3) pad slicing
+1) markerless strip localization for Laua-an style images
+2) neutral strip/plastic gray-world AWB
+3) 10-pad ROI slicing over the detected reactive pad stack
 4) normalized HSV feature extraction
 5) optimized per-analyte semiquant KNN prediction
+
+Legacy macro-marker localization remains available only as a fallback for older
+marker-based images.
 """
 
 from __future__ import annotations
 
 import argparse
 import json
+import os
 import pickle
+import sys
 from pathlib import Path
 from typing import Any
 
 import cv2
 import numpy as np
 from PIL import Image, ImageOps
+
+PIPELINE_DIR = Path(__file__).resolve().parent
+if str(PIPELINE_DIR) not in sys.path:
+    sys.path.insert(0, str(PIPELINE_DIR))
 
 try:
     from .evaluate_semiquant import (
@@ -30,10 +39,9 @@ try:
         load_reference_map,
         predict_one,
     )
-    from .vision_pipeline import ANALYTE_ORDER, BurstFeaturePipeline, VisionPipelineConfig, analyte_to_key
+    from .markerless_strip import MarkerlessStripConfig, extract_markerless_features
+    from .vision_pipeline import ANALYTE_ORDER, BurstFeaturePipeline, VisionPipelineConfig
 except ImportError:
-    import sys
-
     workspace_root = Path(__file__).resolve().parent.parent
     if str(workspace_root) not in sys.path:
         sys.path.insert(0, str(workspace_root))
@@ -46,7 +54,8 @@ except ImportError:
         load_reference_map,
         predict_one,
     )
-    from pipeline.vision_pipeline import ANALYTE_ORDER, BurstFeaturePipeline, VisionPipelineConfig, analyte_to_key
+    from pipeline.markerless_strip import MarkerlessStripConfig, extract_markerless_features
+    from pipeline.vision_pipeline import ANALYTE_ORDER, BurstFeaturePipeline, VisionPipelineConfig
 
 
 REFERENCE_RANGES = {
@@ -60,6 +69,19 @@ REFERENCE_RANGES = {
     "Ketone": "Negative",
     "Bilirubin": "Negative",
     "Glucose": "Negative",
+}
+
+APP_ANALYTE_CODES = {
+    "Leukocytes": "LEU",
+    "Nitrite": "NIT",
+    "Urobilinogen": "URO",
+    "Protein": "PRO",
+    "pH": "pH",
+    "Blood": "BLD",
+    "Specific Gravity": "SG",
+    "Ketone": "KET",
+    "Bilirubin": "BIL",
+    "Glucose": "GLU",
 }
 
 
@@ -84,6 +106,12 @@ def parse_args() -> argparse.Namespace:
         default=None,
         help="Optional JSON file with per-analyte distance weight overrides.",
     )
+    parser.add_argument(
+        "--models-dir",
+        type=Path,
+        default=None,
+        help="Optional optimized semiquant models directory. Omit to use pipeline/output/semiquant_models.",
+    )
     return parser.parse_args()
 
 
@@ -96,21 +124,8 @@ def _normalize_display_level(level: str | None) -> str:
     return normalized
 
 
-def _screening_probability(level: str | None, confidence: float) -> float:
-    normalized = (level or "").strip().lower()
-    confidence = max(0.0, min(confidence, 1.0))
-
-    if normalized in {"", "unavailable"}:
-        return 0.5
-    if normalized in {"neg", "negative"}:
-        return max(0.05, min(0.30, 0.18 - (confidence * 0.10)))
-    if "trace" in normalized:
-        return max(0.20, min(0.45, 0.30 + (confidence * 0.12)))
-    if "moderate" in normalized or "125" in normalized:
-        return max(0.45, min(0.75, 0.58 + (confidence * 0.16)))
-    if "large" in normalized or "500" in normalized or normalized == "high" or normalized == "positive":
-        return max(0.70, min(0.95, 0.82 + (confidence * 0.10)))
-    return max(0.0, min(1.0, confidence))
+def _app_analyte_code(analyte: str) -> str:
+    return APP_ANALYTE_CODES.get(analyte, analyte.upper().replace(" ", "_"))
 
 
 def _reference_map_path(root: Path) -> Path:
@@ -124,6 +139,9 @@ def _reference_map_path(root: Path) -> Path:
 
 
 def _optimized_models_dir(root: Path) -> Path:
+    override = os.environ.get("URITECT_SEMIQUANT_MODELS_DIR", "").strip()
+    if override:
+        return Path(override)
     return root / "pipeline" / "output" / "semiquant_models"
 
 
@@ -168,12 +186,27 @@ def _predict_with_optimized_model(
     s: float,
     v: float,
     models: dict[str, Any],
+    metadata: dict[str, Any] | None = None,
+    features_by_pad: dict[str, tuple[float, float, float]] | None = None,
 ) -> tuple[str | None, float, float, float]:
     model = models.get(analyte)
     if model is None:
         return None, 0.0, 0.0, 0.0
 
-    features = [[float(h), float(s), float(v)]]
+    info = metadata.get(analyte, {}) if metadata else {}
+    feature_set = str(info.get("feature_set", "local")).strip().lower()
+    if feature_set == "all30" and features_by_pad:
+        vector: list[float] = []
+        for pad_analyte in ANALYTE_ORDER:
+            pad_features = features_by_pad.get(pad_analyte)
+            if pad_features is None:
+                vector.extend([0.0, 0.0, 0.0])
+            else:
+                vector.extend(float(value) for value in pad_features)
+        features = [vector]
+    else:
+        features = [[float(h), float(s), float(v)]]
+
     predicted = str(model.predict(features)[0])
 
     confidence = 1.0
@@ -261,6 +294,21 @@ def _process_best_orientation(image_path: Path, config: VisionPipelineConfig) ->
     best: tuple[float, Any, str] | None = None
 
     for variant_name, image_bgr in _iter_bgr_orientation_variants(image_path):
+        try:
+            markerless = extract_markerless_features(
+                image_bgr,
+                orientation=variant_name,
+                config=MarkerlessStripConfig(feature_space=config.feature_space),
+            )
+            score = markerless.quality_score + 10.0
+            if variant_name in {"exif", "raw"} and score >= 10.5:
+                return markerless, f"markerless_{variant_name}", score
+            if best is None or score > best[0]:
+                best = (score, markerless, f"markerless_{variant_name}")
+            continue
+        except Exception as error:
+            failures.append(f"markerless_{variant_name}: {str(error)[:120]}")
+
         pipeline = BurstFeaturePipeline(config)
         try:
             burst = pipeline.process_burst([image_bgr])
@@ -285,13 +333,19 @@ def _process_best_orientation(image_path: Path, config: VisionPipelineConfig) ->
 
 def main() -> None:
     args = parse_args()
-    payload = run_scan(args.image.resolve(), map_path=args.map, distance_weight_profile=args.distance_weight_profile)
+    payload = run_scan(
+        args.image.resolve(),
+        map_path=args.map,
+        models_dir=args.models_dir,
+        distance_weight_profile=args.distance_weight_profile,
+    )
     print(json.dumps(payload, indent=2))
 
 
 def run_scan(
     image_path: Path,
     map_path: Path | None = None,
+    models_dir: Path | None = None,
     distance_weight_profile: str = "legacy",
     progress_callback: callable | None = None,
 ) -> dict[str, Any]:
@@ -307,7 +361,7 @@ def run_scan(
             pass
 
     optimized_models, optimized_metadata = ({}, {})
-    models_dir = _optimized_models_dir(root)
+    models_dir = Path(models_dir) if models_dir is not None else _optimized_models_dir(root)
     if map_path is None:
         optimized_models, optimized_metadata = _load_optimized_models(models_dir)
 
@@ -338,6 +392,11 @@ def run_scan(
             pass
 
     config = VisionPipelineConfig(feature_space=feature_space)
+    if progress_callback:
+        try:
+            progress_callback("locating_strip", 32)
+        except Exception:
+            pass
     burst, orientation_variant, orientation_quality = _process_best_orientation(image_path, config)
     if progress_callback:
         try:
@@ -378,6 +437,8 @@ def run_scan(
                     s,
                     v,
                     optimized_models,
+                    optimized_metadata,
+                    burst.features_by_pad,
                 )
                 was_abstained = False
             else:
@@ -411,8 +472,7 @@ def run_scan(
                 level = _normalize_display_level(predicted_level)
 
         analyte_status = "moderate" if level.lower() != "negative" else "normal"
-        abnormal_probability = _screening_probability(level, confidence)
-        code = analyte_to_key(analyte).upper()
+        code = _app_analyte_code(analyte)
         
         row_data = {
             "code": code,
@@ -421,7 +481,6 @@ def run_scan(
             "display_value": level,
             "reference_range": REFERENCE_RANGES.get(analyte, "Reference unavailable"),
             "status": analyte_status,
-            "abnormal_probability": round(abnormal_probability, 6),
             "confidence": round(float(confidence), 6),
             "distance": round(float(distance), 6),
             "confidence_margin": round(float(margin), 6),
@@ -458,6 +517,16 @@ def run_scan(
     # Count successful detections
     pads_detected = sum(1 for row in feature_rows if row["confidence"] > 0 or "detection_status" not in row)
     pads_unavailable = len(feature_rows) - pads_detected
+    uses_markerless = str(orientation_variant).startswith("markerless_")
+    pipeline_version = (
+        "markerless_strip_optimized_semiquant_knn"
+        if optimized_models and uses_markerless
+        else "vision_pipeline_optimized_semiquant_knn"
+        if optimized_models
+        else "markerless_strip_hsv_knn"
+        if uses_markerless
+        else "vision_pipeline_hsv_knn"
+    )
     
     payload = {
         "id": f"scan_{image_path.stem}",
@@ -470,15 +539,20 @@ def run_scan(
         "model_version": _optimized_model_version(optimized_metadata) if optimized_models else map_path.name,
         "reference_map_path": str(map_path) if map_path is not None else None,
         "optimized_models_path": str(models_dir) if optimized_models else None,
-        "pipeline_version": "vision_pipeline_optimized_semiquant_knn" if optimized_models else "vision_pipeline_hsv_knn",
+        "pipeline_version": pipeline_version,
+        "localization_method": "markerless_strip" if uses_markerless else "macro_marker_legacy",
+        "roi_method": "strip_edge_pad_grid" if uses_markerless else "marker_anchored_grid",
+        "awb_method": "strip_neutral_gray_world" if uses_markerless else "marker_center_patch",
         "feature_space": feature_space,
         "image_orientation_variant": orientation_variant,
         "image_orientation_quality": round(float(orientation_quality), 6),
         "frames_total": burst.frames_total,
         "frames_used": burst.frames_used,
         "frames_skipped": burst.frames_skipped,
-        "frame_errors": burst.frame_errors,
+        "frame_errors": list(burst.frame_errors),
         "features_by_pad": burst.features_by_pad,
+        "strip_bbox": list(getattr(burst, "strip_bbox", ())) if uses_markerless else None,
+        "pad_rois": getattr(burst, "pad_rois", None) if uses_markerless else None,
         "pads_detected": pads_detected,
         "pads_unavailable": pads_unavailable,
         "analytes": feature_rows,
