@@ -18,6 +18,8 @@ pipeline/dataset/cabatuan_holdout_features_normalized_hsv.csv
 pipeline/dataset/cabatuan_holdout_features_lab.csv
 pipeline/output/cabatuan_holdout_label_validation.json
 pipeline/output/*_roi_debug.jpg
+pipeline/output/roi_overlays/
+pipeline/dataset/features_normalized_hsv_roi_topfix.csv
 pipeline/output/cabatuan_cross_site_*.json
 pipeline/output/cabatuan_only_model_family_*.json
 pipeline/output/semiquant_models_cabatuan_*_candidate/

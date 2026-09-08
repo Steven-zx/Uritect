@@ -484,7 +484,18 @@ def _select_consecutive_pad_centers(
         mean_strength = float(np.mean([item[2] for item in window]))
         mean_width = float(np.mean([item[1] for item in window]))
         border_penalty = sum(1 for item in window if item[3] or item[4]) * 0.55
-        score = mean_strength + min(mean_width / median_gap, 1.0) - (gap_cv * 2.0) - border_penalty
+        # Extra colored regions can appear below the strip handle or from
+        # background marks. For semiquant ordering, the first valid reagent pad
+        # is the topmost pad-like row, so do not let a stronger lower window
+        # silently shift all ten analytes downward.
+        top_window_penalty = start * 0.35
+        score = (
+            mean_strength
+            + min(mean_width / median_gap, 1.0)
+            - (gap_cv * 2.0)
+            - border_penalty
+            - top_window_penalty
+        )
         if best is None or score > best[0]:
             best = (score, centers)
 
@@ -553,6 +564,92 @@ def _detect_pad_centers(
     return _select_consecutive_pad_centers(candidates, required_count)
 
 
+def _detect_global_pad_column(image_bgr: np.ndarray, pad_size: int) -> int | None:
+    h, w = image_bgr.shape[:2]
+    hsv = cv2.cvtColor(image_bgr, cv2.COLOR_BGR2HSV).astype(np.float32)
+    sat = hsv[:, :, 1] / 255.0
+    val = hsv[:, :, 2] / 255.0
+    lab = cv2.cvtColor(image_bgr, cv2.COLOR_BGR2LAB).astype(np.float32)
+    bg = _border_background_lab(image_bgr)
+    diff = np.linalg.norm(lab - bg.reshape(1, 1, 3), axis=2)
+    diff_scale = max(1.0, float(np.percentile(diff, 98)))
+    diff_norm = np.clip(diff / diff_scale, 0.0, 1.0)
+    activity = ((diff > max(8.0, float(np.percentile(diff, 80)))) & (val > 0.08) & (val < 0.99)).astype(np.float32)
+    col_score = (0.62 * activity.mean(axis=0)) + (0.38 * diff_norm.mean(axis=0)) + (0.10 * sat.mean(axis=0))
+    col_score = _smooth_projection(col_score, max(7, pad_size // 8))
+    threshold = max(0.08, float(np.percentile(col_score, 95)) * 0.55)
+    runs = _find_runs(col_score >= threshold, min_length=max(12, int(round(pad_size * 0.35))))
+    candidates: list[tuple[float, int, int]] = []
+    for start, end in runs:
+        width = end - start + 1
+        if width < pad_size * 0.45 or width > pad_size * 2.4:
+            continue
+        strength = float(np.mean(col_score[start : end + 1]))
+        candidates.append((strength, start, end))
+    if not candidates:
+        return None
+    _score, start, end = max(candidates, key=lambda item: item[0])
+    center_x = (start + end) / 2.0
+    return int(round(center_x - pad_size / 2.0))
+
+
+def _detect_pad_column(
+    image_bgr: np.ndarray,
+    centers: list[float],
+    pad_size: int,
+    strip_bbox: tuple[int, int, int, int],
+) -> int | None:
+    if not centers:
+        return None
+
+    h, w = image_bgr.shape[:2]
+    band_half = max(4, int(round(pad_size * 0.38)))
+    mask = np.zeros((h,), dtype=bool)
+    for center in centers:
+        y0 = max(0, int(round(center)) - band_half)
+        y1 = min(h, int(round(center)) + band_half + 1)
+        mask[y0:y1] = True
+    rows = np.where(mask)[0]
+    if rows.size == 0:
+        return None
+
+    sample = image_bgr[rows, :, :]
+    hsv = cv2.cvtColor(sample.reshape(len(rows), w, 3), cv2.COLOR_BGR2HSV).astype(np.float32)
+    sat = hsv[:, :, 1] / 255.0
+    val = hsv[:, :, 2] / 255.0
+    lab = cv2.cvtColor(sample.reshape(len(rows), w, 3), cv2.COLOR_BGR2LAB).astype(np.float32)
+    chroma = np.sqrt(np.square(lab[:, :, 1] - 128.0) + np.square(lab[:, :, 2] - 128.0))
+    chroma = chroma / max(1.0, float(np.percentile(chroma, 98)))
+    activity = ((sat > 0.12) & (val > 0.10) & (val < 0.985)).astype(np.float32)
+    col_score = (0.58 * activity.mean(axis=0)) + (0.42 * chroma.mean(axis=0))
+    col_score = _smooth_projection(col_score, max(7, pad_size // 8))
+
+    threshold = max(0.05, float(np.percentile(col_score, 94)) * 0.45)
+    runs = _find_runs(col_score >= threshold, min_length=max(12, int(round(pad_size * 0.35))))
+    if not runs:
+        return None
+
+    x0, _y0, x1, _y1 = strip_bbox
+    strip_center = (x0 + x1) / 2.0
+    candidates: list[tuple[float, int, int]] = []
+    for start, end in runs:
+        width = end - start + 1
+        if width < pad_size * 0.35 or width > pad_size * 2.2:
+            continue
+        center = (start + end) / 2.0
+        strength = float(np.mean(col_score[start : end + 1]))
+        distance_penalty = abs(center - strip_center) / max(1.0, w)
+        score = strength - distance_penalty
+        candidates.append((score, start, end))
+
+    if not candidates:
+        return None
+
+    _score, start, end = max(candidates, key=lambda item: item[0])
+    center_x = (start + end) / 2.0
+    return int(round(center_x - pad_size / 2.0))
+
+
 def extract_markerless_features(
     image_bgr: np.ndarray,
     *,
@@ -566,19 +663,27 @@ def extract_markerless_features(
     strip_width = x1 - x0 + 1
     strip_height = y1 - y0 + 1
     pad_size = max(4, int(round(strip_width * config.pad_inner_fraction)))
-    crop_x0 = int(round((x0 + x1) / 2.0 - pad_size / 2.0))
-    crop_x0 = max(0, min(corrected.shape[1] - pad_size, crop_x0))
+    initial_crop_x0 = _detect_global_pad_column(corrected, pad_size)
+    if initial_crop_x0 is None:
+        initial_crop_x0 = int(round((x0 + x1) / 2.0 - pad_size / 2.0))
+    initial_crop_x0 = max(0, min(corrected.shape[1] - pad_size, initial_crop_x0))
+    pad_column_bbox = (initial_crop_x0, y0, initial_crop_x0 + pad_size - 1, y1)
 
-    centers = _detect_pad_centers(corrected, (x0, y0, x1, y1), pad_size, len(ANALYTE_ORDER))
+    centers = _detect_pad_centers(corrected, pad_column_bbox, pad_size, len(ANALYTE_ORDER))
     if centers is None:
-        # Fallback for low-contrast strips where individual row segments are
-        # not reliable enough to replace the detected stack geometry.
-        centers = np.linspace(y0 + (strip_height * 0.045), y1 - (strip_height * 0.045), len(ANALYTE_ORDER)).tolist()
+        raise ValueError("Markerless strip localization failed: ten pad rows were not reliably detected.")
+
+    detected_crop_x0 = _detect_pad_column(corrected, centers, pad_size, pad_column_bbox)
+    if detected_crop_x0 is None:
+        detected_crop_x0 = initial_crop_x0
+    crop_x0 = max(0, min(corrected.shape[1] - pad_size, detected_crop_x0))
     features: dict[str, tuple[float, float, float]] = {}
     rois: dict[str, tuple[int, int, int, int]] = {}
+    crop_y_values: list[int] = []
     for analyte, center_y in zip(ANALYTE_ORDER, centers, strict=True):
         crop_y0 = int(round(float(center_y) - pad_size / 2.0))
         crop_y0 = max(0, min(corrected.shape[0] - pad_size, crop_y0))
+        crop_y_values.append(crop_y0)
         crop = corrected[crop_y0 : crop_y0 + pad_size, crop_x0 : crop_x0 + pad_size]
         features[analyte] = _mean_lab(crop) if config.feature_space == "lab" else _mean_hsv(crop)
         rois[analyte] = (crop_x0, crop_y0, pad_size, pad_size)
@@ -592,5 +697,10 @@ def extract_markerless_features(
         orientation=orientation,
         quality_score=quality,
         awb_gains_bgr=gains,
-        strip_bbox=(x0, y0, x1, y1),
+        strip_bbox=(
+            crop_x0,
+            min(crop_y_values),
+            crop_x0 + pad_size - 1,
+            max(crop_y_values) + pad_size - 1,
+        ),
     )

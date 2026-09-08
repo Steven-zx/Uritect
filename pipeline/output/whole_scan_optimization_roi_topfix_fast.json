@@ -1,0 +1,1365 @@
+{
+  "generated_at": "2026-09-07T18:24:10.558227+00:00",
+  "features": "pipeline\\dataset\\features_normalized_hsv_roi_topfix.csv",
+  "split_mode": "grouped",
+  "profile": "fast",
+  "selection": "best",
+  "raw_rows": 7840,
+  "deduped_rows": 7840,
+  "duplicates_removed": 0,
+  "train_events": 621,
+  "test_events": 163,
+  "train_samples": 6210,
+  "test_samples": 1630,
+  "per_analyte": {
+    "Leukocytes": {
+      "selected_model": "random_forest",
+      "selected_feature_set": "all30",
+      "selected_accuracy": 0.7791411042944786,
+      "selected_f1_macro": 0.6643327942898567,
+      "knn_current_accuracy": 0.6809815950920245,
+      "candidates": [
+        {
+          "name": "random_forest",
+          "feature_set": "all30",
+          "accuracy": 0.7791411042944786,
+          "f1_macro": 0.6643327942898567
+        },
+        {
+          "name": "extra_trees",
+          "feature_set": "all30",
+          "accuracy": 0.7668711656441718,
+          "f1_macro": 0.6949115044247788
+        },
+        {
+          "name": "knn_11_scaled",
+          "feature_set": "all30",
+          "accuracy": 0.7239263803680982,
+          "f1_macro": 0.6268505747126437
+        },
+        {
+          "name": "random_forest",
+          "feature_set": "local",
+          "accuracy": 0.6809815950920245,
+          "f1_macro": 0.45312227705341046
+        },
+        {
+          "name": "knn_current",
+          "feature_set": "local",
+          "accuracy": 0.6809815950920245,
+          "f1_macro": 0.4449638081217029
+        },
+        {
+          "name": "knn_current",
+          "feature_set": "all30",
+          "accuracy": 0.6809815950920245,
+          "f1_macro": 0.4449638081217029
+        },
+        {
+          "name": "extra_trees",
+          "feature_set": "local",
+          "accuracy": 0.6748466257668712,
+          "f1_macro": 0.624132730015083
+        },
+        {
+          "name": "random_forest_per_light",
+          "feature_set": "local",
+          "accuracy": 0.6687116564417178,
+          "f1_macro": 0.4716134267061129,
+          "fallback_predictions": 0
+        },
+        {
+          "name": "extra_trees_per_light",
+          "feature_set": "local",
+          "accuracy": 0.656441717791411,
+          "f1_macro": 0.3735042735042735,
+          "fallback_predictions": 0
+        },
+        {
+          "name": "knn_current_per_light",
+          "feature_set": "local",
+          "accuracy": 0.6441717791411042,
+          "f1_macro": 0.23418913136499783,
+          "fallback_predictions": 0
+        },
+        {
+          "name": "knn_11_scaled",
+          "feature_set": "local",
+          "accuracy": 0.6257668711656442,
+          "f1_macro": 0.40219505219505214
+        },
+        {
+          "name": "gaussian_nb",
+          "feature_set": "local",
+          "accuracy": 0.6196319018404908,
+          "f1_macro": 0.3371794871794872
+        },
+        {
+          "name": "centroid",
+          "feature_set": "local",
+          "accuracy": 0.4294478527607362,
+          "f1_macro": 0.29727441632799384
+        },
+        {
+          "name": "gaussian_nb",
+          "feature_set": "all30",
+          "accuracy": 0.32515337423312884,
+          "f1_macro": 0.20217072687660922
+        },
+        {
+          "name": "centroid",
+          "feature_set": "all30",
+          "accuracy": 0.3067484662576687,
+          "f1_macro": 0.2668604138605335
+        }
+      ]
+    },
+    "Nitrite": {
+      "selected_model": "extra_trees",
+      "selected_feature_set": "all30",
+      "selected_accuracy": 1.0,
+      "selected_f1_macro": 1.0,
+      "knn_current_accuracy": 0.9938650306748467,
+      "candidates": [
+        {
+          "name": "extra_trees",
+          "feature_set": "all30",
+          "accuracy": 1.0,
+          "f1_macro": 1.0
+        },
+        {
+          "name": "knn_current",
+          "feature_set": "local",
+          "accuracy": 0.9938650306748467,
+          "f1_macro": 0.8317853457172342
+        },
+        {
+          "name": "knn_11_scaled",
+          "feature_set": "local",
+          "accuracy": 0.9938650306748467,
+          "f1_macro": 0.8317853457172342
+        },
+        {
+          "name": "extra_trees",
+          "feature_set": "local",
+          "accuracy": 0.9938650306748467,
+          "f1_macro": 0.8317853457172342
+        },
+        {
+          "name": "knn_11_scaled",
+          "feature_set": "all30",
+          "accuracy": 0.9938650306748467,
+          "f1_macro": 0.8317853457172342
+        },
+        {
+          "name": "knn_current",
+          "feature_set": "all30",
+          "accuracy": 0.9877300613496932,
+          "f1_macro": 0.49691358024691357
+        },
+        {
+          "name": "knn_current_per_light",
+          "feature_set": "local",
+          "accuracy": 0.9877300613496932,
+          "f1_macro": 0.49691358024691357,
+          "fallback_predictions": 0
+        },
+        {
+          "name": "random_forest",
+          "feature_set": "local",
+          "accuracy": 0.9877300613496932,
+          "f1_macro": 0.49691358024691357
+        },
+        {
+          "name": "random_forest_per_light",
+          "feature_set": "local",
+          "accuracy": 0.9877300613496932,
+          "f1_macro": 0.49691358024691357,
+          "fallback_predictions": 0
+        },
+        {
+          "name": "random_forest",
+          "feature_set": "all30",
+          "accuracy": 0.9877300613496932,
+          "f1_macro": 0.49691358024691357
+        },
+        {
+          "name": "extra_trees_per_light",
+          "feature_set": "local",
+          "accuracy": 0.9815950920245399,
+          "f1_macro": 0.4953560371517028,
+          "fallback_predictions": 0
+        },
+        {
+          "name": "gaussian_nb",
+          "feature_set": "local",
+          "accuracy": 0.9631901840490797,
+          "f1_macro": 0.6155660377358491
+        },
+        {
+          "name": "gaussian_nb",
+          "feature_set": "all30",
+          "accuracy": 0.950920245398773,
+          "f1_macro": 0.6539278131634819
+        },
+        {
+          "name": "centroid",
+          "feature_set": "all30",
+          "accuracy": 0.8773006134969326,
+          "f1_macro": 0.5502207505518764
+        },
+        {
+          "name": "centroid",
+          "feature_set": "local",
+          "accuracy": 0.7300613496932515,
+          "f1_macro": 0.443167701863354
+        }
+      ]
+    },
+    "Urobilinogen": {
+      "selected_model": "random_forest",
+      "selected_feature_set": "all30",
+      "selected_accuracy": 0.8711656441717791,
+      "selected_f1_macro": 0.7478081485301702,
+      "knn_current_accuracy": 0.8282208588957055,
+      "candidates": [
+        {
+          "name": "random_forest",
+          "feature_set": "all30",
+          "accuracy": 0.8711656441717791,
+          "f1_macro": 0.7478081485301702
+        },
+        {
+          "name": "knn_11_scaled",
+          "feature_set": "all30",
+          "accuracy": 0.8588957055214724,
+          "f1_macro": 0.7408943257999862
+        },
+        {
+          "name": "extra_trees",
+          "feature_set": "all30",
+          "accuracy": 0.8588957055214724,
+          "f1_macro": 0.7326916221033868
+        },
+        {
+          "name": "knn_current",
+          "feature_set": "local",
+          "accuracy": 0.8282208588957055,
+          "f1_macro": 0.6456521739130435
+        },
+        {
+          "name": "knn_current_per_light",
+          "feature_set": "local",
+          "accuracy": 0.8220858895705522,
+          "f1_macro": 0.595464270432178,
+          "fallback_predictions": 0
+        },
+        {
+          "name": "knn_11_scaled",
+          "feature_set": "local",
+          "accuracy": 0.8159509202453987,
+          "f1_macro": 0.6203416149068324
+        },
+        {
+          "name": "random_forest",
+          "feature_set": "local",
+          "accuracy": 0.8098159509202454,
+          "f1_macro": 0.6003954132068011
+        },
+        {
+          "name": "knn_current",
+          "feature_set": "all30",
+          "accuracy": 0.803680981595092,
+          "f1_macro": 0.544055944055944
+        },
+        {
+          "name": "gaussian_nb",
+          "feature_set": "local",
+          "accuracy": 0.803680981595092,
+          "f1_macro": 0.445578231292517
+        },
+        {
+          "name": "extra_trees_per_light",
+          "feature_set": "local",
+          "accuracy": 0.7975460122699386,
+          "f1_macro": 0.6036985191188389,
+          "fallback_predictions": 0
+        },
+        {
+          "name": "random_forest_per_light",
+          "feature_set": "local",
+          "accuracy": 0.7975460122699386,
+          "f1_macro": 0.5897963852665293,
+          "fallback_predictions": 0
+        },
+        {
+          "name": "extra_trees",
+          "feature_set": "local",
+          "accuracy": 0.7975460122699386,
+          "f1_macro": 0.5897963852665293
+        },
+        {
+          "name": "centroid",
+          "feature_set": "all30",
+          "accuracy": 0.6012269938650306,
+          "f1_macro": 0.5560444165095328
+        },
+        {
+          "name": "gaussian_nb",
+          "feature_set": "all30",
+          "accuracy": 0.5644171779141104,
+          "f1_macro": 0.5230579023284566
+        },
+        {
+          "name": "centroid",
+          "feature_set": "local",
+          "accuracy": 0.4049079754601227,
+          "f1_macro": 0.40166508987701044
+        }
+      ]
+    },
+    "Protein": {
+      "selected_model": "extra_trees",
+      "selected_feature_set": "all30",
+      "selected_accuracy": 0.8773006134969326,
+      "selected_f1_macro": 0.36272956639089365,
+      "knn_current_accuracy": 0.8773006134969326,
+      "candidates": [
+        {
+          "name": "extra_trees",
+          "feature_set": "all30",
+          "accuracy": 0.8773006134969326,
+          "f1_macro": 0.36272956639089365
+        },
+        {
+          "name": "knn_current",
+          "feature_set": "local",
+          "accuracy": 0.8773006134969326,
+          "f1_macro": 0.2593044539353264
+        },
+        {
+          "name": "knn_11_scaled",
+          "feature_set": "local",
+          "accuracy": 0.8650306748466258,
+          "f1_macro": 0.21751304569173988
+        },
+        {
+          "name": "knn_current_per_light",
+          "feature_set": "local",
+          "accuracy": 0.8650306748466258,
+          "f1_macro": 0.20765268579838114,
+          "fallback_predictions": 0
+        },
+        {
+          "name": "extra_trees",
+          "feature_set": "local",
+          "accuracy": 0.8588957055214724,
+          "f1_macro": 0.22014911393353565
+        },
+        {
+          "name": "knn_current",
+          "feature_set": "all30",
+          "accuracy": 0.8588957055214724,
+          "f1_macro": 0.1848184818481848
+        },
+        {
+          "name": "knn_11_scaled",
+          "feature_set": "all30",
+          "accuracy": 0.8588957055214724,
+          "f1_macro": 0.1848184818481848
+        },
+        {
+          "name": "random_forest",
+          "feature_set": "all30",
+          "accuracy": 0.8588957055214724,
+          "f1_macro": 0.1848184818481848
+        },
+        {
+          "name": "random_forest_per_light",
+          "feature_set": "local",
+          "accuracy": 0.852760736196319,
+          "f1_macro": 0.21898767374770522,
+          "fallback_predictions": 0
+        },
+        {
+          "name": "extra_trees_per_light",
+          "feature_set": "local",
+          "accuracy": 0.852760736196319,
+          "f1_macro": 0.21805555555555556,
+          "fallback_predictions": 0
+        },
+        {
+          "name": "random_forest",
+          "feature_set": "local",
+          "accuracy": 0.852760736196319,
+          "f1_macro": 0.21354679802955664
+        },
+        {
+          "name": "gaussian_nb",
+          "feature_set": "local",
+          "accuracy": 0.8282208588957055,
+          "f1_macro": 0.15151515151515152
+        },
+        {
+          "name": "centroid",
+          "feature_set": "all30",
+          "accuracy": 0.5398773006134969,
+          "f1_macro": 0.2373083642058974
+        },
+        {
+          "name": "centroid",
+          "feature_set": "local",
+          "accuracy": 0.5214723926380368,
+          "f1_macro": 0.1983115826975952
+        },
+        {
+          "name": "gaussian_nb",
+          "feature_set": "all30",
+          "accuracy": 0.49693251533742333,
+          "f1_macro": 0.20974594213126324
+        }
+      ]
+    },
+    "pH": {
+      "selected_model": "knn_current",
+      "selected_feature_set": "local",
+      "selected_accuracy": 0.8159509202453987,
+      "selected_f1_macro": 0.5749142179799115,
+      "knn_current_accuracy": 0.8159509202453987,
+      "candidates": [
+        {
+          "name": "knn_current",
+          "feature_set": "local",
+          "accuracy": 0.8159509202453987,
+          "f1_macro": 0.5749142179799115
+        },
+        {
+          "name": "random_forest",
+          "feature_set": "all30",
+          "accuracy": 0.803680981595092,
+          "f1_macro": 0.49488795518207285
+        },
+        {
+          "name": "extra_trees",
+          "feature_set": "all30",
+          "accuracy": 0.7975460122699386,
+          "f1_macro": 0.4619564061669325
+        },
+        {
+          "name": "random_forest",
+          "feature_set": "local",
+          "accuracy": 0.7852760736196319,
+          "f1_macro": 0.5048064285982502
+        },
+        {
+          "name": "gaussian_nb",
+          "feature_set": "local",
+          "accuracy": 0.7791411042944786,
+          "f1_macro": 0.3965721040189125
+        },
+        {
+          "name": "knn_11_scaled",
+          "feature_set": "local",
+          "accuracy": 0.7730061349693251,
+          "f1_macro": 0.4630360274190977
+        },
+        {
+          "name": "knn_current_per_light",
+          "feature_set": "local",
+          "accuracy": 0.7730061349693251,
+          "f1_macro": 0.3185314685314685,
+          "fallback_predictions": 0
+        },
+        {
+          "name": "extra_trees",
+          "feature_set": "local",
+          "accuracy": 0.7668711656441718,
+          "f1_macro": 0.5357513965389273
+        },
+        {
+          "name": "extra_trees_per_light",
+          "feature_set": "local",
+          "accuracy": 0.7668711656441718,
+          "f1_macro": 0.535315945716709,
+          "fallback_predictions": 0
+        },
+        {
+          "name": "knn_11_scaled",
+          "feature_set": "all30",
+          "accuracy": 0.7668711656441718,
+          "f1_macro": 0.2593913789565963
+        },
+        {
+          "name": "random_forest_per_light",
+          "feature_set": "local",
+          "accuracy": 0.7423312883435583,
+          "f1_macro": 0.4633504859919954,
+          "fallback_predictions": 0
+        },
+        {
+          "name": "knn_current",
+          "feature_set": "all30",
+          "accuracy": 0.7361963190184049,
+          "f1_macro": 0.1423487544483986
+        },
+        {
+          "name": "gaussian_nb",
+          "feature_set": "all30",
+          "accuracy": 0.4539877300613497,
+          "f1_macro": 0.4085023163970532
+        },
+        {
+          "name": "centroid",
+          "feature_set": "all30",
+          "accuracy": 0.38650306748466257,
+          "f1_macro": 0.21542038479322
+        },
+        {
+          "name": "centroid",
+          "feature_set": "local",
+          "accuracy": 0.31901840490797545,
+          "f1_macro": 0.25463244561345827
+        }
+      ]
+    },
+    "Blood": {
+      "selected_model": "knn_current",
+      "selected_feature_set": "local",
+      "selected_accuracy": 0.9325153374233128,
+      "selected_f1_macro": 0.906949352179034,
+      "knn_current_accuracy": 0.9325153374233128,
+      "candidates": [
+        {
+          "name": "knn_current",
+          "feature_set": "local",
+          "accuracy": 0.9325153374233128,
+          "f1_macro": 0.906949352179034
+        },
+        {
+          "name": "knn_current_per_light",
+          "feature_set": "local",
+          "accuracy": 0.9202453987730062,
+          "f1_macro": 0.8644845838691348,
+          "fallback_predictions": 0
+        },
+        {
+          "name": "random_forest_per_light",
+          "feature_set": "local",
+          "accuracy": 0.9202453987730062,
+          "f1_macro": 0.7108771929824561,
+          "fallback_predictions": 0
+        },
+        {
+          "name": "knn_11_scaled",
+          "feature_set": "local",
+          "accuracy": 0.9141104294478528,
+          "f1_macro": 0.7668655362500872
+        },
+        {
+          "name": "extra_trees",
+          "feature_set": "local",
+          "accuracy": 0.9141104294478528,
+          "f1_macro": 0.7112830431979368
+        },
+        {
+          "name": "extra_trees_per_light",
+          "feature_set": "local",
+          "accuracy": 0.9141104294478528,
+          "f1_macro": 0.706269877328487,
+          "fallback_predictions": 0
+        },
+        {
+          "name": "extra_trees",
+          "feature_set": "all30",
+          "accuracy": 0.901840490797546,
+          "f1_macro": 0.5408156498673741
+        },
+        {
+          "name": "knn_11_scaled",
+          "feature_set": "all30",
+          "accuracy": 0.8957055214723927,
+          "f1_macro": 0.49189928845101255
+        },
+        {
+          "name": "random_forest",
+          "feature_set": "local",
+          "accuracy": 0.8834355828220859,
+          "f1_macro": 0.5850877192982457
+        },
+        {
+          "name": "random_forest",
+          "feature_set": "all30",
+          "accuracy": 0.8773006134969326,
+          "f1_macro": 0.46578236305576026
+        },
+        {
+          "name": "knn_current",
+          "feature_set": "all30",
+          "accuracy": 0.8466257668711656,
+          "f1_macro": 0.25225225225225223
+        },
+        {
+          "name": "gaussian_nb",
+          "feature_set": "local",
+          "accuracy": 0.8159509202453987,
+          "f1_macro": 0.4613437520870901
+        },
+        {
+          "name": "gaussian_nb",
+          "feature_set": "all30",
+          "accuracy": 0.7975460122699386,
+          "f1_macro": 0.2884661806594892
+        },
+        {
+          "name": "centroid",
+          "feature_set": "local",
+          "accuracy": 0.7300613496932515,
+          "f1_macro": 0.3289760348583878
+        },
+        {
+          "name": "centroid",
+          "feature_set": "all30",
+          "accuracy": 0.6625766871165644,
+          "f1_macro": 0.27719166978426235
+        }
+      ]
+    },
+    "Specific Gravity": {
+      "selected_model": "knn_current",
+      "selected_feature_set": "local",
+      "selected_accuracy": 0.588957055214724,
+      "selected_f1_macro": 0.5556588199590254,
+      "knn_current_accuracy": 0.588957055214724,
+      "candidates": [
+        {
+          "name": "knn_current",
+          "feature_set": "local",
+          "accuracy": 0.588957055214724,
+          "f1_macro": 0.5556588199590254
+        },
+        {
+          "name": "knn_current_per_light",
+          "feature_set": "local",
+          "accuracy": 0.5828220858895705,
+          "f1_macro": 0.5579007925894163,
+          "fallback_predictions": 0
+        },
+        {
+          "name": "extra_trees",
+          "feature_set": "all30",
+          "accuracy": 0.5828220858895705,
+          "f1_macro": 0.5527524826858707
+        },
+        {
+          "name": "extra_trees_per_light",
+          "feature_set": "local",
+          "accuracy": 0.5766871165644172,
+          "f1_macro": 0.54465368041201,
+          "fallback_predictions": 0
+        },
+        {
+          "name": "knn_11_scaled",
+          "feature_set": "local",
+          "accuracy": 0.5766871165644172,
+          "f1_macro": 0.5405622903843321
+        },
+        {
+          "name": "extra_trees",
+          "feature_set": "local",
+          "accuracy": 0.5644171779141104,
+          "f1_macro": 0.5270474556188842
+        },
+        {
+          "name": "random_forest",
+          "feature_set": "all30",
+          "accuracy": 0.558282208588957,
+          "f1_macro": 0.5240972950492241
+        },
+        {
+          "name": "random_forest",
+          "feature_set": "local",
+          "accuracy": 0.558282208588957,
+          "f1_macro": 0.5177925395140769
+        },
+        {
+          "name": "random_forest_per_light",
+          "feature_set": "local",
+          "accuracy": 0.5521472392638037,
+          "f1_macro": 0.5308122037048167,
+          "fallback_predictions": 0
+        },
+        {
+          "name": "knn_11_scaled",
+          "feature_set": "all30",
+          "accuracy": 0.5214723926380368,
+          "f1_macro": 0.4824449573742267
+        },
+        {
+          "name": "centroid",
+          "feature_set": "all30",
+          "accuracy": 0.4233128834355828,
+          "f1_macro": 0.39271668293932066
+        },
+        {
+          "name": "gaussian_nb",
+          "feature_set": "all30",
+          "accuracy": 0.4171779141104294,
+          "f1_macro": 0.3559496208689757
+        },
+        {
+          "name": "gaussian_nb",
+          "feature_set": "local",
+          "accuracy": 0.3803680981595092,
+          "f1_macro": 0.29175867005214046
+        },
+        {
+          "name": "knn_current",
+          "feature_set": "all30",
+          "accuracy": 0.3558282208588957,
+          "f1_macro": 0.28666138573168704
+        },
+        {
+          "name": "centroid",
+          "feature_set": "local",
+          "accuracy": 0.294478527607362,
+          "f1_macro": 0.24313941198041375
+        }
+      ]
+    },
+    "Ketone": {
+      "selected_model": "extra_trees",
+      "selected_feature_set": "all30",
+      "selected_accuracy": 0.7668711656441718,
+      "selected_f1_macro": 0.7227891156462585,
+      "knn_current_accuracy": 0.7300613496932515,
+      "candidates": [
+        {
+          "name": "extra_trees",
+          "feature_set": "all30",
+          "accuracy": 0.7668711656441718,
+          "f1_macro": 0.7227891156462585
+        },
+        {
+          "name": "random_forest",
+          "feature_set": "all30",
+          "accuracy": 0.7361963190184049,
+          "f1_macro": 0.6677096667140758
+        },
+        {
+          "name": "knn_current",
+          "feature_set": "local",
+          "accuracy": 0.7300613496932515,
+          "f1_macro": 0.6751811594202899
+        },
+        {
+          "name": "knn_11_scaled",
+          "feature_set": "all30",
+          "accuracy": 0.7177914110429447,
+          "f1_macro": 0.6469868173258003
+        },
+        {
+          "name": "knn_current_per_light",
+          "feature_set": "local",
+          "accuracy": 0.7116564417177914,
+          "f1_macro": 0.6464534588582769,
+          "fallback_predictions": 0
+        },
+        {
+          "name": "random_forest_per_light",
+          "feature_set": "local",
+          "accuracy": 0.6809815950920245,
+          "f1_macro": 0.6206587898317222,
+          "fallback_predictions": 0
+        },
+        {
+          "name": "knn_current",
+          "feature_set": "all30",
+          "accuracy": 0.6809815950920245,
+          "f1_macro": 0.5763694522191123
+        },
+        {
+          "name": "extra_trees_per_light",
+          "feature_set": "local",
+          "accuracy": 0.6748466257668712,
+          "f1_macro": 0.6198459845984599,
+          "fallback_predictions": 0
+        },
+        {
+          "name": "knn_11_scaled",
+          "feature_set": "local",
+          "accuracy": 0.6748466257668712,
+          "f1_macro": 0.601319857861461
+        },
+        {
+          "name": "random_forest",
+          "feature_set": "local",
+          "accuracy": 0.6748466257668712,
+          "f1_macro": 0.5960252513444003
+        },
+        {
+          "name": "extra_trees",
+          "feature_set": "local",
+          "accuracy": 0.656441717791411,
+          "f1_macro": 0.5865942028985507
+        },
+        {
+          "name": "gaussian_nb",
+          "feature_set": "all30",
+          "accuracy": 0.6257668711656442,
+          "f1_macro": 0.6211468851209754
+        },
+        {
+          "name": "centroid",
+          "feature_set": "all30",
+          "accuracy": 0.6134969325153374,
+          "f1_macro": 0.40726413066838596
+        },
+        {
+          "name": "gaussian_nb",
+          "feature_set": "local",
+          "accuracy": 0.4539877300613497,
+          "f1_macro": 0.2991060025542784
+        },
+        {
+          "name": "centroid",
+          "feature_set": "local",
+          "accuracy": 0.22699386503067484,
+          "f1_macro": 0.21781593933492668
+        }
+      ]
+    },
+    "Bilirubin": {
+      "selected_model": "knn_current",
+      "selected_feature_set": "local",
+      "selected_accuracy": 0.8711656441717791,
+      "selected_f1_macro": 0.8539239533990526,
+      "knn_current_accuracy": 0.8711656441717791,
+      "candidates": [
+        {
+          "name": "knn_current",
+          "feature_set": "local",
+          "accuracy": 0.8711656441717791,
+          "f1_macro": 0.8539239533990526
+        },
+        {
+          "name": "extra_trees",
+          "feature_set": "all30",
+          "accuracy": 0.8588957055214724,
+          "f1_macro": 0.8466854782644256
+        },
+        {
+          "name": "random_forest",
+          "feature_set": "local",
+          "accuracy": 0.852760736196319,
+          "f1_macro": 0.8381330685203575
+        },
+        {
+          "name": "knn_current_per_light",
+          "feature_set": "local",
+          "accuracy": 0.852760736196319,
+          "f1_macro": 0.8305613305613306,
+          "fallback_predictions": 0
+        },
+        {
+          "name": "knn_11_scaled",
+          "feature_set": "local",
+          "accuracy": 0.8404907975460123,
+          "f1_macro": 0.8246441575637207
+        },
+        {
+          "name": "extra_trees",
+          "feature_set": "local",
+          "accuracy": 0.8343558282208589,
+          "f1_macro": 0.8186276529981455
+        },
+        {
+          "name": "random_forest_per_light",
+          "feature_set": "local",
+          "accuracy": 0.8343558282208589,
+          "f1_macro": 0.8155876807039598,
+          "fallback_predictions": 0
+        },
+        {
+          "name": "knn_11_scaled",
+          "feature_set": "all30",
+          "accuracy": 0.8343558282208589,
+          "f1_macro": 0.8103425985778927
+        },
+        {
+          "name": "random_forest",
+          "feature_set": "all30",
+          "accuracy": 0.8282208588957055,
+          "f1_macro": 0.8111552466070837
+        },
+        {
+          "name": "knn_current",
+          "feature_set": "all30",
+          "accuracy": 0.8282208588957055,
+          "f1_macro": 0.8079124579124579
+        },
+        {
+          "name": "extra_trees_per_light",
+          "feature_set": "local",
+          "accuracy": 0.8159509202453987,
+          "f1_macro": 0.7959779706275033,
+          "fallback_predictions": 0
+        },
+        {
+          "name": "centroid",
+          "feature_set": "all30",
+          "accuracy": 0.7484662576687117,
+          "f1_macro": 0.5079495614035088
+        },
+        {
+          "name": "gaussian_nb",
+          "feature_set": "local",
+          "accuracy": 0.7423312883435583,
+          "f1_macro": 0.49174788823911636
+        },
+        {
+          "name": "centroid",
+          "feature_set": "local",
+          "accuracy": 0.6809815950920245,
+          "f1_macro": 0.48899556199619604
+        },
+        {
+          "name": "gaussian_nb",
+          "feature_set": "all30",
+          "accuracy": 0.5460122699386503,
+          "f1_macro": 0.38586813764118727
+        }
+      ]
+    },
+    "Glucose": {
+      "selected_model": "knn_current_per_light",
+      "selected_feature_set": "local",
+      "selected_accuracy": 0.9386503067484663,
+      "selected_f1_macro": 0.3845745511319282,
+      "knn_current_accuracy": 0.9325153374233128,
+      "candidates": [
+        {
+          "name": "knn_current_per_light",
+          "feature_set": "local",
+          "accuracy": 0.9386503067484663,
+          "f1_macro": 0.3845745511319282,
+          "fallback_predictions": 0
+        },
+        {
+          "name": "gaussian_nb",
+          "feature_set": "local",
+          "accuracy": 0.9386503067484663,
+          "f1_macro": 0.35405940594059404
+        },
+        {
+          "name": "knn_current",
+          "feature_set": "local",
+          "accuracy": 0.9325153374233128,
+          "f1_macro": 0.3740983606557377
+        },
+        {
+          "name": "extra_trees",
+          "feature_set": "local",
+          "accuracy": 0.9325153374233128,
+          "f1_macro": 0.3699767333643555
+        },
+        {
+          "name": "knn_11_scaled",
+          "feature_set": "local",
+          "accuracy": 0.9263803680981595,
+          "f1_macro": 0.3306069094304388
+        },
+        {
+          "name": "random_forest_per_light",
+          "feature_set": "local",
+          "accuracy": 0.9263803680981595,
+          "f1_macro": 0.3128338762214984,
+          "fallback_predictions": 0
+        },
+        {
+          "name": "random_forest",
+          "feature_set": "local",
+          "accuracy": 0.9263803680981595,
+          "f1_macro": 0.30192478531240746
+        },
+        {
+          "name": "knn_11_scaled",
+          "feature_set": "all30",
+          "accuracy": 0.9263803680981595,
+          "f1_macro": 0.30192478531240746
+        },
+        {
+          "name": "knn_current",
+          "feature_set": "all30",
+          "accuracy": 0.9202453987730062,
+          "f1_macro": 0.480419833514296
+        },
+        {
+          "name": "random_forest",
+          "feature_set": "all30",
+          "accuracy": 0.9202453987730062,
+          "f1_macro": 0.2804746494066882
+        },
+        {
+          "name": "extra_trees",
+          "feature_set": "all30",
+          "accuracy": 0.9141104294478528,
+          "f1_macro": 0.2797979797979798
+        },
+        {
+          "name": "extra_trees_per_light",
+          "feature_set": "local",
+          "accuracy": 0.9079754601226994,
+          "f1_macro": 0.29141914191419144,
+          "fallback_predictions": 0
+        },
+        {
+          "name": "gaussian_nb",
+          "feature_set": "all30",
+          "accuracy": 0.8159509202453987,
+          "f1_macro": 0.3780294726586287
+        },
+        {
+          "name": "centroid",
+          "feature_set": "all30",
+          "accuracy": 0.5766871165644172,
+          "f1_macro": 0.24340048491576813
+        },
+        {
+          "name": "centroid",
+          "feature_set": "local",
+          "accuracy": 0.38650306748466257,
+          "f1_macro": 0.14532289081552627
+        }
+      ]
+    }
+  },
+  "threshold_summaries": [
+    {
+      "threshold": 0.0,
+      "accepted_scan_rate": 1.0,
+      "accepted_scans": 163,
+      "total_scans": 163,
+      "individual_analyte_accuracy": 0.8441717791411043,
+      "individual_analyte_correct": 1376,
+      "individual_analyte_total": 1630,
+      "whole_scan_all_10_correct_accuracy": 0.2085889570552147,
+      "whole_scan_correct": 34,
+      "failure_analytes": {
+        "Specific Gravity": 67,
+        "Ketone": 38,
+        "Leukocytes": 36,
+        "pH": 30,
+        "Bilirubin": 21,
+        "Urobilinogen": 21,
+        "Protein": 20,
+        "Blood": 11,
+        "Glucose": 10
+      },
+      "rejection_analytes": {}
+    },
+    {
+      "threshold": 0.35,
+      "accepted_scan_rate": 0.9263803680981595,
+      "accepted_scans": 151,
+      "total_scans": 163,
+      "individual_analyte_accuracy": 0.8523178807947019,
+      "individual_analyte_correct": 1287,
+      "individual_analyte_total": 1510,
+      "whole_scan_all_10_correct_accuracy": 0.2185430463576159,
+      "whole_scan_correct": 33,
+      "failure_analytes": {
+        "Specific Gravity": 62,
+        "Ketone": 34,
+        "Leukocytes": 30,
+        "pH": 29,
+        "Urobilinogen": 19,
+        "Bilirubin": 18,
+        "Protein": 16,
+        "Glucose": 8,
+        "Blood": 7
+      },
+      "rejection_analytes": {
+        "Specific Gravity": 6,
+        "Leukocytes": 3,
+        "pH": 2,
+        "Protein": 1
+      }
+    },
+    {
+      "threshold": 0.45,
+      "accepted_scan_rate": 0.7116564417177914,
+      "accepted_scans": 116,
+      "total_scans": 163,
+      "individual_analyte_accuracy": 0.8637931034482759,
+      "individual_analyte_correct": 1002,
+      "individual_analyte_total": 1160,
+      "whole_scan_all_10_correct_accuracy": 0.25862068965517243,
+      "whole_scan_correct": 30,
+      "failure_analytes": {
+        "Specific Gravity": 43,
+        "pH": 23,
+        "Leukocytes": 22,
+        "Ketone": 19,
+        "Protein": 14,
+        "Bilirubin": 14,
+        "Urobilinogen": 14,
+        "Blood": 5,
+        "Glucose": 4
+      },
+      "rejection_analytes": {
+        "Specific Gravity": 31,
+        "Leukocytes": 8,
+        "pH": 6,
+        "Protein": 4,
+        "Ketone": 2,
+        "Glucose": 1,
+        "Blood": 1
+      }
+    },
+    {
+      "threshold": 0.55,
+      "accepted_scan_rate": 0.3496932515337423,
+      "accepted_scans": 57,
+      "total_scans": 163,
+      "individual_analyte_accuracy": 0.8824561403508772,
+      "individual_analyte_correct": 503,
+      "individual_analyte_total": 570,
+      "whole_scan_all_10_correct_accuracy": 0.2807017543859649,
+      "whole_scan_correct": 16,
+      "failure_analytes": {
+        "Specific Gravity": 19,
+        "pH": 11,
+        "Leukocytes": 8,
+        "Ketone": 8,
+        "Protein": 8,
+        "Bilirubin": 6,
+        "Urobilinogen": 3,
+        "Blood": 2,
+        "Glucose": 2
+      },
+      "rejection_analytes": {
+        "Specific Gravity": 56,
+        "Leukocytes": 31,
+        "pH": 20,
+        "Ketone": 20,
+        "Bilirubin": 15,
+        "Protein": 12,
+        "Blood": 8,
+        "Glucose": 6,
+        "Urobilinogen": 4,
+        "Nitrite": 1
+      }
+    },
+    {
+      "threshold": 0.65,
+      "accepted_scan_rate": 0.1165644171779141,
+      "accepted_scans": 19,
+      "total_scans": 163,
+      "individual_analyte_accuracy": 0.8894736842105263,
+      "individual_analyte_correct": 169,
+      "individual_analyte_total": 190,
+      "whole_scan_all_10_correct_accuracy": 0.3157894736842105,
+      "whole_scan_correct": 6,
+      "failure_analytes": {
+        "Specific Gravity": 8,
+        "Bilirubin": 4,
+        "pH": 3,
+        "Glucose": 2,
+        "Urobilinogen": 2,
+        "Leukocytes": 1,
+        "Ketone": 1
+      },
+      "rejection_analytes": {
+        "Specific Gravity": 78,
+        "Leukocytes": 58,
+        "Ketone": 52,
+        "pH": 51,
+        "Bilirubin": 32,
+        "Protein": 23,
+        "Urobilinogen": 21,
+        "Blood": 17,
+        "Glucose": 13,
+        "Nitrite": 1
+      }
+    },
+    {
+      "threshold": 0.75,
+      "accepted_scan_rate": 0.018404907975460124,
+      "accepted_scans": 3,
+      "total_scans": 163,
+      "individual_analyte_accuracy": 1.0,
+      "individual_analyte_correct": 30,
+      "individual_analyte_total": 30,
+      "whole_scan_all_10_correct_accuracy": 1.0,
+      "whole_scan_correct": 3,
+      "failure_analytes": {},
+      "rejection_analytes": {
+        "Specific Gravity": 101,
+        "Leukocytes": 93,
+        "pH": 91,
+        "Ketone": 83,
+        "Bilirubin": 63,
+        "Urobilinogen": 37,
+        "Protein": 33,
+        "Blood": 30,
+        "Glucose": 19,
+        "Nitrite": 1
+      }
+    },
+    {
+      "threshold": 0.8,
+      "accepted_scan_rate": 0.012269938650306749,
+      "accepted_scans": 2,
+      "total_scans": 163,
+      "individual_analyte_accuracy": 1.0,
+      "individual_analyte_correct": 20,
+      "individual_analyte_total": 20,
+      "whole_scan_all_10_correct_accuracy": 1.0,
+      "whole_scan_correct": 2,
+      "failure_analytes": {},
+      "rejection_analytes": {
+        "Leukocytes": 117,
+        "Specific Gravity": 116,
+        "pH": 108,
+        "Ketone": 96,
+        "Bilirubin": 72,
+        "Urobilinogen": 44,
+        "Protein": 43,
+        "Blood": 34,
+        "Glucose": 22,
+        "Nitrite": 3
+      }
+    },
+    {
+      "threshold": 0.85,
+      "accepted_scan_rate": 0.006134969325153374,
+      "accepted_scans": 1,
+      "total_scans": 163,
+      "individual_analyte_accuracy": 1.0,
+      "individual_analyte_correct": 10,
+      "individual_analyte_total": 10,
+      "whole_scan_all_10_correct_accuracy": 1.0,
+      "whole_scan_correct": 1,
+      "failure_analytes": {},
+      "rejection_analytes": {
+        "Leukocytes": 135,
+        "pH": 125,
+        "Specific Gravity": 121,
+        "Ketone": 113,
+        "Bilirubin": 90,
+        "Protein": 53,
+        "Urobilinogen": 49,
+        "Blood": 39,
+        "Glucose": 30,
+        "Nitrite": 5
+      }
+    },
+    {
+      "threshold": 0.9,
+      "accepted_scan_rate": 0.0,
+      "accepted_scans": 0,
+      "total_scans": 163,
+      "individual_analyte_accuracy": 0.0,
+      "individual_analyte_correct": 0,
+      "individual_analyte_total": 0,
+      "whole_scan_all_10_correct_accuracy": 0.0,
+      "whole_scan_correct": 0,
+      "failure_analytes": {},
+      "rejection_analytes": {
+        "Leukocytes": 154,
+        "pH": 143,
+        "Specific Gravity": 140,
+        "Ketone": 129,
+        "Bilirubin": 106,
+        "Protein": 70,
+        "Urobilinogen": 62,
+        "Blood": 58,
+        "Glucose": 35,
+        "Nitrite": 5
+      }
+    },
+    {
+      "threshold": 0.95,
+      "accepted_scan_rate": 0.0,
+      "accepted_scans": 0,
+      "total_scans": 163,
+      "individual_analyte_accuracy": 0.0,
+      "individual_analyte_correct": 0,
+      "individual_analyte_total": 0,
+      "whole_scan_all_10_correct_accuracy": 0.0,
+      "whole_scan_correct": 0,
+      "failure_analytes": {},
+      "rejection_analytes": {
+        "Leukocytes": 161,
+        "pH": 157,
+        "Ketone": 144,
+        "Specific Gravity": 143,
+        "Bilirubin": 128,
+        "Protein": 104,
+        "Urobilinogen": 95,
+        "Blood": 61,
+        "Glucose": 38,
+        "Nitrite": 10
+      }
+    }
+  ],
+  "recommended_max_accuracy_threshold": {
+    "threshold": 0.75,
+    "accepted_scan_rate": 0.018404907975460124,
+    "accepted_scans": 3,
+    "total_scans": 163,
+    "individual_analyte_accuracy": 1.0,
+    "individual_analyte_correct": 30,
+    "individual_analyte_total": 30,
+    "whole_scan_all_10_correct_accuracy": 1.0,
+    "whole_scan_correct": 3,
+    "failure_analytes": {},
+    "rejection_analytes": {
+      "Specific Gravity": 101,
+      "Leukocytes": 93,
+      "pH": 91,
+      "Ketone": 83,
+      "Bilirubin": 63,
+      "Urobilinogen": 37,
+      "Protein": 33,
+      "Blood": 30,
+      "Glucose": 19,
+      "Nitrite": 1
+    }
+  },
+  "recommended_balanced_threshold": {
+    "threshold": 0.45,
+    "accepted_scan_rate": 0.7116564417177914,
+    "accepted_scans": 116,
+    "total_scans": 163,
+    "individual_analyte_accuracy": 0.8637931034482759,
+    "individual_analyte_correct": 1002,
+    "individual_analyte_total": 1160,
+    "whole_scan_all_10_correct_accuracy": 0.25862068965517243,
+    "whole_scan_correct": 30,
+    "failure_analytes": {
+      "Specific Gravity": 43,
+      "pH": 23,
+      "Leukocytes": 22,
+      "Ketone": 19,
+      "Protein": 14,
+      "Bilirubin": 14,
+      "Urobilinogen": 14,
+      "Blood": 5,
+      "Glucose": 4
+    },
+    "rejection_analytes": {
+      "Specific Gravity": 31,
+      "Leukocytes": 8,
+      "pH": 6,
+      "Protein": 4,
+      "Ketone": 2,
+      "Glucose": 1,
+      "Blood": 1
+    }
+  },
+  "notes": [
+    "Per-light models use dataset light labels for evaluation. Android needs a production light-selection rule before per-light routing is frozen.",
+    "Model family selection on the test split is exploratory and should be confirmed on a separate holdout before manuscript claims."
+  ]
+}

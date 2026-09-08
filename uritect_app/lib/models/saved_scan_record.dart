@@ -7,9 +7,7 @@ class SavedScanRecord {
   final DateTime savedAt;
   final ScanResult scanResult;
   final ClinicalChecklistResult checklistResult;
-  final double posteriorProbability;
   final String riskBucket;
-  final double clinicalLogOddsContribution;
   final bool hasEvidenceConflict;
   final String? conflictTitle;
   final String? conflictMessage;
@@ -19,9 +17,7 @@ class SavedScanRecord {
     required this.savedAt,
     required this.scanResult,
     required this.checklistResult,
-    required this.posteriorProbability,
     required this.riskBucket,
-    required this.clinicalLogOddsContribution,
     this.hasEvidenceConflict = false,
     this.conflictTitle,
     this.conflictMessage,
@@ -37,9 +33,7 @@ class SavedScanRecord {
       savedAt: DateTime.now(),
       scanResult: scanResult,
       checklistResult: checklistResult,
-      posteriorProbability: fusionResult.posteriorProbability,
       riskBucket: fusionResult.riskBucket,
-      clinicalLogOddsContribution: fusionResult.logOddsContribution,
       hasEvidenceConflict: fusionResult.hasEvidenceConflict,
       conflictTitle: fusionResult.conflictTitle,
       conflictMessage: fusionResult.conflictMessage,
@@ -52,9 +46,7 @@ class SavedScanRecord {
       'savedAt': savedAt.toIso8601String(),
       'scanResult': scanResult.toJson(),
       'checklistResult': checklistResult.toJson(),
-      'posteriorProbability': posteriorProbability,
       'riskBucket': riskBucket,
-      'clinicalLogOddsContribution': clinicalLogOddsContribution,
       'hasEvidenceConflict': hasEvidenceConflict,
       'conflictTitle': conflictTitle,
       'conflictMessage': conflictMessage,
@@ -72,11 +64,7 @@ class SavedScanRecord {
       checklistResult: ClinicalChecklistResult.fromJson(
         json['checklistResult'] as Map<String, dynamic>? ?? const {},
       ),
-      posteriorProbability:
-          (json['posteriorProbability'] as num?)?.toDouble() ?? 0.0,
       riskBucket: json['riskBucket'] as String? ?? 'Moderate',
-      clinicalLogOddsContribution:
-          (json['clinicalLogOddsContribution'] as num?)?.toDouble() ?? 0.0,
       hasEvidenceConflict: json['hasEvidenceConflict'] == true,
       conflictTitle: json['conflictTitle'] as String?,
       conflictMessage: json['conflictMessage'] as String?,

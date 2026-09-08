@@ -1,0 +1,68 @@
+{
+  "generated_at": "2026-09-07T17:32:54.885612+00:00",
+  "split_mode": "grouped",
+  "selected_models": {
+    "Leukocytes": {
+      "model": "knn_current",
+      "feature_set": "local",
+      "accuracy": 0.729412,
+      "f1_macro": 0.423306
+    },
+    "Nitrite": {
+      "model": "knn_current",
+      "feature_set": "local",
+      "accuracy": 0.994118,
+      "f1_macro": 0.498525
+    },
+    "Urobilinogen": {
+      "model": "knn_current",
+      "feature_set": "local",
+      "accuracy": 0.847059,
+      "f1_macro": 0.660627
+    },
+    "Protein": {
+      "model": "knn_current",
+      "feature_set": "local",
+      "accuracy": 0.876471,
+      "f1_macro": 0.156184
+    },
+    "pH": {
+      "model": "knn_current",
+      "feature_set": "local",
+      "accuracy": 0.764706,
+      "f1_macro": 0.294312
+    },
+    "Blood": {
+      "model": "knn_current",
+      "feature_set": "local",
+      "accuracy": 0.935294,
+      "f1_macro": 0.709501
+    },
+    "Specific Gravity": {
+      "model": "knn_current",
+      "feature_set": "local",
+      "accuracy": 0.629412,
+      "f1_macro": 0.59841
+    },
+    "Ketone": {
+      "model": "knn_current",
+      "feature_set": "local",
+      "accuracy": 0.811765,
+      "f1_macro": 0.723633
+    },
+    "Bilirubin": {
+      "model": "knn_current",
+      "feature_set": "local",
+      "accuracy": 0.823529,
+      "f1_macro": 0.802049
+    },
+    "Glucose": {
+      "model": "knn_current",
+      "feature_set": "local",
+      "accuracy": 0.941176,
+      "f1_macro": 0.309347
+    }
+  },
+  "recommended_balanced_threshold": 0.45,
+  "recommended_max_accuracy_threshold": 0.65
+}

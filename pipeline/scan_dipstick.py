@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run a single dipstick image through the semiquant vision + KNN pipeline.
+"""Run a single dipstick image through the semiquant markerless KNN pipeline.
 
 This is the runtime bridge for the Flutter app's 10-parameter semiquant flow:
 1) markerless strip localization for Laua-an style images
@@ -8,8 +8,8 @@ This is the runtime bridge for the Flutter app's 10-parameter semiquant flow:
 4) normalized HSV feature extraction
 5) optimized per-analyte semiquant KNN prediction
 
-Legacy macro-marker localization remains available only as a fallback for older
-marker-based images.
+Legacy macro-marker localization is intentionally not used by this production
+scan bridge.
 """
 
 from __future__ import annotations
@@ -34,13 +34,13 @@ try:
     from .evaluate_semiquant import (
         AbstainConfig,
         EventCenteringConfig,
-        _load_distance_weights,
-        apply_event_centering,
-        load_reference_map,
-        predict_one,
-    )
+    _load_distance_weights,
+    apply_event_centering,
+    load_reference_map,
+    predict_one,
+)
     from .markerless_strip import MarkerlessStripConfig, extract_markerless_features
-    from .vision_pipeline import ANALYTE_ORDER, BurstFeaturePipeline, VisionPipelineConfig
+    from .vision_pipeline import ANALYTE_ORDER, VisionPipelineConfig
 except ImportError:
     workspace_root = Path(__file__).resolve().parent.parent
     if str(workspace_root) not in sys.path:
@@ -49,13 +49,13 @@ except ImportError:
     from pipeline.evaluate_semiquant import (
         AbstainConfig,
         EventCenteringConfig,
-        _load_distance_weights,
-        apply_event_centering,
-        load_reference_map,
-        predict_one,
-    )
+    _load_distance_weights,
+    apply_event_centering,
+    load_reference_map,
+    predict_one,
+)
     from pipeline.markerless_strip import MarkerlessStripConfig, extract_markerless_features
-    from pipeline.vision_pipeline import ANALYTE_ORDER, BurstFeaturePipeline, VisionPipelineConfig
+    from pipeline.vision_pipeline import ANALYTE_ORDER, VisionPipelineConfig
 
 
 REFERENCE_RANGES = {
@@ -268,27 +268,6 @@ def _iter_bgr_orientation_variants(image_path: Path) -> list[tuple[str, np.ndarr
     return expanded
 
 
-def _burst_quality_score(pipeline: BurstFeaturePipeline, burst: Any) -> float:
-    features = list(burst.features_by_pad.values())
-    if not features:
-        return -float("inf")
-
-    hue_values = np.array([h for h, _, _ in features], dtype=np.float32)
-    sat_values = np.array([s for _, s, _ in features], dtype=np.float32)
-    val_values = np.array([v for _, _, v in features], dtype=np.float32)
-    loc_scores = [result.local_score for result in pipeline.slicer.last_pad_localization.values()]
-    loc_mean = float(np.mean(np.array(loc_scores, dtype=np.float32))) if loc_scores else 0.0
-    usable_values = float(np.mean((val_values > 0.04) & (val_values < 0.98)))
-    colored_pads = float(np.sum(sat_values > 0.035))
-    return (
-        float(np.mean(sat_values)) * 18.0
-        + float(np.std(hue_values)) / 60.0
-        + usable_values * 3.0
-        + colored_pads * 0.15
-        + loc_mean * 0.15
-    )
-
-
 def _process_best_orientation(image_path: Path, config: VisionPipelineConfig) -> tuple[Any, str, float]:
     failures: list[str] = []
     best: tuple[float, Any, str] | None = None
@@ -309,23 +288,9 @@ def _process_best_orientation(image_path: Path, config: VisionPipelineConfig) ->
         except Exception as error:
             failures.append(f"markerless_{variant_name}: {str(error)[:120]}")
 
-        pipeline = BurstFeaturePipeline(config)
-        try:
-            burst = pipeline.process_burst([image_bgr])
-        except Exception as error:
-            failures.append(f"{variant_name}: {str(error)[:120]}")
-            continue
-
-        score = _burst_quality_score(pipeline, burst)
-        if variant_name in {"exif", "raw"} and score >= 4.0:
-            return burst, variant_name, score
-
-        if best is None or score > best[0]:
-            best = (score, burst, variant_name)
-
     if best is None:
         joined = "; ".join(failures[:6])
-        raise ValueError(f"No valid scan orientation processed. {joined}")
+        raise ValueError(f"No valid markerless scan orientation processed. {joined}")
 
     score, burst, variant_name = best
     return burst, variant_name, score
@@ -534,7 +499,6 @@ def run_scan(
         "image_path": str(image_path),
         "status": "complete",
         "confidence": round(float(average_confidence), 6),
-        "posterior_probability": None,
         "risk_bucket": None,
         "model_version": _optimized_model_version(optimized_metadata) if optimized_models else map_path.name,
         "reference_map_path": str(map_path) if map_path is not None else None,
@@ -556,7 +520,6 @@ def run_scan(
         "pads_detected": pads_detected,
         "pads_unavailable": pads_unavailable,
         "analytes": feature_rows,
-        "screening_probabilities": {},
         "provisional_visual_fusion": None,
     }
 

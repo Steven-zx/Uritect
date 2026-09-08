@@ -1,0 +1,564 @@
+{
+  "generated_at": "2026-09-07T17:32:54.885612+00:00",
+  "features": "C:\\Users\\acer\\Downloads\\Github\\Uritect\\pipeline\\dataset\\features_normalized_hsv.csv",
+  "split_mode": "grouped",
+  "profile": "fast",
+  "selection": "knn_current",
+  "raw_rows": 8670,
+  "deduped_rows": 8670,
+  "duplicates_removed": 0,
+  "train_events": 697,
+  "test_events": 170,
+  "train_samples": 6970,
+  "test_samples": 1700,
+  "per_analyte": {
+    "Leukocytes": {
+      "selected_model": "knn_current",
+      "selected_feature_set": "local",
+      "selected_accuracy": 0.7294117647058823,
+      "selected_f1_macro": 0.4233059775978707,
+      "knn_current_accuracy": 0.7294117647058823,
+      "candidates": [
+        {
+          "name": "knn_current",
+          "feature_set": "local",
+          "accuracy": 0.7294117647058823,
+          "f1_macro": 0.4233059775978707
+        },
+        {
+          "name": "knn_current_per_light",
+          "feature_set": "local",
+          "accuracy": 0.7,
+          "f1_macro": 0.472018018018018,
+          "fallback_predictions": 0
+        }
+      ]
+    },
+    "Nitrite": {
+      "selected_model": "knn_current",
+      "selected_feature_set": "local",
+      "selected_accuracy": 0.9941176470588236,
+      "selected_f1_macro": 0.49852507374631266,
+      "knn_current_accuracy": 0.9941176470588236,
+      "candidates": [
+        {
+          "name": "knn_current",
+          "feature_set": "local",
+          "accuracy": 0.9941176470588236,
+          "f1_macro": 0.49852507374631266
+        },
+        {
+          "name": "knn_current_per_light",
+          "feature_set": "local",
+          "accuracy": 0.9941176470588236,
+          "f1_macro": 0.49852507374631266,
+          "fallback_predictions": 0
+        }
+      ]
+    },
+    "Urobilinogen": {
+      "selected_model": "knn_current",
+      "selected_feature_set": "local",
+      "selected_accuracy": 0.8470588235294118,
+      "selected_f1_macro": 0.6606265356265356,
+      "knn_current_accuracy": 0.8470588235294118,
+      "candidates": [
+        {
+          "name": "knn_current",
+          "feature_set": "local",
+          "accuracy": 0.8470588235294118,
+          "f1_macro": 0.6606265356265356
+        },
+        {
+          "name": "knn_current_per_light",
+          "feature_set": "local",
+          "accuracy": 0.8411764705882353,
+          "f1_macro": 0.6405919661733614,
+          "fallback_predictions": 0
+        }
+      ]
+    },
+    "Protein": {
+      "selected_model": "knn_current",
+      "selected_feature_set": "local",
+      "selected_accuracy": 0.8764705882352941,
+      "selected_f1_macro": 0.15618448637316562,
+      "knn_current_accuracy": 0.8764705882352941,
+      "candidates": [
+        {
+          "name": "knn_current",
+          "feature_set": "local",
+          "accuracy": 0.8764705882352941,
+          "f1_macro": 0.15618448637316562
+        },
+        {
+          "name": "knn_current_per_light",
+          "feature_set": "local",
+          "accuracy": 0.8647058823529412,
+          "f1_macro": 0.1792940818499924,
+          "fallback_predictions": 0
+        }
+      ]
+    },
+    "pH": {
+      "selected_model": "knn_current",
+      "selected_feature_set": "local",
+      "selected_accuracy": 0.7647058823529411,
+      "selected_f1_macro": 0.2943121693121693,
+      "knn_current_accuracy": 0.7647058823529411,
+      "candidates": [
+        {
+          "name": "knn_current",
+          "feature_set": "local",
+          "accuracy": 0.7647058823529411,
+          "f1_macro": 0.2943121693121693
+        },
+        {
+          "name": "knn_current_per_light",
+          "feature_set": "local",
+          "accuracy": 0.7411764705882353,
+          "f1_macro": 0.1507323650180793,
+          "fallback_predictions": 0
+        }
+      ]
+    },
+    "Blood": {
+      "selected_model": "knn_current",
+      "selected_feature_set": "local",
+      "selected_accuracy": 0.9352941176470588,
+      "selected_f1_macro": 0.7095005428881651,
+      "knn_current_accuracy": 0.9352941176470588,
+      "candidates": [
+        {
+          "name": "knn_current",
+          "feature_set": "local",
+          "accuracy": 0.9352941176470588,
+          "f1_macro": 0.7095005428881651
+        },
+        {
+          "name": "knn_current_per_light",
+          "feature_set": "local",
+          "accuracy": 0.9117647058823529,
+          "f1_macro": 0.6342424242424243,
+          "fallback_predictions": 0
+        }
+      ]
+    },
+    "Specific Gravity": {
+      "selected_model": "knn_current",
+      "selected_feature_set": "local",
+      "selected_accuracy": 0.6294117647058823,
+      "selected_f1_macro": 0.5984103204327923,
+      "knn_current_accuracy": 0.6294117647058823,
+      "candidates": [
+        {
+          "name": "knn_current",
+          "feature_set": "local",
+          "accuracy": 0.6294117647058823,
+          "f1_macro": 0.5984103204327923
+        },
+        {
+          "name": "knn_current_per_light",
+          "feature_set": "local",
+          "accuracy": 0.611764705882353,
+          "f1_macro": 0.5873776010033861,
+          "fallback_predictions": 0
+        }
+      ]
+    },
+    "Ketone": {
+      "selected_model": "knn_current",
+      "selected_feature_set": "local",
+      "selected_accuracy": 0.8117647058823529,
+      "selected_f1_macro": 0.7236334078439342,
+      "knn_current_accuracy": 0.8117647058823529,
+      "candidates": [
+        {
+          "name": "knn_current_per_light",
+          "feature_set": "local",
+          "accuracy": 0.8176470588235294,
+          "f1_macro": 0.7296187984197835,
+          "fallback_predictions": 0
+        },
+        {
+          "name": "knn_current",
+          "feature_set": "local",
+          "accuracy": 0.8117647058823529,
+          "f1_macro": 0.7236334078439342
+        }
+      ]
+    },
+    "Bilirubin": {
+      "selected_model": "knn_current",
+      "selected_feature_set": "local",
+      "selected_accuracy": 0.8235294117647058,
+      "selected_f1_macro": 0.8020493712156498,
+      "knn_current_accuracy": 0.8235294117647058,
+      "candidates": [
+        {
+          "name": "knn_current",
+          "feature_set": "local",
+          "accuracy": 0.8235294117647058,
+          "f1_macro": 0.8020493712156498
+        },
+        {
+          "name": "knn_current_per_light",
+          "feature_set": "local",
+          "accuracy": 0.788235294117647,
+          "f1_macro": 0.7603383458646616,
+          "fallback_predictions": 0
+        }
+      ]
+    },
+    "Glucose": {
+      "selected_model": "knn_current",
+      "selected_feature_set": "local",
+      "selected_accuracy": 0.9411764705882353,
+      "selected_f1_macro": 0.309347442680776,
+      "knn_current_accuracy": 0.9411764705882353,
+      "candidates": [
+        {
+          "name": "knn_current",
+          "feature_set": "local",
+          "accuracy": 0.9411764705882353,
+          "f1_macro": 0.309347442680776
+        },
+        {
+          "name": "knn_current_per_light",
+          "feature_set": "local",
+          "accuracy": 0.9352941176470588,
+          "f1_macro": 0.25160439560439557,
+          "fallback_predictions": 0
+        }
+      ]
+    }
+  },
+  "threshold_summaries": [
+    {
+      "threshold": 0.0,
+      "accepted_scan_rate": 1.0,
+      "accepted_scans": 170,
+      "total_scans": 170,
+      "individual_analyte_accuracy": 0.8352941176470589,
+      "individual_analyte_correct": 1420,
+      "individual_analyte_total": 1700,
+      "whole_scan_all_10_correct_accuracy": 0.1588235294117647,
+      "whole_scan_correct": 27,
+      "failure_analytes": {
+        "Specific Gravity": 63,
+        "Leukocytes": 46,
+        "pH": 40,
+        "Ketone": 32,
+        "Bilirubin": 30,
+        "Urobilinogen": 26,
+        "Protein": 21,
+        "Blood": 11,
+        "Glucose": 10,
+        "Nitrite": 1
+      },
+      "rejection_analytes": {}
+    },
+    {
+      "threshold": 0.35,
+      "accepted_scan_rate": 0.8823529411764706,
+      "accepted_scans": 150,
+      "total_scans": 170,
+      "individual_analyte_accuracy": 0.8473333333333334,
+      "individual_analyte_correct": 1271,
+      "individual_analyte_total": 1500,
+      "whole_scan_all_10_correct_accuracy": 0.17333333333333334,
+      "whole_scan_correct": 26,
+      "failure_analytes": {
+        "Specific Gravity": 52,
+        "Leukocytes": 38,
+        "pH": 37,
+        "Ketone": 27,
+        "Bilirubin": 22,
+        "Urobilinogen": 21,
+        "Protein": 17,
+        "Glucose": 8,
+        "Blood": 7
+      },
+      "rejection_analytes": {
+        "Specific Gravity": 17,
+        "Leukocytes": 3,
+        "pH": 1
+      }
+    },
+    {
+      "threshold": 0.45,
+      "accepted_scan_rate": 0.6823529411764706,
+      "accepted_scans": 116,
+      "total_scans": 170,
+      "individual_analyte_accuracy": 0.8577586206896551,
+      "individual_analyte_correct": 995,
+      "individual_analyte_total": 1160,
+      "whole_scan_all_10_correct_accuracy": 0.19827586206896552,
+      "whole_scan_correct": 23,
+      "failure_analytes": {
+        "Specific Gravity": 37,
+        "pH": 29,
+        "Leukocytes": 27,
+        "Ketone": 20,
+        "Urobilinogen": 17,
+        "Bilirubin": 15,
+        "Protein": 12,
+        "Glucose": 5,
+        "Blood": 3
+      },
+      "rejection_analytes": {
+        "Specific Gravity": 43,
+        "Leukocytes": 8,
+        "pH": 4,
+        "Glucose": 2,
+        "Protein": 2,
+        "Blood": 1
+      }
+    },
+    {
+      "threshold": 0.55,
+      "accepted_scan_rate": 0.27058823529411763,
+      "accepted_scans": 46,
+      "total_scans": 170,
+      "individual_analyte_accuracy": 0.8760869565217392,
+      "individual_analyte_correct": 403,
+      "individual_analyte_total": 460,
+      "whole_scan_all_10_correct_accuracy": 0.32608695652173914,
+      "whole_scan_correct": 15,
+      "failure_analytes": {
+        "Specific Gravity": 13,
+        "Leukocytes": 11,
+        "pH": 10,
+        "Urobilinogen": 6,
+        "Ketone": 5,
+        "Bilirubin": 5,
+        "Glucose": 3,
+        "Protein": 3,
+        "Blood": 1
+      },
+      "rejection_analytes": {
+        "Specific Gravity": 78,
+        "Leukocytes": 33,
+        "pH": 28,
+        "Bilirubin": 23,
+        "Protein": 10,
+        "Ketone": 10,
+        "Urobilinogen": 6,
+        "Glucose": 4,
+        "Blood": 3
+      }
+    },
+    {
+      "threshold": 0.65,
+      "accepted_scan_rate": 0.07058823529411765,
+      "accepted_scans": 12,
+      "total_scans": 170,
+      "individual_analyte_accuracy": 0.925,
+      "individual_analyte_correct": 111,
+      "individual_analyte_total": 120,
+      "whole_scan_all_10_correct_accuracy": 0.3333333333333333,
+      "whole_scan_correct": 4,
+      "failure_analytes": {
+        "Specific Gravity": 4,
+        "pH": 1,
+        "Leukocytes": 1,
+        "Glucose": 1,
+        "Ketone": 1,
+        "Bilirubin": 1
+      },
+      "rejection_analytes": {
+        "Specific Gravity": 101,
+        "Leukocytes": 74,
+        "pH": 52,
+        "Bilirubin": 48,
+        "Ketone": 48,
+        "Urobilinogen": 25,
+        "Protein": 24,
+        "Blood": 9,
+        "Glucose": 6
+      }
+    },
+    {
+      "threshold": 0.75,
+      "accepted_scan_rate": 0.0,
+      "accepted_scans": 0,
+      "total_scans": 170,
+      "individual_analyte_accuracy": 0.0,
+      "individual_analyte_correct": 0,
+      "individual_analyte_total": 0,
+      "whole_scan_all_10_correct_accuracy": 0.0,
+      "whole_scan_correct": 0,
+      "failure_analytes": {},
+      "rejection_analytes": {
+        "Specific Gravity": 128,
+        "Leukocytes": 116,
+        "Ketone": 93,
+        "pH": 89,
+        "Bilirubin": 69,
+        "Urobilinogen": 46,
+        "Protein": 36,
+        "Blood": 16,
+        "Glucose": 9
+      }
+    },
+    {
+      "threshold": 0.8,
+      "accepted_scan_rate": 0.0,
+      "accepted_scans": 0,
+      "total_scans": 170,
+      "individual_analyte_accuracy": 0.0,
+      "individual_analyte_correct": 0,
+      "individual_analyte_total": 0,
+      "whole_scan_all_10_correct_accuracy": 0.0,
+      "whole_scan_correct": 0,
+      "failure_analytes": {},
+      "rejection_analytes": {
+        "Specific Gravity": 139,
+        "Leukocytes": 136,
+        "Ketone": 115,
+        "pH": 110,
+        "Bilirubin": 87,
+        "Urobilinogen": 64,
+        "Protein": 41,
+        "Blood": 21,
+        "Glucose": 12
+      }
+    },
+    {
+      "threshold": 0.85,
+      "accepted_scan_rate": 0.0,
+      "accepted_scans": 0,
+      "total_scans": 170,
+      "individual_analyte_accuracy": 0.0,
+      "individual_analyte_correct": 0,
+      "individual_analyte_total": 0,
+      "whole_scan_all_10_correct_accuracy": 0.0,
+      "whole_scan_correct": 0,
+      "failure_analytes": {},
+      "rejection_analytes": {
+        "Leukocytes": 150,
+        "Specific Gravity": 149,
+        "Ketone": 134,
+        "pH": 129,
+        "Bilirubin": 106,
+        "Urobilinogen": 78,
+        "Protein": 47,
+        "Blood": 26,
+        "Glucose": 18,
+        "Nitrite": 1
+      }
+    },
+    {
+      "threshold": 0.9,
+      "accepted_scan_rate": 0.0,
+      "accepted_scans": 0,
+      "total_scans": 170,
+      "individual_analyte_accuracy": 0.0,
+      "individual_analyte_correct": 0,
+      "individual_analyte_total": 0,
+      "whole_scan_all_10_correct_accuracy": 0.0,
+      "whole_scan_correct": 0,
+      "failure_analytes": {},
+      "rejection_analytes": {
+        "Leukocytes": 163,
+        "Specific Gravity": 156,
+        "Ketone": 150,
+        "pH": 148,
+        "Bilirubin": 123,
+        "Urobilinogen": 99,
+        "Protein": 63,
+        "Blood": 35,
+        "Glucose": 26,
+        "Nitrite": 2
+      }
+    },
+    {
+      "threshold": 0.95,
+      "accepted_scan_rate": 0.0,
+      "accepted_scans": 0,
+      "total_scans": 170,
+      "individual_analyte_accuracy": 0.0,
+      "individual_analyte_correct": 0,
+      "individual_analyte_total": 0,
+      "whole_scan_all_10_correct_accuracy": 0.0,
+      "whole_scan_correct": 0,
+      "failure_analytes": {},
+      "rejection_analytes": {
+        "Ketone": 169,
+        "Leukocytes": 168,
+        "pH": 163,
+        "Specific Gravity": 160,
+        "Bilirubin": 139,
+        "Urobilinogen": 120,
+        "Protein": 111,
+        "Blood": 60,
+        "Glucose": 53,
+        "Nitrite": 11
+      }
+    }
+  ],
+  "recommended_max_accuracy_threshold": {
+    "threshold": 0.65,
+    "accepted_scan_rate": 0.07058823529411765,
+    "accepted_scans": 12,
+    "total_scans": 170,
+    "individual_analyte_accuracy": 0.925,
+    "individual_analyte_correct": 111,
+    "individual_analyte_total": 120,
+    "whole_scan_all_10_correct_accuracy": 0.3333333333333333,
+    "whole_scan_correct": 4,
+    "failure_analytes": {
+      "Specific Gravity": 4,
+      "pH": 1,
+      "Leukocytes": 1,
+      "Glucose": 1,
+      "Ketone": 1,
+      "Bilirubin": 1
+    },
+    "rejection_analytes": {
+      "Specific Gravity": 101,
+      "Leukocytes": 74,
+      "pH": 52,
+      "Bilirubin": 48,
+      "Ketone": 48,
+      "Urobilinogen": 25,
+      "Protein": 24,
+      "Blood": 9,
+      "Glucose": 6
+    }
+  },
+  "recommended_balanced_threshold": {
+    "threshold": 0.45,
+    "accepted_scan_rate": 0.6823529411764706,
+    "accepted_scans": 116,
+    "total_scans": 170,
+    "individual_analyte_accuracy": 0.8577586206896551,
+    "individual_analyte_correct": 995,
+    "individual_analyte_total": 1160,
+    "whole_scan_all_10_correct_accuracy": 0.19827586206896552,
+    "whole_scan_correct": 23,
+    "failure_analytes": {
+      "Specific Gravity": 37,
+      "pH": 29,
+      "Leukocytes": 27,
+      "Ketone": 20,
+      "Urobilinogen": 17,
+      "Bilirubin": 15,
+      "Protein": 12,
+      "Glucose": 5,
+      "Blood": 3
+    },
+    "rejection_analytes": {
+      "Specific Gravity": 43,
+      "Leukocytes": 8,
+      "pH": 4,
+      "Glucose": 2,
+      "Protein": 2,
+      "Blood": 1
+    }
+  },
+  "notes": [
+    "Per-light models use dataset light labels for evaluation. Android needs a production light-selection rule before per-light routing is frozen.",
+    "Model family selection on the test split is exploratory and should be confirmed on a separate holdout before manuscript claims."
+  ]
+}

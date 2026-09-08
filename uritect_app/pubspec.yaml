@@ -14,7 +14,6 @@ dependencies:
   google_fonts: ^7.0.0
   camera: ^0.10.5+5
   image_picker: ^1.0.7
-  http: ^1.1.0
   image: ^4.8.0
   path_provider: ^2.1.5
 
@@ -28,6 +27,7 @@ flutter:
 
   assets:
     - assets/knn_reference_map.json
+    - assets/production_semiquant_model.json
     - assets/calibration/capture_metadata_template.csv
     - assets/calibration/capture_manifest_template.json
     - assets/calibration/phase0_white_card_metadata_template.csv

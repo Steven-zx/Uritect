@@ -16,9 +16,8 @@ This script implements vision preprocessing before feature extraction:
 3) Mean HSV/LAB extraction for each of 10 semiquant pads
 
 SUPPORTED LABEL FORMATS:
-  1) Binary legacy: Normal | Abnormal
-  2) Semiquant (single): <AnalyteName>:<Level>
-  3) Semiquant (multi-analyte): one level column per analyte
+  1) Semiquant (single): <AnalyteName>:<Level>
+  2) Semiquant (multi-analyte): one level column per analyte
          e.g., leukocytes_level, nitrite_level, ..., glucose_level
 """
 
@@ -48,21 +47,6 @@ except ImportError as error:
     print(f"Failed to import vision pipeline modules: {error}", file=sys.stderr)
     print("Run from repository root and ensure dependencies are installed.", file=sys.stderr)
     sys.exit(1)
-
-BINARY_LABEL_ALIASES = {
-    "normal": "Normal",
-    "negative": "Normal",
-    "class1": "Normal",
-    "class_1": "Normal",
-    "class 1": "Normal",
-    "1": "Normal",
-    "abnormal": "Abnormal",
-    "positive": "Abnormal",
-    "class2": "Abnormal",
-    "class_2": "Abnormal",
-    "class 2": "Abnormal",
-    "2": "Abnormal",
-}
 
 VALID_ANALYTES = set(ANALYTE_ORDER)
 
@@ -95,13 +79,6 @@ class BurstGroupKey:
     semiquant_pairs: tuple[tuple[str, str], ...]
 
 
-def _canonical_binary_label(raw: str) -> Optional[str]:
-    key = raw.strip().lower()
-    if not key:
-        return None
-    return BINARY_LABEL_ALIASES.get(key)
-
-
 def parse_label(label: str) -> Optional[ParsedLabel]:
     trimmed = label.strip()
     if not trimmed:
@@ -120,18 +97,6 @@ def parse_label(label: str) -> Optional[ParsedLabel]:
                 analyte=analyte,
                 level=level,
             )
-
-    binary = _canonical_binary_label(trimmed)
-    if binary is not None:
-        class_id = "1" if binary == "Normal" else "2"
-        return ParsedLabel(
-            label_mode="binary",
-            label_canonical=binary,
-            class_label=binary,
-            class_id=class_id,
-            analyte="",
-            level=binary,
-        )
 
     return None
 
@@ -191,6 +156,7 @@ def _split_name(raw: str) -> str:
 def _process_markerless_frames(
     frames_bgr: list,
     feature_space: str,
+    raw_orientation_only: bool = False,
 ):
     best = None
     errors: list[str] = []
@@ -214,6 +180,8 @@ def _process_markerless_frames(
                 break
 
         if best is not None and best.orientation == f"frame_{index}_raw" and best.quality_score >= 3.0:
+            continue
+        if raw_orientation_only:
             continue
 
         for orientation_name, oriented_frame in (
@@ -243,6 +211,7 @@ def process_zip(
     pipeline: BurstFeaturePipeline,
     feature_space: str = "hsv",
     localization_mode: str = "auto",
+    raw_orientation_only: bool = False,
 ) -> tuple[list[dict], int]:
     rows_out: list[dict] = []
     skipped_bursts = 0
@@ -280,8 +249,8 @@ def process_zip(
                 if parsed is None:
                     print(
                         "  [SKIP] "
-                        f"label='{label_raw}' -> use binary 'Normal/Abnormal', "
-                        "semiquant 'AnalyteName:Level', or multi-analyte *_level columns"
+                        f"label='{label_raw}' -> use semiquant 'AnalyteName:Level' "
+                        "or multi-analyte *_level columns"
                     )
                     continue
 
@@ -315,12 +284,20 @@ def process_zip(
 
             try:
                 if localization_mode == "markerless":
-                    burst_result = _process_markerless_frames(burst_frames, feature_space)
+                    burst_result = _process_markerless_frames(
+                        burst_frames,
+                        feature_space,
+                        raw_orientation_only=raw_orientation_only,
+                    )
                 elif localization_mode == "legacy_marker":
                     burst_result = pipeline.process_burst(burst_frames)
                 else:
                     try:
-                        burst_result = _process_markerless_frames(burst_frames, feature_space)
+                        burst_result = _process_markerless_frames(
+                            burst_frames,
+                            feature_space,
+                            raw_orientation_only=raw_orientation_only,
+                        )
                     except Exception:
                         burst_result = pipeline.process_burst(burst_frames)
             except Exception as error:
@@ -404,22 +381,46 @@ def main() -> None:
         default=PACKAGES_DIR,
         help="Directory containing training/holdout package ZIPs.",
     )
+    parser.add_argument(
+        "--package-zip",
+        type=pathlib.Path,
+        action="append",
+        default=[],
+        help="Explicit package ZIP to ingest. Repeat to bypass --packages-dir.",
+    )
+    parser.add_argument(
+        "--markerless-raw-orientation-only",
+        action="store_true",
+        help="Skip rotated markerless retries for upright dataset images.",
+    )
     args = parser.parse_args()
 
-    packages_dir = args.packages_dir
-    if not packages_dir.exists():
-        print(f"Packages directory not found:\n  {packages_dir}")
-        print("Build at least one training package in the Uritect app first.")
+    if args.package_zip:
+        zip_files = [path.resolve() for path in args.package_zip]
+        missing = [path for path in zip_files if not path.exists()]
+        if missing:
+            print("Package ZIP not found:")
+            for path in missing:
+                print(f"  {path}")
+            sys.exit(1)
+        packages_label = "explicit package list"
+    else:
+        packages_dir = args.packages_dir
+        if not packages_dir.exists():
+            print(f"Packages directory not found:\n  {packages_dir}")
+            print("Build at least one training package in the Uritect app first.")
+            sys.exit(1)
+
+        zip_files = sorted(packages_dir.glob("*.zip"))
+        if not zip_files:
+            zip_files = sorted(packages_dir.rglob("*.zip"))
+        packages_label = str(packages_dir)
+
+    if not zip_files:
+        print(f"No ZIP files found in:\n  {packages_label}")
         sys.exit(1)
 
-    zip_files = sorted(packages_dir.glob("*.zip"))
-    if not zip_files:
-        zip_files = sorted(packages_dir.rglob("*.zip"))
-    if not zip_files:
-        print(f"No ZIP files found in:\n  {packages_dir}")
-        sys.exit(1)
-
-    print(f"Found {len(zip_files)} ZIP(s) in:\n  {packages_dir}\n")
+    print(f"Found {len(zip_files)} ZIP(s) in:\n  {packages_label}\n")
 
     from vision_pipeline import VisionPipelineConfig, all_feature_columns
 
@@ -434,6 +435,7 @@ def main() -> None:
             pipeline,
             feature_space=args.feature_space,
             localization_mode=args.localization_mode,
+            raw_orientation_only=args.markerless_raw_orientation_only,
         )
         all_rows.extend(rows)
         total_skipped_bursts += skipped_bursts
@@ -473,7 +475,6 @@ def main() -> None:
         writer.writerows(all_rows)
 
     mode_counts = Counter(row["label_mode"] for row in all_rows)
-    class_counts = Counter(row["class_label"] for row in all_rows if row["label_mode"] == "binary")
     split_counts = Counter(row["split"] for row in all_rows)
 
     print(f"\nSaved {len(all_rows)} burst feature vector(s) -> {output_path}")
@@ -481,11 +482,6 @@ def main() -> None:
     print("\nCounts by label mode:")
     for mode, count in sorted(mode_counts.items()):
         print(f"  {mode:10s} {count:4d}")
-
-    if class_counts:
-        print("\nBinary class counts:")
-        print(f"  {'Normal':10s} {class_counts.get('Normal', 0):4d}")
-        print(f"  {'Abnormal':10s} {class_counts.get('Abnormal', 0):4d}")
 
     print("\nSplit counts:")
     for split, count in sorted(split_counts.items()):

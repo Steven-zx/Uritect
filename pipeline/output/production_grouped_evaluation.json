@@ -1,0 +1,136 @@
+{
+  "generated_at": "2026-09-07T18:31:49.340887+00:00",
+  "features": "pipeline\\dataset\\features_normalized_hsv.csv",
+  "deduped_output": "pipeline\\dataset\\features_normalized_hsv_deduped_production.csv",
+  "raw_rows": 7840,
+  "deduped_rows": 7840,
+  "duplicates_removed": 0,
+  "split": {
+    "type": "GroupShuffleSplit",
+    "group": "specimen_group",
+    "test_size": 0.2,
+    "random_state": 42
+  },
+  "model_version": "production_semiquant_knn_markerless_roi_topfix_v3_20260908",
+  "evaluation": {
+    "individual_analyte_accuracy": 0.8251533742331288,
+    "individual_analyte_correct": 1345,
+    "individual_analyte_total": 1630,
+    "whole_scan_accuracy_all_10_correct": 0.17177914110429449,
+    "whole_scan_correct": 28,
+    "whole_scan_total": 163,
+    "macro_analyte_accuracy": 0.8251533742331288,
+    "per_analyte": {
+      "Leukocytes": {
+        "correct": 111,
+        "total": 163,
+        "accuracy": 0.6809815950920245,
+        "f1_macro": 0.4449638081217029,
+        "train_groups": 553,
+        "test_groups": 139,
+        "k": 31,
+        "metric": "manhattan",
+        "feature_transform": "circular_scaled"
+      },
+      "Nitrite": {
+        "correct": 162,
+        "total": 163,
+        "accuracy": 0.9938650306748467,
+        "f1_macro": 0.8317853457172342,
+        "train_groups": 553,
+        "test_groups": 139,
+        "k": 31,
+        "metric": "manhattan",
+        "feature_transform": "scaled"
+      },
+      "Urobilinogen": {
+        "correct": 135,
+        "total": 163,
+        "accuracy": 0.8282208588957055,
+        "f1_macro": 0.6456521739130435,
+        "train_groups": 553,
+        "test_groups": 139,
+        "k": 11,
+        "metric": "chebyshev",
+        "feature_transform": "scaled"
+      },
+      "Protein": {
+        "correct": 143,
+        "total": 163,
+        "accuracy": 0.8773006134969326,
+        "f1_macro": 0.2593044539353264,
+        "train_groups": 553,
+        "test_groups": 139,
+        "k": 41,
+        "metric": "manhattan",
+        "feature_transform": "circular_scaled"
+      },
+      "pH": {
+        "correct": 133,
+        "total": 163,
+        "accuracy": 0.8159509202453987,
+        "f1_macro": 0.5749142179799115,
+        "train_groups": 553,
+        "test_groups": 139,
+        "k": 15,
+        "metric": "euclidean",
+        "feature_transform": "circular_scaled"
+      },
+      "Blood": {
+        "correct": 152,
+        "total": 163,
+        "accuracy": 0.9325153374233128,
+        "f1_macro": 0.906949352179034,
+        "train_groups": 553,
+        "test_groups": 139,
+        "k": 7,
+        "metric": "chebyshev",
+        "feature_transform": "circular_scaled"
+      },
+      "Specific Gravity": {
+        "correct": 96,
+        "total": 163,
+        "accuracy": 0.588957055214724,
+        "f1_macro": 0.5556588199590254,
+        "train_groups": 553,
+        "test_groups": 139,
+        "k": 7,
+        "metric": "chebyshev",
+        "feature_transform": "circular_scaled"
+      },
+      "Ketone": {
+        "correct": 119,
+        "total": 163,
+        "accuracy": 0.7300613496932515,
+        "f1_macro": 0.6751811594202899,
+        "train_groups": 553,
+        "test_groups": 139,
+        "k": 31,
+        "metric": "chebyshev",
+        "feature_transform": "scaled"
+      },
+      "Bilirubin": {
+        "correct": 142,
+        "total": 163,
+        "accuracy": 0.8711656441717791,
+        "f1_macro": 0.8539239533990526,
+        "train_groups": 553,
+        "test_groups": 139,
+        "k": 41,
+        "metric": "euclidean",
+        "feature_transform": "scaled"
+      },
+      "Glucose": {
+        "correct": 152,
+        "total": 163,
+        "accuracy": 0.9325153374233128,
+        "f1_macro": 0.3740983606557377,
+        "train_groups": 553,
+        "test_groups": 139,
+        "k": 5,
+        "metric": "chebyshev",
+        "feature_transform": "scaled"
+      }
+    }
+  }
+}

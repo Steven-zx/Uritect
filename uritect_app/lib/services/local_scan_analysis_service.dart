@@ -42,9 +42,9 @@ class LocalScanAnalysisService {
     required String imagePath,
     void Function(double progress, String stage)? onProgress,
   }) async {
-    onProgress?.call(5, 'loading_reference_map');
-    final referenceText = await rootBundle.loadString(
-      'assets/knn_reference_map.json',
+    onProgress?.call(5, 'loading_production_model');
+    final modelText = await rootBundle.loadString(
+      'assets/production_semiquant_model.json',
     );
 
     onProgress?.call(18, 'preparing_image');
@@ -52,9 +52,9 @@ class LocalScanAnalysisService {
       throw StateError('Captured image was not found on this device.');
     }
 
-    onProgress?.call(32, 'locating_strip');
+    onProgress?.call(32, 'locating_markerless_strip');
     final resultJson = await Isolate.run(
-      () => _analyzeScanInBackground(imagePath, referenceText),
+      () => _analyzeScanInBackground(imagePath, modelText),
     );
 
     onProgress?.call(92, 'finalizing_results');
@@ -64,11 +64,9 @@ class LocalScanAnalysisService {
   }
 
   img.Image _imageForAnalysis(img.Image image) {
-    const maxSide = 900;
+    const maxSide = 1100;
     final currentMaxSide = math.max(image.width, image.height);
-    if (currentMaxSide <= maxSide) {
-      return image;
-    }
+    if (currentMaxSide <= maxSide) return image;
     final scale = maxSide / currentMaxSide;
     return img.copyResize(
       image,
@@ -78,10 +76,7 @@ class LocalScanAnalysisService {
     );
   }
 
-  _FeatureExtraction _extractBestPadFeatures(
-    img.Image image,
-    String featureSpace,
-  ) {
+  _FeatureExtraction _extractBestPadFeatures(img.Image image) {
     final variants = <_ImageVariant>[
       _ImageVariant('exif', image),
       _ImageVariant('rot90_cw', img.copyRotate(image, angle: 90)),
@@ -90,570 +85,526 @@ class LocalScanAnalysisService {
     ];
 
     _FeatureExtraction? best;
+    final errors = <String>[];
     for (final variant in variants) {
-      final candidates = _markerCandidates(variant.image);
-      for (final candidate in candidates.take(3)) {
-        final extraction = _extractPadFeatures(
+      try {
+        final extraction = _extractMarkerlessFeatures(
           variant.image,
-          featureSpace,
           variant.name,
-          candidate,
         );
         if (best == null || extraction.qualityScore > best.qualityScore) {
           best = extraction;
         }
-      }
-    }
-
-    if (best == null || best.featuresByAnalyte.length < 6) {
-      throw StateError(
-        'The app could not localize enough dipstick pads offline. Keep the full strip visible, flat, and well lit.',
-      );
-    }
-    return best;
-  }
-
-  _FeatureExtraction _extractPadFeatures(
-    img.Image image,
-    String featureSpace,
-    String variantName,
-    _MarkerCandidate markerCandidate,
-  ) {
-    final marker = markerCandidate.rect;
-    final markerSize = math.max(marker.width, marker.height).toDouble();
-    final pixelsPerMm = markerSize / 20.0;
-    final padSize = math.max(6, (5.0 * pixelsPerMm).round());
-
-    final markerPatch = _markerCenterPatch(image, marker);
-    final gains = _computeGains(image, markerPatch);
-    final grid = _findBestPadGrid(
-      image: image,
-      marker: marker,
-      pixelsPerMm: pixelsPerMm,
-      padSize: padSize,
-      gains: gains,
-    );
-
-    final features = <String, List<double>>{};
-    final hues = <double>[];
-    final saturationScores = <double>[];
-    final values = <double>[];
-
-    for (var i = 0; i < _analyteOrder.length; i++) {
-      final baseY = _padY(marker.top, pixelsPerMm, grid.globalYShift, i);
-      final refinedY = _refinePadY(
-        image: image,
-        left: grid.padX,
-        baseY: baseY,
-        padSize: padSize,
-        gains: gains,
-        previousExpectedY: i == 0
-            ? null
-            : _padY(marker.top, pixelsPerMm, grid.globalYShift, i - 1),
-        previousFinalY: i == 0 ? null : grid.finalYs[_analyteOrder[i - 1]],
-      );
-      final roi = _fullRect(
-        left: grid.padX,
-        top: refinedY,
-        width: padSize,
-        height: padSize,
-        imageWidth: image.width,
-        imageHeight: image.height,
-      );
-      if (roi == null) continue;
-      if (roi.width < 4 || roi.height < 4) {
-        continue;
-      }
-      grid.finalYs[_analyteOrder[i]] = refinedY;
-      final feature = featureSpace == 'lab'
-          ? _meanLab(image, roi, gains)
-          : _meanHsv(image, roi, gains);
-      features[_analyteOrder[i]] = feature;
-      if (featureSpace == 'lab') {
-        saturationScores.add(_meanSaturation(image, roi, gains));
-      } else {
-        hues.add(feature[0]);
-        saturationScores.add(feature[1]);
-        values.add(feature[2]);
-      }
-    }
-
-    final hueStd = hues.length < 2 ? 0.0 : _circularHueStd(hues);
-    final saturationMean = saturationScores.isEmpty
-        ? 0.0
-        : saturationScores.reduce((a, b) => a + b) / saturationScores.length;
-    final saturationStd = _stdDev(saturationScores);
-    final valueStd = _stdDev(values);
-    final colorScore = saturationScores.isEmpty ? 0.0 : saturationMean * 18.0;
-    final quality =
-        markerCandidate.score + grid.score + colorScore + (features.length * 2);
-    return _FeatureExtraction(
-      variantName: variantName,
-      featuresByAnalyte: features,
-      qualityScore: quality,
-      markerScore: markerCandidate.score,
-      markerPatternScore: markerCandidate.patternScore,
-      markerFillRatio: markerCandidate.fillRatio,
-      markerAspectRatio: markerCandidate.normalizedAspect,
-      gridScore: grid.score,
-      hueStd: hueStd,
-      saturationMean: saturationMean,
-      saturationStd: saturationStd,
-      valueStd: valueStd,
-    );
-  }
-
-  List<_MarkerCandidate> _markerCandidates(img.Image image) {
-    final scale = math.min(1.0, 900.0 / math.max(image.width, image.height));
-    final work = scale < 1.0
-        ? img.copyResize(
-            image,
-            width: (image.width * scale).round(),
-            height: (image.height * scale).round(),
-            interpolation: img.Interpolation.nearest,
-          )
-        : image;
-
-    final visited = List<bool>.filled(work.width * work.height, false);
-    final threshold = _darkThreshold(work);
-    final candidates = <_MarkerCandidate>[];
-
-    for (var y = 1; y < work.height - 1; y += 2) {
-      for (var x = 1; x < work.width - 1; x += 2) {
-        final index = y * work.width + x;
-        if (visited[index] || !_isDark(work.getPixel(x, y), threshold)) {
-          continue;
-        }
-
-        final component = _floodDarkComponent(work, x, y, threshold, visited);
-        if (component.area < 80) {
-          continue;
-        }
-        final aspect = component.width / math.max(1, component.height);
-        final normalizedAspect = aspect < 1 ? 1 / aspect : aspect;
-        if (normalizedAspect > 2.8) {
-          continue;
-        }
-        final fill =
-            component.area / math.max(1, component.width * component.height);
-        if (fill < 0.06 || fill > 0.96) {
-          continue;
-        }
-        if (_touchesBorder(component, work.width, work.height)) {
-          continue;
-        }
-
-        final pattern = _markerPatternQuality(work, component);
-        final score =
-            (pattern.score * 8.0) +
-            math.min(component.area / (work.width * work.height * 0.04), 1.5);
-        final scaled = _Rect(
-          left: (component.left / scale).round(),
-          top: (component.top / scale).round(),
-          width: (component.width / scale).round(),
-          height: (component.height / scale).round(),
-          area: (component.area / (scale * scale)).round(),
-        );
-        candidates.add(
-          _MarkerCandidate(
-            rect: scaled,
-            score: score,
-            patternScore: pattern.score,
-            fillRatio: fill,
-            normalizedAspect: normalizedAspect,
-          ),
-        );
-      }
-    }
-
-    candidates.sort((a, b) => b.score.compareTo(a.score));
-    return candidates;
-  }
-
-  _PadGrid _findBestPadGrid({
-    required img.Image image,
-    required _Rect marker,
-    required double pixelsPerMm,
-    required int padSize,
-    required List<double> gains,
-  }) {
-    final expectedX = (marker.left + (32.0 * pixelsPerMm)).round();
-    final xSearch = math.max(padSize * 6, marker.width * 0.8).round();
-    final ySearch = math.max(padSize * 14, marker.height * 3).round();
-    final xStep = math.max(4, padSize ~/ 2);
-    final yStep = math.max(4, padSize ~/ 2);
-
-    _PadGrid? best;
-    for (var xShift = -xSearch; xShift <= xSearch; xShift += xStep) {
-      final x = expectedX + xShift;
-      for (var yShift = -ySearch; yShift <= ySearch; yShift += yStep) {
-        final score = _gridAlignmentScore(
-          image: image,
-          padX: x,
-          markerTop: marker.top,
-          globalYShift: yShift,
-          pixelsPerMm: pixelsPerMm,
-          padSize: padSize,
-          gains: gains,
-        );
-        if (best == null || score > best.score) {
-          best = _PadGrid(
-            padX: x,
-            globalYShift: yShift,
-            score: score,
-            finalYs: <String, int>{},
-          );
-        }
+      } catch (error) {
+        errors.add('${variant.name}: $error');
       }
     }
 
     if (best == null) {
-      return _PadGrid(
-        padX: expectedX,
-        globalYShift: 0,
-        score: -1000,
-        finalYs: <String, int>{},
+      throw StateError(
+        'INVALID_IMAGE: Could not locate a complete ten-pad strip. ${errors.take(2).join("; ")}',
       );
+    }
+    _validateReadableCapture(best);
+    return best;
+  }
+
+  _FeatureExtraction _extractMarkerlessFeatures(
+    img.Image image,
+    String orientation,
+  ) {
+    _rejectBlankOrBlurred(image);
+    final strip = _detectStripBox(image);
+    final gains = _grayWorldGains(image, strip);
+    final padSize = math.max(8, (strip.width * 0.58).round());
+    final initialDetectedCropX =
+        _detectGlobalPadColumn(image, padSize, gains) ??
+        (strip.left + strip.width / 2.0 - padSize / 2.0).round();
+    final initialCropX = initialDetectedCropX
+        .clamp(0, math.max(0, image.width - padSize))
+        .toInt();
+    final padColumn = _StripRect(
+      left: initialCropX,
+      top: strip.top,
+      width: padSize,
+      height: strip.height,
+      area: padSize * strip.height,
+      quality: strip.quality,
+    );
+    final centers = _detectPadCenters(image, padColumn, padSize, gains);
+    if (centers.length != _analyteOrder.length) {
+      throw StateError('INVALID_IMAGE: Expected ten reagent pads.');
+    }
+    final refinedCropX =
+        _detectPadColumn(image, centers, padSize, padColumn, gains) ??
+        initialCropX;
+    final cropX = refinedCropX
+        .clamp(0, math.max(0, image.width - padSize))
+        .toInt();
+
+    final raw = <String, List<double>>{};
+    final rois = <String, _Rect>{};
+    final sats = <double>[];
+    final vals = <double>[];
+    final hues = <double>[];
+    for (var i = 0; i < _analyteOrder.length; i++) {
+      final analyte = _analyteOrder[i];
+      final cropY = (centers[i] - padSize / 2.0)
+          .round()
+          .clamp(0, math.max(0, image.height - padSize))
+          .toInt();
+      final roi = _Rect(
+        left: cropX,
+        top: cropY,
+        width: padSize,
+        height: padSize,
+        area: padSize * padSize,
+      );
+      final hsv = _meanHsv(image, roi, gains);
+      raw[analyte] = hsv;
+      rois[analyte] = roi;
+      hues.add(hsv[0]);
+      sats.add(hsv[1]);
+      vals.add(hsv[2]);
+    }
+
+    final normalized = _normalizeHsvFeatures(raw);
+    final gaps = <double>[];
+    for (var i = 1; i < centers.length; i++) {
+      gaps.add(centers[i] - centers[i - 1]);
+    }
+    final medianGap = _median(gaps);
+    final gapCv = medianGap <= 0 ? 999.0 : _stdDev(gaps) / medianGap;
+    final satMean = _mean(sats);
+    final satStd = _stdDev(sats);
+    final valStd = _stdDev(vals);
+    final hueStd = _circularHueStd(hues);
+    final quality =
+        strip.quality + (10.0 * (1.0 - gapCv).clamp(0.0, 1.0)) +
+        (satMean * 18.0) +
+        (satStd * 10.0) +
+        (valStd * 6.0);
+
+    return _FeatureExtraction(
+      variantName: orientation,
+      featuresByAnalyte: normalized,
+      rawFeaturesByAnalyte: raw,
+      padRois: rois,
+      stripRect: strip,
+      imageWidth: image.width,
+      imageHeight: image.height,
+      qualityScore: quality,
+      padGapCv: gapCv,
+      hueStd: hueStd,
+      saturationMean: satMean,
+      saturationStd: satStd,
+      valueStd: valStd,
+    );
+  }
+
+  void _rejectBlankOrBlurred(img.Image image) {
+    final step = math.max(2, math.max(image.width, image.height) ~/ 180);
+    final lumas = <double>[];
+    final sats = <double>[];
+    var lapSum = 0.0;
+    var lapCount = 0;
+    for (var y = step; y < image.height - step; y += step) {
+      for (var x = step; x < image.width - step; x += step) {
+        final p = image.getPixel(x, y);
+        final l = _luma(p);
+        lumas.add(l);
+        sats.add(_rgbToHsv(p.r.toDouble(), p.g.toDouble(), p.b.toDouble())[1]);
+        final c = l * 4.0;
+        final n = _luma(image.getPixel(x, y - step));
+        final s = _luma(image.getPixel(x, y + step));
+        final e = _luma(image.getPixel(x + step, y));
+        final w = _luma(image.getPixel(x - step, y));
+        lapSum += (c - n - s - e - w).abs();
+        lapCount++;
+      }
+    }
+    if (lumas.isEmpty) throw StateError('INVALID_IMAGE: Image is unreadable.');
+    final lumaStd = _stdDev(lumas);
+    final lumaMean = _mean(lumas);
+    final satMean = _mean(sats);
+    final blurScore = lapCount == 0 ? 0.0 : lapSum / lapCount;
+    if (lumaMean < 28.0) {
+      throw StateError('INVALID_IMAGE: Image is too dark for pad reading.');
+    }
+    if (lumaMean > 242.0 && lumaStd < 18.0) {
+      throw StateError('INVALID_IMAGE: Image is overexposed for pad reading.');
+    }
+    if (lumaStd < 6.0 && satMean < 0.035) {
+      throw StateError('INVALID_IMAGE: Blank image or no visible strip signal.');
+    }
+    if (blurScore < 2.8) {
+      throw StateError('INVALID_IMAGE: Image is too blurred for pad reading.');
+    }
+  }
+
+  _StripRect _detectStripBox(img.Image image) {
+    final colScores = List<double>.filled(image.width, 0.0);
+    final rowStep = math.max(1, image.height ~/ 500);
+    for (var x = 0; x < image.width; x++) {
+      var active = 0;
+      var total = 0;
+      for (var y = 0; y < image.height; y += rowStep) {
+        final p = image.getPixel(x, y);
+        final hsv = _rgbToHsv(p.r.toDouble(), p.g.toDouble(), p.b.toDouble());
+        if (hsv[1] > 0.16 && hsv[2] > 0.10 && hsv[2] < 0.985) active++;
+        total++;
+      }
+      colScores[x] = total == 0 ? 0.0 : active / total;
+    }
+    final smoothedCols = _smooth(colScores, math.max(9, image.width ~/ 100));
+    final threshold = math.max(0.035, _percentile(smoothedCols, 95) * 0.40);
+    final runs = _runs(smoothedCols.map((v) => v >= threshold).toList());
+    if (runs.isEmpty) {
+      throw StateError('INVALID_IMAGE: No vertical strip candidate.');
+    }
+
+    _Run? best;
+    double bestScore = -1;
+    final plausibleScores = <double>[];
+    for (final run in runs) {
+      final width = run.end - run.start + 1;
+      if (width < 14 || width > image.width * 0.24) continue;
+      final score = _mean(smoothedCols.sublist(run.start, run.end + 1));
+      plausibleScores.add(score);
+      if (score > bestScore) {
+        best = run;
+        bestScore = score;
+      }
+    }
+    if (best == null) {
+      throw StateError('INVALID_IMAGE: Strip candidate is not plausible.');
+    }
+    final strongRunCount = plausibleScores
+        .where((score) => score >= math.max(0.03, bestScore * 0.72))
+        .length;
+    if (strongRunCount > 1) {
+      throw StateError(
+        'INVALID_IMAGE: Multiple plausible strips or strip-like objects were found.',
+      );
+    }
+
+    var x0 = best.start;
+    var x1 = best.end;
+    final xPad = ((x1 - x0 + 1) * 0.18).round();
+    x0 = math.max(0, x0 - xPad);
+    x1 = math.min(image.width - 1, x1 + xPad);
+    final stripWidth = x1 - x0 + 1;
+
+    final rowScores = List<double>.filled(image.height, 0.0);
+    final colStep = math.max(1, stripWidth ~/ 40);
+    for (var y = 0; y < image.height; y++) {
+      var active = 0;
+      var total = 0;
+      for (var x = x0; x <= x1; x += colStep) {
+        final p = image.getPixel(x, y);
+        final hsv = _rgbToHsv(p.r.toDouble(), p.g.toDouble(), p.b.toDouble());
+        if (hsv[1] > 0.12 && hsv[2] > 0.10 && hsv[2] < 0.985) active++;
+        total++;
+      }
+      rowScores[y] = total == 0 ? 0.0 : active / total;
+    }
+    final smoothedRows = _smooth(rowScores, math.max(17, image.height ~/ 120));
+    final rowThreshold = math.max(0.025, _percentile(smoothedRows, 82) * 0.35);
+    final activeRows = <int>[];
+    for (var i = 0; i < smoothedRows.length; i++) {
+      if (smoothedRows[i] >= rowThreshold) activeRows.add(i);
+    }
+    if (activeRows.isEmpty) {
+      throw StateError('INVALID_IMAGE: No reagent-pad row signal.');
+    }
+    final y0 = activeRows.first;
+    final y1 = activeRows.last;
+    final stripHeight = y1 - y0 + 1;
+    if (stripHeight / math.max(1, stripWidth) < 3.0) {
+      throw StateError('INVALID_IMAGE: Partial or wrong strip geometry.');
+    }
+    if (stripWidth / image.width > 0.24) {
+      throw StateError('INVALID_IMAGE: Strip candidate is too wide.');
+    }
+    return _StripRect(
+      left: x0,
+      top: y0,
+      width: stripWidth,
+      height: stripHeight,
+      area: stripWidth * stripHeight,
+      quality: 2.0 + bestScore + stripHeight / image.height,
+    );
+  }
+
+  List<double> _detectPadCenters(
+    img.Image image,
+    _StripRect strip,
+    int padSize,
+    List<double> gains,
+  ) {
+    final centerX = strip.left + strip.width ~/ 2;
+    final halfWidth = math.max(4, (strip.width * 0.42).round());
+    final x0 = math.max(0, centerX - halfWidth);
+    final x1 = math.min(image.width - 1, centerX + halfWidth);
+    final rowScore = List<double>.filled(image.height, 0.0);
+
+    for (var y = 0; y < image.height; y++) {
+      final samples = <double>[];
+      final step = math.max(1, (x1 - x0 + 1) ~/ 32);
+      for (var x = x0; x <= x1; x += step) {
+        final rgb = _correctedRgb(image.getPixel(x, y), gains);
+        final hsv = _rgbToHsv(rgb[0], rgb[1], rgb[2]);
+        final chroma = _rgbChroma(rgb[0], rgb[1], rgb[2]);
+        final valueScore = 1.0 - (hsv[2] - 0.55).abs();
+        samples.add((0.52 * hsv[1]) + (0.34 * chroma) + (0.14 * valueScore.clamp(0.0, 1.0)));
+      }
+      rowScore[y] = samples.isEmpty ? 0.0 : _mean(samples);
+    }
+
+    final smoothed = _smooth(rowScore, math.max(11, padSize ~/ 4));
+    final threshold = math.max(0.10, _percentile(smoothed, 70) * 0.50);
+    var runs = _runs(smoothed.map((v) => v >= threshold).toList())
+        .where((run) => run.length >= math.max(10, (padSize * 0.20).round()))
+        .toList();
+    if (runs.length > _analyteOrder.length) {
+      runs = _bestConsecutiveRuns(runs, smoothed, _analyteOrder.length);
+    }
+    if (runs.length != _analyteOrder.length) {
+      throw StateError(
+        'INVALID_IMAGE: Ten reliable reagent-pad regions were not found.',
+      );
+    }
+    return runs.map((run) => (run.start + run.end) / 2.0).toList();
+  }
+
+  int? _detectGlobalPadColumn(
+    img.Image image,
+    int padSize,
+    List<double> gains,
+  ) {
+    final colScores = List<double>.filled(image.width, 0.0);
+    final rowStep = math.max(1, image.height ~/ 900);
+    for (var x = 0; x < image.width; x++) {
+      final samples = <double>[];
+      for (var y = 0; y < image.height; y += rowStep) {
+        final rgb = _correctedRgb(image.getPixel(x, y), gains);
+        final hsv = _rgbToHsv(rgb[0], rgb[1], rgb[2]);
+        final activity = hsv[1] > 0.12 && hsv[2] > 0.10 && hsv[2] < 0.985
+            ? 1.0
+            : 0.0;
+        samples.add(activity);
+      }
+      colScores[x] = samples.isEmpty ? 0.0 : _mean(samples);
+    }
+
+    final smoothed = _smooth(colScores, math.max(7, padSize ~/ 8));
+    final threshold = math.max(0.04, _percentile(smoothed, 95) * 0.45);
+    final runs = _runs(smoothed.map((v) => v >= threshold).toList())
+        .where((run) =>
+            run.length >= math.max(12, (padSize * 0.45).round()) &&
+            run.length <= math.max(13, (padSize * 2.4).round()))
+        .toList();
+    if (runs.isEmpty) {
+      return null;
+    }
+
+    _Run? best;
+    var bestScore = -double.infinity;
+    for (final run in runs) {
+      final score = _mean(smoothed.sublist(run.start, run.end + 1));
+      if (score > bestScore) {
+        bestScore = score;
+        best = run;
+      }
+    }
+    if (best == null) {
+      return null;
+    }
+    return (((best.start + best.end) / 2.0) - padSize / 2.0).round();
+  }
+
+  int? _detectPadColumn(
+    img.Image image,
+    List<double> centers,
+    int padSize,
+    _StripRect strip,
+    List<double> gains,
+  ) {
+    final colScores = List<double>.filled(image.width, 0.0);
+    final bandHalf = math.max(4, (padSize * 0.38).round());
+    final selectedRows = <int>{};
+    for (final center in centers) {
+      final cy = center.round();
+      for (var y = math.max(0, cy - bandHalf);
+          y <= math.min(image.height - 1, cy + bandHalf);
+          y++) {
+        selectedRows.add(y);
+      }
+    }
+    if (selectedRows.isEmpty) {
+      return null;
+    }
+
+    final rows = selectedRows.toList()..sort();
+    for (var x = 0; x < image.width; x++) {
+      final samples = <double>[];
+      final rowStep = math.max(1, rows.length ~/ 900);
+      for (var i = 0; i < rows.length; i += rowStep) {
+        final rgb = _correctedRgb(image.getPixel(x, rows[i]), gains);
+        final hsv = _rgbToHsv(rgb[0], rgb[1], rgb[2]);
+        final chroma = _rgbChroma(rgb[0], rgb[1], rgb[2]);
+        final activity = hsv[1] > 0.12 && hsv[2] > 0.10 && hsv[2] < 0.985
+            ? 1.0
+            : 0.0;
+        samples.add((0.58 * activity) + (0.42 * chroma));
+      }
+      colScores[x] = samples.isEmpty ? 0.0 : _mean(samples);
+    }
+
+    final smoothed = _smooth(colScores, math.max(7, padSize ~/ 8));
+    final threshold = math.max(0.05, _percentile(smoothed, 94) * 0.45);
+    final runs = _runs(smoothed.map((v) => v >= threshold).toList())
+        .where((run) =>
+            run.length >= math.max(12, (padSize * 0.35).round()) &&
+            run.length <= math.max(13, (padSize * 2.2).round()))
+        .toList();
+    if (runs.isEmpty) {
+      return null;
+    }
+
+    final stripCenter = strip.left + strip.width / 2.0;
+    _Run? best;
+    var bestScore = -double.infinity;
+    for (final run in runs) {
+      final strength = _mean(smoothed.sublist(run.start, run.end + 1));
+      final center = (run.start + run.end) / 2.0;
+      final distancePenalty = (center - stripCenter).abs() / image.width;
+      final score = strength - distancePenalty;
+      if (score > bestScore) {
+        bestScore = score;
+        best = run;
+      }
+    }
+    if (best == null) {
+      return null;
+    }
+    return (((best.start + best.end) / 2.0) - padSize / 2.0).round();
+  }
+
+  List<_Run> _bestConsecutiveRuns(
+    List<_Run> runs,
+    List<double> score,
+    int count,
+  ) {
+    runs.sort((a, b) => a.start.compareTo(b.start));
+    var bestScore = -double.infinity;
+    var best = runs.take(count).toList();
+    for (var start = 0; start <= runs.length - count; start++) {
+      final window = runs.sublist(start, start + count);
+      final centers = window.map((r) => (r.start + r.end) / 2.0).toList();
+      final gaps = <double>[];
+      for (var i = 1; i < centers.length; i++) {
+        gaps.add(centers[i] - centers[i - 1]);
+      }
+      final gapMedian = _median(gaps);
+      final gapCv = gapMedian <= 0 ? 999.0 : _stdDev(gaps) / gapMedian;
+      final strength = _mean(
+        window.map((r) => _mean(score.sublist(r.start, r.end + 1))).toList(),
+      );
+      // Prefer the topmost valid ten-pad sequence. Some Cabatuan warm images
+      // include extra pad-like regions; a stronger lower window would shift
+      // every analyte label downward.
+      final topWindowPenalty = start * 0.35;
+      final s = strength - gapCv * 1.5 - topWindowPenalty;
+      if (s > bestScore) {
+        bestScore = s;
+        best = window;
+      }
     }
     return best;
   }
 
-  double _gridAlignmentScore({
-    required img.Image image,
-    required int padX,
-    required int markerTop,
-    required int globalYShift,
-    required double pixelsPerMm,
-    required int padSize,
-    required List<double> gains,
-  }) {
-    final hues = <double>[];
-    final sats = <double>[];
-    final vals = <double>[];
-    var lockScore = 0.0;
-    var validCount = 0;
-
-    for (var i = 0; i < _analyteOrder.length; i++) {
-      final rect = _fullRect(
-        left: padX,
-        top: _padY(markerTop, pixelsPerMm, globalYShift, i),
-        width: padSize,
-        height: padSize,
-        imageWidth: image.width,
-        imageHeight: image.height,
-      );
-      if (rect == null) {
-        continue;
-      }
-      final hsv = _meanHsv(image, rect, gains);
-      hues.add(hsv[0]);
-      sats.add(hsv[1]);
-      vals.add(hsv[2]);
-      lockScore += _singlePadLockScore(image, rect, gains);
-      validCount++;
-    }
-
-    if (validCount < 6) {
-      return -10000.0 + validCount;
-    }
-
-    final hueStd = _stdDev(hues);
-    final satStd = _stdDev(sats);
-    final valStd = _stdDev(vals);
-    final satMean = sats.reduce((a, b) => a + b) / sats.length;
-    return (validCount * 80.0) +
-        lockScore +
-        hueStd +
-        (satStd * 100.0) +
-        (valStd * 60.0) +
-        (satMean * 25.0);
-  }
-
-  int _padY(int markerTop, double pixelsPerMm, int globalYShift, int padIndex) {
-    final yMm = 5.0 + (padIndex * 7.5);
-    return (markerTop + (yMm * pixelsPerMm)).round() + globalYShift;
-  }
-
-  int _refinePadY({
-    required img.Image image,
-    required int left,
-    required int baseY,
-    required int padSize,
-    required List<double> gains,
-    required int? previousExpectedY,
-    required int? previousFinalY,
-  }) {
-    final search = math.max(4, padSize ~/ 2);
-    final step = math.max(1, padSize ~/ 8);
-    var bestY = baseY;
-    var bestScore = -double.infinity;
-
-    for (var dy = -search; dy <= search; dy += step) {
-      final y = baseY + dy;
-      if (previousExpectedY != null && previousFinalY != null) {
-        final expectedStep = baseY - previousExpectedY;
-        final actualStep = y - previousFinalY;
-        if ((actualStep - expectedStep).abs() > math.max(6, padSize ~/ 2)) {
-          continue;
-        }
-      }
-      final rect = _fullRect(
-        left: left,
-        top: y,
-        width: padSize,
-        height: padSize,
-        imageWidth: image.width,
-        imageHeight: image.height,
-      );
-      if (rect == null) {
-        continue;
-      }
-      final score = _singlePadLockScore(image, rect, gains) - (dy.abs() * 0.05);
-      if (score > bestScore) {
-        bestScore = score;
-        bestY = y;
-      }
-    }
-    return bestY;
-  }
-
-  double _singlePadLockScore(img.Image image, _Rect rect, List<double> gains) {
-    final hues = <double>[];
-    final sats = <double>[];
-    final vals = <double>[];
-    final step = math.max(2, math.min(rect.width, rect.height) ~/ 8);
-    for (var y = rect.top; y < rect.top + rect.height; y += step) {
-      for (var x = rect.left; x < rect.left + rect.width; x += step) {
-        final rgb = _correctedRgb(image.getPixel(x, y), gains);
-        final hsv = _rgbToHsv(rgb[0], rgb[1], rgb[2]);
-        hues.add(hsv[0]);
-        sats.add(hsv[1]);
-        vals.add(hsv[2]);
-      }
-    }
-    if (sats.isEmpty) {
-      return -100.0;
-    }
-    final meanSat = sats.reduce((a, b) => a + b) / sats.length;
-    final meanVal = vals.reduce((a, b) => a + b) / vals.length;
-    final hueStd = _stdDev(hues);
-    final satStd = _stdDev(sats);
-    final clipPenalty = meanVal >= 0.995 ? 0.5 : 0.0;
-    return (hueStd * 0.1) +
-        (meanSat * 25.0) +
-        (meanVal * 5.0) -
-        (satStd * 20.0) -
-        clipPenalty;
-  }
-
-  double _stdDev(List<double> values) {
-    if (values.length < 2) {
-      return 0.0;
-    }
-    final mean = values.reduce((a, b) => a + b) / values.length;
-    final variance =
-        values
-            .map((value) {
-              final d = value - mean;
-              return d * d;
-            })
-            .reduce((a, b) => a + b) /
-        values.length;
-    return math.sqrt(variance);
-  }
-
-  double _circularHueStd(List<double> hues) {
-    if (hues.length < 2) {
-      return 0.0;
-    }
-
-    var sinSum = 0.0;
-    var cosSum = 0.0;
-    for (final hue in hues) {
-      final radians = hue * math.pi / 180.0;
-      sinSum += math.sin(radians);
-      cosSum += math.cos(radians);
-    }
-
-    final meanResultantLength =
-        math.sqrt((sinSum * sinSum) + (cosSum * cosSum)) / hues.length;
-    final safeLength = meanResultantLength.clamp(0.000001, 1.0);
-    return math.sqrt(-2.0 * math.log(safeLength)) * 180.0 / math.pi;
-  }
-
-  int _darkThreshold(img.Image image) {
-    var sum = 0.0;
+  List<double> _grayWorldGains(img.Image image, _Rect rect) {
+    var r = 0.0;
+    var g = 0.0;
+    var b = 0.0;
     var count = 0;
-    final step = math.max(1, math.max(image.width, image.height) ~/ 180);
-    for (var y = 0; y < image.height; y += step) {
-      for (var x = 0; x < image.width; x += step) {
-        sum += _luma(image.getPixel(x, y));
-        count++;
-      }
-    }
-    final mean = count == 0 ? 128.0 : sum / count;
-    return mean.clamp(70.0, 155.0).round();
-  }
-
-  _Rect _floodDarkComponent(
-    img.Image image,
-    int startX,
-    int startY,
-    int threshold,
-    List<bool> visited,
-  ) {
-    final queueX = <int>[startX];
-    final queueY = <int>[startY];
-    var head = 0;
-    var minX = startX;
-    var maxX = startX;
-    var minY = startY;
-    var maxY = startY;
-    var area = 0;
-
-    visited[startY * image.width + startX] = true;
-    while (head < queueX.length) {
-      final x = queueX[head];
-      final y = queueY[head];
-      head++;
-      area++;
-      if (x < minX) minX = x;
-      if (x > maxX) maxX = x;
-      if (y < minY) minY = y;
-      if (y > maxY) maxY = y;
-
-      const neighbors = [
-        [1, 0],
-        [-1, 0],
-        [0, 1],
-        [0, -1],
-      ];
-      for (final n in neighbors) {
-        final nx = x + n[0];
-        final ny = y + n[1];
-        if (nx < 0 || ny < 0 || nx >= image.width || ny >= image.height) {
-          continue;
-        }
-        final idx = ny * image.width + nx;
-        if (visited[idx]) {
-          continue;
-        }
-        visited[idx] = true;
-        if (_isDark(image.getPixel(nx, ny), threshold)) {
-          queueX.add(nx);
-          queueY.add(ny);
-        }
-      }
-    }
-
-    return _Rect(
-      left: minX,
-      top: minY,
-      width: maxX - minX + 1,
-      height: maxY - minY + 1,
-      area: area,
-    );
-  }
-
-  bool _isDark(img.Pixel pixel, int threshold) => _luma(pixel) < threshold;
-
-  bool _touchesBorder(_Rect rect, int width, int height) {
-    final margin = math.max(2, math.min(width, height) * 0.003);
-    return rect.left <= margin ||
-        rect.top <= margin ||
-        rect.left + rect.width >= width - margin ||
-        rect.top + rect.height >= height - margin;
-  }
-
-  _MarkerPatternQuality _markerPatternQuality(img.Image image, _Rect rect) {
-    final border = <double>[];
-    final center = <double>[];
-    final x0 = rect.left;
-    final y0 = rect.top;
-    final x1 = rect.left + rect.width - 1;
-    final y1 = rect.top + rect.height - 1;
-    final borderBand = math.max(2, math.min(rect.width, rect.height) ~/ 5);
-
-    final step = math.max(1, math.min(rect.width, rect.height) ~/ 28);
+    final mx = math.max(4, (rect.width * 0.15).round());
+    final my = math.max(8, (rect.height * 0.04).round());
+    final x0 = math.max(0, rect.left - mx);
+    final x1 = math.min(image.width - 1, rect.left + rect.width + mx);
+    final y0 = math.max(0, rect.top - my);
+    final y1 = math.min(image.height - 1, rect.top + rect.height + my);
+    final step = math.max(1, math.min(x1 - x0 + 1, y1 - y0 + 1) ~/ 80);
     for (var y = y0; y <= y1; y += step) {
       for (var x = x0; x <= x1; x += step) {
-        final value =
-            _luma(
-              image.getPixel(
-                x.clamp(0, image.width - 1),
-                y.clamp(0, image.height - 1),
-              ),
-            ) /
-            255.0;
-        final inBorder =
-            x - x0 < borderBand ||
-            x1 - x < borderBand ||
-            y - y0 < borderBand ||
-            y1 - y < borderBand;
-        final inCenter =
-            x > x0 + rect.width * 0.35 &&
-            x < x0 + rect.width * 0.65 &&
-            y > y0 + rect.height * 0.35 &&
-            y < y0 + rect.height * 0.65;
-        if (inBorder) border.add(value);
-        if (inCenter) center.add(value);
+        final p = image.getPixel(x, y);
+        final hsv = _rgbToHsv(p.r.toDouble(), p.g.toDouble(), p.b.toDouble());
+        if (hsv[1] < 0.28 && hsv[2] > 0.35 && hsv[2] < 0.98) {
+          r += p.r.toDouble();
+          g += p.g.toDouble();
+          b += p.b.toDouble();
+          count++;
+        }
       }
     }
-    if (border.isEmpty || center.isEmpty) {
-      return const _MarkerPatternQuality(
-        score: 0.0,
-        borderMean: 1.0,
-        centerMean: 0.0,
-        isValid: false,
-      );
+    if (count < 20) return [1.0, 1.0, 1.0];
+    r = math.max(1.0, r / count);
+    g = math.max(1.0, g / count);
+    b = math.max(1.0, b / count);
+    final target = (r + g + b) / 3.0;
+    return [target / r, target / g, target / b];
+  }
+
+  void _validateReadableCapture(_FeatureExtraction extraction) {
+    if (extraction.featuresByAnalyte.length != _analyteOrder.length) {
+      throw StateError('INVALID_IMAGE: The full ten-pad strip was not found.');
     }
-    final borderMean = border.reduce((a, b) => a + b) / border.length;
-    final centerMean = center.reduce((a, b) => a + b) / center.length;
-    final contrast = centerMean - borderMean;
-    final score = (1.0 - borderMean) + centerMean + (contrast * 2.0);
-    final isValid =
-        borderMean <= 0.70 &&
-        centerMean >= 0.28 &&
-        contrast >= 0.10 &&
-        score >= 1.10;
-    return _MarkerPatternQuality(
-      score: score,
-      borderMean: borderMean,
-      centerMean: centerMean,
-      isValid: isValid,
-    );
-  }
-
-  _Rect _markerCenterPatch(img.Image image, _Rect marker) {
-    final size = math.max(4, math.min(marker.width, marker.height) ~/ 8);
-    return _clampedRect(
-      left: marker.left + marker.width ~/ 2 - size ~/ 2,
-      top: marker.top + marker.height ~/ 2 - size ~/ 2,
-      width: size,
-      height: size,
-      imageWidth: image.width,
-      imageHeight: image.height,
-    );
-  }
-
-  List<double> _meanLab(img.Image image, _Rect rect, List<double> gains) {
-    var sumL = 0.0;
-    var sumA = 0.0;
-    var sumB = 0.0;
-    var count = 0;
-
-    final step = _colorSampleStep(rect);
-    for (var y = rect.top; y < rect.top + rect.height; y += step) {
-      for (var x = rect.left; x < rect.left + rect.width; x += step) {
-        final rgb = _correctedRgb(image.getPixel(x, y), gains);
-        final lab = _rgbToLab(rgb[0], rgb[1], rgb[2]);
-        sumL += lab[0];
-        sumA += lab[1];
-        sumB += lab[2];
-        count++;
+    if (extraction.padGapCv > 0.24) {
+      throw StateError('INVALID_IMAGE: Reagent-pad spacing is inconsistent.');
+    }
+    if (extraction.saturationMean < 0.018 &&
+        extraction.saturationStd < 0.010 &&
+        extraction.valueStd < 0.020) {
+      throw StateError('INVALID_IMAGE: Image does not contain readable reagent colors.');
+    }
+    final stripTooSmall =
+        extraction.stripRect.height < extraction.imageHeight * 0.35 ||
+        extraction.stripRect.width < extraction.imageWidth * 0.015;
+    if (stripTooSmall) {
+      throw StateError('INVALID_IMAGE: Strip is partial or too small in frame.');
+    }
+    for (final roi in extraction.padRois.values) {
+      final roiInsideX =
+          roi.left >= extraction.stripRect.left - extraction.stripRect.width &&
+          roi.left + roi.width <=
+              extraction.stripRect.left + extraction.stripRect.width * 2;
+      final roiInsideY =
+          roi.top >= extraction.stripRect.top - roi.height &&
+          roi.top + roi.height <=
+              extraction.stripRect.top + extraction.stripRect.height + roi.height;
+      if (!roiInsideX || !roiInsideY) {
+        throw StateError('INVALID_IMAGE: Pad ROIs do not align with the detected strip.');
       }
     }
-    return [sumL / count, sumA / count, sumB / count];
+  }
+
+  Map<String, List<double>> _normalizeHsvFeatures(
+    Map<String, List<double>> raw,
+  ) {
+    final hues = raw.values.map((v) => v[0]).toList();
+    final sats = raw.values.map((v) => v[1]).toList();
+    final vals = raw.values.map((v) => v[2]).toList();
+    final hueAnchor = _circularMeanDeg(hues);
+    final satAnchor = _mean(sats);
+    final valAnchor = _mean(vals);
+    return raw.map((analyte, hsv) {
+      return MapEntry(analyte, [
+        _normalizeHue(hsv[0] - hueAnchor),
+        (0.5 + (hsv[1] - satAnchor)).clamp(0.0, 1.0).toDouble(),
+        (0.5 + (hsv[2] - valAnchor)).clamp(0.0, 1.0).toDouble(),
+      ]);
+    });
   }
 
   List<double> _meanHsv(img.Image image, _Rect rect, List<double> gains) {
@@ -662,8 +613,7 @@ class LocalScanAnalysisService {
     var sumS = 0.0;
     var sumV = 0.0;
     var count = 0;
-
-    final step = _colorSampleStep(rect);
+    final step = math.max(1, math.min(rect.width, rect.height) ~/ 12);
     for (var y = rect.top; y < rect.top + rect.height; y += step) {
       for (var x = rect.left; x < rect.left + rect.width; x += step) {
         final rgb = _correctedRgb(image.getPixel(x, y), gains);
@@ -675,145 +625,37 @@ class LocalScanAnalysisService {
         count++;
       }
     }
-    final hue = (math.atan2(sinH, cosH) * 180.0 / math.pi) % 360.0;
-    return [hue < 0 ? hue + 360.0 : hue, sumS / count, sumV / count];
-  }
-
-  double _meanSaturation(img.Image image, _Rect rect, List<double> gains) {
-    var sum = 0.0;
-    var count = 0;
-    final step = math.max(2, _colorSampleStep(rect));
-    for (var y = rect.top; y < rect.top + rect.height; y += step) {
-      for (var x = rect.left; x < rect.left + rect.width; x += step) {
-        final rgb = _correctedRgb(image.getPixel(x, y), gains);
-        sum += _rgbToHsv(rgb[0], rgb[1], rgb[2])[1];
-        count++;
-      }
-    }
-    return count == 0 ? 0.0 : sum / count;
-  }
-
-  List<double> _computeGains(img.Image image, _Rect rect) {
-    var r = 0.0;
-    var g = 0.0;
-    var b = 0.0;
-    var count = 0;
-    for (var y = rect.top; y < rect.top + rect.height; y++) {
-      for (var x = rect.left; x < rect.left + rect.width; x++) {
-        final p = image.getPixel(x, y);
-        r += p.r.toDouble();
-        g += p.g.toDouble();
-        b += p.b.toDouble();
-        count++;
-      }
-    }
-    if (count == 0) {
-      return [1.0, 1.0, 1.0];
-    }
-    r = math.max(1.0, r / count);
-    g = math.max(1.0, g / count);
-    b = math.max(1.0, b / count);
-    final target = math.max(r, math.max(g, b));
-    return [target / r, target / g, target / b];
-  }
-
-  int _colorSampleStep(_Rect rect) =>
-      math.max(1, math.min(rect.width, rect.height) ~/ 12);
-
-  List<double> _correctedRgb(img.Pixel pixel, List<double> gains) {
-    return [
-      (pixel.r.toDouble() * gains[0]).clamp(0.0, 255.0),
-      (pixel.g.toDouble() * gains[1]).clamp(0.0, 255.0),
-      (pixel.b.toDouble() * gains[2]).clamp(0.0, 255.0),
-    ];
-  }
-
-  double _luma(img.Pixel pixel) =>
-      (0.2126 * pixel.r) + (0.7152 * pixel.g) + (0.0722 * pixel.b);
-
-  _Rect _clampedRect({
-    required int left,
-    required int top,
-    required int width,
-    required int height,
-    required int imageWidth,
-    required int imageHeight,
-  }) {
-    final x0 = left.clamp(0, imageWidth - 1);
-    final y0 = top.clamp(0, imageHeight - 1);
-    final x1 = (left + width).clamp(0, imageWidth);
-    final y1 = (top + height).clamp(0, imageHeight);
-    return _Rect(
-      left: x0,
-      top: y0,
-      width: math.max(0, x1 - x0),
-      height: math.max(0, y1 - y0),
-      area: math.max(0, x1 - x0) * math.max(0, y1 - y0),
-    );
-  }
-
-  _Rect? _fullRect({
-    required int left,
-    required int top,
-    required int width,
-    required int height,
-    required int imageWidth,
-    required int imageHeight,
-  }) {
-    if (left < 0 ||
-        top < 0 ||
-        left + width > imageWidth ||
-        top + height > imageHeight) {
-      return null;
-    }
-    return _Rect(
-      left: left,
-      top: top,
-      width: width,
-      height: height,
-      area: width * height,
-    );
+    final hue = _normalizeHue(math.atan2(sinH, cosH) * 180.0 / math.pi);
+    return [hue, sumS / count, sumV / count];
   }
 }
 
 Map<String, dynamic> _analyzeScanInBackground(
   String imagePath,
-  String referenceText,
+  String modelText,
 ) {
   final service = const LocalScanAnalysisService();
-  final referenceMap = _ReferenceMap.fromText(referenceText);
+  final model = _ProductionModel.fromText(modelText);
   final imageBytes = File(imagePath).readAsBytesSync();
   final decoded = img.decodeImage(imageBytes);
   if (decoded == null) {
-    throw StateError('Could not decode captured image on device.');
+    throw StateError('INVALID_IMAGE: Could not decode captured image.');
   }
 
   final baseImage = service._imageForAnalysis(img.bakeOrientation(decoded));
-  final extraction = service._extractBestPadFeatures(
-    baseImage,
-    referenceMap.featureSpace,
-  );
-  if (!_looksLikeReadableDipstick(extraction)) {
-    throw StateError('NO_DIPSTICK_FOUND');
-  }
-
+  final extraction = service._extractBestPadFeatures(baseImage);
   final rows = <DipstickResultRow>[];
   final confidenceValues = <double>[];
+  final confidenceByAnalyte = <String, double>{};
 
   for (final analyte in _analyteOrder) {
-    final observed = extraction.featuresByAnalyte[analyte];
-    final prediction = observed == null
-        ? null
-        : referenceMap.predict(analyte: analyte, observed: observed);
-    final level = prediction?.level ?? 'Unavailable';
-    final displayLevel = _normalizeDisplayLevel(level);
-    final confidence = prediction?.confidence ?? 0.0;
-    final code = _codeForAnalyte(analyte);
-    confidenceValues.add(confidence);
-
+    final prediction = model.predict(analyte, extraction.featuresByAnalyte);
+    final displayLevel = _normalizeDisplayLevel(prediction.level);
+    confidenceValues.add(prediction.confidence);
+    confidenceByAnalyte[analyte] = prediction.confidence;
     rows.add(
       DipstickResultRow(
-        code: code,
+        code: _codeForAnalyte(analyte),
         name: analyte,
         result: displayLevel,
         referenceRange: _referenceRanges[analyte] ?? 'Reference unavailable',
@@ -823,6 +665,7 @@ Map<String, dynamic> _analyzeScanInBackground(
       ),
     );
   }
+  model.validateConfidence(confidenceByAnalyte);
 
   final averageConfidence = confidenceValues.isEmpty
       ? 0.0
@@ -834,167 +677,228 @@ Map<String, dynamic> _analyzeScanInBackground(
     imagePath: imagePath,
     status: 'complete',
     confidence: averageConfidence,
-    posteriorProbability: 0.0,
     riskBucket: 'Complete',
-    modelVersion: '${referenceMap.version}_edge',
+    modelVersion: model.version,
     rows: rows,
-    screeningProbabilities: const <String, double>{},
     padsDetected: extraction.featuresByAnalyte.length,
     padsUnavailable: _analyteOrder.length - extraction.featuresByAnalyte.length,
-  ).toJson();
+  ).toJson()
+    ..['pipeline_version'] = 'android_markerless_json_knn_v1'
+    ..['feature_space'] = 'normalized_hsv'
+    ..['localization'] = 'markerless_strip_v1'
+    ..['orientation'] = extraction.variantName;
 }
 
-bool _looksLikeReadableDipstick(_FeatureExtraction extraction) {
-  final hasEnoughPads = extraction.featuresByAnalyte.length >= 6;
-  final hasReadableMarker =
-      extraction.markerPatternScore >= 0.95 &&
-      extraction.markerFillRatio >= 0.06 &&
-      extraction.markerFillRatio <= 0.96 &&
-      extraction.markerAspectRatio <= 2.8;
-  final hasAnyStripSignal =
-      extraction.saturationMean >= 0.02 ||
-      extraction.saturationStd >= 0.012 ||
-      extraction.valueStd >= 0.025 ||
-      extraction.hueStd >= 5.0;
-  return hasEnoughPads && hasReadableMarker && hasAnyStripSignal;
-}
-
-class _ReferenceMap {
+class _ProductionModel {
   final String version;
-  final String featureSpace;
-  final int knnK;
-  final Map<String, List<_LevelReference>> referencesByAnalyte;
+  final bool abstainEnabled;
+  final double abstainThreshold;
+  final Map<String, _AnalyteModel> analytes;
 
-  const _ReferenceMap({
+  const _ProductionModel({
     required this.version,
-    required this.featureSpace,
-    required this.knnK,
-    required this.referencesByAnalyte,
+    required this.abstainEnabled,
+    required this.abstainThreshold,
+    required this.analytes,
   });
 
-  static _ReferenceMap fromText(String text) {
+  static _ProductionModel fromText(String text) {
     final payload = jsonDecode(text) as Map<String, dynamic>;
-    final featureSpace = (payload['reference_color_space'] as String? ?? 'hsv')
-        .toLowerCase();
-    final knnPayload = payload['semiquant_knn'] as Map<String, dynamic>?;
-    final knnK = math.max(1, (knnPayload?['k'] as num?)?.round() ?? 31);
-    final analytesPayload =
-        payload['analytes'] as Map<String, dynamic>? ?? const {};
-    final refs = <String, List<_LevelReference>>{};
-
-    for (final analyte in _analyteOrder) {
-      final items = analytesPayload[analyte] as List<dynamic>? ?? const [];
-      refs[analyte] = items
-          .whereType<Map<String, dynamic>>()
-          .map((item) {
-            final level = item['level'] as String? ?? 'Unavailable';
-            if (featureSpace == 'lab') {
-              return _LevelReference(
-                level: level,
-                values: [
-                  (item['l'] as num?)?.toDouble() ?? 0.0,
-                  (item['a'] as num?)?.toDouble() ?? 0.0,
-                  (item['b'] as num?)?.toDouble() ?? 0.0,
-                ],
-              );
-            }
-            return _LevelReference(
-              level: level,
-              values: [
-                (item['h'] as num?)?.toDouble() ?? 0.0,
-                (item['s'] as num?)?.toDouble() ?? 0.0,
-                (item['v'] as num?)?.toDouble() ?? 0.0,
-              ],
-            );
-          })
-          .toList(growable: false);
-    }
-
-    return _ReferenceMap(
-      version: payload['version'] as String? ?? 'edge_reference_map',
-      featureSpace: featureSpace,
-      knnK: knnK,
-      referencesByAnalyte: refs,
+    final analytesJson = payload['analytes'] as Map<String, dynamic>? ?? {};
+    final abstainPolicy = payload['abstain_policy'] as Map<String, dynamic>? ?? {};
+    return _ProductionModel(
+      version: payload['model_version'] as String? ?? 'production_unknown',
+      abstainEnabled: abstainPolicy['enabled'] as bool? ?? false,
+      abstainThreshold: (abstainPolicy['threshold'] as num?)?.toDouble() ?? 0.0,
+      analytes: analytesJson.map((key, value) {
+        return MapEntry(key, _AnalyteModel.fromJson(value as Map<String, dynamic>));
+      }),
     );
   }
 
-  _Prediction? predict({
-    required String analyte,
-    required List<double> observed,
-  }) {
-    final refs = referencesByAnalyte[analyte] ?? const [];
-    if (refs.isEmpty) {
-      return null;
+  _Prediction predict(
+    String analyte,
+    Map<String, List<double>> featuresByAnalyte,
+  ) {
+    final model = analytes[analyte];
+    final observed = featuresByAnalyte[analyte];
+    if (model == null || observed == null) {
+      return const _Prediction(level: 'Unavailable', confidence: 0.0);
     }
+    return model.predict(analyte, featuresByAnalyte);
+  }
 
-    final distances =
-        refs
-            .map(
-              (ref) =>
-                  MapEntry(ref, _distance(observed, ref.values, featureSpace)),
-            )
-            .toList()
-          ..sort((a, b) => a.value.compareTo(b.value));
-    final neighbors = distances.take(math.min(knnK, distances.length));
+  void validateConfidence(Map<String, double> confidenceByAnalyte) {
+    if (!abstainEnabled || abstainThreshold <= 0.0) return;
+    final lowConfidence = confidenceByAnalyte.entries
+        .where((entry) => entry.value < abstainThreshold)
+        .toList()
+      ..sort((a, b) => a.value.compareTo(b.value));
+    if (lowConfidence.isEmpty) return;
+
+    final analyte = lowConfidence.first.key;
+    throw StateError(
+      'LOW_CONFIDENCE: $analyte result is low confidence. Please retake scan under better lighting.',
+    );
+  }
+}
+
+class _AnalyteModel {
+  final int k;
+  final String metric;
+  final String weights;
+  final String featureSet;
+  final String featureTransform;
+  final List<double>? scalerMean;
+  final List<double>? scalerScale;
+  final List<List<double>> trainVectors;
+  final List<String> trainLabels;
+
+  const _AnalyteModel({
+    required this.k,
+    required this.metric,
+    required this.weights,
+    required this.featureSet,
+    required this.featureTransform,
+    required this.scalerMean,
+    required this.scalerScale,
+    required this.trainVectors,
+    required this.trainLabels,
+  });
+
+  static _AnalyteModel fromJson(Map<String, dynamic> json) {
+    final scaler = json['scaler'] as Map<String, dynamic>?;
+    return _AnalyteModel(
+      k: (json['k'] as num?)?.round() ?? 1,
+      metric: json['metric'] as String? ?? 'euclidean',
+      weights: json['weights'] as String? ?? 'distance',
+      featureSet: json['feature_set'] as String? ?? 'local',
+      featureTransform: json['feature_transform'] as String? ?? 'raw',
+      scalerMean: (scaler?['mean'] as List<dynamic>?)
+          ?.map((v) => (v as num).toDouble())
+          .toList(growable: false),
+      scalerScale: (scaler?['scale'] as List<dynamic>?)
+          ?.map((v) => (v as num).toDouble())
+          .toList(growable: false),
+      trainVectors: (json['train_vectors'] as List<dynamic>)
+          .map(
+            (row) => (row as List<dynamic>)
+                .map((v) => (v as num).toDouble())
+                .toList(growable: false),
+          )
+          .toList(growable: false),
+      trainLabels: (json['train_labels'] as List<dynamic>)
+          .map((v) => v.toString())
+          .toList(growable: false),
+    );
+  }
+
+  _Prediction predict(
+    String analyte,
+    Map<String, List<double>> featuresByAnalyte,
+  ) {
+    final observed = _observedVector(analyte, featuresByAnalyte);
+    if (observed.isEmpty) {
+      return const _Prediction(level: 'Unavailable', confidence: 0.0);
+    }
+    final transformed = _transform(observed);
+    final distances = <_Neighbor>[];
+    for (var i = 0; i < trainVectors.length; i++) {
+      distances.add(_Neighbor(trainLabels[i], _distance(transformed, trainVectors[i])));
+    }
+    distances.sort((a, b) => a.distance.compareTo(b.distance));
     final votes = <String, double>{};
-    for (final item in neighbors) {
-      votes[item.key.level] =
-          (votes[item.key.level] ?? 0.0) + (1.0 / (item.value + 1e-9));
+    for (final neighbor in distances.take(math.min(k, distances.length))) {
+      final vote = weights == 'distance' ? 1.0 / (neighbor.distance + 1e-9) : 1.0;
+      votes[neighbor.label] = (votes[neighbor.label] ?? 0.0) + vote;
     }
-    final rankedVotes = votes.entries.toList()
+    final ranked = votes.entries.toList()
       ..sort((a, b) => b.value.compareTo(a.value));
-    final bestVote = rankedVotes.first;
-    final voteTotal = rankedVotes.fold<double>(
-      0.0,
-      (total, item) => total + item.value,
-    );
-    final confidence = voteTotal <= 0.0 ? 0.0 : bestVote.value / voteTotal;
-    final second = rankedVotes.length > 1 && voteTotal > 0.0
-        ? rankedVotes[1].value / voteTotal
-        : 0.0;
-    final best = distances.firstWhere(
-      (item) => item.key.level == bestVote.key,
-      orElse: () => distances.first,
-    );
+    if (ranked.isEmpty) {
+      return const _Prediction(level: 'Unavailable', confidence: 0.0);
+    }
+    final total = ranked.fold<double>(0.0, (sum, item) => sum + item.value);
     return _Prediction(
-      level: bestVote.key,
-      confidence: confidence,
-      distance: best.value,
-      margin: confidence - second,
+      level: ranked.first.key,
+      confidence: total <= 0 ? 0.0 : ranked.first.value / total,
     );
   }
 
-  double _distance(List<double> a, List<double> b, String featureSpace) {
-    if (featureSpace == 'hsv' || featureSpace == 'normalized_hsv') {
-      final hueDelta =
-          math.min((a[0] - b[0]).abs(), 360.0 - (a[0] - b[0]).abs()) / 180.0;
-      final ds = a[1] - b[1];
-      final dv = a[2] - b[2];
-      return math.sqrt((hueDelta * hueDelta) + (ds * ds) + (dv * dv));
+  List<double> _observedVector(
+    String analyte,
+    Map<String, List<double>> featuresByAnalyte,
+  ) {
+    if (featureSet == 'all30') {
+      final values = <double>[];
+      for (final item in _analyteOrder) {
+        final hsv = featuresByAnalyte[item];
+        if (hsv == null) return const [];
+        values.addAll(hsv);
+      }
+      return values;
     }
-    final d0 = a[0] - b[0];
-    final d1 = a[1] - b[1];
-    final d2 = a[2] - b[2];
-    return math.sqrt((d0 * d0) + (d1 * d1) + (d2 * d2));
+    return featuresByAnalyte[analyte] ?? const [];
+  }
+
+  List<double> _transform(List<double> values) {
+    var transformed = values;
+    if (featureTransform == 'circular_scaled') {
+      final radians = values[0] * math.pi / 180.0;
+      transformed = [math.cos(radians), math.sin(radians), values[1], values[2]];
+    }
+    if (featureTransform == 'scaled' || featureTransform == 'circular_scaled') {
+      final mean = scalerMean;
+      final scale = scalerScale;
+      if (mean != null && scale != null && mean.length == transformed.length) {
+        return [
+          for (var i = 0; i < transformed.length; i++)
+            (transformed[i] - mean[i]) / (scale[i] == 0.0 ? 1.0 : scale[i]),
+        ];
+      }
+    }
+    return transformed;
+  }
+
+  double _distance(List<double> a, List<double> b) {
+    if (metric == 'manhattan') {
+      var total = 0.0;
+      for (var i = 0; i < a.length; i++) {
+        total += (a[i] - b[i]).abs();
+      }
+      return total;
+    }
+    if (metric == 'chebyshev') {
+      var maxDelta = 0.0;
+      for (var i = 0; i < a.length; i++) {
+        maxDelta = math.max(maxDelta, (a[i] - b[i]).abs());
+      }
+      return maxDelta;
+    }
+    var total = 0.0;
+    for (var i = 0; i < a.length; i++) {
+      final delta = a[i] - b[i];
+      total += delta * delta;
+    }
+    return math.sqrt(total);
   }
 }
 
 class _ImageVariant {
   final String name;
   final img.Image image;
-
   const _ImageVariant(this.name, this.image);
 }
 
 class _FeatureExtraction {
   final String variantName;
   final Map<String, List<double>> featuresByAnalyte;
+  final Map<String, List<double>> rawFeaturesByAnalyte;
+  final Map<String, _Rect> padRois;
+  final _StripRect stripRect;
+  final int imageWidth;
+  final int imageHeight;
   final double qualityScore;
-  final double markerScore;
-  final double markerPatternScore;
-  final double markerFillRatio;
-  final double markerAspectRatio;
-  final double gridScore;
+  final double padGapCv;
   final double hueStd;
   final double saturationMean;
   final double saturationStd;
@@ -1003,12 +907,13 @@ class _FeatureExtraction {
   const _FeatureExtraction({
     required this.variantName,
     required this.featuresByAnalyte,
+    required this.rawFeaturesByAnalyte,
+    required this.padRois,
+    required this.stripRect,
+    required this.imageWidth,
+    required this.imageHeight,
     required this.qualityScore,
-    required this.markerScore,
-    required this.markerPatternScore,
-    required this.markerFillRatio,
-    required this.markerAspectRatio,
-    required this.gridScore,
+    required this.padGapCv,
     required this.hueStd,
     required this.saturationMean,
     required this.saturationStd,
@@ -1016,69 +921,23 @@ class _FeatureExtraction {
   });
 }
 
-class _MarkerCandidate {
-  final _Rect rect;
-  final double score;
-  final double patternScore;
-  final double fillRatio;
-  final double normalizedAspect;
-
-  const _MarkerCandidate({
-    required this.rect,
-    required this.score,
-    required this.patternScore,
-    required this.fillRatio,
-    required this.normalizedAspect,
-  });
-}
-
-class _MarkerPatternQuality {
-  final double score;
-  final double borderMean;
-  final double centerMean;
-  final bool isValid;
-
-  const _MarkerPatternQuality({
-    required this.score,
-    required this.borderMean,
-    required this.centerMean,
-    required this.isValid,
-  });
-}
-
-class _PadGrid {
-  final int padX;
-  final int globalYShift;
-  final double score;
-  final Map<String, int> finalYs;
-
-  const _PadGrid({
-    required this.padX,
-    required this.globalYShift,
-    required this.score,
-    required this.finalYs,
-  });
-}
-
-class _LevelReference {
-  final String level;
-  final List<double> values;
-
-  const _LevelReference({required this.level, required this.values});
+class _Neighbor {
+  final String label;
+  final double distance;
+  const _Neighbor(this.label, this.distance);
 }
 
 class _Prediction {
   final String level;
   final double confidence;
-  final double distance;
-  final double margin;
+  const _Prediction({required this.level, required this.confidence});
+}
 
-  const _Prediction({
-    required this.level,
-    required this.confidence,
-    required this.distance,
-    required this.margin,
-  });
+class _Run {
+  final int start;
+  final int end;
+  int get length => end - start + 1;
+  const _Run(this.start, this.end);
 }
 
 class _Rect {
@@ -1087,7 +946,6 @@ class _Rect {
   final int width;
   final int height;
   final int area;
-
   const _Rect({
     required this.left,
     required this.top,
@@ -1095,6 +953,135 @@ class _Rect {
     required this.height,
     required this.area,
   });
+}
+
+class _StripRect extends _Rect {
+  final double quality;
+  const _StripRect({
+    required super.left,
+    required super.top,
+    required super.width,
+    required super.height,
+    required super.area,
+    required this.quality,
+  });
+}
+
+List<_Run> _runs(List<bool> flags) {
+  final runs = <_Run>[];
+  int? start;
+  for (var i = 0; i <= flags.length; i++) {
+    final flag = i < flags.length ? flags[i] : false;
+    if (flag && start == null) {
+      start = i;
+    } else if (!flag && start != null) {
+      runs.add(_Run(start, i - 1));
+      start = null;
+    }
+  }
+  return runs;
+}
+
+List<double> _smooth(List<double> values, int window) {
+  final w = math.max(3, window.isEven ? window + 1 : window);
+  final half = w ~/ 2;
+  return [
+    for (var i = 0; i < values.length; i++)
+      _mean(values.sublist(math.max(0, i - half), math.min(values.length, i + half + 1))),
+  ];
+}
+
+double _percentile(List<double> values, double percentile) {
+  if (values.isEmpty) return 0.0;
+  final sorted = values.toList()..sort();
+  final index = ((percentile / 100.0) * (sorted.length - 1)).round();
+  return sorted[index.clamp(0, sorted.length - 1).toInt()];
+}
+
+double _mean(List<double> values) =>
+    values.isEmpty ? 0.0 : values.reduce((a, b) => a + b) / values.length;
+
+double _median(List<double> values) {
+  if (values.isEmpty) return 0.0;
+  final sorted = values.toList()..sort();
+  final mid = sorted.length ~/ 2;
+  if (sorted.length.isOdd) return sorted[mid];
+  return (sorted[mid - 1] + sorted[mid]) / 2.0;
+}
+
+double _stdDev(List<double> values) {
+  if (values.length < 2) return 0.0;
+  final m = _mean(values);
+  return math.sqrt(_mean(values.map((v) => math.pow(v - m, 2).toDouble()).toList()));
+}
+
+double _circularMeanDeg(List<double> values) {
+  var sinSum = 0.0;
+  var cosSum = 0.0;
+  for (final hue in values) {
+    final radians = hue * math.pi / 180.0;
+    sinSum += math.sin(radians);
+    cosSum += math.cos(radians);
+  }
+  return _normalizeHue(math.atan2(sinSum, cosSum) * 180.0 / math.pi);
+}
+
+double _circularHueStd(List<double> hues) {
+  if (hues.length < 2) return 0.0;
+  var sinSum = 0.0;
+  var cosSum = 0.0;
+  for (final hue in hues) {
+    final radians = hue * math.pi / 180.0;
+    sinSum += math.sin(radians);
+    cosSum += math.cos(radians);
+  }
+  final r = (math.sqrt(sinSum * sinSum + cosSum * cosSum) / hues.length)
+      .clamp(0.000001, 1.0)
+      .toDouble();
+  return math.sqrt(-2.0 * math.log(r)) * 180.0 / math.pi;
+}
+
+double _normalizeHue(double hue) {
+  var normalized = hue % 360.0;
+  if (normalized < 0) normalized += 360.0;
+  return normalized;
+}
+
+List<double> _correctedRgb(img.Pixel pixel, List<double> gains) {
+  return [
+    (pixel.r.toDouble() * gains[0]).clamp(0.0, 255.0).toDouble(),
+    (pixel.g.toDouble() * gains[1]).clamp(0.0, 255.0).toDouble(),
+    (pixel.b.toDouble() * gains[2]).clamp(0.0, 255.0).toDouble(),
+  ];
+}
+
+double _rgbChroma(double r, double g, double b) {
+  final maxValue = math.max(r, math.max(g, b));
+  final minValue = math.min(r, math.min(g, b));
+  return ((maxValue - minValue) / 255.0).clamp(0.0, 1.0).toDouble();
+}
+
+double _luma(img.Pixel pixel) =>
+    (0.2126 * pixel.r) + (0.7152 * pixel.g) + (0.0722 * pixel.b);
+
+List<double> _rgbToHsv(double r, double g, double b) {
+  final rn = r / 255.0;
+  final gn = g / 255.0;
+  final bn = b / 255.0;
+  final maxValue = math.max(rn, math.max(gn, bn));
+  final minValue = math.min(rn, math.min(gn, bn));
+  final delta = maxValue - minValue;
+  var hue = 0.0;
+  if (delta != 0) {
+    if (maxValue == rn) {
+      hue = 60.0 * (((gn - bn) / delta) % 6.0);
+    } else if (maxValue == gn) {
+      hue = 60.0 * (((bn - rn) / delta) + 2.0);
+    } else {
+      hue = 60.0 * (((rn - gn) / delta) + 4.0);
+    }
+  }
+  return [_normalizeHue(hue), maxValue == 0 ? 0.0 : delta / maxValue, maxValue];
 }
 
 String _codeForAnalyte(String analyte) {
@@ -1126,67 +1113,12 @@ String _codeForAnalyte(String analyte) {
 
 String _normalizeDisplayLevel(String level) {
   final normalized = level.trim();
-  if (normalized.toLowerCase() == 'neg') {
-    return 'Negative';
-  }
+  if (normalized.toLowerCase() == 'neg') return 'Negative';
   return normalized.isEmpty ? 'Unavailable' : normalized;
 }
 
 bool _isDisplayValueAbnormal(String level) {
   final normalized = level.trim().toLowerCase();
-  if (normalized.isEmpty || normalized == 'unavailable') {
-    return false;
-  }
+  if (normalized.isEmpty || normalized == 'unavailable') return false;
   return normalized != 'neg' && normalized != 'negative';
-}
-
-List<double> _rgbToHsv(double r, double g, double b) {
-  final rn = r / 255.0;
-  final gn = g / 255.0;
-  final bn = b / 255.0;
-  final maxValue = math.max(rn, math.max(gn, bn));
-  final minValue = math.min(rn, math.min(gn, bn));
-  final delta = maxValue - minValue;
-
-  var hue = 0.0;
-  if (delta != 0) {
-    if (maxValue == rn) {
-      hue = 60.0 * (((gn - bn) / delta) % 6.0);
-    } else if (maxValue == gn) {
-      hue = 60.0 * (((bn - rn) / delta) + 2.0);
-    } else {
-      hue = 60.0 * (((rn - gn) / delta) + 4.0);
-    }
-  }
-  if (hue < 0) hue += 360.0;
-  final saturation = maxValue == 0 ? 0.0 : delta / maxValue;
-  return [hue, saturation, maxValue];
-}
-
-List<double> _rgbToLab(double r, double g, double b) {
-  double pivotRgb(double value) {
-    final normalized = value / 255.0;
-    return normalized <= 0.04045
-        ? normalized / 12.92
-        : math.pow((normalized + 0.055) / 1.055, 2.4).toDouble();
-  }
-
-  final rr = pivotRgb(r);
-  final gg = pivotRgb(g);
-  final bb = pivotRgb(b);
-
-  final x = ((rr * 0.4124564) + (gg * 0.3575761) + (bb * 0.1804375)) / 0.95047;
-  final y = (rr * 0.2126729) + (gg * 0.7151522) + (bb * 0.0721750);
-  final z = ((rr * 0.0193339) + (gg * 0.1191920) + (bb * 0.9503041)) / 1.08883;
-
-  double pivotXyz(double value) {
-    return value > 0.008856
-        ? math.pow(value, 1.0 / 3.0).toDouble()
-        : (7.787 * value) + (16.0 / 116.0);
-  }
-
-  final fx = pivotXyz(x);
-  final fy = pivotXyz(y);
-  final fz = pivotXyz(z);
-  return [(116.0 * fy) - 16.0, 500.0 * (fx - fy), 200.0 * (fy - fz)];
 }

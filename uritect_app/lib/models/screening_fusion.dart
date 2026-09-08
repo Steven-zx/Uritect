@@ -1,17 +1,14 @@
 import 'clinical_symptoms.dart';
 import 'dipstick_results_data.dart';
-import 'knn_probabilities.dart';
 
 class ScreeningAnalyteResult {
   final String code;
   final String name;
-  final double abnormalProbability;
   final String displayValue;
 
   const ScreeningAnalyteResult({
     required this.code,
     required this.name,
-    required this.abnormalProbability,
     required this.displayValue,
   });
 }
@@ -33,20 +30,16 @@ class ClinicalInterpretation {
 }
 
 class ScreeningFusionResult {
-  final double posteriorProbability;
   final String riskBucket;
   final List<ScreeningAnalyteResult> analytes;
-  final double logOddsContribution;
   final bool hasEvidenceConflict;
   final String? conflictTitle;
   final String? conflictMessage;
   final List<ClinicalInterpretation> interpretations;
 
   const ScreeningFusionResult({
-    required this.posteriorProbability,
     required this.riskBucket,
     required this.analytes,
-    required this.logOddsContribution,
     required this.interpretations,
     this.hasEvidenceConflict = false,
     this.conflictTitle,
@@ -55,19 +48,6 @@ class ScreeningFusionResult {
 }
 
 class ScreeningFusionEngine {
-  static String displayValueForProbability(double probability) {
-    if (probability < 0.25) {
-      return 'Negative';
-    }
-    if (probability < 0.50) {
-      return 'Trace';
-    }
-    if (probability < 0.75) {
-      return 'Moderate';
-    }
-    return 'High';
-  }
-
   static List<ScreeningAnalyteResult> buildAnalytesFromRows(
     List<DipstickResultRow> rows,
   ) {
@@ -81,7 +61,6 @@ class ScreeningFusionEngine {
       return ScreeningAnalyteResult(
         code: code,
         name: name,
-        abnormalProbability: _isAbnormalDisplayValue(display) ? 1.0 : 0.0,
         displayValue: display,
       );
     }
@@ -94,43 +73,29 @@ class ScreeningFusionEngine {
     ];
   }
 
-  static List<ScreeningAnalyteResult> buildAnalytesFromProbabilities(
-    Map<String, double> probabilities,
-  ) {
-    double p(String code, double fallback) {
-      return (probabilities[code] ?? fallback).clamp(0.0, 1.0).toDouble();
-    }
-
-    return [
+  static List<ScreeningAnalyteResult> get defaultAnalytes {
+    return const [
       ScreeningAnalyteResult(
         code: 'GLU',
         name: 'Glucose',
-        abnormalProbability: p('GLU', 0.10),
-        displayValue: displayValueForProbability(p('GLU', 0.10)),
+        displayValue: 'Unavailable',
       ),
       ScreeningAnalyteResult(
         code: 'LEU',
         name: 'Leukocytes',
-        abnormalProbability: p('LEU', 0.0),
-        displayValue: displayValueForProbability(p('LEU', 0.0)),
+        displayValue: 'Unavailable',
       ),
       ScreeningAnalyteResult(
         code: 'PRO',
         name: 'Protein',
-        abnormalProbability: p('PRO', 0.0),
-        displayValue: displayValueForProbability(p('PRO', 0.0)),
+        displayValue: 'Unavailable',
       ),
       ScreeningAnalyteResult(
         code: 'NIT',
         name: 'Nitrite',
-        abnormalProbability: p('NIT', 0.0),
-        displayValue: displayValueForProbability(p('NIT', 0.0)),
+        displayValue: 'Unavailable',
       ),
     ];
-  }
-
-  static List<ScreeningAnalyteResult> get defaultAnalytes {
-    return buildAnalytesFromProbabilities(knnProbabilities);
   }
 
   const ScreeningFusionEngine();
@@ -151,10 +116,8 @@ class ScreeningFusionEngine {
     final conflict = _evidenceConflict(interpretations, checklist);
 
     return ScreeningFusionResult(
-      posteriorProbability: 0.0,
       riskBucket: priority,
       analytes: selectedAnalytes,
-      logOddsContribution: checklist.computeLogOddsContribution(),
       interpretations: interpretations,
       hasEvidenceConflict: conflict.title != null,
       conflictTitle: conflict.title,
@@ -185,15 +148,15 @@ class ScreeningFusionEngine {
     final hematuria = checklist.selectedSymptoms['hematuria'] == true;
     final suprapubic = checklist.selectedSymptoms['suprapubic'] == true;
 
-    if (dysuria) evidence.add('Dysuria present; LR+ 1.30');
+    if (dysuria) evidence.add('Dysuria reported');
     if (frequency && urgency) {
-      evidence.add('Frequency and urgency present; applied LR+ 1.22 once');
+      evidence.add('Frequency and urgency reported');
     } else if (frequency) {
-      evidence.add('Frequency present; LR+ 1.10');
+      evidence.add('Frequency reported');
     } else if (urgency) {
-      evidence.add('Urgency present; LR+ 1.22');
+      evidence.add('Urgency reported');
     }
-    if (hematuria) evidence.add('Visible hematuria present; LR+ 1.72');
+    if (hematuria) evidence.add('Visible hematuria reported');
     if (suprapubic) {
       evidence.add('Lower abdominal pain reported; supporting symptom only');
     }
