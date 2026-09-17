@@ -1,33 +1,39 @@
 # Uritect Clinical Interpretation Evidence
 
-This app does not calculate a combined disease probability from symptoms and
-dipstick results. The scan model remains a 10-parameter semiquant classifier.
-Clinical interpretation is a separate evidence display intended for review by a
-qualified health worker.
+The scan model remains a 10-parameter semiquant classifier. Clinical
+interpretation is a separate UTI-focused Bayesian research candidate intended
+for review by a qualified health worker. The app does not claim renal,
+metabolic, or hepatic screening interpretation.
 
 ## Evidence Rules
 
-- Nitrite and leukocyte esterase are the only dipstick analytes used for the
-  localized UTI-related findings category.
-- Dysuria, frequency, urgency, visible hematuria, and suprapubic pain are shown
-  as localized urinary findings, but they are not converted into numeric
-  likelihood-ratio weights.
+- Nitrite, leukocyte esterase, and blood are the dipstick analytes used for the
+  UTI screening findings category.
+- Dysuria, frequency, urgency, and visible hematuria can contribute one grouped
+  urinary-symptom likelihood ratio. Suprapubic pain is displayed but unweighted.
+- Vaginal discharge and vaginal irritation are shown as alternate-cause
+  symptoms because published reviews report that they lower the likelihood of
+  uncomplicated UTI.
 - Fever/chills, flank or back pain, and nausea/vomiting are shown separately as
   systemic warning symptoms.
-- Protein is handled as a renal follow-up flag.
-- Glucose is handled as a metabolic follow-up flag.
-- Protein and glucose are not averaged into a UTI score.
-- No fixed prior probability is used.
-- No posterior thresholds are used.
-- No single combined disease probability is calculated.
+- Protein, glucose, ketones, bilirubin, urobilinogen, pH, and specific gravity
+  remain visible in the ten-analyte dipstick table but are not used for UTI
+  screening interpretation.
+- A 50% development prior is used for the source population.
+- Posterior display bands are provisional at less than 20%, 20% to less than
+  80%, and 80% or greater.
+- Systemic warning findings are not included in the lower-UTI posterior.
 
-## Numeric Weights
+## Numeric Model
 
-The app intentionally does not store or apply LR+, LR-, priors, odds-space
-updates, or posterior probability thresholds. Published symptom studies are used
-only to justify which symptoms are clinically relevant enough to display as
-separate rule-based flags. Exact numeric weighting requires a validated target
-population and clinical signoff, so it is outside the current implementation.
+The app applies one mutually exclusive LR from each of three groups: dipstick
+pattern, localized urinary symptoms, and alternate-cause symptoms. New history
+records store the candidate version and posterior estimate.
+
+The frozen specification is documented in
+`docs/uti_screening_weight_table_for_physician_review.md`. It must not be
+described as clinically validated until physician review, local calibration,
+and outcome validation against urine culture are complete.
 
 ## Sources
 

@@ -88,8 +88,8 @@ class _SymptomChecklistPageState extends State<SymptomChecklistPage> {
     final systemicSymptoms = clinicalSymptoms
         .where((s) => s.category == 'systemic')
         .toList();
-    final followUpSymptoms = clinicalSymptoms
-        .where((s) => s.category == 'followup')
+    final differentialSymptoms = clinicalSymptoms
+        .where((s) => s.category == 'differential')
         .toList();
 
     return Scaffold(
@@ -155,19 +155,19 @@ class _SymptomChecklistPageState extends State<SymptomChecklistPage> {
                       const SizedBox(height: 28),
                       _buildCategoryHeader(
                         context,
-                        'Systemic Warning Symptoms',
+                        'Symptoms That May Suggest Another Cause',
                       ),
                       const SizedBox(height: 12),
-                      ...systemicSymptoms.map(
+                      ...differentialSymptoms.map(
                         (symptom) => _buildSymptomTile(context, symptom),
                       ),
                       const SizedBox(height: 28),
                       _buildCategoryHeader(
                         context,
-                        'Follow-up Indicators',
+                        'Systemic Warning Symptoms',
                       ),
                       const SizedBox(height: 12),
-                      ...followUpSymptoms.map(
+                      ...systemicSymptoms.map(
                         (symptom) => _buildSymptomTile(context, symptom),
                       ),
                       const SizedBox(height: 28),
@@ -304,12 +304,14 @@ class _SymptomChecklistPageState extends State<SymptomChecklistPage> {
         return Icons.person_rounded;
       case 'hematuria':
         return Icons.water_drop_rounded;
+      case 'discharge':
+        return Icons.info_outline_rounded;
+      case 'irritation':
+        return Icons.report_problem_rounded;
       case 'flank':
         return Icons.person_rounded;
       case 'fever':
         return Icons.thermostat_rounded;
-      case 'edema':
-        return Icons.person_rounded;
       case 'nausea':
         return Icons.sentiment_very_dissatisfied_rounded;
       default:

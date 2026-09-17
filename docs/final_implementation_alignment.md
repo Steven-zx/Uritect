@@ -8,16 +8,16 @@ system that is implemented in the app.
 
 Uritect performs fully offline, markerless, ten-analyte semiquantitative urine
 dipstick classification on Android. The app does not use a Python server, HTTP
-endpoint, cloud storage, Firebase, remote APIs, binary screening, Bayesian
-posterior scoring, unsupported likelihood-ratio weights, priors, or posterior
-thresholds.
+endpoint, cloud storage, Firebase, remote APIs, binary screening, or unsupported
+likelihood-ratio parameters. Its UTI interpretation layer uses one frozen,
+source-documented Bayesian research candidate pending clinical validation.
 
 ## Objective 4 Replacement
 
 Evaluate the Uritect mobile application as an offline clinical decision-support
 prototype that combines markerless ten-pad semiquantitative dipstick results
-with separate rule-based clinical outputs for localized UTI-related findings,
-systemic warning symptoms, renal-related follow-up, and metabolic follow-up.
+with a UTI-only Bayesian research estimate plus separate outputs for
+alternate-cause symptoms, and systemic warning symptoms.
 
 ## Chapter 3 Methodology Replacement
 
@@ -66,8 +66,8 @@ validated 2,000 feature-row predictions with zero mismatches.
 
 ## Formula Replacement
 
-Remove Bayesian posterior formulas, priors, likelihood-ratio multiplication,
-and posterior thresholds.
+Replace the old unsupported Bayesian table with the frozen grouped-LR UTI
+candidate documented in `docs/uti_screening_weight_table_for_physician_review.md`.
 
 Use this pipeline expression instead:
 
@@ -80,7 +80,7 @@ captured image
   -> normalized HSV feature vector
   -> per-analyte KNN semiquantitative classifier
   -> ten semiquantitative analyte results
-  -> separate rule-based clinical interpretation categories
+  -> grouped Bayesian UTI estimate plus separate systemic warning output
 ```
 
 ## Corrected Performance Wording
@@ -110,25 +110,24 @@ Correct wording:
 
 ## Clinical Interpretation Replacement
 
-Clinical interpretation is rule-based and separated into four outputs:
+Clinical interpretation is limited to UTI screening support:
 
-- Localized UTI-related findings: leukocyte esterase, nitrite, dysuria,
+- UTI screening findings: leukocyte esterase, nitrite, blood, dysuria,
   frequency/urgency, visible hematuria, and suprapubic pain.
+- Alternate-cause symptoms: vaginal discharge and vaginal irritation.
 - Systemic warning symptoms: fever/chills, flank/back pain, and
   nausea/vomiting.
-- Renal-related follow-up: protein abnormality, blood-related findings when
-  incorporated into the approved rule set, edema, and other approved evidence.
-- Metabolic follow-up: glucose and ketone abnormalities.
 
-These outputs are not merged into a single artificial disease probability.
+These outputs are not merged into renal, metabolic, or general disease-risk
+scores.
 
 ## Abstract And Conclusion Replacement
 
 The abstract and conclusion should describe Uritect as an offline Android
-prototype for markerless semiquantitative dipstick interpretation with
-rule-based clinical follow-up categories. They should not claim clinical
-diagnosis, ISO certification, Bayesian risk prediction, or whole-scan 80%
-accuracy.
+prototype for markerless semiquantitative dipstick interpretation with a
+source-documented Bayesian UTI research candidate and separate warning
+categories. They should not claim clinical diagnosis, ISO certification,
+clinically validated probability prediction, or whole-scan 80% accuracy.
 
 Use "evaluation guided by ISO/IEC 25010:2023" rather than claiming ISO
 compliance or certification unless a formal certification process was performed.

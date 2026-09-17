@@ -44,6 +44,18 @@ final List<ClinicalSymptom> clinicalSymptoms = [
     iconCode: 'hematuria',
   ),
   const ClinicalSymptom(
+    id: 'vaginal_discharge',
+    label: 'Vaginal discharge',
+    category: 'differential',
+    iconCode: 'discharge',
+  ),
+  const ClinicalSymptom(
+    id: 'vaginal_irritation',
+    label: 'Vaginal irritation',
+    category: 'differential',
+    iconCode: 'irritation',
+  ),
+  const ClinicalSymptom(
     id: 'flank',
     label: 'Back pain',
     category: 'systemic',
@@ -54,12 +66,6 @@ final List<ClinicalSymptom> clinicalSymptoms = [
     label: 'Fever / Chills',
     category: 'systemic',
     iconCode: 'fever',
-  ),
-  const ClinicalSymptom(
-    id: 'edema',
-    label: 'Peripheral edema',
-    category: 'followup',
-    iconCode: 'edema',
   ),
   const ClinicalSymptom(
     id: 'nausea',

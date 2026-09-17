@@ -218,11 +218,21 @@ class OverallResultsPage extends StatelessWidget {
                 ),
                 const SizedBox(height: 1),
                 Text(
-                  'No combined disease probability is calculated.',
+                  fusionResult.utiEstimate.isCalculable
+                      ? 'Candidate Bayesian UTI estimate: '
+                            '${(fusionResult.utiEstimate.posteriorProbability * 100).toStringAsFixed(1)}%'
+                      : 'Candidate Bayesian UTI estimate unavailable',
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: AppColors.textSecondary,
                     fontSize: 12,
                     height: 1.2,
+                  ),
+                ),
+                Text(
+                  'Prior 50% | ${fusionResult.utiEstimate.modelVersion}',
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: AppColors.textSecondary,
+                    fontSize: 10,
                   ),
                 ),
               ],
@@ -297,32 +307,32 @@ class OverallResultsPage extends StatelessWidget {
                       children: [
                         Text(
                           interpretation.title,
-                          style:
-                              Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                    color: const Color(0xFF004E7A),
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w700,
-                                  ),
+                          style: Theme.of(context).textTheme.bodyMedium
+                              ?.copyWith(
+                                color: const Color(0xFF004E7A),
+                                fontSize: 13,
+                                fontWeight: FontWeight.w700,
+                              ),
                         ),
                         Text(
                           interpretation.message,
-                          style:
-                              Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                    color: AppColors.textSecondary,
-                                    fontSize: 11,
-                                    height: 1.25,
-                                  ),
+                          style: Theme.of(context).textTheme.bodyMedium
+                              ?.copyWith(
+                                color: AppColors.textSecondary,
+                                fontSize: 11,
+                                height: 1.25,
+                              ),
                         ),
                         if (interpretation.evidence.isNotEmpty)
                           Text(
                             interpretation.evidence.join(' | '),
-                            style:
-                                Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                      color: AppColors.textSecondary,
-                                      fontSize: 11,
-                                      fontWeight: FontWeight.w600,
-                                      height: 1.25,
-                                    ),
+                            style: Theme.of(context).textTheme.bodyMedium
+                                ?.copyWith(
+                                  color: AppColors.textSecondary,
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w600,
+                                  height: 1.25,
+                                ),
                           ),
                       ],
                     ),

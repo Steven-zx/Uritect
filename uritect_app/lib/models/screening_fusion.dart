@@ -29,6 +29,38 @@ class ClinicalInterpretation {
   });
 }
 
+class BayesianEvidenceFactor {
+  final String group;
+  final String finding;
+  final double likelihoodRatio;
+  final String source;
+
+  const BayesianEvidenceFactor({
+    required this.group,
+    required this.finding,
+    required this.likelihoodRatio,
+    required this.source,
+  });
+}
+
+class BayesianUtiEstimate {
+  final String modelVersion;
+  final double priorProbability;
+  final double posteriorProbability;
+  final String likelihoodBand;
+  final List<BayesianEvidenceFactor> factors;
+
+  bool get isCalculable => factors.isNotEmpty;
+
+  const BayesianUtiEstimate({
+    required this.modelVersion,
+    required this.priorProbability,
+    required this.posteriorProbability,
+    required this.likelihoodBand,
+    required this.factors,
+  });
+}
+
 class ScreeningFusionResult {
   final String riskBucket;
   final List<ScreeningAnalyteResult> analytes;
@@ -36,11 +68,13 @@ class ScreeningFusionResult {
   final String? conflictTitle;
   final String? conflictMessage;
   final List<ClinicalInterpretation> interpretations;
+  final BayesianUtiEstimate utiEstimate;
 
   const ScreeningFusionResult({
     required this.riskBucket,
     required this.analytes,
     required this.interpretations,
+    required this.utiEstimate,
     this.hasEvidenceConflict = false,
     this.conflictTitle,
     this.conflictMessage,
@@ -48,6 +82,12 @@ class ScreeningFusionResult {
 }
 
 class ScreeningFusionEngine {
+  static const String bayesianModelVersion =
+      'uti_bayesian_lr_candidate_v1_20260917';
+  static const double priorProbability = 0.50;
+  static const double lowerLikelihoodThreshold = 0.20;
+  static const double higherLikelihoodThreshold = 0.80;
+
   static List<ScreeningAnalyteResult> buildAnalytesFromRows(
     List<DipstickResultRow> rows,
   ) {
@@ -66,33 +106,27 @@ class ScreeningFusionEngine {
     }
 
     return [
-      resultFor('GLU', 'Glucose', aliases: const ['GLUCOSE']),
       resultFor('LEU', 'Leukocytes', aliases: const ['LEUKOCYTES']),
-      resultFor('PRO', 'Protein', aliases: const ['PROTEIN']),
       resultFor('NIT', 'Nitrite', aliases: const ['NITRITE']),
+      resultFor('BLD', 'Blood', aliases: const ['BLOOD']),
     ];
   }
 
   static List<ScreeningAnalyteResult> get defaultAnalytes {
     return const [
       ScreeningAnalyteResult(
-        code: 'GLU',
-        name: 'Glucose',
-        displayValue: 'Unavailable',
-      ),
-      ScreeningAnalyteResult(
         code: 'LEU',
         name: 'Leukocytes',
         displayValue: 'Unavailable',
       ),
       ScreeningAnalyteResult(
-        code: 'PRO',
-        name: 'Protein',
+        code: 'NIT',
+        name: 'Nitrite',
         displayValue: 'Unavailable',
       ),
       ScreeningAnalyteResult(
-        code: 'NIT',
-        name: 'Nitrite',
+        code: 'BLD',
+        name: 'Blood',
         displayValue: 'Unavailable',
       ),
     ];
@@ -105,92 +139,247 @@ class ScreeningFusionEngine {
     required ClinicalChecklistResult checklist,
   }) {
     final selectedAnalytes = analytes ?? defaultAnalytes;
+    final utiEstimate = _calculateBayesianUtiEstimate(
+      selectedAnalytes,
+      checklist,
+    );
     final interpretations = <ClinicalInterpretation>[
-      _localizedUtiInterpretation(selectedAnalytes, checklist),
-      _systemicUtiInterpretation(checklist),
-      _renalFollowUpInterpretation(selectedAnalytes, checklist),
-      _metabolicFollowUpInterpretation(selectedAnalytes),
+      _utiScreeningInterpretation(utiEstimate),
+      _alternateCauseInterpretation(checklist),
+      _systemicWarningInterpretation(checklist),
     ];
 
     final priority = _reviewPriority(interpretations);
-    final conflict = _evidenceConflict(interpretations, checklist);
+    final conflict = _evidenceConflict(selectedAnalytes, checklist);
 
     return ScreeningFusionResult(
       riskBucket: priority,
       analytes: selectedAnalytes,
       interpretations: interpretations,
+      utiEstimate: utiEstimate,
       hasEvidenceConflict: conflict.title != null,
       conflictTitle: conflict.title,
       conflictMessage: conflict.message,
     );
   }
 
-  ClinicalInterpretation _localizedUtiInterpretation(
+  BayesianUtiEstimate _calculateBayesianUtiEstimate(
     List<ScreeningAnalyteResult> analytes,
     ClinicalChecklistResult checklist,
   ) {
-    final evidence = <String>[];
+    final factors = <BayesianEvidenceFactor>[];
     final leukocytes = _byCode(analytes, 'LEU');
     final nitrite = _byCode(analytes, 'NIT');
-    final leukocytesPositive = _isAbnormalDisplayValue(leukocytes?.displayValue);
+    final blood = _byCode(analytes, 'BLD');
+    final leukocytesPositive = _isAbnormalDisplayValue(
+      leukocytes?.displayValue,
+    );
     final nitritePositive = _isAbnormalDisplayValue(nitrite?.displayValue);
+    final bloodPositive = _isAbnormalDisplayValue(blood?.displayValue);
+    final leukocytesKnown = _isKnownDisplayValue(leukocytes?.displayValue);
+    final nitriteKnown = _isKnownDisplayValue(nitrite?.displayValue);
+    final bloodKnown = _isKnownDisplayValue(blood?.displayValue);
 
-    if (leukocytesPositive) {
-      evidence.add('Leukocyte esterase result: ${leukocytes!.displayValue}');
-    }
-    if (nitritePositive) {
-      evidence.add('Nitrite result: ${nitrite!.displayValue}');
+    // One mutually exclusive dipstick factor prevents multiplying correlated
+    // nitrite, leukocyte esterase, and blood results as independent tests.
+    if (nitritePositive && (leukocytesPositive || bloodPositive)) {
+      factors.add(
+        const BayesianEvidenceFactor(
+          group: 'Dipstick',
+          finding: 'Nitrite plus leukocytes or blood positive',
+          likelihoodRatio: 7.2,
+          source: 'Little et al. 2006/2009',
+        ),
+      );
+    } else if (nitritePositive) {
+      factors.add(
+        const BayesianEvidenceFactor(
+          group: 'Dipstick',
+          finding: 'Nitrite positive',
+          likelihoodRatio: 5.5,
+          source: 'Kurotschka et al. 2024, Table 4',
+        ),
+      );
+    } else if (leukocytesPositive || bloodPositive) {
+      final useBlood = bloodPositive;
+      factors.add(
+        BayesianEvidenceFactor(
+          group: 'Dipstick',
+          finding: useBlood ? 'Blood positive' : 'Leukocytes positive',
+          likelihoodRatio: useBlood ? 1.7 : 1.4,
+          source: 'Kurotschka et al. 2024, Table 4',
+        ),
+      );
+    } else if (leukocytesKnown && nitriteKnown && bloodKnown) {
+      factors.add(
+        const BayesianEvidenceFactor(
+          group: 'Dipstick',
+          finding: 'Nitrite, leukocytes, and blood all negative',
+          likelihoodRatio: 0.22,
+          source: 'Little et al. 2006/2009',
+        ),
+      );
     }
 
     final dysuria = checklist.selectedSymptoms['dysuria'] == true;
     final frequency = checklist.selectedSymptoms['frequency'] == true;
     final urgency = checklist.selectedSymptoms['urgency'] == true;
     final hematuria = checklist.selectedSymptoms['hematuria'] == true;
-    final suprapubic = checklist.selectedSymptoms['suprapubic'] == true;
-
-    if (dysuria) evidence.add('Dysuria reported');
-    if (frequency && urgency) {
-      evidence.add('Frequency and urgency reported');
-    } else if (frequency) {
-      evidence.add('Frequency reported');
+    // Use only the strongest supported urinary-symptom factor. This avoids
+    // treating overlapping urinary symptoms as conditionally independent.
+    if (hematuria) {
+      factors.add(
+        const BayesianEvidenceFactor(
+          group: 'Urinary symptoms',
+          finding: 'Visible hematuria reported',
+          likelihoodRatio: 2.0,
+          source: 'Bent et al. 2002',
+        ),
+      );
+    } else if (dysuria && urgency) {
+      factors.add(
+        const BayesianEvidenceFactor(
+          group: 'Urinary symptoms',
+          finding: 'Urgency with dysuria reported',
+          likelihoodRatio: 1.5,
+          source: 'Kurotschka et al. 2024, Table 4',
+        ),
+      );
+    } else if (dysuria) {
+      factors.add(
+        const BayesianEvidenceFactor(
+          group: 'Urinary symptoms',
+          finding: 'Dysuria reported',
+          likelihoodRatio: 1.3,
+          source: 'Kurotschka et al. 2024, Table 4',
+        ),
+      );
     } else if (urgency) {
-      evidence.add('Urgency reported');
-    }
-    if (hematuria) evidence.add('Visible hematuria reported');
-    if (suprapubic) {
-      evidence.add('Lower abdominal pain reported; supporting symptom only');
+      factors.add(
+        const BayesianEvidenceFactor(
+          group: 'Urinary symptoms',
+          finding: 'Urgency reported',
+          likelihoodRatio: 1.2,
+          source: 'Kurotschka et al. 2024, Table 4',
+        ),
+      );
+    } else if (frequency) {
+      factors.add(
+        const BayesianEvidenceFactor(
+          group: 'Urinary symptoms',
+          finding: 'Frequency reported',
+          likelihoodRatio: 1.1,
+          source: 'Kurotschka et al. 2024, Table 4',
+        ),
+      );
     }
 
-    final keySymptomCount = [dysuria, frequency, urgency, hematuria]
-        .where((selected) => selected)
-        .length;
-    final hasDipstickUtiEvidence = leukocytesPositive || nitritePositive;
-    final hasLocalizedEvidence = hasDipstickUtiEvidence || keySymptomCount >= 2;
+    final discharge = checklist.selectedSymptoms['vaginal_discharge'] == true;
+    final irritation = checklist.selectedSymptoms['vaginal_irritation'] == true;
+    if (irritation || discharge) {
+      factors.add(
+        BayesianEvidenceFactor(
+          group: 'Alternate-cause symptoms',
+          finding: irritation
+              ? 'Vaginal irritation reported'
+              : 'Vaginal discharge reported',
+          likelihoodRatio: irritation ? 0.2 : 0.3,
+          source: 'Bent et al. 2002',
+        ),
+      );
+    }
 
-    if (!hasLocalizedEvidence) {
-      return ClinicalInterpretation(
-        category: 'localized_uti',
-        title: 'No localized UTI evidence detected',
+    var odds = priorProbability / (1 - priorProbability);
+    for (final factor in factors) {
+      odds *= factor.likelihoodRatio;
+    }
+    final posterior = odds / (1 + odds);
+    final band = factors.isEmpty
+        ? 'Insufficient'
+        : posterior < lowerLikelihoodThreshold
+        ? 'Lower'
+        : posterior >= higherLikelihoodThreshold
+        ? 'Higher'
+        : 'Intermediate';
+
+    return BayesianUtiEstimate(
+      modelVersion: bayesianModelVersion,
+      priorProbability: priorProbability,
+      posteriorProbability: posterior,
+      likelihoodBand: band,
+      factors: factors,
+    );
+  }
+
+  ClinicalInterpretation _utiScreeningInterpretation(
+    BayesianUtiEstimate estimate,
+  ) {
+    final evidence = estimate.factors
+        .map(
+          (factor) =>
+              '${factor.finding} (LR ${factor.likelihoodRatio.toStringAsFixed(2)})',
+        )
+        .toList();
+    final percent = (estimate.posteriorProbability * 100).toStringAsFixed(1);
+
+    if (!estimate.isCalculable) {
+      return const ClinicalInterpretation(
+        category: 'uti_screening',
+        title: 'Insufficient evidence for UTI estimate',
         severity: 'low',
         message:
-            'No nitrite/leukocyte signal and fewer than two supported urinary symptoms were identified.',
-        evidence: evidence,
+            'No usable UTI-related dipstick result or supported weighted symptom was available.',
+        evidence: [],
       );
     }
 
     return ClinicalInterpretation(
-      category: 'localized_uti',
-      title: 'Localized UTI findings detected',
-      severity: nitritePositive || (hasDipstickUtiEvidence && keySymptomCount > 0)
+      category: 'uti_screening',
+      title: '${estimate.likelihoodBand} estimated UTI likelihood',
+      severity: estimate.likelihoodBand == 'Higher'
           ? 'moderate'
-          : 'caution',
+          : estimate.likelihoodBand == 'Intermediate'
+          ? 'caution'
+          : 'low',
       message:
-          'Findings are consistent with possible localized UTI. Interpret with patient context and confirmatory testing when clinically needed.',
+          'Candidate Bayesian estimate: $percent%. Intended for nonpregnant adult women with urinary symptoms; not a diagnosis and not clinically validated yet.',
       evidence: evidence,
     );
   }
 
-  ClinicalInterpretation _systemicUtiInterpretation(
+  ClinicalInterpretation _alternateCauseInterpretation(
+    ClinicalChecklistResult checklist,
+  ) {
+    final evidence = <String>[];
+    if (checklist.selectedSymptoms['vaginal_discharge'] == true) {
+      evidence.add('Vaginal discharge reported');
+    }
+    if (checklist.selectedSymptoms['vaginal_irritation'] == true) {
+      evidence.add('Vaginal irritation reported');
+    }
+
+    if (evidence.isEmpty) {
+      return const ClinicalInterpretation(
+        category: 'alternate_cause',
+        title: 'No alternate-cause symptom reported',
+        severity: 'low',
+        message:
+            'No vaginal discharge or irritation was selected in the checklist.',
+        evidence: [],
+      );
+    }
+
+    return ClinicalInterpretation(
+      category: 'alternate_cause',
+      title: 'Alternate-cause symptoms reported',
+      severity: 'caution',
+      message:
+          'These symptoms can lower the likelihood of uncomplicated UTI and may suggest another cause that needs clinical review.',
+      evidence: evidence,
+    );
+  }
+
+  ClinicalInterpretation _systemicWarningInterpretation(
     ClinicalChecklistResult checklist,
   ) {
     final evidence = <String>[];
@@ -220,66 +409,8 @@ class ScreeningFusionEngine {
       title: 'Systemic UTI warning symptoms reported',
       severity: 'high',
       message:
-          'These symptoms are warning signs rather than validated multipliers in this app. Clinical review is recommended.',
+          'These symptoms may suggest upper UTI, pyelonephritis, or complicated infection. Clinical review is recommended.',
       evidence: evidence,
-    );
-  }
-
-  ClinicalInterpretation _renalFollowUpInterpretation(
-    List<ScreeningAnalyteResult> analytes,
-    ClinicalChecklistResult checklist,
-  ) {
-    final evidence = <String>[];
-    final protein = _byCode(analytes, 'PRO');
-    if (_isAbnormalDisplayValue(protein?.displayValue)) {
-      evidence.add('Protein result: ${protein!.displayValue}');
-    }
-    if (checklist.selectedSymptoms['edema'] == true) {
-      evidence.add('Peripheral edema reported');
-    }
-
-    if (evidence.isEmpty) {
-      return const ClinicalInterpretation(
-        category: 'renal_followup',
-        title: 'No renal-related follow-up flag',
-        severity: 'low',
-        message:
-            'No protein abnormality or edema follow-up indicator was identified.',
-        evidence: [],
-      );
-    }
-
-    return ClinicalInterpretation(
-      category: 'renal_followup',
-      title: 'Renal-related follow-up recommended',
-      severity: 'moderate',
-      message:
-          'This is a follow-up flag, not a renal disease probability. Review clinically and confirm if persistent or clinically significant.',
-      evidence: evidence,
-    );
-  }
-
-  ClinicalInterpretation _metabolicFollowUpInterpretation(
-    List<ScreeningAnalyteResult> analytes,
-  ) {
-    final glucose = _byCode(analytes, 'GLU');
-    if (!_isAbnormalDisplayValue(glucose?.displayValue)) {
-      return const ClinicalInterpretation(
-        category: 'metabolic_followup',
-        title: 'No metabolic follow-up flag',
-        severity: 'low',
-        message: 'No glucose abnormality was identified by the dipstick scan.',
-        evidence: [],
-      );
-    }
-
-    return ClinicalInterpretation(
-      category: 'metabolic_followup',
-      title: 'Metabolic follow-up recommended',
-      severity: 'moderate',
-      message:
-          'Glucose abnormality is handled separately from UTI evidence and should not be averaged into a UTI probability.',
-      evidence: ['Glucose result: ${glucose!.displayValue}'],
     );
   }
 
@@ -297,16 +428,16 @@ class ScreeningFusionEngine {
   }
 
   _EvidenceConflict _evidenceConflict(
-    List<ClinicalInterpretation> interpretations,
+    List<ScreeningAnalyteResult> analytes,
     ClinicalChecklistResult checklist,
   ) {
-    final localized = interpretations.firstWhere(
-      (item) => item.category == 'localized_uti',
+    final hasAbnormalDipstick = analytes.any(
+      (item) => _isAbnormalDisplayValue(item.displayValue),
     );
     final selectedSymptoms = checklist.selectedSymptoms.values
         .where((selected) => selected)
         .length;
-    if (localized.severity != 'low' && selectedSymptoms == 0) {
+    if (hasAbnormalDipstick && selectedSymptoms == 0) {
       return const _EvidenceConflict(
         title: 'Dipstick finding without reported symptoms',
         message:
@@ -358,6 +489,11 @@ class ScreeningFusionEngine {
       return false;
     }
     return !(normalized == 'neg' || normalized == 'negative');
+  }
+
+  static bool _isKnownDisplayValue(String? value) {
+    final normalized = (value ?? '').trim().toLowerCase();
+    return normalized.isNotEmpty && normalized != 'unavailable';
   }
 }
 

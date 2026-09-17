@@ -18,10 +18,10 @@ passed until they are actually performed.
 | Recalculate metrics | Individual-analyte accuracy 82.52%; whole-scan all-ten-correct accuracy 17.18% |
 | Apply corrected ROI gate during production ingest | 257 capture bursts rejected before model training/evaluation |
 | Apply confidence retake gate | Android JSON requires every analyte prediction to reach confidence threshold `0.45`; accepted-scan grouped metrics are in `pipeline/output/whole_scan_optimization_final_knn_grouped.json` |
-| Remove inactive Bayesian/probability code | Bayesian fusion files, probability package export, and stale app probability fields were removed |
-| Keep separate clinical outputs | `screening_fusion.dart` outputs localized UTI, systemic warning, renal follow-up, and metabolic follow-up categories |
+| Freeze one Bayesian UTI candidate | `screening_fusion.dart` applies the versioned grouped-LR specification and stores the posterior with new history records |
+| Keep UTI-only clinical outputs | `screening_fusion.dart` outputs UTI screening findings, alternate-cause symptoms, and systemic warning symptoms |
 | Fix release APK build | Release build completed successfully; APK at `uritect_app/build/app/outputs/flutter-apk/app-release.apk` |
-| APK checksum | SHA256 `3C8322479429C7B64599B61F35D116B37370E91CA5702FA98B5A682FD341420F` |
+| APK checksum | SHA256 `C00D236E66F5C367EC868C0E35DB7BAF3B5B75697A0E21D23E8A43F945EAE75F` |
 
 ## Manual Gates Still Required
 

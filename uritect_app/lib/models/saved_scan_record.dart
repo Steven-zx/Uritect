@@ -8,6 +8,8 @@ class SavedScanRecord {
   final ScanResult scanResult;
   final ClinicalChecklistResult checklistResult;
   final String riskBucket;
+  final double? utiPosteriorProbability;
+  final String? bayesianModelVersion;
   final bool hasEvidenceConflict;
   final String? conflictTitle;
   final String? conflictMessage;
@@ -18,6 +20,8 @@ class SavedScanRecord {
     required this.scanResult,
     required this.checklistResult,
     required this.riskBucket,
+    this.utiPosteriorProbability,
+    this.bayesianModelVersion,
     this.hasEvidenceConflict = false,
     this.conflictTitle,
     this.conflictMessage,
@@ -34,6 +38,8 @@ class SavedScanRecord {
       scanResult: scanResult,
       checklistResult: checklistResult,
       riskBucket: fusionResult.riskBucket,
+      utiPosteriorProbability: fusionResult.utiEstimate.posteriorProbability,
+      bayesianModelVersion: fusionResult.utiEstimate.modelVersion,
       hasEvidenceConflict: fusionResult.hasEvidenceConflict,
       conflictTitle: fusionResult.conflictTitle,
       conflictMessage: fusionResult.conflictMessage,
@@ -47,6 +53,8 @@ class SavedScanRecord {
       'scanResult': scanResult.toJson(),
       'checklistResult': checklistResult.toJson(),
       'riskBucket': riskBucket,
+      'utiPosteriorProbability': utiPosteriorProbability,
+      'bayesianModelVersion': bayesianModelVersion,
       'hasEvidenceConflict': hasEvidenceConflict,
       'conflictTitle': conflictTitle,
       'conflictMessage': conflictMessage,
@@ -65,6 +73,9 @@ class SavedScanRecord {
         json['checklistResult'] as Map<String, dynamic>? ?? const {},
       ),
       riskBucket: json['riskBucket'] as String? ?? 'Moderate',
+      utiPosteriorProbability: (json['utiPosteriorProbability'] as num?)
+          ?.toDouble(),
+      bayesianModelVersion: json['bayesianModelVersion'] as String?,
       hasEvidenceConflict: json['hasEvidenceConflict'] == true,
       conflictTitle: json['conflictTitle'] as String?,
       conflictMessage: json['conflictMessage'] as String?,
