@@ -4,8 +4,10 @@ Model version: `production_semiquant_knn_markerless_roi_topfix_v3_20260908`
 
 Scope: 10-parameter semiquant urine dipstick classification only.
 
-The production claim excludes binary screening, Bayesian/posterior risk scoring,
-unsupported symptom weights, priors, and combined disease-probability thresholds.
+This model card covers the visual classifier only. Binary screening is excluded.
+The downstream app contains a separately versioned Bayesian UTI research module
+and a deterministic renal follow-up module; neither changes these visual-model
+metrics or converts them into disease-diagnostic performance.
 
 Frozen artifacts:
 
@@ -38,6 +40,12 @@ Corrected metric evaluation:
 - Individual-analyte accuracy: 82.52%
 - Macro analyte accuracy: see `pipeline/output/production_grouped_evaluation.json`
 - Whole-scan all-10-correct accuracy: 17.18%
+- Mean per-analyte macro F1: 61.22%
+- Mean per-analyte macro sensitivity: 58.99%
+- Mean per-analyte macro specificity: 81.59%
+- Mean per-analyte Cohen's kappa: 0.464
+- Complete metrics and confusion matrices:
+  `pipeline/output/production_grouped_metrics_complete.json`
 
 Confidence abstain policy:
 

@@ -1,67 +1,69 @@
-# Bayesian UTI Candidate Table
+# Final Clinical Interpretation Table
 
-This document summarizes the app's current UTI-only interpretation.
-The app no longer claims renal, metabolic, or hepatic risk stratification. The
-ten-analyte scan table is still displayed, but clinical interpretation is limited
-to UTI screening support and systemic warning flags.
+This document summarizes the frozen clinical interpretation implemented in
+URITECT 1.3.0. Ten semiquantitative strip results remain visible. UTI screening
+and renal follow-up are calculated separately and are never merged into one
+risk score.
 
-The app calculates a candidate Bayesian estimate but does not diagnose. The
-frozen numerical specification and physician sign-off table are in
-`docs/uti_screening_weight_table_for_physician_review.md`.
+## Bayesian UTI Pathway
 
-## Inputs
+The ordinary estimate is available only for symptomatic, nonpregnant women
+aged 18 to 64 with all six eligibility confirmations and no alternate-cause or
+systemic warning finding.
 
-Dipstick inputs used by the rule engine:
+| Group | First matching evidence pattern | LR |
+| --- | --- | ---: |
+| Dipstick A1 | Nitrite positive plus leukocytes or blood positive at the source-matched threshold | 7.20 |
+| Dipstick A2 | Nitrite positive without either additional positive finding | 5.50 |
+| Dipstick A3 | Nitrite not positive or unavailable; blood positive | 1.70 |
+| Dipstick A4 | Nitrite and blood not positive; leukocytes positive | 1.40 |
+| Dipstick A5 | Nitrite, leukocytes, and blood all confirmed negative | 0.22 |
+| Symptom B1 | Dysuria and urgency present | 1.50 |
+| Symptom B2 | Dysuria present | 1.30 |
+| Symptom B3 | Urgency present | 1.20 |
+| Symptom B4 | Frequency present | 1.10 |
 
-- Leukocyte esterase
-- Nitrite
-- Blood
+Only one dipstick LR and one symptom LR can be applied. Unknown, unchecked,
+unavailable, and unreliable inputs receive no update. Visible hematuria is
+context only and does not add an LR. Vaginal discharge or irritation stops the
+ordinary calculation and routes to consultation.
 
-Checklist inputs used by the rule engine:
+The calculation is:
 
-- Dysuria
-- Frequency
-- Urgency
-- Visible hematuria
-- Lower abdominal pain
-- Vaginal discharge
-- Vaginal irritation
-- Fever/chills
-- Back/flank pain
-- Nausea/vomiting
+```text
+prior odds = 0.50 / (1 - 0.50) = 1.00
+posterior odds = prior odds x selected dipstick LR x selected symptom LR
+posterior = posterior odds / (1 + posterior odds)
+```
 
-## Output Rules
+For an eligible result, the app displays the provisional posterior, the 50%
+prior, and every applied factor. It does not assign Low, Moderate, or High
+probability bands and does not recommend treatment.
 
-| Output category | Trigger | Severity | Message intent |
-| --- | --- | --- | --- |
-| Bayesian UTI estimate | At least one supported dipstick-pattern, urinary-symptom, or alternate-cause factor is available | Lower, intermediate, or higher estimated likelihood | Display the posterior and factors as an unvalidated research estimate |
-| Alternate-cause symptoms | Vaginal discharge or vaginal irritation is selected | Caution | Flag symptoms that can lower the likelihood of uncomplicated UTI or suggest another cause |
-| Systemic warning symptoms | Fever/chills, back/flank pain, or nausea/vomiting is selected | High | Flag symptoms that need clinical review for possible upper UTI, pyelonephritis, or complicated infection |
+## Safety And Alternate-Cause Pathways
 
-## Review Priority
-
-The top-level review priority is selected from the most serious active category:
-
-| Active category severity | Review priority |
+| Trigger | Output |
 | --- | --- |
-| Any high category | High |
-| Otherwise any moderate category | Moderate |
-| Otherwise any caution category | Caution |
-| Otherwise | Low |
+| Eligibility not confirmed or outside intended population | Consultation suggested; no ordinary UTI estimate |
+| Vaginal discharge or irritation | Alternate-cause consultation message; no ordinary UTI estimate |
+| Visible hematuria | Consultation context; no hematuria LR |
+| Fever with flank pain | Prompt medical consultation suggested |
+| Nausea/vomiting with fever or flank pain | Prompt medical consultation suggested |
+| Inability to maintain hydration or oral medication | Prompt medical consultation suggested |
+| Confusion, fainting, or severe weakness with a urinary finding | Prompt medical consultation suggested |
 
-## Conflict Flag
+## Renal Follow-Up Pathway
 
-If UTI-related dipstick evidence is present but no symptom is selected, the app
-shows a conflict message recommending repeat scanning or professional review.
+The separate `RenalFollowupEngine` uses reliable protein and blood categories,
+renal safety symptoms, interference questions, and explicit repeat-test history.
+It stores all triggered rule IDs and selects the highest-priority final action:
+`RETAKE`, `PROMPT_CONSULT`, `CONSULT`, `REPEAT_CONFIRM`, or `OBSERVE`.
+
+This pathway does not calculate a kidney-disease probability and does not infer
+possible or managed UTI from the Bayesian percentage.
 
 ## Excluded Methods
 
-The app no longer contains or uses:
-
-- Binary normal/abnormal classifiers
-- Renal or metabolic risk scores
-- A single merged disease-risk score
-
-The provisional Bayesian display bands are not treatment thresholds. Systemic
-warning symptoms remain outside the lower-UTI posterior and can independently
-set the review priority to High.
+The production app does not use binary normal/abnormal classifiers, unsupported
+weights, invented probability thresholds, a Bayesian renal score, or one merged
+disease-risk score.

@@ -23,25 +23,31 @@ class ResultsPage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const SizedBox(width: 64),
-                  Column(
-                    children: [
-                      Text(
-                        'Dipstick Results',
-                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          color: AppColors.primaryMain,
-                          fontWeight: FontWeight.w700,
-                          fontSize: 20,
+                  Expanded(
+                    child: Column(
+                      children: [
+                        Text(
+                          'Dipstick Results',
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context).textTheme.titleLarge
+                              ?.copyWith(
+                                color: AppColors.primaryMain,
+                                fontWeight: FontWeight.w700,
+                                fontSize: 20,
+                              ),
                         ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        'Analyte Measurements',
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          fontSize: 12,
-                          color: AppColors.textSecondary,
+                        const SizedBox(height: 4),
+                        Text(
+                          'Analyte Measurements',
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context).textTheme.bodyMedium
+                              ?.copyWith(
+                                fontSize: 12,
+                                color: AppColors.textSecondary,
+                              ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                   const SizedBox(width: 64),
                 ],
@@ -99,10 +105,34 @@ class ResultsPage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(16),
                           border: Border.all(color: AppColors.border),
                         ),
-                        child: Text(
-                          'No analyte values were returned for this scan.',
-                          style: Theme.of(context).textTheme.bodyMedium
-                              ?.copyWith(color: AppColors.textSecondary),
+                        child: Column(
+                          children: [
+                            const Icon(
+                              Icons.replay_rounded,
+                              color: Color(0xFFB36B00),
+                              size: 28,
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              'The scan could not be interpreted reliably. No analyte results were produced.',
+                              textAlign: TextAlign.center,
+                              style: Theme.of(context).textTheme.bodyMedium
+                                  ?.copyWith(
+                                    color: AppColors.textSecondary,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                            ),
+                            const SizedBox(height: 6),
+                            Text(
+                              'You may still complete the safety checklist. Serious symptoms require attention even when a scan fails.',
+                              textAlign: TextAlign.center,
+                              style: Theme.of(context).textTheme.bodySmall
+                                  ?.copyWith(
+                                    color: AppColors.textSecondary,
+                                    height: 1.3,
+                                  ),
+                            ),
+                          ],
                         ),
                       ),
                     const SizedBox(height: 24),
@@ -126,8 +156,10 @@ class ResultsPage extends StatelessWidget {
                             borderRadius: BorderRadius.circular(18),
                           ),
                         ),
-                        child: const Text(
-                          'ADD SYMPTOMS',
+                        child: Text(
+                          scanResult.rows.isEmpty
+                              ? 'COMPLETE SAFETY CHECKLIST'
+                              : 'CONTINUE TO CHECKLIST',
                           style: TextStyle(
                             fontSize: 17,
                             fontWeight: FontWeight.w700,

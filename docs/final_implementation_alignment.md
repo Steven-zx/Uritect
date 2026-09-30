@@ -16,8 +16,9 @@ source-documented Bayesian research candidate pending clinical validation.
 
 Evaluate the Uritect mobile application as an offline clinical decision-support
 prototype that combines markerless ten-pad semiquantitative dipstick results
-with a UTI-only Bayesian research estimate plus separate outputs for
-alternate-cause symptoms, and systemic warning symptoms.
+with a grouped likelihood-ratio Bayesian UTI screening estimate, a separate
+deterministic renal follow-up rule engine, alternate-cause findings, and
+systemic warning outputs.
 
 ## Chapter 3 Methodology Replacement
 
@@ -67,7 +68,10 @@ validated 2,000 feature-row predictions with zero mismatches.
 ## Formula Replacement
 
 Replace the old unsupported Bayesian table with the frozen grouped-LR UTI
-candidate documented in `docs/uti_screening_weight_table_for_physician_review.md`.
+candidate documented in
+`docs/URITECT_Bayesian_UTI_Scoring_System_v1.1.md`. The similarly named
+`uti_screening_weight_table_for_physician_review.md` is a superseded-link notice
+only.
 
 Use this pipeline expression instead:
 
@@ -80,7 +84,9 @@ captured image
   -> normalized HSV feature vector
   -> per-analyte KNN semiquantitative classifier
   -> ten semiquantitative analyte results
-  -> grouped Bayesian UTI estimate plus separate systemic warning output
+  -> grouped Bayesian UTI estimate
+  -> deterministic renal follow-up action
+  -> separate systemic warning output
 ```
 
 ## Corrected Performance Wording
@@ -92,12 +98,18 @@ Current leakage-controlled grouped evaluation:
 
 - Individual-analyte accuracy: 82.52%
 - Whole-scan all-ten-correct accuracy: 17.18%
+- Mean per-analyte macro F1: 61.22%
+- Mean per-analyte macro sensitivity: 58.99%
+- Mean per-analyte macro specificity: 81.59%
+- Mean per-analyte Cohen's kappa: 0.464
 - Exact duplicate feature rows removed: 0
 - Rejected capture bursts during corrected markerless ingest: 257
 - Confidence retake threshold: 0.45
 - Accepted-scan individual-analyte accuracy at threshold 0.45: 83.75%
 - Accepted-scan all-ten-correct accuracy at threshold 0.45: 19.17%
 - Full report: `pipeline/output/production_grouped_evaluation.json`
+- Complete Objective 4 metrics:
+  `pipeline/output/production_grouped_metrics_complete.json`
 
 Correct wording:
 
@@ -110,24 +122,38 @@ Correct wording:
 
 ## Clinical Interpretation Replacement
 
-Clinical interpretation is limited to UTI screening support:
+Clinical interpretation is divided into independent outputs:
 
 - UTI screening findings: leukocyte esterase, nitrite, blood, dysuria,
   frequency/urgency, visible hematuria, and suprapubic pain.
 - Alternate-cause symptoms: vaginal discharge and vaginal irritation.
 - Systemic warning symptoms: fever/chills, flank/back pain, and
   nausea/vomiting.
+- Renal follow-up: deterministic rules using reliable protein and blood
+  categories, renal safety symptoms, interference questions, and explicit
+  repeat-test history. The frozen implementation is
+  `renal_followup_rules_v1.1_20260919`.
 
-These outputs are not merged into renal, metabolic, or general disease-risk
-scores.
+The Bayesian UTI estimate and renal follow-up action are not merged into one
+probability or risk score. Renal output uses `OBSERVE`, `REPEAT_CONFIRM`,
+`CONSULT`, `PROMPT_CONSULT`, or `RETAKE` and does not diagnose kidney disease
+or calculate renal probability.
+
+The patient-facing summary uses action wording: `Observe for symptoms`,
+`Consultation suggested`, `Prompt medical consultation suggested`, or
+`Insufficient evidence`. For an eligible calculation it also displays the
+provisional posterior, the 50% starting prior, and each applied LR. It does not
+display Low/Moderate/High UTI likelihood bands, diagnose UTI, or recommend
+treatment.
 
 ## Abstract And Conclusion Replacement
 
 The abstract and conclusion should describe Uritect as an offline Android
 prototype for markerless semiquantitative dipstick interpretation with a
-source-documented Bayesian UTI research candidate and separate warning
-categories. They should not claim clinical diagnosis, ISO certification,
-clinically validated probability prediction, or whole-scan 80% accuracy.
+source-documented Bayesian UTI research candidate, deterministic renal
+follow-up actions, and separate warning categories. They should not claim
+clinical diagnosis, ISO certification, clinically validated probability
+prediction, renal-disease detection, or whole-scan 80% accuracy.
 
 Use "evaluation guided by ISO/IEC 25010:2023" rather than claiming ISO
 compliance or certification unless a formal certification process was performed.

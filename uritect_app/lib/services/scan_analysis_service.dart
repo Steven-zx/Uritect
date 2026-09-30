@@ -11,9 +11,6 @@ class ScanAnalysisService {
     required String imagePath,
     void Function(double progress, String stage)? onProgress,
   }) {
-    return _localAnalyzer.analyze(
-      imagePath: imagePath,
-      onProgress: onProgress,
-    );
+    return _localAnalyzer.analyze(imagePath: imagePath, onProgress: onProgress);
   }
 }

@@ -29,11 +29,11 @@ class PrimaryButton extends StatelessWidget {
   final bool isLoading;
 
   const PrimaryButton({
+    super.key,
     required this.label,
     required this.onPressed,
     this.isLoading = false,
-    Key? key,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -76,10 +76,10 @@ class SecondaryButton extends StatelessWidget {
   final VoidCallback onPressed;
 
   const SecondaryButton({
+    super.key,
     required this.label,
     required this.onPressed,
-    Key? key,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -111,8 +111,7 @@ class StatusBadge extends StatelessWidget {
   final String label;
   final String status; // 'low', 'moderate', 'high'
 
-  const StatusBadge({required this.label, required this.status, Key? key})
-    : super(key: key);
+  const StatusBadge({super.key, required this.label, required this.status});
 
   Color getStatusColor() {
     switch (status) {

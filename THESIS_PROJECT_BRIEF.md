@@ -1,123 +1,112 @@
-# Thesis Project Foundation (Working Brief)
+# URITECT Final Engineering Brief
 
+This file is the authoritative engineering summary for the final thesis build.
+Older experimental reports remain available for traceability but do not define
+the production system or its performance claims.
 
-C:\Users\acer\AppData\Local\Android\sdk\ndk\28.2.13676358 
+## Final System
 
-## Proposed Title
-**A Hybrid Illumination-Invariant, Multimodal Smartphone-Based Urinalysis Screening System Using Colorimetric Strip Analysis and Clinical Symptom Integration**
+URITECT 1.3.0 is an offline Android clinical decision-support prototype for
+markerless, semiquantitative interpretation of ten URS-10T reagent pads. Image
+processing, normalized HSV feature extraction, per-analyte k-nearest neighbors
+classification, UTI interpretation, renal follow-up rules, and local history
+storage run on the device. The production manifest requests no Internet
+permission and the scan path has no Python-server dependency.
 
-## Core Problem
-Manual dipstick interpretation is fast but subjective, lighting-sensitive, and inconsistent in timing/reading quality. Existing smartphone urinalysis solutions improve convenience but often remain vulnerable to illumination shifts and typically ignore symptom context.
+## Frozen Components
 
-## Research Gap
-1. **Illumination invariance gap** in real-world capture conditions (warm/neutral/cool lighting).
-2. **Unimodal limitation** (visual-only inference without symptom-aware weighting).
-3. **Rural deployment gap** (need for lightweight, offline-capable implementation on entry-level phones).
+- Visual model: `production_semiquant_knn_markerless_roi_topfix_v3_20260908`
+- UTI model: `uti_bayesian_lr_v1_1_20260926`
+- Renal rules: `renal_followup_rules_v1.1_20260919`
+- Android release: `1.3.0+4`
+- Android application ID: `ph.edu.wvsu.uritect`
+- Confidence retake threshold: `0.45` for every analyte
 
-## Proposed Solution (High-Level)
-A hybrid mobile screening system with:
-1. **Reference-based Adaptive White Balancing (AWB)** using the strip’s unreacted white plastic as dynamic white reference.
-2. **Automated strip/pad segmentation** via edge + contour-based localization and ROI slicing.
-3. **Late-fusion multimodal engine** combining visual features (HSV/colorimetric) and clinical symptoms to produce **risk-stratified** outputs.
+## Final Processing Method
 
-## Scope and Intended Use
-- **Intended use**: clinical decision support / risk stratification screening tool.
-- **Not intended**: definitive diagnostic replacement.
-- **Target context**: rural health units and low-resource settings.
-- **Deployment requirement**: offline-capable, on-device inference.
+1. Reject unreadable, blank, blurred, dark, overexposed, partial, ambiguous,
+   geometrically implausible, or low-confidence captures.
+2. Evaluate image orientations and locate one complete strip without the old
+   black-and-white macromarker.
+3. Use neutral, low-saturation strip/plastic pixels for gray-world white-balance
+   gains.
+4. Detect the reagent-pad stack using color/chroma activity and validate ten
+   aligned pad regions.
+5. Extract normalized HSV features and classify each analyte with its frozen
+   per-analyte k-NN configuration.
+6. Keep the UTI and renal interpretation paths separate.
 
-## Study Objectives (Operationalized)
-### General
-Design, implement, and evaluate an illumination-invariant image-processing + multimodal risk assessment pipeline for automated 10-parameter urinalysis on mobile devices.
+## Final Clinical Interpretation
 
-### Specific
-1. Build calibrated synthetic-control dataset under **2700K / 4000K / 5500K**.
-2. Implement reference-based AWB (gray-world-guided correction).
-3. Implement robust ROI segmentation independent of strip orientation/background noise.
-4. Implement k-NN multimodal fusion of HSV features + symptoms.
-5. Integrate into lightweight offline mobile app.
-6. Evaluate against analyzer gold standard via accuracy, efficiency, and lighting robustness metrics.
+The UTI pathway is a provisional literature-derived Bayesian research model,
+not a calibrated diagnostic probability. It uses a 50% starting prior only for
+the strictly gated study-like population, one mutually exclusive dipstick LR,
+and one mutually exclusive urinary-symptom LR. For an eligible calculation, it
+displays the provisional posterior, 50% prior, and exact evidence factors next
+to action wording. It does not use Low/Moderate/High probability bands. The
+same calculation details are stored in the local audit record.
 
-## System Architecture (Functional)
-1. **Image Preprocessing Module**
-   - Input: raw camera image
-   - Output: white-balanced image corrected by strip-reference matrix
-2. **Segmentation Module**
-   - Strip isolation, perspective correction, and 10-pad ROI extraction
-3. **Multimodal Analysis Module**
-   - Visual branch: HSV feature extraction and color-class mapping
-   - Clinical branch: symptom flags (e.g., dysuria, flank pain, edema)
-   - Fusion: weighted risk scoring for borderline/ambiguous visual readings
+The renal pathway is deterministic and rule-based. It stores every triggered
+rule ID and produces one of these actions: `OBSERVE`, `REPEAT_CONFIRM`,
+`CONSULT`, `PROMPT_CONSULT`, or `RETAKE`. It does not calculate kidney-disease
+probability or diagnose renal disease.
 
-## Methodology Snapshot
-### Phase 1 – Dataset Creation
-- Use Level 1/2/3 control solutions (negative/low abnormal/high abnormal).
-- Capture images across warm/neutral/cool lighting setups.
+## Frozen Evaluation Claim
 
-### Phase 1 Metric Positioning (For Defense)
-- Phase 1 performance must be presented as a **calibrated baseline feasibility result** under strict multiclass semiquant conditions.
-- The current aggregate score (~20% overall accuracy in recent retests) is **not** the final thesis claim and should not be interpreted as final clinical performance.
-- Rationale: Phase 1 prioritizes controlled ground-truth establishment, pipeline stability, and reproducible calibration behavior over peak classification performance.
-- Therefore, Phase 1 success criteria are:
-   1. Stable end-to-end capture-to-inference pipeline,
-   2. Reproducible metrics under frozen evaluation protocol,
-   3. Clear error characterization to guide Phase 2 optimization.
+Evaluation used exact-row deduplication followed by specimen-grouped splitting,
+so Cool, Warm, and Daylight images from one specimen could not cross between
+training and test partitions.
 
-### Phase 2 Performance Claim Window
-- Final performance claims must be reserved for Phase 2+ experiments after targeted data expansion, analyte-level hard-case balancing, and optimized model configuration.
-- Defense wording should emphasize that Phase 1 establishes the baseline and risk map; Phase 2 is the performance-optimization stage.
+- Individual-analyte accuracy: **82.52%** (1,345/1,630 predictions)
+- Whole-scan all-ten-correct accuracy: **17.18%** (28/163 scans)
+- Mean per-analyte macro F1: **61.22%**
+- Mean per-analyte macro sensitivity: **58.99%**
+- Mean per-analyte macro specificity: **81.59%**
+- Mean per-analyte Cohen's kappa: **0.464**
+- Confidence-gated accepted scan rate: **73.62%**
+- Accepted individual-analyte accuracy: **83.75%**
+- Accepted all-ten-correct accuracy: **19.17%**
 
-### Phase 2 – Model Development
-- Train k-NN with colorimetric ground truth.
-- Tune AWB to minimize cross-light color discrepancy (e.g., Delta E).
+The 80% target is achieved only for individual-analyte accuracy. It is not a
+whole-scan or diagnostic-accuracy claim.
 
-### Phase 3 – Validation
-- Compare app outputs vs clinic automated analyzer on real samples (target range: 30–50).
+## Thesis Objective Alignment
 
-## Evaluation Plan
-1. **Diagnostic agreement**
-   - Sensitivity, specificity, confusion matrix
-   - Cohen’s kappa against gold standard analyzer
-2. **Runtime performance**
-   - Average processing latency per sample (ms)
-3. **Illumination robustness**
-   - Output variance across 2700K/4000K/5500K conditions
-4. **Statistical testing**
-   - ANOVA for lighting-condition effect on performance
+1. Dataset construction: implemented with cleaned Laua-an and Cabatuan
+   semiquantitative data under three controlled lighting conditions.
+2. AWB normalization: implemented using neutral strip/plastic pixels; the
+   manuscript must not claim a macromarker or a single guaranteed white patch.
+3. Offline ROI application: implemented markerlessly. The final detector uses
+   strip geometry, color/chroma activity, and ten-pad alignment validation;
+   broad references to adaptive thresholding/contours should be revised to the
+   actual algorithm.
+4. k-NN and clinical reasoning: implemented and evaluated. Bayesian inference
+   applies only to gated UTI screening. Renal abnormality follow-up is a
+   separate physician-reviewed rule engine, not Bayesian probability.
+5. ISO/IEC 25010-guided evaluation: the instrument and APK are prepared. The
+   objective is complete only after the planned 10 registered medical
+   technologists perform the app evaluation and the results are analyzed.
 
-### Reporting Rule for Current Stage
-- In early-stage reporting to panelists, prioritize **Accuracy** and **F1-macro** as baseline indicators.
-- Keep agreement metrics (e.g., Cohen's kappa) as secondary/supporting analysis unless explicitly required by the panel.
+## Human Gates That Code Cannot Complete
 
-## Clinical Threshold Basis (From Proposal)
-- Proteinuria risk emphasis at **>=1+ (30 mg/dL)**
-- UTI logic strengthened by **nitrite + leukocyte esterase** combination
-- Glucosuria concern at **>=1+ (100 mg/dL)**
-- Symptom-informed weighting for red flags (e.g., dysuria, edema)
+- Two-medtech content review of the literature-derived Bayesian parameters.
+- Ten-medtech final app evaluation using the prepared ISO/IEC 25010-guided form.
+- Final physician comparison/sign-off for implemented renal wording and rules.
+- Statistician or prediction-model review of the Bayesian combination.
+- Physical bottle/box/IFU transcription: manufacturer, catalog number, lot,
+  expiry, IFU revision, reaction times, and supported category chart.
+- Real-device installation, airplane-mode workflow, invalid-image challenge,
+  ROI overlay review, latency, and privacy/deletion checks.
+- Culture-confirmed prospective validation before any claim that the Bayesian
+  posterior is a calibrated clinical probability.
 
-## Implementation Implications for the App
-1. Require camera capture guardrails (distance, focus, timer window).
-2. Keep color pipeline deterministic and reproducible across devices.
-3. Store local rule/version metadata for traceability of risk scoring.
-4. Show explainable outputs (which pads + which symptoms increased risk).
-5. Preserve offline-first workflow and lightweight model footprint.
+## Authoritative Files
 
-## Current Risks to Manage Early
-1. Device camera heterogeneity (sensor/ISP differences).
-2. Shadow and perspective artifacts during capture.
-3. Label quality and class imbalance in calibration dataset.
-4. Overfitting to synthetic controls with poor real-sample generalization.
-5. Clinical interpretation drift if threshold/rules are not version-controlled.
-
-## Open Items to Finalize in Thesis + Build
-1. Exact symptom-weighting formulation (rule-based vs learned weight tuning).
-2. Precise target metrics (minimum acceptable kappa, sensitivity/specificity floors).
-3. Human factors protocol for capture timing after dipstick immersion.
-4. Ethics/privacy handling for patient metadata storage on device.
-5. Reference list cleanup (one entry has missing title text).
-
-## References Note
-The proposal indicates IEEE style for references, with BLIS exception in APA where required. Keep one consistent citation map in thesis drafts to avoid numbering drift.
-
----
-This file is the canonical engineering brief for this workspace and should be treated as the baseline for feature and experiment decisions unless superseded by adviser-approved revisions.
+- `docs/FINAL_PROJECT_HANDOFF.md`
+- `docs/MANUSCRIPT_FINAL_REVISION_GUIDE.md`
+- `docs/URITECT_Bayesian_UTI_Scoring_System_v1.1.md`
+- `docs/URITECT_Bayesian_Parameter_Validation_Form_v1.2.md`
+- `docs/URITECT_Renal_Rule_Specification_v1.1.md`
+- `docs/URITECT_ISO25010_MedTech_App_Evaluation_v1.0.md`
+- `pipeline/output/production_grouped_metrics_complete.json`
+- `output/release/URITECT_FINAL_RELEASE_MANIFEST.json`

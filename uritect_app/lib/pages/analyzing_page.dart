@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../config/theme.dart';
-import '../models/scan_analysis_exit_reason.dart';
 import '../models/scan_model.dart';
 import '../services/scan_analysis_service.dart';
 import 'results_page.dart';
@@ -57,8 +56,24 @@ class _AnalyzingPageState extends State<AnalyzingPage> {
         })
         .catchError((error) {
           if (!mounted) return;
-          if (_isNoDipstickError(error)) {
-            Navigator.of(context).pop(ScanAnalysisExitReason.noDipstickFound);
+          if (_isInvalidScanError(error)) {
+            final invalidResult =
+                ScanResult.empty(
+                  imagePath: widget.imagePath,
+                  id: 'invalid_${DateTime.now().millisecondsSinceEpoch}',
+                ).copyWith(
+                  status: 'invalid',
+                  riskBucket: 'Unavailable',
+                  modelVersion:
+                      'production_semiquant_knn_markerless_roi_topfix_v3_20260908',
+                  padsDetected: 0,
+                  padsUnavailable: 10,
+                );
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(
+                builder: (_) => ResultsPage(scanResult: invalidResult),
+              ),
+            );
             return;
           }
           ScaffoldMessenger.of(context).showSnackBar(
@@ -122,11 +137,13 @@ class _AnalyzingPageState extends State<AnalyzingPage> {
     return stageTarget > _targetProgress ? stageTarget : _targetProgress;
   }
 
-  bool _isNoDipstickError(Object error) {
+  bool _isInvalidScanError(Object error) {
     final message = error.toString().toLowerCase();
     return message.contains('no_dipstick_found') ||
         message.contains('could not localize enough dipstick pads') ||
-        message.contains('no readable dipstick');
+        message.contains('no readable dipstick') ||
+        message.contains('invalid_image') ||
+        message.contains('low_confidence');
   }
 
   @override

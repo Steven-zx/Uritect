@@ -14,21 +14,13 @@ class LandingPage extends StatelessWidget {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [
-              Color(0xFFF2F7FA),
-              Color(0xFFF1F7FA),
-              Color(0xFFD3E8EA),
-            ],
+            colors: [Color(0xFFF2F7FA), Color(0xFFF1F7FA), Color(0xFFD3E8EA)],
             stops: [0.0, 0.70, 1.0],
           ),
         ),
         child: Stack(
           children: [
-            const Positioned.fill(
-              child: IgnorePointer(
-                child: _DotPattern(),
-              ),
-            ),
+            const Positioned.fill(child: IgnorePointer(child: _DotPattern())),
             SafeArea(
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(22, 24, 22, 30),
@@ -92,9 +84,7 @@ class _DotPattern extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomPaint(
-      painter: _DotPatternPainter(),
-    );
+    return CustomPaint(painter: _DotPatternPainter());
   }
 }
 

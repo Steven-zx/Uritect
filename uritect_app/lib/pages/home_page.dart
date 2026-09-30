@@ -401,9 +401,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildRecentScanCard(BuildContext context, SavedScanRecord record) {
-    final statusColor = _riskColor(record.riskBucket);
-    final icon = _riskIcon(record.riskBucket);
-    final iconBackground = _riskIconBackground(record.riskBucket);
+    final statusColor = _actionColor(record.clinicalAction);
+    final icon = _actionIcon(record.clinicalAction);
+    final iconBackground = _actionIconBackground(record.clinicalAction);
 
     return InkWell(
       borderRadius: BorderRadius.circular(14),
@@ -471,7 +471,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 const SizedBox(width: 7),
                 Text(
-                  '${record.riskBucket} Priority',
+                  record.clinicalAction,
                   style: Theme.of(context).textTheme.labelSmall?.copyWith(
                     color: statusColor,
                     fontSize: 12,
@@ -516,39 +516,39 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Color _riskColor(String riskBucket) {
-    switch (riskBucket) {
-      case 'High':
+  Color _actionColor(String action) {
+    switch (action) {
+      case 'Prompt medical consultation suggested':
         return AppColors.statusHigh;
-      case 'Moderate':
+      case 'Consultation suggested':
         return AppColors.statusModerate;
-      case 'Caution':
+      case 'Insufficient evidence':
         return AppColors.primaryMain;
       default:
         return AppColors.statusLow;
     }
   }
 
-  Color _riskIconBackground(String riskBucket) {
-    switch (riskBucket) {
-      case 'High':
+  Color _actionIconBackground(String action) {
+    switch (action) {
+      case 'Prompt medical consultation suggested':
         return const Color(0xFFFAD2CE);
-      case 'Moderate':
+      case 'Consultation suggested':
         return const Color(0xFFFFE8BF);
-      case 'Caution':
+      case 'Insufficient evidence':
         return const Color(0xFFEAF6FB);
       default:
         return const Color(0xFFDDF7E7);
     }
   }
 
-  IconData _riskIcon(String riskBucket) {
-    switch (riskBucket) {
-      case 'High':
+  IconData _actionIcon(String action) {
+    switch (action) {
+      case 'Prompt medical consultation suggested':
         return Icons.error_outline;
-      case 'Moderate':
+      case 'Consultation suggested':
         return Icons.warning_amber_rounded;
-      case 'Caution':
+      case 'Insufficient evidence':
         return Icons.info_outline_rounded;
       default:
         return Icons.check;

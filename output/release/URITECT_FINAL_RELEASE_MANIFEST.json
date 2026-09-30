@@ -1,0 +1,140 @@
+{
+  "release": "URITECT 1.3.0 - Bayesian UTI v1.1 - Renal rules v1.1",
+  "generated_at": "2026-09-26T05:14:17.862989+00:00",
+  "android_application_id": "ph.edu.wvsu.uritect",
+  "android_version": {
+    "name": "1.3.0",
+    "code": 4
+  },
+  "release_signing_certificate_sha256": "15D1138DCE077ADA624A140B3A145343D1A48305FD0847E9002869E488F19D39",
+  "production_model_version": "production_semiquant_knn_markerless_roi_topfix_v3_20260908",
+  "bayesian_model_version": "uti_bayesian_lr_v1_1_20260926",
+  "renal_rule_version": "renal_followup_rules_v1.1_20260919",
+  "files": [
+    {
+      "path": "output/apk/Uritect_v1.3.0_bayesian_v1.1_renal_v1.1_release.apk",
+      "bytes": 53010405,
+      "sha256": "F68A88D576BCF34FBB83502564512E86F4E28C0CEA71C4FAF752427EBF4F975E"
+    },
+    {
+      "path": "uritect_app/assets/production_semiquant_model.json",
+      "bytes": 388131,
+      "sha256": "348EA1A6CF2C59E3FF6834E4FD042ABA09A2A26CC041559096F13966FBD8FE80"
+    },
+    {
+      "path": "pipeline/output/semiquant_models/semiquant_models_metadata.json",
+      "bytes": 4557,
+      "sha256": "5D9F101549B701D9CC95F8E08419C70ECD9E94BABDF1FD7DE572738AE5EBB3A3"
+    },
+    {
+      "path": "pipeline/output/production_grouped_evaluation.json",
+      "bytes": 3997,
+      "sha256": "937D11E8D6F20DBEA7C0A7C6ECB18D0CFF2342A5614DDE4398FEEC04C49E60DD"
+    },
+    {
+      "path": "pipeline/output/production_grouped_metrics_complete.json",
+      "bytes": 20326,
+      "sha256": "8EFE086CAAB7A70FFC7CA554CDEBE210C26CF80440C702BD6F7588FFB15F745D"
+    },
+    {
+      "path": "pipeline/output/whole_scan_optimization_final_knn_grouped.json",
+      "bytes": 16702,
+      "sha256": "C65A372EB9033531A282861153BAF0152BB2831B1330BC13CA2AD0AF9BDD1F3F"
+    },
+    {
+      "path": "docs/URITECT_Bayesian_UTI_Scoring_System_v1.1.md",
+      "bytes": 14844,
+      "sha256": "2B526FB651D42B2C2736E47E3960A2828F4E849F284AAE088AB010911AC50A90"
+    },
+    {
+      "path": "docs/URITECT_Renal_Rule_Specification_v1.1.md",
+      "bytes": 16748,
+      "sha256": "8B462633B3B47E0C3877A4133A8A7600892B18B464100CF36C9BC765809E173A"
+    },
+    {
+      "path": "docs/ANDROID_RELEASE_SIGNING.md",
+      "bytes": 1082,
+      "sha256": "B5CE8840C7403062DE7BD10CAA1E0815F280E888916B3027A1A8803D24CD9680"
+    },
+    {
+      "path": "uritect_app/lib/models/screening_fusion.dart",
+      "bytes": 20649,
+      "sha256": "A78BC2704E6FBA6E66A80129B755E0C5A9A2E237F8E3BDCC1081136AA9C6869B"
+    },
+    {
+      "path": "uritect_app/lib/models/renal_followup.dart",
+      "bytes": 16274,
+      "sha256": "11260233ABCDDD9886733F86DFD03A1C0484DE8ED849F5A245846A55EEE072CE"
+    },
+    {
+      "path": "uritect_app/lib/models/saved_scan_record.dart",
+      "bytes": 5039,
+      "sha256": "7C3830A392ED270A535BF02E34EBD8B80F0029BF0D666AADD8526ECACA6F5C1B"
+    },
+    {
+      "path": "uritect_app/lib/pages/symptom_checklist_page.dart",
+      "bytes": 17906,
+      "sha256": "25112DFBB36DA35918BF07D6C00DA475F62DF1B4C88C775947A001B69DC85528"
+    },
+    {
+      "path": "uritect_app/lib/pages/overall_results_page.dart",
+      "bytes": 28821,
+      "sha256": "FE7DA855E415C2135216D1560BB551B7C1FF808C7898A3F933F1DC3282F7D5C3"
+    },
+    {
+      "path": "uritect_app/pubspec.yaml",
+      "bytes": 1730,
+      "sha256": "97B22C76E235A626D7C5EDF80EA9FA96AF5D4070246A6FD966EC0F2EBC774718"
+    },
+    {
+      "path": "uritect_app/android/app/build.gradle.kts",
+      "bytes": 2217,
+      "sha256": "EC305CDCA0318BFBC4A9D19F9050A655ED2059F938C315A5727CDD74ADE6EEE0"
+    },
+    {
+      "path": "uritect_app/android/app/src/main/AndroidManifest.xml",
+      "bytes": 2737,
+      "sha256": "007C27D834261C6FBF9B5F010961A6C93FF4D73C10337E1A4E4288BABBB60B73"
+    },
+    {
+      "path": "output/pdf/URITECT_Bayesian_UTI_Scoring_System_v1.1.pdf",
+      "bytes": 79013,
+      "sha256": "0AD42863DDBBED8329E518F997A48D312F232C29D02FA364A48A26DC5F0FA38C"
+    },
+    {
+      "path": "output/pdf/URITECT_Bayesian_Parameter_Validation_Form_v1.2.pdf",
+      "bytes": 77123,
+      "sha256": "4345EB4AA14182C427238083F84AF31FF1F7C7D1540632292A5D7E13EAE674FC"
+    },
+    {
+      "path": "output/pdf/URITECT_Renal_Physician_Implementation_Signoff_v1.1.pdf",
+      "bytes": 75972,
+      "sha256": "573CBA3695F16899EE067E53A43B6018B57A3AE46D84F68117884B343879E6D6"
+    },
+    {
+      "path": "output/pdf/URITECT_ISO25010_MedTech_App_Evaluation_v1.0.pdf",
+      "bytes": 13634,
+      "sha256": "310BCBA91720E1A7604C99CD7EF4E3204371168AA6433E9D83253459960AFA01"
+    },
+    {
+      "path": "output/pdf/URITECT_Final_Project_Handoff_v1.0.pdf",
+      "bytes": 9200,
+      "sha256": "19820980647D7C0C95D993F2D25031D57E6F83D309ECAB5D4924FE5A068B79ED"
+    },
+    {
+      "path": "output/forms/URITECT_ISO25010_MedTech_App_Evaluation_Data_Template.csv",
+      "bytes": 895,
+      "sha256": "118E91E9A57A30E73489F815B1F4B5EA113FEF81AA6F4E6E7CB4C6B4A69D8B10"
+    },
+    {
+      "path": "pipeline/analyze_medtech_app_evaluation.py",
+      "bytes": 6450,
+      "sha256": "CF26361AE657472C1FA4ED4D9FFF035827F6C6BAFB1224317802C9A2A1C1F6C0"
+    },
+    {
+      "path": "pipeline/verify_final_release_manifest.py",
+      "bytes": 1501,
+      "sha256": "D3ACB0B9350E4FD56F08A5480650E4B0DACBC2486728E58A5856764485524794"
+    }
+  ]
+}

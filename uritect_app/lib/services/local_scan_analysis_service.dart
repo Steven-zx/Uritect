@@ -180,7 +180,8 @@ class LocalScanAnalysisService {
     final valStd = _stdDev(vals);
     final hueStd = _circularHueStd(hues);
     final quality =
-        strip.quality + (10.0 * (1.0 - gapCv).clamp(0.0, 1.0)) +
+        strip.quality +
+        (10.0 * (1.0 - gapCv).clamp(0.0, 1.0)) +
         (satMean * 18.0) +
         (satStd * 10.0) +
         (valStd * 6.0);
@@ -235,7 +236,9 @@ class LocalScanAnalysisService {
       throw StateError('INVALID_IMAGE: Image is overexposed for pad reading.');
     }
     if (lumaStd < 6.0 && satMean < 0.035) {
-      throw StateError('INVALID_IMAGE: Blank image or no visible strip signal.');
+      throw StateError(
+        'INVALID_IMAGE: Blank image or no visible strip signal.',
+      );
     }
     if (blurScore < 2.8) {
       throw StateError('INVALID_IMAGE: Image is too blurred for pad reading.');
@@ -356,7 +359,11 @@ class LocalScanAnalysisService {
         final hsv = _rgbToHsv(rgb[0], rgb[1], rgb[2]);
         final chroma = _rgbChroma(rgb[0], rgb[1], rgb[2]);
         final valueScore = 1.0 - (hsv[2] - 0.55).abs();
-        samples.add((0.52 * hsv[1]) + (0.34 * chroma) + (0.14 * valueScore.clamp(0.0, 1.0)));
+        samples.add(
+          (0.52 * hsv[1]) +
+              (0.34 * chroma) +
+              (0.14 * valueScore.clamp(0.0, 1.0)),
+        );
       }
       rowScore[y] = samples.isEmpty ? 0.0 : _mean(samples);
     }
@@ -400,9 +407,11 @@ class LocalScanAnalysisService {
     final smoothed = _smooth(colScores, math.max(7, padSize ~/ 8));
     final threshold = math.max(0.04, _percentile(smoothed, 95) * 0.45);
     final runs = _runs(smoothed.map((v) => v >= threshold).toList())
-        .where((run) =>
-            run.length >= math.max(12, (padSize * 0.45).round()) &&
-            run.length <= math.max(13, (padSize * 2.4).round()))
+        .where(
+          (run) =>
+              run.length >= math.max(12, (padSize * 0.45).round()) &&
+              run.length <= math.max(13, (padSize * 2.4).round()),
+        )
         .toList();
     if (runs.isEmpty) {
       return null;
@@ -435,9 +444,11 @@ class LocalScanAnalysisService {
     final selectedRows = <int>{};
     for (final center in centers) {
       final cy = center.round();
-      for (var y = math.max(0, cy - bandHalf);
-          y <= math.min(image.height - 1, cy + bandHalf);
-          y++) {
+      for (
+        var y = math.max(0, cy - bandHalf);
+        y <= math.min(image.height - 1, cy + bandHalf);
+        y++
+      ) {
         selectedRows.add(y);
       }
     }
@@ -464,9 +475,11 @@ class LocalScanAnalysisService {
     final smoothed = _smooth(colScores, math.max(7, padSize ~/ 8));
     final threshold = math.max(0.05, _percentile(smoothed, 94) * 0.45);
     final runs = _runs(smoothed.map((v) => v >= threshold).toList())
-        .where((run) =>
-            run.length >= math.max(12, (padSize * 0.35).round()) &&
-            run.length <= math.max(13, (padSize * 2.2).round()))
+        .where(
+          (run) =>
+              run.length >= math.max(12, (padSize * 0.35).round()) &&
+              run.length <= math.max(13, (padSize * 2.2).round()),
+        )
         .toList();
     if (runs.isEmpty) {
       return null;
@@ -566,13 +579,17 @@ class LocalScanAnalysisService {
     if (extraction.saturationMean < 0.018 &&
         extraction.saturationStd < 0.010 &&
         extraction.valueStd < 0.020) {
-      throw StateError('INVALID_IMAGE: Image does not contain readable reagent colors.');
+      throw StateError(
+        'INVALID_IMAGE: Image does not contain readable reagent colors.',
+      );
     }
     final stripTooSmall =
         extraction.stripRect.height < extraction.imageHeight * 0.35 ||
         extraction.stripRect.width < extraction.imageWidth * 0.015;
     if (stripTooSmall) {
-      throw StateError('INVALID_IMAGE: Strip is partial or too small in frame.');
+      throw StateError(
+        'INVALID_IMAGE: Strip is partial or too small in frame.',
+      );
     }
     for (final roi in extraction.padRois.values) {
       final roiInsideX =
@@ -582,9 +599,13 @@ class LocalScanAnalysisService {
       final roiInsideY =
           roi.top >= extraction.stripRect.top - roi.height &&
           roi.top + roi.height <=
-              extraction.stripRect.top + extraction.stripRect.height + roi.height;
+              extraction.stripRect.top +
+                  extraction.stripRect.height +
+                  roi.height;
       if (!roiInsideX || !roiInsideY) {
-        throw StateError('INVALID_IMAGE: Pad ROIs do not align with the detected strip.');
+        throw StateError(
+          'INVALID_IMAGE: Pad ROIs do not align with the detected strip.',
+        );
       }
     }
   }
@@ -672,17 +693,18 @@ Map<String, dynamic> _analyzeScanInBackground(
       : confidenceValues.reduce((a, b) => a + b) / confidenceValues.length;
 
   return ScanResult(
-    id: 'scan_${DateTime.now().millisecondsSinceEpoch}',
-    date: DateTime.now(),
-    imagePath: imagePath,
-    status: 'complete',
-    confidence: averageConfidence,
-    riskBucket: 'Complete',
-    modelVersion: model.version,
-    rows: rows,
-    padsDetected: extraction.featuresByAnalyte.length,
-    padsUnavailable: _analyteOrder.length - extraction.featuresByAnalyte.length,
-  ).toJson()
+      id: 'scan_${DateTime.now().millisecondsSinceEpoch}',
+      date: DateTime.now(),
+      imagePath: imagePath,
+      status: 'complete',
+      confidence: averageConfidence,
+      riskBucket: 'Complete',
+      modelVersion: model.version,
+      rows: rows,
+      padsDetected: extraction.featuresByAnalyte.length,
+      padsUnavailable:
+          _analyteOrder.length - extraction.featuresByAnalyte.length,
+    ).toJson()
     ..['pipeline_version'] = 'android_markerless_json_knn_v1'
     ..['feature_space'] = 'normalized_hsv'
     ..['localization'] = 'markerless_strip_v1'
@@ -705,13 +727,17 @@ class _ProductionModel {
   static _ProductionModel fromText(String text) {
     final payload = jsonDecode(text) as Map<String, dynamic>;
     final analytesJson = payload['analytes'] as Map<String, dynamic>? ?? {};
-    final abstainPolicy = payload['abstain_policy'] as Map<String, dynamic>? ?? {};
+    final abstainPolicy =
+        payload['abstain_policy'] as Map<String, dynamic>? ?? {};
     return _ProductionModel(
       version: payload['model_version'] as String? ?? 'production_unknown',
       abstainEnabled: abstainPolicy['enabled'] as bool? ?? false,
       abstainThreshold: (abstainPolicy['threshold'] as num?)?.toDouble() ?? 0.0,
       analytes: analytesJson.map((key, value) {
-        return MapEntry(key, _AnalyteModel.fromJson(value as Map<String, dynamic>));
+        return MapEntry(
+          key,
+          _AnalyteModel.fromJson(value as Map<String, dynamic>),
+        );
       }),
     );
   }
@@ -730,10 +756,11 @@ class _ProductionModel {
 
   void validateConfidence(Map<String, double> confidenceByAnalyte) {
     if (!abstainEnabled || abstainThreshold <= 0.0) return;
-    final lowConfidence = confidenceByAnalyte.entries
-        .where((entry) => entry.value < abstainThreshold)
-        .toList()
-      ..sort((a, b) => a.value.compareTo(b.value));
+    final lowConfidence =
+        confidenceByAnalyte.entries
+            .where((entry) => entry.value < abstainThreshold)
+            .toList()
+          ..sort((a, b) => a.value.compareTo(b.value));
     if (lowConfidence.isEmpty) return;
 
     final analyte = lowConfidence.first.key;
@@ -804,12 +831,16 @@ class _AnalyteModel {
     final transformed = _transform(observed);
     final distances = <_Neighbor>[];
     for (var i = 0; i < trainVectors.length; i++) {
-      distances.add(_Neighbor(trainLabels[i], _distance(transformed, trainVectors[i])));
+      distances.add(
+        _Neighbor(trainLabels[i], _distance(transformed, trainVectors[i])),
+      );
     }
     distances.sort((a, b) => a.distance.compareTo(b.distance));
     final votes = <String, double>{};
     for (final neighbor in distances.take(math.min(k, distances.length))) {
-      final vote = weights == 'distance' ? 1.0 / (neighbor.distance + 1e-9) : 1.0;
+      final vote = weights == 'distance'
+          ? 1.0 / (neighbor.distance + 1e-9)
+          : 1.0;
       votes[neighbor.label] = (votes[neighbor.label] ?? 0.0) + vote;
     }
     final ranked = votes.entries.toList()
@@ -844,7 +875,12 @@ class _AnalyteModel {
     var transformed = values;
     if (featureTransform == 'circular_scaled') {
       final radians = values[0] * math.pi / 180.0;
-      transformed = [math.cos(radians), math.sin(radians), values[1], values[2]];
+      transformed = [
+        math.cos(radians),
+        math.sin(radians),
+        values[1],
+        values[2],
+      ];
     }
     if (featureTransform == 'scaled' || featureTransform == 'circular_scaled') {
       final mean = scalerMean;
@@ -987,7 +1023,12 @@ List<double> _smooth(List<double> values, int window) {
   final half = w ~/ 2;
   return [
     for (var i = 0; i < values.length; i++)
-      _mean(values.sublist(math.max(0, i - half), math.min(values.length, i + half + 1))),
+      _mean(
+        values.sublist(
+          math.max(0, i - half),
+          math.min(values.length, i + half + 1),
+        ),
+      ),
   ];
 }
 
@@ -1012,7 +1053,9 @@ double _median(List<double> values) {
 double _stdDev(List<double> values) {
   if (values.length < 2) return 0.0;
   final m = _mean(values);
-  return math.sqrt(_mean(values.map((v) => math.pow(v - m, 2).toDouble()).toList()));
+  return math.sqrt(
+    _mean(values.map((v) => math.pow(v - m, 2).toDouble()).toList()),
+  );
 }
 
 double _circularMeanDeg(List<double> values) {

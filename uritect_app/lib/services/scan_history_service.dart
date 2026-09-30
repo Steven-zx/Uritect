@@ -5,6 +5,7 @@ import 'package:path_provider/path_provider.dart';
 
 import '../models/clinical_symptoms.dart';
 import '../models/saved_scan_record.dart';
+import '../models/renal_followup.dart';
 import '../models/scan_model.dart';
 import '../models/screening_fusion.dart';
 
@@ -78,6 +79,7 @@ class ScanHistoryService {
     required ScanResult scanResult,
     required ClinicalChecklistResult checklistResult,
     required ScreeningFusionResult fusionResult,
+    required RenalFollowupResult renalFollowupResult,
   }) async {
     final savedImagePath = await _persistImage(
       scanResult.imagePath,
@@ -88,6 +90,7 @@ class ScanHistoryService {
       scanResult: persistedScan,
       checklistResult: checklistResult,
       fusionResult: fusionResult,
+      renalFollowupResult: renalFollowupResult,
     );
 
     final records = await loadRecords();

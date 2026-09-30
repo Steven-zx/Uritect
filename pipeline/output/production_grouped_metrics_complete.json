@@ -1,0 +1,906 @@
+{
+  "generated_at": "2026-09-25T18:35:37.188727+00:00",
+  "model_version": "production_semiquant_knn_markerless_roi_topfix_v3_20260908",
+  "features": "C:\\Users\\acer\\Downloads\\Github\\Uritect\\pipeline\\dataset\\features_normalized_hsv_deduped_production.csv",
+  "evaluation_design": {
+    "split": "GroupShuffleSplit",
+    "group": "specimen_group",
+    "test_size": 0.2,
+    "random_state": 42,
+    "note": "Lighting variants from one specimen remain on the same split side."
+  },
+  "summary": {
+    "individual_analyte_accuracy": 0.8251533742331288,
+    "individual_analyte_correct": 1345,
+    "individual_analyte_total": 1630,
+    "whole_scan_all_10_correct_accuracy": 0.17177914110429449,
+    "whole_scan_all_10_correct": 28,
+    "whole_scan_total": 163,
+    "macro_across_analytes": {
+      "accuracy": 0.8251533742331288,
+      "macro_f1": 0.6122431645280358,
+      "macro_sensitivity": 0.5898935752485831,
+      "macro_specificity": 0.8159274806150638,
+      "cohen_kappa": 0.46373429159610646
+    }
+  },
+  "per_analyte": {
+    "Leukocytes": {
+      "accuracy": 0.6809815950920245,
+      "macro_f1": 0.4449638081217029,
+      "macro_sensitivity": 0.4671717171717172,
+      "macro_specificity": 0.8573913043478261,
+      "cohen_kappa": 0.3154579227911485,
+      "test_predictions": 163,
+      "train_specimen_groups": 553,
+      "test_specimen_groups": 139,
+      "model": {
+        "k": 31,
+        "metric": "manhattan",
+        "feature_transform": "circular_scaled"
+      },
+      "class_metrics": {
+        "Large 500": {
+          "support": 1,
+          "sensitivity": 0.0,
+          "specificity": 1.0,
+          "tp": 0,
+          "fn": 1,
+          "fp": 0,
+          "tn": 162
+        },
+        "Moderate 125": {
+          "support": 3,
+          "sensitivity": 1.0,
+          "specificity": 0.99375,
+          "tp": 3,
+          "fn": 0,
+          "fp": 1,
+          "tn": 159
+        },
+        "Neg": {
+          "support": 99,
+          "sensitivity": 0.9191919191919192,
+          "specificity": 0.40625,
+          "tp": 91,
+          "fn": 8,
+          "fp": 38,
+          "tn": 26
+        },
+        "Small 70": {
+          "support": 12,
+          "sensitivity": 0.08333333333333333,
+          "specificity": 1.0,
+          "tp": 1,
+          "fn": 11,
+          "fp": 0,
+          "tn": 151
+        },
+        "Trace 15": {
+          "support": 48,
+          "sensitivity": 0.3333333333333333,
+          "specificity": 0.8869565217391304,
+          "tp": 16,
+          "fn": 32,
+          "fp": 13,
+          "tn": 102
+        }
+      },
+      "confusion_matrix": {
+        "labels": [
+          "Large 500",
+          "Moderate 125",
+          "Neg",
+          "Small 70",
+          "Trace 15"
+        ],
+        "matrix": [
+          [
+            0,
+            0,
+            1,
+            0,
+            0
+          ],
+          [
+            0,
+            3,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            91,
+            0,
+            8
+          ],
+          [
+            0,
+            1,
+            5,
+            1,
+            5
+          ],
+          [
+            0,
+            0,
+            32,
+            0,
+            16
+          ]
+        ]
+      }
+    },
+    "Nitrite": {
+      "accuracy": 0.9938650306748467,
+      "macro_f1": 0.8317853457172342,
+      "macro_sensitivity": 0.75,
+      "macro_specificity": 0.75,
+      "cohen_kappa": 0.663917525773196,
+      "test_predictions": 163,
+      "train_specimen_groups": 553,
+      "test_specimen_groups": 139,
+      "model": {
+        "k": 31,
+        "metric": "manhattan",
+        "feature_transform": "scaled"
+      },
+      "class_metrics": {
+        "Neg": {
+          "support": 161,
+          "sensitivity": 1.0,
+          "specificity": 0.5,
+          "tp": 161,
+          "fn": 0,
+          "fp": 1,
+          "tn": 1
+        },
+        "Positive": {
+          "support": 2,
+          "sensitivity": 0.5,
+          "specificity": 1.0,
+          "tp": 1,
+          "fn": 1,
+          "fp": 0,
+          "tn": 161
+        }
+      },
+      "confusion_matrix": {
+        "labels": [
+          "Neg",
+          "Positive"
+        ],
+        "matrix": [
+          [
+            161,
+            0
+          ],
+          [
+            1,
+            1
+          ]
+        ]
+      }
+    },
+    "Urobilinogen": {
+      "accuracy": 0.8282208588957055,
+      "macro_f1": 0.6456521739130435,
+      "macro_sensitivity": 0.6215410305343512,
+      "macro_specificity": 0.6215410305343512,
+      "cohen_kappa": 0.3086943350499849,
+      "test_predictions": 163,
+      "train_specimen_groups": 553,
+      "test_specimen_groups": 139,
+      "model": {
+        "k": 11,
+        "metric": "chebyshev",
+        "feature_transform": "scaled"
+      },
+      "class_metrics": {
+        "16": {
+          "support": 32,
+          "sensitivity": 0.28125,
+          "specificity": 0.9618320610687023,
+          "tp": 9,
+          "fn": 23,
+          "fp": 5,
+          "tn": 126
+        },
+        "3.2": {
+          "support": 131,
+          "sensitivity": 0.9618320610687023,
+          "specificity": 0.28125,
+          "tp": 126,
+          "fn": 5,
+          "fp": 23,
+          "tn": 9
+        }
+      },
+      "confusion_matrix": {
+        "labels": [
+          "16",
+          "3.2"
+        ],
+        "matrix": [
+          [
+            9,
+            23
+          ],
+          [
+            5,
+            126
+          ]
+        ]
+      }
+    },
+    "Protein": {
+      "accuracy": 0.8773006134969326,
+      "macro_f1": 0.2593044539353264,
+      "macro_sensitivity": 0.24563025210084033,
+      "macro_specificity": 0.8334127456819536,
+      "cohen_kappa": 0.25297891842346476,
+      "test_predictions": 163,
+      "train_specimen_groups": 553,
+      "test_specimen_groups": 139,
+      "model": {
+        "k": 41,
+        "metric": "manhattan",
+        "feature_transform": "circular_scaled"
+      },
+      "class_metrics": {
+        "0.3": {
+          "support": 4,
+          "sensitivity": 0.0,
+          "specificity": 1.0,
+          "tp": 0,
+          "fn": 4,
+          "fp": 0,
+          "tn": 159
+        },
+        "1.0": {
+          "support": 1,
+          "sensitivity": 0.0,
+          "specificity": 1.0,
+          "tp": 0,
+          "fn": 1,
+          "fp": 0,
+          "tn": 162
+        },
+        ">=20.0": {
+          "support": 1,
+          "sensitivity": 0.0,
+          "specificity": 1.0,
+          "tp": 0,
+          "fn": 1,
+          "fp": 0,
+          "tn": 162
+        },
+        "Neg": {
+          "support": 140,
+          "sensitivity": 0.9928571428571429,
+          "specificity": 0.17391304347826086,
+          "tp": 139,
+          "fn": 1,
+          "fp": 19,
+          "tn": 4
+        },
+        "Trace": {
+          "support": 17,
+          "sensitivity": 0.23529411764705882,
+          "specificity": 0.9931506849315068,
+          "tp": 4,
+          "fn": 13,
+          "fp": 1,
+          "tn": 145
+        }
+      },
+      "confusion_matrix": {
+        "labels": [
+          "0.3",
+          "1.0",
+          ">=20.0",
+          "Neg",
+          "Trace"
+        ],
+        "matrix": [
+          [
+            0,
+            0,
+            0,
+            4,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            1,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            1,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            139,
+            1
+          ],
+          [
+            0,
+            0,
+            0,
+            13,
+            4
+          ]
+        ]
+      }
+    },
+    "pH": {
+      "accuracy": 0.8159509202453987,
+      "macro_f1": 0.5749142179799115,
+      "macro_sensitivity": 0.5224867724867724,
+      "macro_specificity": 0.8779446112779447,
+      "cohen_kappa": 0.35674822415153895,
+      "test_predictions": 163,
+      "train_specimen_groups": 553,
+      "test_specimen_groups": 139,
+      "model": {
+        "k": 15,
+        "metric": "euclidean",
+        "feature_transform": "circular_scaled"
+      },
+      "class_metrics": {
+        "5.0": {
+          "support": 126,
+          "sensitivity": 0.9682539682539683,
+          "specificity": 0.2972972972972973,
+          "tp": 122,
+          "fn": 4,
+          "fp": 26,
+          "tn": 11
+        },
+        "6.0": {
+          "support": 28,
+          "sensitivity": 0.25,
+          "specificity": 0.9703703703703703,
+          "tp": 7,
+          "fn": 21,
+          "fp": 4,
+          "tn": 131
+        },
+        "6.5": {
+          "support": 1,
+          "sensitivity": 0.0,
+          "specificity": 1.0,
+          "tp": 0,
+          "fn": 1,
+          "fp": 0,
+          "tn": 162
+        },
+        "7.0": {
+          "support": 4,
+          "sensitivity": 0.25,
+          "specificity": 1.0,
+          "tp": 1,
+          "fn": 3,
+          "fp": 0,
+          "tn": 159
+        },
+        "7.5": {
+          "support": 3,
+          "sensitivity": 0.6666666666666666,
+          "specificity": 1.0,
+          "tp": 2,
+          "fn": 1,
+          "fp": 0,
+          "tn": 160
+        },
+        "8.5": {
+          "support": 1,
+          "sensitivity": 1.0,
+          "specificity": 1.0,
+          "tp": 1,
+          "fn": 0,
+          "fp": 0,
+          "tn": 162
+        }
+      },
+      "confusion_matrix": {
+        "labels": [
+          "5.0",
+          "6.0",
+          "6.5",
+          "7.0",
+          "7.5",
+          "8.5"
+        ],
+        "matrix": [
+          [
+            122,
+            4,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            21,
+            7,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            3,
+            0,
+            0,
+            1,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            0,
+            0,
+            2,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ]
+        ]
+      }
+    },
+    "Blood": {
+      "accuracy": 0.9325153374233128,
+      "macro_f1": 0.906949352179034,
+      "macro_sensitivity": 0.8893411586520258,
+      "macro_specificity": 0.9114583333333333,
+      "cohen_kappa": 0.7142174051641696,
+      "test_predictions": 163,
+      "train_specimen_groups": 553,
+      "test_specimen_groups": 139,
+      "model": {
+        "k": 7,
+        "metric": "chebyshev",
+        "feature_transform": "circular_scaled"
+      },
+      "class_metrics": {
+        "Large 200": {
+          "support": 3,
+          "sensitivity": 1.0,
+          "specificity": 1.0,
+          "tp": 3,
+          "fn": 0,
+          "fp": 0,
+          "tn": 160
+        },
+        "Moderate 80": {
+          "support": 2,
+          "sensitivity": 1.0,
+          "specificity": 1.0,
+          "tp": 2,
+          "fn": 0,
+          "fp": 0,
+          "tn": 161
+        },
+        "Neg": {
+          "support": 139,
+          "sensitivity": 0.9784172661870504,
+          "specificity": 0.6666666666666666,
+          "tp": 136,
+          "fn": 3,
+          "fp": 8,
+          "tn": 16
+        },
+        "Non-hemolyzed 10": {
+          "support": 19,
+          "sensitivity": 0.5789473684210527,
+          "specificity": 0.9791666666666666,
+          "tp": 11,
+          "fn": 8,
+          "fp": 3,
+          "tn": 141
+        }
+      },
+      "confusion_matrix": {
+        "labels": [
+          "Large 200",
+          "Moderate 80",
+          "Neg",
+          "Non-hemolyzed 10"
+        ],
+        "matrix": [
+          [
+            3,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            2,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            136,
+            3
+          ],
+          [
+            0,
+            0,
+            8,
+            11
+          ]
+        ]
+      }
+    },
+    "Specific Gravity": {
+      "accuracy": 0.588957055214724,
+      "macro_f1": 0.5556588199590254,
+      "macro_sensitivity": 0.5642869265258439,
+      "macro_specificity": 0.9153750289537591,
+      "cohen_kappa": 0.4937888198757764,
+      "test_predictions": 163,
+      "train_specimen_groups": 553,
+      "test_specimen_groups": 139,
+      "model": {
+        "k": 7,
+        "metric": "chebyshev",
+        "feature_transform": "circular_scaled"
+      },
+      "class_metrics": {
+        "1.005": {
+          "support": 16,
+          "sensitivity": 0.3125,
+          "specificity": 0.9931972789115646,
+          "tp": 5,
+          "fn": 11,
+          "fp": 1,
+          "tn": 146
+        },
+        "1.010": {
+          "support": 21,
+          "sensitivity": 0.8095238095238095,
+          "specificity": 0.8732394366197183,
+          "tp": 17,
+          "fn": 4,
+          "fp": 18,
+          "tn": 124
+        },
+        "1.015": {
+          "support": 27,
+          "sensitivity": 0.4074074074074074,
+          "specificity": 0.9264705882352942,
+          "tp": 11,
+          "fn": 16,
+          "fp": 10,
+          "tn": 126
+        },
+        "1.020": {
+          "support": 23,
+          "sensitivity": 0.391304347826087,
+          "specificity": 0.9571428571428572,
+          "tp": 9,
+          "fn": 14,
+          "fp": 6,
+          "tn": 134
+        },
+        "1.025": {
+          "support": 42,
+          "sensitivity": 0.5238095238095238,
+          "specificity": 0.8429752066115702,
+          "tp": 22,
+          "fn": 20,
+          "fp": 19,
+          "tn": 102
+        },
+        "1.030": {
+          "support": 34,
+          "sensitivity": 0.9411764705882353,
+          "specificity": 0.8992248062015504,
+          "tp": 32,
+          "fn": 2,
+          "fp": 13,
+          "tn": 116
+        }
+      },
+      "confusion_matrix": {
+        "labels": [
+          "1.005",
+          "1.010",
+          "1.015",
+          "1.020",
+          "1.025",
+          "1.030"
+        ],
+        "matrix": [
+          [
+            5,
+            5,
+            4,
+            0,
+            1,
+            1
+          ],
+          [
+            1,
+            17,
+            1,
+            0,
+            1,
+            1
+          ],
+          [
+            0,
+            9,
+            11,
+            1,
+            5,
+            1
+          ],
+          [
+            0,
+            2,
+            1,
+            9,
+            10,
+            1
+          ],
+          [
+            0,
+            2,
+            4,
+            5,
+            22,
+            9
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            2,
+            32
+          ]
+        ]
+      }
+    },
+    "Ketone": {
+      "accuracy": 0.7300613496932515,
+      "macro_f1": 0.6751811594202899,
+      "macro_sensitivity": 0.6681229773462783,
+      "macro_specificity": 0.6681229773462783,
+      "cohen_kappa": 0.36687853107344626,
+      "test_predictions": 163,
+      "train_specimen_groups": 553,
+      "test_specimen_groups": 139,
+      "model": {
+        "k": 31,
+        "metric": "chebyshev",
+        "feature_transform": "scaled"
+      },
+      "class_metrics": {
+        "Neg": {
+          "support": 103,
+          "sensitivity": 0.9029126213592233,
+          "specificity": 0.43333333333333335,
+          "tp": 93,
+          "fn": 10,
+          "fp": 34,
+          "tn": 26
+        },
+        "Trace 0.5": {
+          "support": 60,
+          "sensitivity": 0.43333333333333335,
+          "specificity": 0.9029126213592233,
+          "tp": 26,
+          "fn": 34,
+          "fp": 10,
+          "tn": 93
+        }
+      },
+      "confusion_matrix": {
+        "labels": [
+          "Neg",
+          "Trace 0.5"
+        ],
+        "matrix": [
+          [
+            93,
+            10
+          ],
+          [
+            34,
+            26
+          ]
+        ]
+      }
+    },
+    "Bilirubin": {
+      "accuracy": 0.8711656441717791,
+      "macro_f1": 0.8539239533990526,
+      "macro_sensitivity": 0.8465453938584779,
+      "macro_specificity": 0.8465453938584779,
+      "cohen_kappa": 0.7081592633643107,
+      "test_predictions": 163,
+      "train_specimen_groups": 553,
+      "test_specimen_groups": 139,
+      "model": {
+        "k": 41,
+        "metric": "euclidean",
+        "feature_transform": "scaled"
+      },
+      "class_metrics": {
+        "Neg": {
+          "support": 107,
+          "sensitivity": 0.9252336448598131,
+          "specificity": 0.7678571428571429,
+          "tp": 99,
+          "fn": 8,
+          "fp": 13,
+          "tn": 43
+        },
+        "Small 17": {
+          "support": 56,
+          "sensitivity": 0.7678571428571429,
+          "specificity": 0.9252336448598131,
+          "tp": 43,
+          "fn": 13,
+          "fp": 8,
+          "tn": 99
+        }
+      },
+      "confusion_matrix": {
+        "labels": [
+          "Neg",
+          "Small 17"
+        ],
+        "matrix": [
+          [
+            99,
+            8
+          ],
+          [
+            13,
+            43
+          ]
+        ]
+      }
+    },
+    "Glucose": {
+      "accuracy": 0.9325153374233128,
+      "macro_f1": 0.3740983606557377,
+      "macro_sensitivity": 0.3238095238095238,
+      "macro_specificity": 0.8774833808167142,
+      "cohen_kappa": 0.4565019702940284,
+      "test_predictions": 163,
+      "train_specimen_groups": 553,
+      "test_specimen_groups": 139,
+      "model": {
+        "k": 5,
+        "metric": "chebyshev",
+        "feature_transform": "scaled"
+      },
+      "class_metrics": {
+        "110 ++++": {
+          "support": 7,
+          "sensitivity": 0.2857142857142857,
+          "specificity": 0.9935897435897436,
+          "tp": 2,
+          "fn": 5,
+          "fp": 1,
+          "tn": 155
+        },
+        "30 ++": {
+          "support": 1,
+          "sensitivity": 0.0,
+          "specificity": 1.0,
+          "tp": 0,
+          "fn": 1,
+          "fp": 0,
+          "tn": 162
+        },
+        "60 +++": {
+          "support": 1,
+          "sensitivity": 0.0,
+          "specificity": 0.9938271604938271,
+          "tp": 0,
+          "fn": 1,
+          "fp": 1,
+          "tn": 161
+        },
+        "Neg": {
+          "support": 148,
+          "sensitivity": 1.0,
+          "specificity": 0.4,
+          "tp": 148,
+          "fn": 0,
+          "fp": 9,
+          "tn": 6
+        },
+        "Trace 5": {
+          "support": 6,
+          "sensitivity": 0.3333333333333333,
+          "specificity": 1.0,
+          "tp": 2,
+          "fn": 4,
+          "fp": 0,
+          "tn": 157
+        }
+      },
+      "confusion_matrix": {
+        "labels": [
+          "110 ++++",
+          "30 ++",
+          "60 +++",
+          "Neg",
+          "Trace 5"
+        ],
+        "matrix": [
+          [
+            2,
+            0,
+            1,
+            4,
+            0
+          ],
+          [
+            1,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            1,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            148,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            4,
+            2
+          ]
+        ]
+      }
+    }
+  }
+}

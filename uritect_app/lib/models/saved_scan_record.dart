@@ -1,4 +1,5 @@
 import 'clinical_symptoms.dart';
+import 'renal_followup.dart';
 import 'scan_model.dart';
 import 'screening_fusion.dart';
 
@@ -7,42 +8,59 @@ class SavedScanRecord {
   final DateTime savedAt;
   final ScanResult scanResult;
   final ClinicalChecklistResult checklistResult;
-  final String riskBucket;
+  final String clinicalAction;
   final double? utiPosteriorProbability;
+  final double? utiPriorProbability;
+  final List<BayesianEvidenceFactor> utiEvidenceFactors;
   final String? bayesianModelVersion;
+  final String? utiCalculationStatus;
   final bool hasEvidenceConflict;
   final String? conflictTitle;
   final String? conflictMessage;
+  final RenalFollowupResult? renalFollowupResult;
 
   const SavedScanRecord({
     required this.id,
     required this.savedAt,
     required this.scanResult,
     required this.checklistResult,
-    required this.riskBucket,
+    required this.clinicalAction,
     this.utiPosteriorProbability,
+    this.utiPriorProbability,
+    this.utiEvidenceFactors = const [],
     this.bayesianModelVersion,
+    this.utiCalculationStatus,
     this.hasEvidenceConflict = false,
     this.conflictTitle,
     this.conflictMessage,
+    this.renalFollowupResult,
   });
+
+  String get riskBucket => clinicalAction;
 
   factory SavedScanRecord.fromAnalysis({
     required ScanResult scanResult,
     required ClinicalChecklistResult checklistResult,
     required ScreeningFusionResult fusionResult,
+    required RenalFollowupResult renalFollowupResult,
   }) {
     return SavedScanRecord(
       id: scanResult.id,
       savedAt: DateTime.now(),
       scanResult: scanResult,
       checklistResult: checklistResult,
-      riskBucket: fusionResult.riskBucket,
-      utiPosteriorProbability: fusionResult.utiEstimate.posteriorProbability,
+      clinicalAction: fusionResult.clinicalAction,
+      utiPosteriorProbability: fusionResult.utiEstimate.isCalculable
+          ? fusionResult.utiEstimate.posteriorProbability
+          : null,
+      utiPriorProbability: fusionResult.utiEstimate.priorProbability,
+      utiEvidenceFactors: fusionResult.utiEstimate.factors,
       bayesianModelVersion: fusionResult.utiEstimate.modelVersion,
+      utiCalculationStatus: fusionResult.utiEstimate.calculationStatus,
       hasEvidenceConflict: fusionResult.hasEvidenceConflict,
       conflictTitle: fusionResult.conflictTitle,
       conflictMessage: fusionResult.conflictMessage,
+      renalFollowupResult: renalFollowupResult,
     );
   }
 
@@ -52,12 +70,20 @@ class SavedScanRecord {
       'savedAt': savedAt.toIso8601String(),
       'scanResult': scanResult.toJson(),
       'checklistResult': checklistResult.toJson(),
-      'riskBucket': riskBucket,
+      'clinicalAction': clinicalAction,
+      // Preserve this key so existing installations can read the record.
+      'riskBucket': clinicalAction,
       'utiPosteriorProbability': utiPosteriorProbability,
+      'utiPriorProbability': utiPriorProbability,
+      'utiEvidenceFactors': utiEvidenceFactors
+          .map((factor) => factor.toJson())
+          .toList(),
       'bayesianModelVersion': bayesianModelVersion,
+      'utiCalculationStatus': utiCalculationStatus,
       'hasEvidenceConflict': hasEvidenceConflict,
       'conflictTitle': conflictTitle,
       'conflictMessage': conflictMessage,
+      'renalFollowupResult': renalFollowupResult?.toJson(),
     };
   }
 
@@ -72,13 +98,37 @@ class SavedScanRecord {
       checklistResult: ClinicalChecklistResult.fromJson(
         json['checklistResult'] as Map<String, dynamic>? ?? const {},
       ),
-      riskBucket: json['riskBucket'] as String? ?? 'Moderate',
+      clinicalAction:
+          json['clinicalAction'] as String? ??
+          _migrateLegacyAction(json['riskBucket'] as String?),
       utiPosteriorProbability: (json['utiPosteriorProbability'] as num?)
           ?.toDouble(),
+      utiPriorProbability: (json['utiPriorProbability'] as num?)?.toDouble(),
+      utiEvidenceFactors:
+          (json['utiEvidenceFactors'] as List<dynamic>? ?? const [])
+              .whereType<Map<String, dynamic>>()
+              .map(BayesianEvidenceFactor.fromJson)
+              .toList(),
       bayesianModelVersion: json['bayesianModelVersion'] as String?,
+      utiCalculationStatus: json['utiCalculationStatus'] as String?,
       hasEvidenceConflict: json['hasEvidenceConflict'] == true,
       conflictTitle: json['conflictTitle'] as String?,
       conflictMessage: json['conflictMessage'] as String?,
+      renalFollowupResult: json['renalFollowupResult'] is Map<String, dynamic>
+          ? RenalFollowupResult.fromJson(
+              json['renalFollowupResult'] as Map<String, dynamic>,
+            )
+          : null,
     );
+  }
+
+  static String _migrateLegacyAction(String? value) {
+    return switch (value) {
+      'High' => 'Prompt medical consultation suggested',
+      'Moderate' || 'Caution' => 'Consultation suggested',
+      'Low' => 'Observe for symptoms',
+      final String action when action.isNotEmpty => action,
+      _ => 'Insufficient evidence',
+    };
   }
 }
