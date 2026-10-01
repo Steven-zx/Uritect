@@ -6,7 +6,7 @@ the production system or its performance claims.
 
 ## Final System
 
-URITECT 1.3.0 is an offline Android clinical decision-support prototype for
+URITECT 1.4.0 is an offline Android clinical decision-support prototype for
 markerless, semiquantitative interpretation of ten URS-10T reagent pads. Image
 processing, normalized HSV feature extraction, per-analyte k-nearest neighbors
 classification, UTI interpretation, renal follow-up rules, and local history
@@ -16,9 +16,10 @@ permission and the scan path has no Python-server dependency.
 ## Frozen Components
 
 - Visual model: `production_semiquant_knn_markerless_roi_topfix_v3_20260908`
-- UTI model: `uti_bayesian_lr_v1_1_20260926`
+- Female UTI model: `uti_bayesian_female_v1_1_20260926`
+- Male UTI candidate: `uti_bayesian_male_v0_1_20261001`
 - Renal rules: `renal_followup_rules_v1.1_20260919`
-- Android release: `1.3.0+4`
+- Android release: `1.4.0+5`
 - Android application ID: `ph.edu.wvsu.uritect`
 - Confidence retake threshold: `0.45` for every analyte
 
@@ -38,13 +39,14 @@ permission and the scan path has no Python-server dependency.
 
 ## Final Clinical Interpretation
 
-The UTI pathway is a provisional literature-derived Bayesian research model,
-not a calibrated diagnostic probability. It uses a 50% starting prior only for
-the strictly gated study-like population, one mutually exclusive dipstick LR,
-and one mutually exclusive urinary-symptom LR. For an eligible calculation, it
-displays the provisional posterior, 50% prior, and exact evidence factors next
-to action wording. It does not use Low/Moderate/High probability bands. The
-same calculation details are stored in the local audit record.
+The UTI pathway contains separate provisional female and male Bayesian research
+models, not calibrated diagnostic probabilities. The unchanged female v1.1
+model uses a 50% prior, one dipstick LR, and one symptom LR. The male v0.1
+candidate uses a 52.2% literature-derived younger-subgroup prior and one
+ordered nitrite/leukocyte threshold LR. Female blood and symptom LRs are never
+applied to men. Eligible calculations display the sex-specific model, prior,
+posterior, and exact factor without Low/Moderate/High bands; the same details
+are stored in the local audit record.
 
 The renal pathway is deterministic and rule-based. It stores every triggered
 rule ID and produces one of these actions: `OBSERVE`, `REPEAT_CONFIRM`,

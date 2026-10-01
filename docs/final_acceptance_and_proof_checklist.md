@@ -18,11 +18,11 @@ be performed by the research team or clinical evaluators.
 | Confidence retake | Threshold 0.45 for every analyte; grouped accepted-scan metrics documented. |
 | Markerless ROI/AWB | Production service uses markerless geometry/chroma localization and neutral strip/plastic gray-world normalization. |
 | Invalid-scan rejection | Blank, blur, exposure, partial/geometry, ambiguity, ten-pad, and confidence checks implemented. |
-| Bayesian UTI v1.1 | Eligibility gate, source-threshold mapping, grouped LRs, explicit prior/posterior/factor display for eligible calculations, and no risk bands. |
+| Sex-specific Bayesian UTI | Female v1.1 retained; male v0.1 candidate added with its own prior, eligibility gate, nitrite/LE hierarchy, audit version, tests, and no risk bands. |
 | Renal rules v1.1 | Dedicated engine, rule IDs, final action, separate UI, safety overrides, and tests. |
 | Action wording | App uses Observe, Consultation suggested, Prompt consultation suggested, or Insufficient evidence instead of UTI Low/Moderate/High bands. |
 | Medtech materials | Two-medtech parameter form and ten-medtech final-app form prepared. |
-| APK | `output/apk/Uritect_v1.3.0_bayesian_v1.1_renal_v1.1_release.apk`. |
+| APK | `output/apk/Uritect_v1.4.0_sex_specific_bayesian_renal_v1.1_release.apk`. |
 | Release checksum | Recorded in `output/release/URITECT_FINAL_RELEASE_MANIFEST.json`. |
 
 ## Manual Release Gates
@@ -37,7 +37,7 @@ be performed by the research team or clinical evaluators.
 | Wrong-brand claim | Do not claim brand recognition unless a negative-example brand validator is separately trained and tested. |
 | Latency | Capture-to-result time recorded per target phone. |
 | Privacy/storage | Permission prompts, local persistence, reopening, deletion, backup behavior, and absence of unintended identifiers checked. |
-| Bayesian content review | Two medtechs complete v1.2; physician/statistical boundaries remain stated. |
+| Bayesian content review | Two medtechs complete v1.3; physician/statistical boundaries remain stated. |
 | Renal sign-off | Physician compares the exact app wording/rules with renal v1.1 and signs the packet. |
 | Final app evaluation | 10 medtechs complete the ISO/IEC 25010-guided instrument; results are analyzed. |
 | Manuscript alignment | Every item in `MANUSCRIPT_FINAL_REVISION_GUIDE.md` is resolved in the editable thesis source. |

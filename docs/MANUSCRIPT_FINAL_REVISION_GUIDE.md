@@ -71,7 +71,7 @@ Use:
 ### Scope and limitations
 
 State the supported strip profile and unresolved physical-manufacturer gate.
-Limit the Bayesian pathway to symptomatic, nonpregnant women aged 18-64 with
+Describe the female v1.1 pathway as limited to symptomatic, nonpregnant women aged 18-64 with
 all six eligibility confirmations and no alternate-cause/systemic finding.
 State that no culture-confirmed calibration study was performed.
 
@@ -91,7 +91,11 @@ Document these exact reproducible details:
   override.
 
 Do not describe unselected symptoms as confirmed absent. Unselected/unknown,
-unavailable, or unreliable inputs receive no Bayesian update.
+unavailable, or unreliable inputs receive no Bayesian update. Add the separate
+male v0.1 candidate from the sex-specific v1.2 specification: symptomatic men
+18-64, study-matched exclusions, 52.2% younger-subgroup prior, and one ordered
+nitrite/leukocyte threshold LR. State that its threshold hierarchy and local
+calibration require prospective culture-confirmed validation.
 
 ## Chapter 4
 

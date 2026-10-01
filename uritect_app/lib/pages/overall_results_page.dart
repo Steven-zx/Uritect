@@ -223,7 +223,10 @@ class OverallResultsPage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Bayesian UTI Screening Estimate',
+                      estimate.modelVersion ==
+                              ScreeningFusionEngine.maleModelVersion
+                          ? 'Male Bayesian UTI Research Estimate'
+                          : 'Female Bayesian UTI Research Estimate',
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         color: AppColors.primaryDark,
                         fontSize: 15,
@@ -232,7 +235,10 @@ class OverallResultsPage extends StatelessWidget {
                     ),
                     Text(
                       calculated
-                          ? 'Calculated from the approved v1.1 evidence hierarchy'
+                          ? estimate.modelVersion ==
+                                    ScreeningFusionEngine.maleModelVersion
+                                ? 'Provisional male model based on culture-referenced evidence'
+                                : 'Calculated from the female v1.1 evidence hierarchy'
                           : 'No ordinary estimate was calculated',
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: AppColors.textSecondary,
@@ -333,7 +339,9 @@ class OverallResultsPage extends StatelessWidget {
               ),
             const Divider(height: 20),
             Text(
-              'Prior odds x selected dipstick LR x selected symptom LR = posterior odds',
+              estimate.modelVersion == ScreeningFusionEngine.maleModelVersion
+                  ? 'Prior odds x one selected dipstick-threshold LR = posterior odds'
+                  : 'Prior odds x selected dipstick LR x selected symptom LR = posterior odds',
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                 color: AppColors.textSecondary,
                 fontSize: 10,
@@ -350,7 +358,9 @@ class OverallResultsPage extends StatelessWidget {
             ),
           const SizedBox(height: 10),
           Text(
-            'Screening support only. This result is not a diagnosis and does not recommend antibiotics or other treatment.',
+            estimate.modelVersion == ScreeningFusionEngine.maleModelVersion
+                ? 'Provisional ordered-threshold research approximation. It is not locally calibrated, is not a diagnosis, and does not recommend treatment.'
+                : 'Screening support only. This result is not a diagnosis and does not recommend antibiotics or other treatment.',
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
               color: const Color(0xFF4E5962),
               fontWeight: FontWeight.w600,

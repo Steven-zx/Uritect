@@ -15,8 +15,14 @@ class ClinicalSymptom {
 final List<ClinicalSymptom> clinicalSymptoms = [
   const ClinicalSymptom(
     id: 'uti_eligible_female',
-    label: 'Patient is a woman',
-    category: 'uti_eligibility',
+    label: 'Female',
+    category: 'uti_sex',
+    iconCode: 'eligibility',
+  ),
+  const ClinicalSymptom(
+    id: 'uti_eligible_male',
+    label: 'Male',
+    category: 'uti_sex',
     iconCode: 'eligibility',
   ),
   const ClinicalSymptom(
@@ -47,6 +53,18 @@ final List<ClinicalSymptom> clinicalSymptoms = [
     id: 'uti_eligible_not_immunocompromised',
     label: 'Patient is not immunocompromised',
     category: 'uti_eligibility',
+    iconCode: 'eligibility',
+  ),
+  const ClinicalSymptom(
+    id: 'uti_male_no_diabetes',
+    label: 'Patient does not have diabetes',
+    category: 'uti_male_eligibility',
+    iconCode: 'eligibility',
+  ),
+  const ClinicalSymptom(
+    id: 'uti_male_no_suspected_sti',
+    label: 'No suspected sexually transmitted infection',
+    category: 'uti_male_eligibility',
     iconCode: 'eligibility',
   ),
   const ClinicalSymptom(

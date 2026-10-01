@@ -1,7 +1,8 @@
 # URITECT Final App Evaluation Form v1.0
 
 **For:** 10 registered medical technologists  
-**Build:** URITECT Android 1.3.0+4  
+**Build:** URITECT Android 1.4.0+5
+
 **Purpose:** Final application usability, functionality, and observed
 performance evaluation guided by ISO/IEC 25010. This is separate from the
 two-medtech review of Bayesian parameter values.

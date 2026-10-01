@@ -1,7 +1,9 @@
 # URITECT Final Project Handoff
 
-**Release candidate:** 1.3.0+4  
-**Finalization date:** 2026-09-26  
+**Release candidate:** 1.4.0+5
+
+**Finalization date:** 2026-10-01
+
 **Scope:** Offline Android thesis prototype; ten-analyte semiquantitative URS-10T interpretation
 **Android application ID:** `ph.edu.wvsu.uritect`
 
@@ -18,10 +20,10 @@
 | ROI | Markerless strip localization and ten-pad alignment validation | local scan service |
 | Invalid scans | Blank, blurred, dark, overexposed, partial, ambiguous, implausible, and low-confidence captures rejected | local scan service |
 | Confidence abstention | Every analyte must meet 0.45 confidence | model asset and grouped optimization report |
-| UTI interpretation | Bayesian v1.1 population gate and grouped LRs; eligible estimates display the prior, posterior, and applied factors without probability bands | `screening_fusion.dart` |
+| UTI interpretation | Separate female v1.1 and male v0.1 research models; sex-specific gates and one-factor anti-duplication hierarchy; no probability bands | `screening_fusion.dart` and sex-specific v1.2 specification |
 | Renal interpretation | Separate deterministic v1.1 rule engine with all triggered IDs and final action | `renal_followup.dart` |
 | Clinical UI | Separate findings, systemic warning, and renal follow-up; action wording replaces risk bands | results pages |
-| Automated tests | 49 tests pass across Bayesian, renal, invalid-scan, persistence, navigation, and phone-width UI behavior | `uritect_app/test` |
+| Automated tests | 59 tests pass across sex-specific Bayesian, renal, invalid-scan, persistence, navigation, and phone-width UI behavior | `uritect_app/test` |
 | Release integrity | Final checksums stored in a machine-readable manifest | `output/release/URITECT_FINAL_RELEASE_MANIFEST.json` |
 
 ## Final Metrics
@@ -78,7 +80,7 @@ Bayesian v1.0 PDF and the superseded weight-table filename are also not final.
 
 1. Copy the physical URS-10T manufacturer, catalog number, lot, expiry, IFU
    revision, reaction times, and category chart into the sign-off documents.
-2. Obtain the two-medtech Bayesian parameter content review.
+2. Obtain the two-medtech sex-specific Bayesian parameter content review using v1.3.
 3. Obtain final physician comparison/sign-off for renal v1.1 and the safety
    wording actually displayed by the app.
 4. Run the real-device acceptance protocol on the target phones: airplane mode,

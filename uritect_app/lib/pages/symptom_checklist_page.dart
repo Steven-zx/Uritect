@@ -45,6 +45,23 @@ class _SymptomChecklistPageState extends State<SymptomChecklistPage> {
     });
   }
 
+  void _selectSex(String id) {
+    if (_isSaving) return;
+    setState(() {
+      selectedSymptoms['uti_eligible_female'] = id == 'uti_eligible_female';
+      selectedSymptoms['uti_eligible_male'] = id == 'uti_eligible_male';
+      if (id == 'uti_eligible_male') {
+        selectedSymptoms['uti_eligible_nonpregnant'] = false;
+        selectedSymptoms['vaginal_discharge'] = false;
+        selectedSymptoms['vaginal_irritation'] = false;
+        selectedSymptoms['menstruation_or_vaginal_bleeding'] = false;
+      } else {
+        selectedSymptoms['uti_male_no_diabetes'] = false;
+        selectedSymptoms['uti_male_no_suspected_sti'] = false;
+      }
+    });
+  }
+
   void _setStep(int step) {
     if (_isSaving) return;
     setState(() => _currentStep = step);
@@ -221,10 +238,31 @@ class _SymptomChecklistPageState extends State<SymptomChecklistPage> {
           ),
           _buildSection(
             context,
-            title: 'Eligibility confirmations',
-            helper: 'All six confirmations are required for the UTI estimate.',
-            items: _items('uti_eligibility'),
+            title: 'Sex',
+            helper:
+                'Select one. URITECT applies a separately sourced model for each sex.',
+            items: _items('uti_sex'),
+            singleSelection: true,
           ),
+          _buildSection(
+            context,
+            title: 'Eligibility confirmations',
+            helper: 'Confirm every item that is known to be true.',
+            items: _items('uti_eligibility').where((item) {
+              if (item.id == 'uti_eligible_nonpregnant') {
+                return selectedSymptoms['uti_eligible_female'] == true;
+              }
+              return true;
+            }).toList(),
+          ),
+          if (selectedSymptoms['uti_eligible_male'] == true)
+            _buildSection(
+              context,
+              title: 'Male-model confirmations',
+              helper:
+                  'These exclusions match the culture-referenced male study population.',
+              items: _items('uti_male_eligibility'),
+            ),
           _buildSection(
             context,
             title: 'Acute urinary symptoms',
@@ -236,7 +274,9 @@ class _SymptomChecklistPageState extends State<SymptomChecklistPage> {
             title: 'Symptoms suggesting another cause',
             helper:
                 'Either finding routes to consultation instead of an ordinary lower-UTI estimate.',
-            items: _items('differential'),
+            items: selectedSymptoms['uti_eligible_male'] == true
+                ? const []
+                : _items('differential'),
           ),
         ],
       ),
@@ -284,7 +324,12 @@ class _SymptomChecklistPageState extends State<SymptomChecklistPage> {
             context,
             title: 'Possible interferences',
             helper: 'Temporary causes may change the renal follow-up action.',
-            items: _items('interference'),
+            items: _items('interference').where((item) {
+              if (item.id == 'menstruation_or_vaginal_bleeding') {
+                return selectedSymptoms['uti_eligible_male'] != true;
+              }
+              return true;
+            }).toList(),
           ),
           _buildSection(
             context,
@@ -354,7 +399,9 @@ class _SymptomChecklistPageState extends State<SymptomChecklistPage> {
     required String title,
     required String helper,
     required List<ClinicalSymptom> items,
+    bool singleSelection = false,
   }) {
+    if (items.isEmpty) return const SizedBox.shrink();
     final selectedCount = items
         .where((item) => selectedSymptoms[item.id] == true)
         .length;
@@ -393,13 +440,22 @@ class _SymptomChecklistPageState extends State<SymptomChecklistPage> {
             ),
           ),
           const SizedBox(height: 10),
-          for (final item in items) _buildChecklistTile(context, item),
+          for (final item in items)
+            _buildChecklistTile(
+              context,
+              item,
+              singleSelection: singleSelection,
+            ),
         ],
       ),
     );
   }
 
-  Widget _buildChecklistTile(BuildContext context, ClinicalSymptom symptom) {
+  Widget _buildChecklistTile(
+    BuildContext context,
+    ClinicalSymptom symptom, {
+    bool singleSelection = false,
+  }) {
     final selected = selectedSymptoms[symptom.id] ?? false;
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
@@ -414,7 +470,9 @@ class _SymptomChecklistPageState extends State<SymptomChecklistPage> {
         ),
         child: InkWell(
           borderRadius: BorderRadius.circular(8),
-          onTap: () => _toggleSymptom(symptom.id),
+          onTap: () => singleSelection
+              ? _selectSex(symptom.id)
+              : _toggleSymptom(symptom.id),
           child: Padding(
             padding: const EdgeInsets.fromLTRB(12, 9, 8, 9),
             child: Row(
@@ -437,14 +495,24 @@ class _SymptomChecklistPageState extends State<SymptomChecklistPage> {
                     ),
                   ),
                 ),
-                Checkbox(
-                  value: selected,
-                  onChanged: (_) => _toggleSymptom(symptom.id),
-                  activeColor: AppColors.primaryMain,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(4),
+                if (singleSelection)
+                  Icon(
+                    selected
+                        ? Icons.radio_button_checked_rounded
+                        : Icons.radio_button_unchecked_rounded,
+                    color: selected
+                        ? AppColors.primaryMain
+                        : AppColors.textSecondary,
+                  )
+                else
+                  Checkbox(
+                    value: selected,
+                    onChanged: (_) => _toggleSymptom(symptom.id),
+                    activeColor: AppColors.primaryMain,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4),
+                    ),
                   ),
-                ),
               ],
             ),
           ),

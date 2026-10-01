@@ -63,6 +63,24 @@ ClinicalChecklistResult _eligibleChecklist() {
   );
 }
 
+ClinicalChecklistResult _eligibleMaleChecklist() {
+  const selected = {
+    'uti_eligible_male',
+    'uti_eligible_age_18_64',
+    'uti_eligible_no_catheter',
+    'uti_eligible_no_urologic_abnormality',
+    'uti_eligible_not_immunocompromised',
+    'uti_male_no_diabetes',
+    'uti_male_no_suspected_sti',
+    'dysuria',
+  };
+  return ClinicalChecklistResult(
+    selectedSymptoms: {
+      for (final item in clinicalSymptoms) item.id: selected.contains(item.id),
+    },
+  );
+}
+
 Widget _app(Widget child) => MaterialApp(home: child);
 
 void main() {
@@ -84,7 +102,7 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.text('Bayesian UTI Screening Estimate'), findsOneWidget);
+    expect(find.text('Female Bayesian UTI Research Estimate'), findsOneWidget);
     expect(find.text('91.5%'), findsOneWidget);
     expect(find.text('LR 7.20'), findsOneWidget);
     expect(find.text('LR 1.50'), findsOneWidget);
@@ -114,6 +132,30 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Test context and reliability'), findsOneWidget);
     expect(find.textContaining('CALCULATE RESULTS'), findsOneWidget);
+  });
+
+  testWidgets('male pathway displays its separate model and one factor', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(430, 932);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(
+      _app(
+        OverallResultsPage(
+          scanResult: _scan(),
+          clinicalChecklistResult: _eligibleMaleChecklist(),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Male Bayesian UTI Research Estimate'), findsOneWidget);
+    expect(find.text('LR 5.14'), findsOneWidget);
+    expect(find.text('84.9%'), findsOneWidget);
+    expect(find.textContaining('uti_bayesian_male_v0_1'), findsOneWidget);
   });
 
   testWidgets('scan results continue into the clinical checklist', (

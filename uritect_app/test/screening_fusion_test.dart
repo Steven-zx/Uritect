@@ -21,6 +21,20 @@ void main() {
     );
   }
 
+  ClinicalChecklistResult maleChecklist(List<String> selected) {
+    final selections = <String>{
+      ...selected,
+      'uti_eligible_male',
+      ...ScreeningFusionEngine.maleEligibilityConfirmations,
+    };
+    return ClinicalChecklistResult(
+      selectedSymptoms: {
+        for (final item in clinicalSymptoms)
+          item.id: selections.contains(item.id),
+      },
+    );
+  }
+
   List<ScreeningAnalyteResult> analytes({
     String leukocytes = 'Neg',
     String nitrite = 'Neg',
@@ -123,7 +137,7 @@ void main() {
       checklist: checklist(const ['dysuria'], eligible: false),
     );
     expect(result.utiEstimate.calculationStatus, 'not_designed');
-    expect(result.utiEstimate.statusReason, contains('eligibility'));
+    expect(result.utiEstimate.statusReason, contains('sex'));
   });
 
   test('asymptomatic screening sample blocks calculation', () {
@@ -213,5 +227,120 @@ void main() {
     expect(restored.finding, factor.finding);
     expect(restored.likelihoodRatio, factor.likelihoodRatio);
     expect(restored.source, factor.source);
+  });
+
+  test(
+    'male nitrite and leukocyte pattern uses one published threshold LR',
+    () {
+      final result = engine.fuse(
+        analytes: analytes(leukocytes: 'Moderate 125', nitrite: 'Positive'),
+        checklist: maleChecklist(const ['dysuria']),
+      );
+      expect(result.utiEstimate.calculationStatus, 'calculated');
+      expect(
+        result.utiEstimate.modelVersion,
+        ScreeningFusionEngine.maleModelVersion,
+      );
+      expect(result.utiEstimate.priorProbability, closeTo(97 / 186, 0.000001));
+      expect(result.utiEstimate.factors, hasLength(1));
+      expect(result.utiEstimate.factors.single.likelihoodRatio, 5.14);
+      expect(
+        result.utiEstimate.posteriorProbability,
+        closeTo(0.84853, 0.00002),
+      );
+    },
+  );
+
+  test('male model treats trace leukocytes as study-positive', () {
+    final result = engine.fuse(
+      analytes: analytes(leukocytes: 'Trace 15'),
+      checklist: maleChecklist(const ['frequency']),
+    );
+    expect(result.utiEstimate.factors.single.likelihoodRatio, 1.65);
+  });
+
+  test('male nitrite-only pattern uses the published nitrite threshold LR', () {
+    final result = engine.fuse(
+      analytes: analytes(nitrite: 'Positive'),
+      checklist: maleChecklist(const ['dysuria']),
+    );
+    expect(result.utiEstimate.factors, hasLength(1));
+    expect(result.utiEstimate.factors.single.likelihoodRatio, 4.87);
+  });
+
+  test('male all-negative dipstick cannot rule out UTI', () {
+    final result = engine.fuse(
+      analytes: analytes(),
+      checklist: maleChecklist(const ['urgency']),
+    );
+    expect(result.utiEstimate.factors.single.likelihoodRatio, 0.35);
+    expect(result.utiEstimate.posteriorProbability, closeTo(0.27613, 0.00002));
+  });
+
+  test('male model excludes female blood and symptom likelihood ratios', () {
+    final result = engine.fuse(
+      analytes: analytes(blood: 'Large 200'),
+      checklist: maleChecklist(const ['dysuria', 'urgency']),
+    );
+    expect(result.utiEstimate.factors, hasLength(1));
+    expect(result.utiEstimate.factors.single.likelihoodRatio, 0.35);
+  });
+
+  test('male model requires study-matched exclusions', () {
+    final selected = <String>{
+      'uti_eligible_male',
+      ...ScreeningFusionEngine.commonEligibilityConfirmations,
+      'dysuria',
+    };
+    final result = engine.fuse(
+      analytes: analytes(nitrite: 'Positive'),
+      checklist: ClinicalChecklistResult(
+        selectedSymptoms: {
+          for (final item in clinicalSymptoms)
+            item.id: selected.contains(item.id),
+        },
+      ),
+    );
+    expect(result.utiEstimate.calculationStatus, 'not_designed');
+    expect(result.utiEstimate.statusReason, contains('eligibility'));
+  });
+
+  test('male model does not calculate from unavailable dipstick evidence', () {
+    final result = engine.fuse(
+      analytes: analytes(leukocytes: 'Unavailable', nitrite: 'Unavailable'),
+      checklist: maleChecklist(const ['urgency']),
+    );
+    expect(result.utiEstimate.calculationStatus, 'insufficient');
+    expect(result.utiEstimate.factors, isEmpty);
+  });
+
+  test('male systemic finding routes outside the ordinary posterior', () {
+    final result = engine.fuse(
+      analytes: analytes(nitrite: 'Positive'),
+      checklist: maleChecklist(const ['dysuria', 'fever']),
+    );
+    expect(result.utiEstimate.calculationStatus, 'not_designed');
+    expect(result.utiEstimate.statusReason, contains('systemic'));
+  });
+
+  test('selecting both sexes blocks calculation', () {
+    final selected = <String>{
+      'uti_eligible_female',
+      'uti_eligible_male',
+      ...ScreeningFusionEngine.femaleEligibilityConfirmations,
+      ...ScreeningFusionEngine.maleEligibilityConfirmations,
+      'dysuria',
+    };
+    final result = engine.fuse(
+      analytes: analytes(nitrite: 'Positive'),
+      checklist: ClinicalChecklistResult(
+        selectedSymptoms: {
+          for (final item in clinicalSymptoms)
+            item.id: selected.contains(item.id),
+        },
+      ),
+    );
+    expect(result.utiEstimate.calculationStatus, 'not_designed');
+    expect(result.utiEstimate.statusReason, contains('exactly one sex'));
   });
 }

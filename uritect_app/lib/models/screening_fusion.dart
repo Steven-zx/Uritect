@@ -104,15 +104,31 @@ class ScreeningFusionResult {
 }
 
 class ScreeningFusionEngine {
-  static const String bayesianModelVersion = 'uti_bayesian_lr_v1_1_20260926';
-  static const double priorProbability = 0.50;
-  static const List<String> eligibilityConfirmations = [
-    'uti_eligible_female',
+  static const String femaleModelVersion = 'uti_bayesian_female_v1_1_20260926';
+  static const String maleModelVersion = 'uti_bayesian_male_v0_1_20261001';
+  static const String bayesianModelVersion = femaleModelVersion;
+  static const double femalePriorProbability = 0.50;
+  static const double malePriorProbability = 97 / 186;
+  static const double priorProbability = femalePriorProbability;
+  static const List<String> commonEligibilityConfirmations = [
     'uti_eligible_age_18_64',
-    'uti_eligible_nonpregnant',
     'uti_eligible_no_catheter',
     'uti_eligible_no_urologic_abnormality',
     'uti_eligible_not_immunocompromised',
+  ];
+  static const List<String> femaleEligibilityConfirmations = [
+    ...commonEligibilityConfirmations,
+    'uti_eligible_nonpregnant',
+  ];
+  static const List<String> maleEligibilityConfirmations = [
+    ...commonEligibilityConfirmations,
+    'uti_male_no_diabetes',
+    'uti_male_no_suspected_sti',
+  ];
+  // Retained for older tests and records that mean the female v1.1 gate.
+  static const List<String> eligibilityConfirmations = [
+    'uti_eligible_female',
+    ...femaleEligibilityConfirmations,
   ];
 
   static List<ScreeningAnalyteResult> buildAnalytesFromRows(
@@ -196,16 +212,32 @@ class ScreeningFusionEngine {
     ClinicalChecklistResult checklist,
   ) {
     final factors = <BayesianEvidenceFactor>[];
-    final missingEligibility = eligibilityConfirmations
+    final female = checklist.selectedSymptoms['uti_eligible_female'] == true;
+    final male = checklist.selectedSymptoms['uti_eligible_male'] == true;
+    final sexIsValid = female != male;
+    final requiredEligibility = female
+        ? femaleEligibilityConfirmations
+        : male
+        ? maleEligibilityConfirmations
+        : const <String>[];
+    final missingEligibility = requiredEligibility
         .where((id) => checklist.selectedSymptoms[id] != true)
         .toList();
-    final hasUrinarySymptom = const [
+    final hasFemaleUrinarySymptom = const [
       'dysuria',
       'frequency',
       'urgency',
       'suprapubic',
       'hematuria',
     ].any((id) => checklist.selectedSymptoms[id] == true);
+    final hasMaleUrinarySymptom = const [
+      'dysuria',
+      'frequency',
+      'urgency',
+    ].any((id) => checklist.selectedSymptoms[id] == true);
+    final hasUrinarySymptom = female
+        ? hasFemaleUrinarySymptom
+        : hasMaleUrinarySymptom;
     final hasAlternateCause =
         checklist.selectedSymptoms['vaginal_discharge'] == true ||
         checklist.selectedSymptoms['vaginal_irritation'] == true;
@@ -215,7 +247,9 @@ class ScreeningFusionEngine {
         checklist.selectedSymptoms['nausea'] == true;
 
     String? blockedReason;
-    if (missingEligibility.isNotEmpty) {
+    if (!sexIsValid) {
+      blockedReason = 'Select exactly one sex for the sex-specific UTI model.';
+    } else if (missingEligibility.isNotEmpty) {
       blockedReason =
           'The intended-population eligibility confirmations are incomplete.';
     } else if (!hasUrinarySymptom) {
@@ -230,9 +264,17 @@ class ScreeningFusionEngine {
 
     if (blockedReason != null) {
       return BayesianUtiEstimate(
-        modelVersion: bayesianModelVersion,
-        priorProbability: priorProbability,
-        posteriorProbability: priorProbability,
+        modelVersion: female
+            ? femaleModelVersion
+            : male
+            ? maleModelVersion
+            : 'uti_bayesian_sex_specific_not_selected',
+        priorProbability: female
+            ? femalePriorProbability
+            : male
+            ? malePriorProbability
+            : 0,
+        posteriorProbability: 0,
         calculationStatus: 'not_designed',
         statusReason: blockedReason,
         factors: const [],
@@ -250,6 +292,68 @@ class ScreeningFusionEngine {
     final leukocytesNegative = _isNegative(leukocytes?.displayValue);
     final nitriteNegative = _isNegative(nitrite?.displayValue);
     final bloodNegative = _isNegative(blood?.displayValue);
+
+    if (male) {
+      final maleLeukocytesPositive = _isMaleLeukocytePositive(
+        leukocytes?.displayValue,
+      );
+      // Ordered male thresholds are taken from den Heijer et al. (2012),
+      // Table 2. One factor only is used, so correlated dipstick thresholds
+      // are never multiplied as independent evidence.
+      if (nitritePositive && maleLeukocytesPositive) {
+        factors.add(
+          const BayesianEvidenceFactor(
+            group: 'Male dipstick threshold',
+            finding: 'Nitrite and leukocyte esterase positive',
+            likelihoodRatio: 5.14,
+            source: 'den Heijer et al. 2012, Table 2',
+          ),
+        );
+      } else if (nitritePositive) {
+        factors.add(
+          const BayesianEvidenceFactor(
+            group: 'Male dipstick threshold',
+            finding: 'Nitrite-positive threshold met',
+            likelihoodRatio: 4.87,
+            source: 'den Heijer et al. 2012, Table 2',
+          ),
+        );
+      } else if (maleLeukocytesPositive) {
+        factors.add(
+          const BayesianEvidenceFactor(
+            group: 'Male dipstick threshold',
+            finding: 'Leukocyte-esterase-positive threshold met',
+            likelihoodRatio: 1.65,
+            source: 'den Heijer et al. 2012, Table 2',
+          ),
+        );
+      } else if (nitriteNegative && leukocytesNegative) {
+        factors.add(
+          const BayesianEvidenceFactor(
+            group: 'Male dipstick threshold',
+            finding: 'Nitrite and leukocyte esterase both negative',
+            likelihoodRatio: 0.35,
+            source: 'den Heijer et al. 2012, Table 2',
+          ),
+        );
+      }
+
+      var odds = malePriorProbability / (1 - malePriorProbability);
+      for (final factor in factors) {
+        odds *= factor.likelihoodRatio;
+      }
+      final posterior = odds / (1 + odds);
+      return BayesianUtiEstimate(
+        modelVersion: maleModelVersion,
+        priorProbability: malePriorProbability,
+        posteriorProbability: posterior,
+        calculationStatus: factors.isEmpty ? 'insufficient' : 'calculated',
+        statusReason: factors.isEmpty
+            ? 'No source-matched male nitrite/leukocyte threshold was available.'
+            : 'Calculated with the provisional male ordered-threshold model; not locally calibrated.',
+        factors: factors,
+      );
+    }
 
     // One mutually exclusive dipstick factor prevents multiplying correlated
     // nitrite, leukocyte esterase, and blood results as independent tests.
@@ -335,15 +439,15 @@ class ScreeningFusionEngine {
       );
     }
 
-    var odds = priorProbability / (1 - priorProbability);
+    var odds = femalePriorProbability / (1 - femalePriorProbability);
     for (final factor in factors) {
       odds *= factor.likelihoodRatio;
     }
     final posterior = odds / (1 + odds);
 
     return BayesianUtiEstimate(
-      modelVersion: bayesianModelVersion,
-      priorProbability: priorProbability,
+      modelVersion: femaleModelVersion,
+      priorProbability: femalePriorProbability,
       posteriorProbability: posterior,
       calculationStatus: factors.isEmpty ? 'insufficient' : 'calculated',
       statusReason: factors.isEmpty
@@ -373,7 +477,7 @@ class ScreeningFusionEngine {
             : 'low',
         message: estimate.calculationStatus == 'not_designed'
             ? '${estimate.statusReason} Consultation with a healthcare professional is suggested.'
-            : '${estimate.statusReason} The 50% starting prior is not displayed as a patient result.',
+            : '${estimate.statusReason} The starting prior is not displayed as a patient result.',
         evidence: const [],
       );
     }
@@ -383,7 +487,7 @@ class ScreeningFusionEngine {
       title: 'UTI screening estimate calculated',
       severity: 'low',
       message:
-          'The Bayesian screening estimate is shown with the evidence factors used. It supports screening only and is not a diagnosis or treatment recommendation.',
+          'The sex-specific Bayesian research estimate is shown with the evidence factor used. It supports screening only and is not a diagnosis or treatment recommendation.',
       evidence: evidence,
     );
   }
@@ -612,6 +716,13 @@ class ScreeningFusionEngine {
         normalized == '+' ||
         normalized == '++' ||
         normalized == '+++';
+  }
+
+  static bool _isMaleLeukocytePositive(String? value) {
+    final normalized = (value ?? '').trim().toLowerCase();
+    return normalized == 'trace 15' ||
+        normalized == 'trace' ||
+        _isLeukocyteStudyPositive(value);
   }
 
   static bool _isBloodStudyPositive(String? value) {
