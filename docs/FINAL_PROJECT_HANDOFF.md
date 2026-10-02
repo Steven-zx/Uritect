@@ -23,7 +23,7 @@
 | UTI interpretation | Separate female v1.1 and male v0.1 research models; sex-specific gates and one-factor anti-duplication hierarchy; no probability bands | `screening_fusion.dart` and sex-specific v1.2 specification |
 | Renal interpretation | Separate deterministic v1.1 rule engine with all triggered IDs and final action | `renal_followup.dart` |
 | Clinical UI | Separate findings, systemic warning, and renal follow-up; action wording replaces risk bands | results pages |
-| Automated tests | 59 tests pass across sex-specific Bayesian, renal, invalid-scan, persistence, navigation, and phone-width UI behavior | `uritect_app/test` |
+| Automated tests | 56 tests pass across sex-specific Bayesian, renal, invalid-scan, persistence, navigation, and phone-width UI behavior | `uritect_app/test` |
 | Release integrity | Final checksums stored in a machine-readable manifest | `output/release/URITECT_FINAL_RELEASE_MANIFEST.json` |
 
 ## Final Metrics

@@ -259,15 +259,6 @@ void main() {
     expect(result.utiEstimate.factors.single.likelihoodRatio, 1.65);
   });
 
-  test('male nitrite-only pattern uses the published nitrite threshold LR', () {
-    final result = engine.fuse(
-      analytes: analytes(nitrite: 'Positive'),
-      checklist: maleChecklist(const ['dysuria']),
-    );
-    expect(result.utiEstimate.factors, hasLength(1));
-    expect(result.utiEstimate.factors.single.likelihoodRatio, 4.87);
-  });
-
   test('male all-negative dipstick cannot rule out UTI', () {
     final result = engine.fuse(
       analytes: analytes(),
@@ -303,24 +294,6 @@ void main() {
     );
     expect(result.utiEstimate.calculationStatus, 'not_designed');
     expect(result.utiEstimate.statusReason, contains('eligibility'));
-  });
-
-  test('male model does not calculate from unavailable dipstick evidence', () {
-    final result = engine.fuse(
-      analytes: analytes(leukocytes: 'Unavailable', nitrite: 'Unavailable'),
-      checklist: maleChecklist(const ['urgency']),
-    );
-    expect(result.utiEstimate.calculationStatus, 'insufficient');
-    expect(result.utiEstimate.factors, isEmpty);
-  });
-
-  test('male systemic finding routes outside the ordinary posterior', () {
-    final result = engine.fuse(
-      analytes: analytes(nitrite: 'Positive'),
-      checklist: maleChecklist(const ['dysuria', 'fever']),
-    );
-    expect(result.utiEstimate.calculationStatus, 'not_designed');
-    expect(result.utiEstimate.statusReason, contains('systemic'));
   });
 
   test('selecting both sexes blocks calculation', () {

@@ -2,7 +2,7 @@
 
 **Android release:** `1.4.0+5`  
 **APK:** `Uritect_v1.4.0_sex_specific_bayesian_renal_v1.1_release.apk`  
-**APK SHA-256:** `A244432523DE2ED8E33BC5D0F371EDD76450E1984AA1B76A3217038B5C1CF9A2`  
+**APK SHA-256:** `E4B190E2C5134CFC23208989E460E716BE0421B352A7D0D09A470576C819C3E8`  
 **Signing certificate SHA-256:** `15D1138DCE077ADA624A140B3A145343D1A48305FD0847E9002869E488F19D39`
 
 ## Clinical Components in This Build
@@ -25,3 +25,4 @@ alignment, not diagnostic calibration or clinical validation.
 
 Reviewer name and credentials: __________________________________________  
 Signature: ______________________________ Date: _________________________
+
