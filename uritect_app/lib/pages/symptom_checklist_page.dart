@@ -82,6 +82,7 @@ class _SymptomChecklistPageState extends State<SymptomChecklistPage> {
     );
     final fusionResult = const ScreeningFusionEngine().fuse(
       analytes: screeningAnalytes,
+      scanResult: widget.scanResult,
       checklist: checklistResult,
     );
     final renalFollowupResult = const RenalFollowupEngine().evaluate(
@@ -266,7 +267,9 @@ class _SymptomChecklistPageState extends State<SymptomChecklistPage> {
           _buildSection(
             context,
             title: 'Acute urinary symptoms',
-            helper: 'Select every symptom currently reported.',
+            helper: selectedSymptoms['uti_eligible_male'] == true
+                ? 'Select reported symptoms. Dysuria, frequency or urgency is required for the male estimate; other symptoms inform separate follow-up.'
+                : 'Select every symptom currently reported.',
             items: _items('uti'),
           ),
           _buildSection(

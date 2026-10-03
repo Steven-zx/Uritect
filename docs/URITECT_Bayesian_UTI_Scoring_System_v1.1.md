@@ -1,6 +1,6 @@
 # URITECT Bayesian UTI Scoring System v1.1
 
-**Implemented model:** `uti_bayesian_lr_v1_1_20260926`  
+**Implemented model:** `uti_bayesian_female_v1_1_20260926`  
 **Method:** Provisional grouped likelihood-ratio Bayesian research estimate  
 **Prior:** 50% for the narrowly gated population only  
 **Status:** Frozen app implementation; literature-derived and not clinically calibrated
@@ -262,3 +262,17 @@ valid, and it does not replace physician, statistical, or culture-confirmed
 validation.
 
 Reviewer signature: __________________________  Date: _________________
+
+## Implementation audit addendum — 2026-10-03
+
+The source now gates the complete scan before any numerical estimate, including
+symptom-only calculations: invalid/low-confidence/partial scans and declared
+strip-quality failures produce no posterior. Female Trace 15 LE remains neither
+source-positive nor confirmed negative; it cannot contribute to A5, while other
+usable evidence can contribute when the scan itself is reliable.
+
+The existing female prior and all LRs are unchanged. At most one Group A and one
+Group B factor are selected, but the statistical relationship needed to multiply
+these groups has not been established. Statistical review remains required.
+See URITECT_UTI_Eligibility_Authority.md and the dated methodology audit.
+These source changes are not yet in the installed retake-only 1.4.0+6 pilot APK.

@@ -71,8 +71,12 @@ Use:
 ### Scope and limitations
 
 State the supported strip profile and unresolved physical-manufacturer gate.
-Describe the female v1.1 pathway as limited to symptomatic, nonpregnant women aged 18-64 with
-all six eligibility confirmations and no alternate-cause/systemic finding.
+Describe two sex-specific provisional UTI research pathways from the outset.
+Both require symptomatic adults aged 18-64 and all shared confirmations.
+Female v1.1 additionally requires confirmed nonpregnancy; male v0.1 additionally
+requires no diabetes and no suspected STI. Use the exact confirmations and
+qualifying symptom lists in URITECT_UTI_Eligibility_Authority.md.
+Safety and alternate-cause gates apply separately.
 State that no culture-confirmed calibration study was performed.
 
 ## Chapter 3
@@ -86,7 +90,8 @@ Document these exact reproducible details:
   transform from the final report.
 - GroupShuffleSplit, test size 0.20, random state 42, group `specimen_group`.
 - Confidence threshold 0.45 applied to every analyte at scan acceptance.
-- UTI v1.1 eligibility, mapping, grouped LR hierarchy, and audit-only posterior.
+- Sex-specific female v1.1/male v0.1 eligibility, source mappings, selected LR
+  hierarchy, displayed provisional posterior, and local audit details.
 - Renal v1.1 rule IDs, priority order, final action, and invalid-scan safety
   override.
 
@@ -154,3 +159,13 @@ screening/referral-support logic. Explicitly retain these limitations:
 - Physical manufacturer/IFU identity must be recorded.
 - Bayesian probability calibration and diagnostic validation require
   culture-confirmed prospective cases.
+
+## Unresolved statistical decisions — do not call methodology final
+
+The male ordered-threshold conditioning change, younger-subgroup prior plus
+broader-cohort LRs, and female dipstick × symptom multiplication require
+statistical review. Disclosure does not establish validity. Neither expert
+content review nor classifier metrics validates the complete posterior model.
+After review, synchronize source specs, generated PDFs, forms, APK version/hash,
+editable Chapter 3, Chapter 4 diagrams, discussion and audit/history behavior.
+The editable manuscript and review decisions are not present in this repository.

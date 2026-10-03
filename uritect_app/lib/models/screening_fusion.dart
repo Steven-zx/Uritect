@@ -1,15 +1,19 @@
 import 'clinical_symptoms.dart';
 import 'dipstick_results_data.dart';
+import 'scan_model.dart';
+import 'renal_followup.dart';
 
 class ScreeningAnalyteResult {
   final String code;
   final String name;
   final String displayValue;
+  final bool isReliable;
 
   const ScreeningAnalyteResult({
     required this.code,
     required this.name,
     required this.displayValue,
+    this.isReliable = true,
   });
 }
 
@@ -104,6 +108,8 @@ class ScreeningFusionResult {
 }
 
 class ScreeningFusionEngine {
+  static const String interpretationPolicyVersion =
+      'interpretation_gates_v1_20261003';
   static const String femaleModelVersion = 'uti_bayesian_female_v1_1_20260926';
   static const String maleModelVersion = 'uti_bayesian_male_v0_1_20261001';
   static const String bayesianModelVersion = femaleModelVersion;
@@ -180,11 +186,13 @@ class ScreeningFusionEngine {
   ScreeningFusionResult fuse({
     List<ScreeningAnalyteResult>? analytes,
     required ClinicalChecklistResult checklist,
+    ScanResult? scanResult,
   }) {
     final selectedAnalytes = analytes ?? defaultAnalytes;
     final utiEstimate = _calculateBayesianUtiEstimate(
       selectedAnalytes,
       checklist,
+      scanResult,
     );
     final interpretations = <ClinicalInterpretation>[
       _utiScreeningInterpretation(utiEstimate),
@@ -210,6 +218,7 @@ class ScreeningFusionEngine {
   BayesianUtiEstimate _calculateBayesianUtiEstimate(
     List<ScreeningAnalyteResult> analytes,
     ClinicalChecklistResult checklist,
+    ScanResult? scanResult,
   ) {
     final factors = <BayesianEvidenceFactor>[];
     final female = checklist.selectedSymptoms['uti_eligible_female'] == true;
@@ -244,7 +253,16 @@ class ScreeningFusionEngine {
     final hasSystemicFinding =
         checklist.selectedSymptoms['fever'] == true ||
         checklist.selectedSymptoms['flank'] == true ||
-        checklist.selectedSymptoms['nausea'] == true;
+        checklist.selectedSymptoms['nausea'] == true ||
+        checklist.selectedSymptoms['cannot_hydrate_or_medicate'] == true ||
+        checklist.selectedSymptoms['confusion_fainting_weakness'] == true;
+
+    final hasRenalSafetyOverride =
+        scanResult != null &&
+        const RenalFollowupEngine()
+                .evaluate(scanResult: scanResult, checklist: checklist)
+                .finalAction ==
+            RenalAction.promptConsult;
 
     String? blockedReason;
     if (!sexIsValid) {
@@ -257,7 +275,7 @@ class ScreeningFusionEngine {
     } else if (hasAlternateCause) {
       blockedReason =
           'Vaginal discharge or irritation requires the alternate-cause consultation pathway.';
-    } else if (hasSystemicFinding) {
+    } else if (hasSystemicFinding || hasRenalSafetyOverride) {
       blockedReason =
           'A systemic warning finding requires consultation outside the uncomplicated lower-UTI pathway.';
     }
@@ -281,6 +299,26 @@ class ScreeningFusionEngine {
       );
     }
 
+    final flags = checklist.selectedSymptoms;
+    final testQualityFailed = const [
+      'strip_expired',
+      'strip_damaged',
+      'read_outside_60_seconds',
+      'unsupported_strip',
+    ].any((id) => flags[id] == true);
+    if ((scanResult != null && !scanResult.isReliableForInterpretation) ||
+        testQualityFailed) {
+      return BayesianUtiEstimate(
+        modelVersion: male ? maleModelVersion : femaleModelVersion,
+        priorProbability: male ? malePriorProbability : femalePriorProbability,
+        posteriorProbability: 0,
+        calculationStatus: 'insufficient',
+        statusReason:
+            'The scan or test quality is unreliable. Retake the scan; symptom-based safety guidance remains available.',
+        factors: const [],
+      );
+    }
+
     final leukocytes = _byCode(analytes, 'LEU');
     final nitrite = _byCode(analytes, 'NIT');
     final blood = _byCode(analytes, 'BLD');
@@ -299,7 +337,9 @@ class ScreeningFusionEngine {
       );
       // Ordered male thresholds are taken from den Heijer et al. (2012),
       // Table 2. One factor only is used, so correlated dipstick thresholds
-      // are never multiplied as independent evidence.
+      // are never multiplied as independent evidence. M2/M3 use threshold LRs
+      // after stronger branches are excluded: this conditioning change is a
+      // research approximation pending statistical review, not exact-pattern evidence.
       if (nitritePositive && maleLeukocytesPositive) {
         factors.add(
           const BayesianEvidenceFactor(
@@ -439,6 +479,8 @@ class ScreeningFusionEngine {
       );
     }
 
+    // Multiplying dipstick and symptom factors is a design assumption.
+    // Conditional independence between these groups has not been established.
     var odds = femalePriorProbability / (1 - femalePriorProbability);
     for (final factor in factors) {
       odds *= factor.likelihoodRatio;
@@ -660,7 +702,7 @@ class ScreeningFusionEngine {
     String code,
   ) {
     for (final item in analytes) {
-      if (item.code == code) return item;
+      if (item.code == code && item.isReliable) return item;
     }
     return null;
   }

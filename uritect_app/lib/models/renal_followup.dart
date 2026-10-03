@@ -194,12 +194,18 @@ class RenalFollowupEngine {
 
     final protein = _findResult(scanResult.rows, 'PRO', 'Protein');
     final blood = _findResult(scanResult.rows, 'BLD', 'Blood');
-    final scanValid =
-        scanResult.status != 'invalid' && scanResult.rows.length == 10;
+    final scanValid = scanResult.isReliableForInterpretation;
     final proteinValue = _normalize(protein?.result);
     final bloodValue = _normalize(blood?.result);
-    final proteinReliable = scanValid && _isKnownProtein(proteinValue);
-    final bloodReliable = scanValid && _isKnownBlood(bloodValue);
+    final testQualityFailed =
+        flag('strip_expired') ||
+        flag('strip_damaged') ||
+        flag('read_outside_60_seconds') ||
+        flag('unsupported_strip');
+    final proteinReliable =
+        scanValid && !testQualityFailed && _isKnownProtein(proteinValue);
+    final bloodReliable =
+        scanValid && !testQualityFailed && _isKnownBlood(bloodValue);
     final proteinTrace =
         proteinReliable && Urs10TProfile.proteinTrace.contains(proteinValue);
     final proteinPositive =

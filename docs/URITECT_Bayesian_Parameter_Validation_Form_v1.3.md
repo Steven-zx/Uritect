@@ -122,3 +122,19 @@ Signature: ______________________________ Date: _________________
 4. Little P, et al. *Br J Gen Pract*. 2006;56:606-612.
 5. Bent S, et al. *JAMA*. 2002;287:2701-2710.
 
+
+## Statistical-review boundary (implementation audit, 2026-10-03)
+
+M01 is the parameter-review prior; M02–M05 are review entries for branch
+M1–M4 in the sex-specific specification. Branch M5 means no calculation.
+These ID systems are not interchangeable.
+
+Review questions for a statistician: (1) male M03/M04 reuse overlapping
+threshold LRs after excluding stronger patterns, changing conditioning;
+(2) the derived younger-subgroup prior is combined with broader-cohort LRs;
+(3) female dipstick × symptom multiplication has unestablished cross-group
+conditional independence. Medtech content review cannot settle these questions
+or establish posterior calibration. Values must remain candidate parameters
+until an evidence-based statistical decision is recorded.
+
+Use URITECT_UTI_Eligibility_Authority.md as the intended-population contract.

@@ -6,6 +6,7 @@ class ScanResult {
   final String imagePath;
   final String status; // 'normal', 'moderate', 'critical'
   final double confidence;
+  final Map<String, double> analyteConfidences;
   final String riskBucket;
   final String modelVersion;
   final List<DipstickResultRow> rows;
@@ -18,12 +19,31 @@ class ScanResult {
     required this.imagePath,
     required this.status,
     required this.confidence,
+    this.analyteConfidences = const {},
     required this.riskBucket,
     required this.modelVersion,
     required this.rows,
     this.padsDetected,
     this.padsUnavailable,
   });
+
+  static const double minimumInterpretationConfidence = 0.45;
+
+  bool get isReliableForInterpretation =>
+      const {'complete', 'normal', 'moderate', 'critical'}.contains(status) &&
+      rows.length == 10 &&
+      confidence.isFinite &&
+      confidence >= minimumInterpretationConfidence &&
+      (padsDetected == null || padsDetected == 10) &&
+      (padsUnavailable == null || padsUnavailable == 0) &&
+      (analyteConfidences.isEmpty ||
+          (analyteConfidences.length == 10 &&
+              rows.every((row) {
+                final value = analyteConfidences[row.name];
+                return value != null &&
+                    value.isFinite &&
+                    value >= minimumInterpretationConfidence;
+              })));
 
   factory ScanResult.empty({
     required String imagePath,
@@ -47,6 +67,7 @@ class ScanResult {
     String? imagePath,
     String? status,
     double? confidence,
+    Map<String, double>? analyteConfidences,
     String? riskBucket,
     String? modelVersion,
     List<DipstickResultRow>? rows,
@@ -59,6 +80,7 @@ class ScanResult {
       imagePath: imagePath ?? this.imagePath,
       status: status ?? this.status,
       confidence: confidence ?? this.confidence,
+      analyteConfidences: analyteConfidences ?? this.analyteConfidences,
       riskBucket: riskBucket ?? this.riskBucket,
       modelVersion: modelVersion ?? this.modelVersion,
       rows: rows ?? this.rows,
@@ -74,6 +96,7 @@ class ScanResult {
       'imagePath': imagePath,
       'status': status,
       'confidence': confidence,
+      'analyteConfidences': analyteConfidences,
       'riskBucket': riskBucket,
       'modelVersion': modelVersion,
       'rows': rows.map((row) => row.toJson()).toList(),
@@ -90,6 +113,10 @@ class ScanResult {
       imagePath: json['imagePath'] as String? ?? '',
       status: json['status'] as String? ?? 'moderate',
       confidence: (json['confidence'] as num?)?.toDouble() ?? 0.0,
+      analyteConfidences:
+          (json['analyteConfidences'] as Map<String, dynamic>? ?? {}).map(
+            (key, value) => MapEntry(key, (value as num).toDouble()),
+          ),
       riskBucket: json['riskBucket'] as String? ?? 'Moderate',
       modelVersion: json['modelVersion'] as String? ?? 'unknown',
       rows: rawRows

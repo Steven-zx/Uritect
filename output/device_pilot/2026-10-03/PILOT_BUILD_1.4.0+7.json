@@ -1,0 +1,66 @@
+{
+  "release": "URITECT 1.4.0+7 audit safeguards pilot",
+  "application_id": "ph.edu.wvsu.uritect",
+  "date": "2026-10-03",
+  "apk": {
+    "path": "output/device_pilot/2026-10-03/Uritect_v1.4.0+7_audit_safeguards_pilot.apk",
+    "bytes": 52476397,
+    "sha256": "4B335502B64BEE5C4796C9531076AB4147C2F2FC8EDF4F7ED3B9B23D6ADBF425"
+  },
+  "source_files": [
+    {
+      "path": "uritect_app/lib/models/screening_fusion.dart",
+      "sha256": "AD1EACF482831769A68D2EAA31BACA53EAEB2221BFF2C9DA9E5C5D5C9DCD5D89"
+    },
+    {
+      "path": "uritect_app/lib/models/renal_followup.dart",
+      "sha256": "AD2DE2E6A16EB89EA84F930C2A7B74F337E03A8AC4850C21FBC0ADC4B49BE0E6"
+    },
+    {
+      "path": "uritect_app/lib/models/scan_model.dart",
+      "sha256": "140E1B9A34567672E728D86B35D7B8372CA3352A2601F23F545F88C4AC6576FA"
+    },
+    {
+      "path": "uritect_app/lib/models/saved_scan_record.dart",
+      "sha256": "3C15D76A6A661EA381D4A65A3E40B06B489D122964437279B93B3A7A8AC23CFC"
+    },
+    {
+      "path": "uritect_app/lib/pages/analyzing_page.dart",
+      "sha256": "B573FBDB43C14413707CD61B7DBC81305D9E89FD98E72AC66850777F8B08682C"
+    },
+    {
+      "path": "uritect_app/lib/pages/overall_results_page.dart",
+      "sha256": "80C869D6138CA8D6D5310279F6AFEFB18B47B59A7C56DD3F47B4DFB95CF29B67"
+    },
+    {
+      "path": "uritect_app/lib/pages/symptom_checklist_page.dart",
+      "sha256": "4647D68AA28C70DDAD1A2D95A6BD2CE71AD528189DF6CC6AF8C44E233B6E2323"
+    },
+    {
+      "path": "uritect_app/lib/pages/home_page.dart",
+      "sha256": "A256A380C1943FD7A0110C8437A6D2AC0860BFE051AC238E842EAAED04B27421"
+    },
+    {
+      "path": "uritect_app/lib/services/local_scan_analysis_service.dart",
+      "sha256": "CA42F91407E1F9F0E689A0725BB147CF043C957E427E17E92D5FB40C8E2C71FA"
+    },
+    {
+      "path": "uritect_app/assets/production_semiquant_model.json",
+      "sha256": "348EA1A6CF2C59E3FF6834E4FD042ABA09A2A26CC041559096F13966FBD8FE80"
+    }
+  ],
+  "verification": {
+    "prior_source_tests_passed": 69,
+    "prior_source_analysis": "No issues found",
+    "build": "Success",
+    "apk_metadata": "versionName 1.4.0; versionCode 7; minSdk 24; targetSdk 36"
+  },
+  "interpretation_policy": "interpretation_gates_v1_20261003",
+  "statistical_review": "Issues 1–3 unresolved; numeric priors and LRs unchanged",
+  "device_checks": {
+    "install": "Success; device package versionCode 7 verified",
+    "launch": "Success; foreground activity and visible home screen verified",
+    "workflow": "Pending; home history layout defect observed"
+  },
+  "note": "Pilot snapshot of uncommitted source. Does not replace the final-release manifest or establish clinical validation."
+}

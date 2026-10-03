@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:uritect_app/models/clinical_symptoms.dart';
 import 'package:uritect_app/models/dipstick_results_data.dart';
 import 'package:uritect_app/models/scan_model.dart';
+import 'package:uritect_app/models/screening_fusion.dart';
 import 'package:uritect_app/pages/overall_results_page.dart';
 import 'package:uritect_app/pages/results_page.dart';
 import 'package:uritect_app/pages/symptom_checklist_page.dart';
@@ -155,6 +156,7 @@ void main() {
     expect(find.text('Male Bayesian UTI Research Estimate'), findsOneWidget);
     expect(find.text('LR 5.14'), findsOneWidget);
     expect(find.text('84.9%'), findsOneWidget);
+    expect(find.text('Starting prior: 52.2%'), findsOneWidget);
     expect(find.textContaining('uti_bayesian_male_v0_1'), findsOneWidget);
   });
 
@@ -174,4 +176,32 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Bayesian UTI screening inputs'), findsOneWidget);
   });
+  testWidgets(
+    'history displays recorded posterior instead of recalculating it',
+    (tester) async {
+      await tester.pumpWidget(
+        _app(
+          OverallResultsPage(
+            scanResult: _scan(),
+            clinicalChecklistResult: _eligibleChecklist(),
+            savedUtiEstimate: const BayesianUtiEstimate(
+              modelVersion: ScreeningFusionEngine.femaleModelVersion,
+              priorProbability: 0.5,
+              posteriorProbability: 0.12,
+              calculationStatus: 'calculated',
+              statusReason: 'Synthetic saved record',
+              factors: [],
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('12.0%'), findsOneWidget);
+      expect(find.text('91.5%'), findsNothing);
+      expect(
+        find.textContaining('Saved research estimate shown as recorded'),
+        findsOneWidget,
+      );
+    },
+  );
 }

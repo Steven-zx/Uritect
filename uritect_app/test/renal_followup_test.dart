@@ -285,9 +285,17 @@ void main() {
     });
 
     test('RETAKE overrides CONSULT when no safety trigger exists', () {
-      final result = evaluate(protein: '1.0', selected: ['strip_expired']);
+      final result = evaluate(
+        protein: '1.0',
+        selected: ['strip_expired', 'repeat_protein_present'],
+      );
       expectRule(result, 'TECH-02');
-      expectRule(result, 'PRO-03');
+      expectRule(result, 'PRO-04');
+      expect(result.proteinReliable, isFalse);
+      expect(
+        result.triggeredRules.map((rule) => rule.id),
+        isNot(contains('PRO-03')),
+      );
       expect(result.finalAction, RenalAction.retake);
     });
 

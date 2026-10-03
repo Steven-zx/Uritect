@@ -85,6 +85,11 @@ for this derived subgroup. It does not exactly represent the app's 18-64
 population and is frozen only as a provisional research prior pending local
 culture-confirmed calibration.
 
+The dipstick LRs below were estimated in the broader complete-data cohort,
+not specifically in this derived younger subgroup. Combining this subgroup prior
+with broader-cohort LRs assumes transportability across age and setting; this
+requires statistical review in addition to prior calibration.
+
 ## 5. Male Ordered-Threshold Model
 
 Den Heijer et al. assigned one point to positive leukocyte esterase and two
@@ -108,7 +113,10 @@ correlated thresholds:
 | M5 | Missing, unreliable, or unmatched | 1.00; no calculation |
 
 M2 and M3 use an ordered-threshold approximation: the publication reports
-threshold LRs, not mutually exclusive exact-pattern LRs. This is an explicit
+threshold LRs, not mutually exclusive exact-pattern LRs. Applying them only
+after excluding stronger branches changes their original conditioning. Selecting
+one LR prevents duplicate multiplication but does not validate that conditioning
+change. This is an explicit
 URITECT design assumption requiring statistical review and prospective
 validation. It is not hidden as a published clinical rule.
 
@@ -125,7 +133,11 @@ posterior odds = prior odds x the one selected LR
 posterior probability = posterior odds / (1 + posterior odds)
 ```
 
-Female calculations multiply one dipstick LR and one symptom LR. Male
+Female calculations multiply at most one dipstick LR and at most one symptom LR.
+This cross-group multiplication assumes a statistical relationship that has not
+been established; within-group selection does not prove conditional independence
+between dipstick and symptoms. It remains a URITECT design assumption pending
+statistical review. Male
 calculations use one ordered dipstick-threshold LR only.
 
 ## 7. Safety and Display Rules
@@ -166,3 +178,18 @@ intervals, and subgroup performance.
    2006;56:606-612.
 5. Bent S, Nallamothu BK, Simel DL, Fihn SD, Saint S. Does this woman have an
    acute uncomplicated urinary tract infection? *JAMA*. 2002;287:2701-2710.
+
+## Implementation audit addendum — 2026-10-03
+
+See URITECT_UTI_Eligibility_Authority.md for the shared eligibility contract and
+URITECT_Methodology_Implementation_Audit_2026-10-03.md for pending review gates.
+Invalid/low-confidence/technically unreliable scans do not produce a posterior,
+even from symptoms alone; symptom-based safety guidance remains available.
+Serious systemic findings and existing renal PROMPT_CONSULT safety rules stop
+the ordinary UTI estimate; renal findings are never numerical Bayesian factors.
+Parameter values remain unchanged. These source changes are not yet in the
+installed 1.4.0+6 retake-only pilot APK.
+
+Parameter form IDs M01–M05 are not branch IDs M1–M5. Form M01 is the prior;
+M02/M03/M04/M05 correspond to specification M1/M2/M3/M4 respectively.
+Specification M5 is no calculation and has no parameter-form LR entry.

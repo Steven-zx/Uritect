@@ -11,11 +11,13 @@ import 'renal_results_page.dart';
 class OverallResultsPage extends StatelessWidget {
   final ScanResult scanResult;
   final ClinicalChecklistResult clinicalChecklistResult;
+  final BayesianUtiEstimate? savedUtiEstimate;
 
   const OverallResultsPage({
     super.key,
     required this.scanResult,
     required this.clinicalChecklistResult,
+    this.savedUtiEstimate,
   });
 
   @override
@@ -26,6 +28,7 @@ class OverallResultsPage extends StatelessWidget {
     );
     final fusionResult = engine.fuse(
       analytes: screeningAnalytes,
+      scanResult: scanResult,
       checklist: clinicalChecklistResult,
     );
 
@@ -95,7 +98,18 @@ class OverallResultsPage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 14),
-              _bayesianEstimateCard(context, fusionResult.utiEstimate),
+              _bayesianEstimateCard(
+                context,
+                savedUtiEstimate ?? fusionResult.utiEstimate,
+              ),
+              if (savedUtiEstimate != null)
+                const Padding(
+                  padding: EdgeInsets.only(top: 8),
+                  child: Text(
+                    'Saved research estimate shown as recorded. Follow-up guidance is re-evaluated with current rules.',
+                    textAlign: TextAlign.center,
+                  ),
+                ),
               const SizedBox(height: 12),
               _riskCard(context, fusionResult),
               if (fusionResult.hasEvidenceConflict) ...[
@@ -226,7 +240,10 @@ class OverallResultsPage extends StatelessWidget {
                       estimate.modelVersion ==
                               ScreeningFusionEngine.maleModelVersion
                           ? 'Male Bayesian UTI Research Estimate'
-                          : 'Female Bayesian UTI Research Estimate',
+                          : estimate.modelVersion ==
+                                ScreeningFusionEngine.femaleModelVersion
+                          ? 'Female Bayesian UTI Research Estimate'
+                          : 'Bayesian UTI Research Estimate',
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         color: AppColors.primaryDark,
                         fontSize: 15,
@@ -272,7 +289,7 @@ class OverallResultsPage extends StatelessWidget {
               ],
             ),
             Text(
-              'Starting prior: ${(estimate.priorProbability * 100).toStringAsFixed(0)}%',
+              'Starting prior: ${(estimate.priorProbability * 100).toStringAsFixed(estimate.modelVersion == ScreeningFusionEngine.maleModelVersion ? 1 : 0)}%',
               style: Theme.of(
                 context,
               ).textTheme.bodySmall?.copyWith(color: AppColors.textSecondary),
@@ -360,7 +377,7 @@ class OverallResultsPage extends StatelessWidget {
           Text(
             estimate.modelVersion == ScreeningFusionEngine.maleModelVersion
                 ? 'Provisional ordered-threshold research approximation. It is not locally calibrated, is not a diagnosis, and does not recommend treatment.'
-                : 'Screening support only. This result is not a diagnosis and does not recommend antibiotics or other treatment.',
+                : 'Provisional literature-derived research estimate; not locally calibrated. Not a diagnosis or treatment recommendation.',
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
               color: const Color(0xFF4E5962),
               fontWeight: FontWeight.w600,

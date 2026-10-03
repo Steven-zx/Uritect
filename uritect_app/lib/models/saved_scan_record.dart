@@ -14,6 +14,7 @@ class SavedScanRecord {
   final List<BayesianEvidenceFactor> utiEvidenceFactors;
   final String? bayesianModelVersion;
   final String? utiCalculationStatus;
+  final String? interpretationPolicyVersion;
   final bool hasEvidenceConflict;
   final String? conflictTitle;
   final String? conflictMessage;
@@ -30,6 +31,7 @@ class SavedScanRecord {
     this.utiEvidenceFactors = const [],
     this.bayesianModelVersion,
     this.utiCalculationStatus,
+    this.interpretationPolicyVersion,
     this.hasEvidenceConflict = false,
     this.conflictTitle,
     this.conflictMessage,
@@ -37,6 +39,19 @@ class SavedScanRecord {
   });
 
   String get riskBucket => clinicalAction;
+
+  BayesianUtiEstimate get recordedUtiEstimate => BayesianUtiEstimate(
+    modelVersion: bayesianModelVersion ?? 'historical_model_unknown',
+    priorProbability: utiPriorProbability ?? 0,
+    posteriorProbability: utiPosteriorProbability ?? 0,
+    calculationStatus:
+        utiCalculationStatus == 'calculated' && utiPosteriorProbability == null
+        ? 'insufficient'
+        : utiCalculationStatus ?? 'insufficient',
+    statusReason:
+        'Historical research estimate shown as recorded. Missing historical model details are not reconstructed.',
+    factors: utiEvidenceFactors,
+  );
 
   factory SavedScanRecord.fromAnalysis({
     required ScanResult scanResult,
@@ -57,6 +72,8 @@ class SavedScanRecord {
       utiEvidenceFactors: fusionResult.utiEstimate.factors,
       bayesianModelVersion: fusionResult.utiEstimate.modelVersion,
       utiCalculationStatus: fusionResult.utiEstimate.calculationStatus,
+      interpretationPolicyVersion:
+          ScreeningFusionEngine.interpretationPolicyVersion,
       hasEvidenceConflict: fusionResult.hasEvidenceConflict,
       conflictTitle: fusionResult.conflictTitle,
       conflictMessage: fusionResult.conflictMessage,
@@ -80,6 +97,7 @@ class SavedScanRecord {
           .toList(),
       'bayesianModelVersion': bayesianModelVersion,
       'utiCalculationStatus': utiCalculationStatus,
+      'interpretationPolicyVersion': interpretationPolicyVersion,
       'hasEvidenceConflict': hasEvidenceConflict,
       'conflictTitle': conflictTitle,
       'conflictMessage': conflictMessage,
@@ -111,6 +129,8 @@ class SavedScanRecord {
               .toList(),
       bayesianModelVersion: json['bayesianModelVersion'] as String?,
       utiCalculationStatus: json['utiCalculationStatus'] as String?,
+      interpretationPolicyVersion:
+          json['interpretationPolicyVersion'] as String?,
       hasEvidenceConflict: json['hasEvidenceConflict'] == true,
       conflictTitle: json['conflictTitle'] as String?,
       conflictMessage: json['conflictMessage'] as String?,

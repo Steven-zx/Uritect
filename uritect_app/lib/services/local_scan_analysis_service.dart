@@ -698,6 +698,7 @@ Map<String, dynamic> _analyzeScanInBackground(
       imagePath: imagePath,
       status: 'complete',
       confidence: averageConfidence,
+      analyteConfidences: confidenceByAnalyte,
       riskBucket: 'Complete',
       modelVersion: model.version,
       rows: rows,

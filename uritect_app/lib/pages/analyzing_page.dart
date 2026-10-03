@@ -4,13 +4,19 @@ import 'package:flutter/material.dart';
 
 import '../config/theme.dart';
 import '../models/scan_model.dart';
+import '../models/scan_analysis_exit_reason.dart';
 import '../services/scan_analysis_service.dart';
 import 'results_page.dart';
 
 class AnalyzingPage extends StatefulWidget {
   final String imagePath;
+  final ScanAnalysisService analysisService;
 
-  const AnalyzingPage({super.key, required this.imagePath});
+  const AnalyzingPage({
+    super.key,
+    required this.imagePath,
+    this.analysisService = const ScanAnalysisService(),
+  });
 
   @override
   State<AnalyzingPage> createState() => _AnalyzingPageState();
@@ -22,14 +28,13 @@ class _AnalyzingPageState extends State<AnalyzingPage> {
   double _targetProgress = 8.0;
   String _currentStage = 'starting';
   late Future<ScanResult> _scanResultFuture;
-  final ScanAnalysisService _scanAnalysisService = const ScanAnalysisService();
 
   @override
   void initState() {
     super.initState();
     _startProgressLoop();
 
-    _scanResultFuture = _scanAnalysisService.analyze(
+    _scanResultFuture = widget.analysisService.analyze(
       imagePath: widget.imagePath,
       onProgress: (progress, stage) {
         if (!mounted) return;
@@ -48,13 +53,9 @@ class _AnalyzingPageState extends State<AnalyzingPage> {
           });
           await _finishProgress();
           if (!mounted) return;
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(
-              builder: (_) => ResultsPage(scanResult: scanResult),
-            ),
-          );
+          await _showResults(scanResult);
         })
-        .catchError((error) {
+        .catchError((error) async {
           if (!mounted) return;
           if (_isInvalidScanError(error)) {
             final invalidResult =
@@ -69,11 +70,7 @@ class _AnalyzingPageState extends State<AnalyzingPage> {
                   padsDetected: 0,
                   padsUnavailable: 10,
                 );
-            Navigator.of(context).pushReplacement(
-              MaterialPageRoute(
-                builder: (_) => ResultsPage(scanResult: invalidResult),
-              ),
-            );
+            await _showResults(invalidResult);
             return;
           }
           ScaffoldMessenger.of(context).showSnackBar(
@@ -81,6 +78,17 @@ class _AnalyzingPageState extends State<AnalyzingPage> {
           );
           Navigator.of(context).pop();
         });
+  }
+
+  // Keep the analysis route alive until results return so the retake reason
+  // reaches the capture page instead of completing its push with null.
+  Future<void> _showResults(ScanResult result) async {
+    _progressTimer?.cancel();
+    final exitReason = await Navigator.of(context).push<ScanAnalysisExitReason>(
+      MaterialPageRoute(builder: (_) => ResultsPage(scanResult: result)),
+    );
+    if (!mounted) return;
+    Navigator.of(context).pop(exitReason);
   }
 
   @override
