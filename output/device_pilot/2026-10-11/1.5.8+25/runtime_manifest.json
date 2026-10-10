@@ -1,0 +1,329 @@
+{
+  "cases": [
+    {
+      "event_id": "LAUAAN-P003-L5500",
+      "image_path": "C:\\Users\\acer\\Downloads\\Github\\Uritect\\pipeline\\output\\abnormal_error_audit_2026-10-05\\image_evidence\\LAUAAN-P003-L5500.jpg",
+      "source_zip": "LAUAAN_20260730_ID_CLEANED_2026-07-30.zip",
+      "light_kelvin": "5500",
+      "reference_labels": {
+        "Leukocytes": "Trace 15",
+        "Nitrite": "Neg",
+        "Urobilinogen": "3.2",
+        "Protein": "Neg",
+        "pH": "5.0",
+        "Blood": "Neg",
+        "Specific Gravity": "1.020",
+        "Ketone": "Trace 0.5",
+        "Bilirubin": "Neg",
+        "Glucose": "Neg"
+      }
+    },
+    {
+      "event_id": "LAUAAN-P152-L5500",
+      "image_path": "C:\\Users\\acer\\Downloads\\Github\\Uritect\\pipeline\\output\\abnormal_error_audit_2026-10-05\\image_evidence\\LAUAAN-P152-L5500.jpg",
+      "source_zip": "LAUAAN_20260730_ID_CLEANED_2026-07-30.zip",
+      "light_kelvin": "5500",
+      "reference_labels": {
+        "Leukocytes": "Trace 15",
+        "Nitrite": "Positive",
+        "Urobilinogen": "3.2",
+        "Protein": "Neg",
+        "pH": "5.0",
+        "Blood": "Neg",
+        "Specific Gravity": "1.030",
+        "Ketone": "Trace 0.5",
+        "Bilirubin": "Small 17",
+        "Glucose": "Neg"
+      }
+    },
+    {
+      "event_id": "LAUAAN-P005-L4000",
+      "image_path": "C:\\Users\\acer\\Downloads\\Github\\Uritect\\pipeline\\output\\abnormal_error_audit_2026-10-05\\image_evidence\\LAUAAN-P005-L4000.jpg",
+      "source_zip": "LAUAAN_20260730_ID_CLEANED_2026-07-30.zip",
+      "light_kelvin": "4000",
+      "reference_labels": {
+        "Leukocytes": "Trace 15",
+        "Nitrite": "Neg",
+        "Urobilinogen": "3.2",
+        "Protein": "Neg",
+        "pH": "5.0",
+        "Blood": "Non-hemolyzed 10",
+        "Specific Gravity": "1.015",
+        "Ketone": "Trace 0.5",
+        "Bilirubin": "Neg",
+        "Glucose": "Neg"
+      }
+    },
+    {
+      "event_id": "LAUAAN-P031-L4000",
+      "image_path": "C:\\Users\\acer\\Downloads\\Github\\Uritect\\pipeline\\output\\abnormal_error_audit_2026-10-05\\image_evidence\\LAUAAN-P031-L4000.jpg",
+      "source_zip": "LAUAAN_20260730_ID_CLEANED_2026-07-30.zip",
+      "light_kelvin": "4000",
+      "reference_labels": {
+        "Leukocytes": "Trace 15",
+        "Nitrite": "Neg",
+        "Urobilinogen": "3.2",
+        "Protein": "Neg",
+        "pH": "5.0",
+        "Blood": "Neg",
+        "Specific Gravity": "1.005",
+        "Ketone": "Neg",
+        "Bilirubin": "Neg",
+        "Glucose": "Neg"
+      }
+    },
+    {
+      "event_id": "LAUAAN-P018-L2700",
+      "image_path": "C:\\Users\\acer\\Downloads\\Github\\Uritect\\pipeline\\output\\abnormal_error_audit_2026-10-05\\image_evidence\\LAUAAN-P018-L2700.jpg",
+      "source_zip": "LAUAAN_20260730_ID_CLEANED_2026-07-30.zip",
+      "light_kelvin": "2700",
+      "reference_labels": {
+        "Leukocytes": "Trace 15",
+        "Nitrite": "Neg",
+        "Urobilinogen": "3.2",
+        "Protein": "Trace",
+        "pH": "5.0",
+        "Blood": "Neg",
+        "Specific Gravity": "1.025",
+        "Ketone": "Trace 0.5",
+        "Bilirubin": "Small 17",
+        "Glucose": "Neg"
+      }
+    },
+    {
+      "event_id": "LAUAAN-P094-L2700",
+      "image_path": "C:\\Users\\acer\\Downloads\\Github\\Uritect\\pipeline\\output\\abnormal_error_audit_2026-10-05\\image_evidence\\LAUAAN-P094-L2700.jpg",
+      "source_zip": "LAUAAN_20260730_ID_CLEANED_2026-07-30.zip",
+      "light_kelvin": "2700",
+      "reference_labels": {
+        "Leukocytes": "Trace 15",
+        "Nitrite": "Neg",
+        "Urobilinogen": "3.2",
+        "Protein": "Neg",
+        "pH": "5.0",
+        "Blood": "Neg",
+        "Specific Gravity": "1.015",
+        "Ketone": "Neg",
+        "Bilirubin": "Neg",
+        "Glucose": "Neg"
+      }
+    },
+    {
+      "event_id": "uritect_2026-7-15_Cabatuan_005_Cool",
+      "image_path": "C:\\Users\\acer\\Downloads\\Github\\Uritect\\pipeline\\output\\abnormal_error_audit_2026-10-05\\image_evidence\\uritect_2026-7-15_Cabatuan_005_Cool.jpg",
+      "source_zip": "uritect_2026-7-15_Cabatuan_holdout_package.zip",
+      "light_kelvin": "Cool",
+      "reference_labels": {
+        "Leukocytes": "Trace 15",
+        "Nitrite": "Neg",
+        "Urobilinogen": "3.2",
+        "Protein": "Neg",
+        "pH": "5.0",
+        "Blood": "Neg",
+        "Specific Gravity": "1.015",
+        "Ketone": "Neg",
+        "Bilirubin": "Neg",
+        "Glucose": "Neg"
+      }
+    },
+    {
+      "event_id": "uritect_2026-7-15_Cabatuan_010_Cool",
+      "image_path": "C:\\Users\\acer\\Downloads\\Github\\Uritect\\pipeline\\output\\abnormal_error_audit_2026-10-05\\image_evidence\\uritect_2026-7-15_Cabatuan_010_Cool.jpg",
+      "source_zip": "uritect_2026-7-15_Cabatuan_holdout_package.zip",
+      "light_kelvin": "Cool",
+      "reference_labels": {
+        "Leukocytes": "Trace 15",
+        "Nitrite": "Neg",
+        "Urobilinogen": "16",
+        "Protein": "0.3",
+        "pH": "5.0",
+        "Blood": "Neg",
+        "Specific Gravity": "1.025",
+        "Ketone": "Trace 0.5",
+        "Bilirubin": "Small 17",
+        "Glucose": "Neg"
+      }
+    },
+    {
+      "event_id": "uritect_2026-7-15_Cabatuan_005_Warm",
+      "image_path": "C:\\Users\\acer\\Downloads\\Github\\Uritect\\pipeline\\output\\abnormal_error_audit_2026-10-05\\image_evidence\\uritect_2026-7-15_Cabatuan_005_Warm.jpg",
+      "source_zip": "uritect_2026-7-15_Cabatuan_holdout_package.zip",
+      "light_kelvin": "Warm",
+      "reference_labels": {
+        "Leukocytes": "Trace 15",
+        "Nitrite": "Neg",
+        "Urobilinogen": "3.2",
+        "Protein": "Neg",
+        "pH": "5.0",
+        "Blood": "Neg",
+        "Specific Gravity": "1.015",
+        "Ketone": "Neg",
+        "Bilirubin": "Neg",
+        "Glucose": "Neg"
+      }
+    },
+    {
+      "event_id": "uritect_2026-7-15_Cabatuan_H_Warm",
+      "image_path": "C:\\Users\\acer\\Downloads\\Github\\Uritect\\pipeline\\output\\abnormal_error_audit_2026-10-05\\image_evidence\\uritect_2026-7-15_Cabatuan_H_Warm.jpg",
+      "source_zip": "uritect_2026-7-15_Cabatuan_holdout_package.zip",
+      "light_kelvin": "Warm",
+      "reference_labels": {
+        "Leukocytes": "Small 70",
+        "Nitrite": "Neg",
+        "Urobilinogen": "16",
+        "Protein": "Neg",
+        "pH": "5.0",
+        "Blood": "Neg",
+        "Specific Gravity": "1.020",
+        "Ketone": "Trace 0.5",
+        "Bilirubin": "Neg",
+        "Glucose": "110 ++++"
+      }
+    },
+    {
+      "event_id": "uritect_2026-7-15_Cabatuan_005_Daylight",
+      "image_path": "C:\\Users\\acer\\Downloads\\Github\\Uritect\\pipeline\\output\\abnormal_error_audit_2026-10-05\\image_evidence\\uritect_2026-7-15_Cabatuan_005_Daylight.jpg",
+      "source_zip": "uritect_2026-7-15_Cabatuan_holdout_package.zip",
+      "light_kelvin": "Daylight",
+      "reference_labels": {
+        "Leukocytes": "Trace 15",
+        "Nitrite": "Neg",
+        "Urobilinogen": "3.2",
+        "Protein": "Neg",
+        "pH": "5.0",
+        "Blood": "Neg",
+        "Specific Gravity": "1.015",
+        "Ketone": "Neg",
+        "Bilirubin": "Neg",
+        "Glucose": "Neg"
+      }
+    },
+    {
+      "event_id": "uritect_2026-7-15_Cabatuan_011_Daylight",
+      "image_path": "C:\\Users\\acer\\Downloads\\Github\\Uritect\\pipeline\\output\\abnormal_error_audit_2026-10-05\\image_evidence\\uritect_2026-7-15_Cabatuan_011_Daylight.jpg",
+      "source_zip": "uritect_2026-7-15_Cabatuan_holdout_package.zip",
+      "light_kelvin": "Daylight",
+      "reference_labels": {
+        "Leukocytes": "Trace 15",
+        "Nitrite": "Neg",
+        "Urobilinogen": "16",
+        "Protein": "Neg",
+        "pH": "7.5",
+        "Blood": "Neg",
+        "Specific Gravity": "1.015",
+        "Ketone": "Trace 0.5",
+        "Bilirubin": "Neg",
+        "Glucose": "Neg"
+      }
+    },
+    {
+      "event_id": "uritect_2026-7-17_Cabatuan_002_Cool",
+      "image_path": "C:\\Users\\acer\\Downloads\\Github\\Uritect\\pipeline\\output\\abnormal_error_audit_2026-10-05\\image_evidence\\uritect_2026-7-17_Cabatuan_002_Cool.jpg",
+      "source_zip": "uritect_2026-7-17_Cabatuan_holdout_package.zip",
+      "light_kelvin": "Cool",
+      "reference_labels": {
+        "Leukocytes": "Trace 15",
+        "Nitrite": "Neg",
+        "Urobilinogen": "3.2",
+        "Protein": "Neg",
+        "pH": "5.0",
+        "Blood": "Neg",
+        "Specific Gravity": "1.015",
+        "Ketone": "Neg",
+        "Bilirubin": "Neg",
+        "Glucose": "Neg"
+      }
+    },
+    {
+      "event_id": "uritect_2026-7-17_Cabatuan_015_Cool",
+      "image_path": "C:\\Users\\acer\\Downloads\\Github\\Uritect\\pipeline\\output\\abnormal_error_audit_2026-10-05\\image_evidence\\uritect_2026-7-17_Cabatuan_015_Cool.jpg",
+      "source_zip": "uritect_2026-7-17_Cabatuan_holdout_package.zip",
+      "light_kelvin": "Cool",
+      "reference_labels": {
+        "Leukocytes": "Trace 15",
+        "Nitrite": "Neg",
+        "Urobilinogen": "3.2",
+        "Protein": "Neg",
+        "pH": "5.0",
+        "Blood": "Neg",
+        "Specific Gravity": "1.025",
+        "Ketone": "Trace 0.5",
+        "Bilirubin": "Small 17",
+        "Glucose": "Neg"
+      }
+    },
+    {
+      "event_id": "uritect_2026-7-17_Cabatuan_015_Warm",
+      "image_path": "C:\\Users\\acer\\Downloads\\Github\\Uritect\\pipeline\\output\\abnormal_error_audit_2026-10-05\\image_evidence\\uritect_2026-7-17_Cabatuan_015_Warm.jpg",
+      "source_zip": "uritect_2026-7-17_Cabatuan_holdout_package.zip",
+      "light_kelvin": "Warm",
+      "reference_labels": {
+        "Leukocytes": "Trace 15",
+        "Nitrite": "Neg",
+        "Urobilinogen": "3.2",
+        "Protein": "Neg",
+        "pH": "5.0",
+        "Blood": "Neg",
+        "Specific Gravity": "1.025",
+        "Ketone": "Trace 0.5",
+        "Bilirubin": "Small 17",
+        "Glucose": "Neg"
+      }
+    },
+    {
+      "event_id": "uritect_2026-7-17_Cabatuan_028_Warm",
+      "image_path": "C:\\Users\\acer\\Downloads\\Github\\Uritect\\pipeline\\output\\abnormal_error_audit_2026-10-05\\image_evidence\\uritect_2026-7-17_Cabatuan_028_Warm.jpg",
+      "source_zip": "uritect_2026-7-17_Cabatuan_holdout_package.zip",
+      "light_kelvin": "Warm",
+      "reference_labels": {
+        "Leukocytes": "Small 70",
+        "Nitrite": "Neg",
+        "Urobilinogen": "16",
+        "Protein": "Neg",
+        "pH": "5.0",
+        "Blood": "Neg",
+        "Specific Gravity": "1.015",
+        "Ketone": "Neg",
+        "Bilirubin": "Neg",
+        "Glucose": "Neg"
+      }
+    },
+    {
+      "event_id": "uritect_2026-7-17_Cabatuan_028_Daylight",
+      "image_path": "C:\\Users\\acer\\Downloads\\Github\\Uritect\\pipeline\\output\\abnormal_error_audit_2026-10-05\\image_evidence\\uritect_2026-7-17_Cabatuan_028_Daylight.jpg",
+      "source_zip": "uritect_2026-7-17_Cabatuan_holdout_package.zip",
+      "light_kelvin": "Daylight",
+      "reference_labels": {
+        "Leukocytes": "Small 70",
+        "Nitrite": "Neg",
+        "Urobilinogen": "16",
+        "Protein": "Neg",
+        "pH": "5.0",
+        "Blood": "Neg",
+        "Specific Gravity": "1.015",
+        "Ketone": "Neg",
+        "Bilirubin": "Neg",
+        "Glucose": "Neg"
+      }
+    },
+    {
+      "event_id": "uritect_2026-7-17_Cabatuan_031_Daylight",
+      "image_path": "C:\\Users\\acer\\Downloads\\Github\\Uritect\\pipeline\\output\\abnormal_error_audit_2026-10-05\\image_evidence\\uritect_2026-7-17_Cabatuan_031_Daylight.jpg",
+      "source_zip": "uritect_2026-7-17_Cabatuan_holdout_package.zip",
+      "light_kelvin": "Daylight",
+      "reference_labels": {
+        "Leukocytes": "Trace 15",
+        "Nitrite": "Neg",
+        "Urobilinogen": "16",
+        "Protein": "Neg",
+        "pH": "5.0",
+        "Blood": "Neg",
+        "Specific Gravity": "1.030",
+        "Ketone": "Trace 0.5",
+        "Bilirubin": "Small 17",
+        "Glucose": "Neg"
+      }
+    }
+  ],
+  "output_path": "C:\\Users\\acer\\Downloads\\Github\\Uritect\\output\\device_pilot\\2026-10-11\\1.5.8+25\\runtime_regression.json"
+}

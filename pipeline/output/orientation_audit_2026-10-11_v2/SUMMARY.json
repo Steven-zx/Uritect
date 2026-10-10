@@ -1,0 +1,10 @@
+{
+  "scope": "Engineering orientation audit, not clinical label/timing validation",
+  "events": 784,
+  "verified_events": 90,
+  "likely_reversed_old_features": 2,
+  "candidate_rows": 900,
+  "gold_labels_changed": false,
+  "historical_inputs_overwritten": false,
+  "production_model_replaced": false
+}

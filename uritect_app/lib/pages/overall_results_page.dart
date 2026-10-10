@@ -167,9 +167,14 @@ class OverallResultsPage extends StatelessWidget {
             const SizedBox(height: 12),
             _bayesianEstimateCard(
               context,
-              savedUtiEstimate ?? fusionResult.utiEstimate,
+              (!scanResult.modelDirectionReviewed ||
+                      !scanResult.stripDirectionVerified)
+                  ? fusionResult.utiEstimate
+                  : savedUtiEstimate ?? fusionResult.utiEstimate,
             ),
-            if (savedUtiEstimate != null)
+            if (savedUtiEstimate != null &&
+                scanResult.modelDirectionReviewed &&
+                scanResult.stripDirectionVerified)
               const Padding(
                 padding: EdgeInsets.only(top: 8),
                 child: Text(
@@ -184,7 +189,13 @@ class OverallResultsPage extends StatelessWidget {
                 title: const Text('Dipstick measurements'),
                 subtitle: Text('${tableRows.length} analyte readings'),
                 tilePadding: EdgeInsets.zero,
-                children: [DipstickResultsTable(rows: tableRows)],
+                children: [
+                  DipstickResultsTable(
+                    rows: tableRows,
+                    analyteConfidences: scanResult.analyteConfidences,
+                    requiredConfidence: scanResult.requiredAnalyteConfidence,
+                  ),
+                ],
               )
             else
               const Padding(

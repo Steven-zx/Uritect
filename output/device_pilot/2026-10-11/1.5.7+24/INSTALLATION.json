@@ -1,0 +1,13 @@
+{
+  "installed_at": "2026-10-10T17:39:57.410098+00:00",
+  "device_model": "RMX3933",
+  "android_version": "16",
+  "version": "1.5.7+24",
+  "installed_apk_sha256": "DD659666127A20B7191F21FA094A711E9CB283278AD7F736A1C088DA74CA8D45",
+  "installation": "Success",
+  "cold_launch": "Status: ok",
+  "running_pid": "23694",
+  "data_preservation": "Replacement install; no uninstall, clear-data or key reset performed",
+  "manual_capture_validation": "Pending user test",
+  "classifier_suspended": true
+}

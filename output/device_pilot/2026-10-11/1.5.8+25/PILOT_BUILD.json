@@ -1,0 +1,180 @@
+{
+  "version": "Glucose+25",
+  "generated_at": "2026-10-10T17:58:39.509329+00:00",
+  "status": "corrected_experimental_research_classifier_not_clinically_validated",
+  "apk": {
+    "path": "output/device_pilot/2026-10-11/1.5.8+25/Uritect_v1.5.8+25_release.apk",
+    "bytes": 57689523,
+    "sha256": "C83C361152D5E970EBDF6864B9F4BB0099D9BAF31DC08AF963FE41308531D1A8"
+  },
+  "certificate_sha256": "15D1138DCE077ADA624A140B3A145343D1A48305FD0847E9002869E488F19D39",
+  "source_snapshot_sha256": "571A514B1E67AECF4ED0291CB8E3559694D1D678CF75F2E96F41B1F8CA9BCFB0",
+  "source_archive_sha256": "C96772F4903E27D1647B9BB620883C10DAC15D3AD2506F1E0EDE75E91A223940",
+  "checks": {
+    "flutter_test": {
+      "exit_code": 0,
+      "tests_passed": 134
+    },
+    "flutter_analyze": {
+      "exit_code": 0
+    },
+    "real_photo_tools": {
+      "exit_code": 0,
+      "regression_cases": 18,
+      "overlay_rotations_and_exif_cases": 5,
+      "exact_user_photo": 1,
+      "user_photo_outcome": "ten pads localized; pH low-confidence rejection"
+    },
+    "python_syntax": {
+      "exit_code": 0
+    },
+    "release_build": {
+      "exit_code": 0,
+      "native_compile": "included in successful signed release assembly"
+    }
+  },
+  "development_image_regression": {
+    "cases": 18,
+    "previously_accepted": 6,
+    "currently_accepted": 1,
+    "lost": [
+      "LAUAAN-P031-L4000",
+      "uritect_2026-7-15_Cabatuan_005_Cool",
+      "uritect_2026-7-15_Cabatuan_010_Cool",
+      "uritect_2026-7-15_Cabatuan_011_Daylight",
+      "uritect_2026-7-17_Cabatuan_028_Daylight"
+    ],
+    "changed_previously_accepted": [
+      "LAUAAN-P005-L4000"
+    ],
+    "scope": "Selected retrospective development regression; model intentionally replaced with explicitly authorized corrected experimental candidate. Changed predictions and reduced acceptance documented, not claimed as performance improvement."
+  },
+  "pipeline": "android_markerless_direction_guard_v6_experimental_20261011",
+  "classification_suspended": false,
+  "production_model_changed": true,
+  "vote_confidence_threshold_changed": false,
+  "bayesian_values_changed": false,
+  "support_policy_status": "training-only engineering guard, not clinically validated",
+  "native_security_device_tests": "Pending; mocked Flutter tests do not verify AndroidKeyStore on physical phones",
+  "clinical_validation": "Not established",
+  "files": [
+    {
+      "path": "docs/URITECT_SECURITY_AND_INPUT_REVIEW_2026-10-10.md",
+      "bytes": 10849,
+      "sha256": "857AC2B78F65369A0D952C9D8C85B8C42466FF04DF051E4F0ED5D13478304A6A"
+    },
+    {
+      "path": "output/device_pilot/2026-10-11/1.5.8+25/APK_IDENTITY.txt",
+      "bytes": 5975,
+      "sha256": "72D9504E7ED021517648668F9F43C5E2F03ABAEFB65B6ACE238DD2056096A04D"
+    },
+    {
+      "path": "output/device_pilot/2026-10-11/1.5.8+25/APK_PERMISSIONS.txt",
+      "bytes": 532,
+      "sha256": "2DDE9EECBAD5340347D8E684C4E92A9EA23E3D882A9B3F5049C47AD5783E1E60"
+    },
+    {
+      "path": "output/device_pilot/2026-10-11/1.5.8+25/APK_SECURITY_MANIFEST.txt",
+      "bytes": 8163,
+      "sha256": "CF3E41D2E61B4A722C5C131F2A2EEA8EC97A560441533F6EF0A196F4CF70A32C"
+    },
+    {
+      "path": "output/device_pilot/2026-10-11/1.5.8+25/AUTOMATED_CHECKS.json",
+      "bytes": 525,
+      "sha256": "D14365D4BAF0D2E422D8B14396EB2F0CBC7F0A53E8E089F4C78B2138E33EE8EF"
+    },
+    {
+      "path": "output/device_pilot/2026-10-11/1.5.8+25/flutter_analyze.log",
+      "bytes": 202,
+      "sha256": "672039733AAFADB00C15DCA38F79B5DCEB3A51AFD61A610A2E632B81E884F1B9"
+    },
+    {
+      "path": "output/device_pilot/2026-10-11/1.5.8+25/flutter_test.log",
+      "bytes": 48062,
+      "sha256": "628E4923559C0635AF9A6425F3D5BBDD5BCD1FA17F5996A69B7CBB4E5F6373B4"
+    },
+    {
+      "path": "output/device_pilot/2026-10-11/1.5.8+25/release_build.log",
+      "bytes": 8474,
+      "sha256": "B2A15C23BE5F1E03E13107BA6EAE2B8C821602B9AD1562865F70D993E65A9F35"
+    },
+    {
+      "path": "output/device_pilot/2026-10-11/1.5.8+25/runtime_checks.log",
+      "bytes": 5974,
+      "sha256": "2243EF3137C5F94677C27250A0D5CA61373F72C0C1649ABD34AB57EF1981805F"
+    },
+    {
+      "path": "output/device_pilot/2026-10-11/1.5.8+25/runtime_comparison.json",
+      "bytes": 618,
+      "sha256": "FD4FC6EC6346CE7C09782EE10D7862B923D300BB5566B605580BDD6167D37CC2"
+    },
+    {
+      "path": "output/device_pilot/2026-10-11/1.5.8+25/runtime_regression.json",
+      "bytes": 11263,
+      "sha256": "BD51858B7F5E7FD601C290317992EABDDCF02BABC74377E87BC08FC638C815FB"
+    },
+    {
+      "path": "output/device_pilot/2026-10-11/1.5.8+25/SOURCE_SNAPSHOT.json",
+      "bytes": 24004,
+      "sha256": "571A514B1E67AECF4ED0291CB8E3559694D1D678CF75F2E96F41B1F8CA9BCFB0"
+    },
+    {
+      "path": "output/device_pilot/2026-10-11/1.5.8+25/URITECT_SOURCE_SNAPSHOT.zip",
+      "bytes": 6354736,
+      "sha256": "C96772F4903E27D1647B9BB620883C10DAC15D3AD2506F1E0EDE75E91A223940"
+    },
+    {
+      "path": "pipeline/build_training_support_policy.py",
+      "bytes": 2511,
+      "sha256": "8C4A410441408D2B95E06919825AAEDF90EE8922F33CFE844E0738A109C0707D"
+    },
+    {
+      "path": "pipeline/test_training_support_policy.py",
+      "bytes": 2065,
+      "sha256": "52138A0FAFAEC7074A9AC6F951FE6FDB3C78F29472B3949183710C60E6836A64"
+    },
+    {
+      "path": "pipeline/verify_qa_pilot_build.py",
+      "bytes": 8811,
+      "sha256": "6F1F6BB22DA3AD72548A00834CC4874FDBC1D3525DBA596DC3112B1C3B12CB12"
+    },
+    {
+      "path": "output/device_pilot/2026-10-11/1.5.8+25/EXPERIMENTAL_MODEL_AUTHORIZATION.json",
+      "bytes": 419,
+      "sha256": "F729D71ECC0EB00ED73776E774C676D11988AB9BFE2E50C1D8426668F2F000A8"
+    },
+    {
+      "path": "output/device_pilot/2026-10-11/1.5.8+25/CORRECTED_PAD_IDENTIFICATION.png",
+      "bytes": 167915,
+      "sha256": "A4B5AA4AF64D447ECCC5416479A4DE1CB91E5F07DF5063A8542BB25E478B898E"
+    },
+    {
+      "path": "output/device_pilot/2026-10-11/1.5.8+25/PHOTO_GEOMETRY.json",
+      "bytes": 1594,
+      "sha256": "4B93E4DF3B0FFE4BDA2153F44CE8F062ABF9DB0AAF687A3FB61D572386784E1D"
+    },
+    {
+      "path": "output/device_pilot/2026-10-11/1.5.8+25/overlay_geometry.json",
+      "bytes": 828,
+      "sha256": "1F3892CF562D5262D024DFAA95F4D8072F29EC02DFC20855D91B2C55FDBC8233"
+    },
+    {
+      "path": "docs/URITECT_PAD_ORIENTATION_INCIDENT_2026-10-11.md",
+      "bytes": 6720,
+      "sha256": "7B89F83E8E9EBBF778D176929C01F7AE83F329CC37F288E160921929AABFA511"
+    },
+    {
+      "path": "pipeline/output/orientation_audit_2026-10-11_v3/SUMMARY.json",
+      "bytes": 314,
+      "sha256": "30E00584DD8FB5EE469576C424578CFF65DB2EABC548F7D0A3CD9C8D06AF8DC7"
+    },
+    {
+      "path": "pipeline/output/orientation_audit_2026-10-11_v3/candidate_grouped_evaluation.json",
+      "bytes": 4005,
+      "sha256": "633C887EE9BB146251358682AA7D6D83383A1AE67F0173E59BBC9AA8C7211606"
+    }
+  ],
+  "experimental_research_only": true,
+  "model_mapping_review": "Established physical pad order reaffirmed by owner and checked with physical endpoint fixtures; no new clinical/reference-label approval claimed.",
+  "exact_user_photo_outcome": "All ten physical pads located; low pH confidence rejects numerical output."
+}

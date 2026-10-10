@@ -1,0 +1,1306 @@
+{
+  "purpose": "Nested group CV within the 453 prior development events only; no confirmation evaluation",
+  "configurations": [
+    {
+      "recipe": "runtime_normalized",
+      "scale": false,
+      "k": 3,
+      "balance": 0.0
+    },
+    {
+      "recipe": "runtime_normalized",
+      "scale": false,
+      "k": 3,
+      "balance": 0.25
+    },
+    {
+      "recipe": "runtime_normalized",
+      "scale": false,
+      "k": 3,
+      "balance": 0.5
+    },
+    {
+      "recipe": "runtime_normalized",
+      "scale": false,
+      "k": 9,
+      "balance": 0.0
+    },
+    {
+      "recipe": "runtime_normalized",
+      "scale": false,
+      "k": 9,
+      "balance": 0.25
+    },
+    {
+      "recipe": "runtime_normalized",
+      "scale": false,
+      "k": 9,
+      "balance": 0.5
+    },
+    {
+      "recipe": "runtime_normalized",
+      "scale": false,
+      "k": 21,
+      "balance": 0.0
+    },
+    {
+      "recipe": "runtime_normalized",
+      "scale": false,
+      "k": 21,
+      "balance": 0.25
+    },
+    {
+      "recipe": "runtime_normalized",
+      "scale": false,
+      "k": 21,
+      "balance": 0.5
+    },
+    {
+      "recipe": "runtime_normalized",
+      "scale": true,
+      "k": 3,
+      "balance": 0.0
+    },
+    {
+      "recipe": "runtime_normalized",
+      "scale": true,
+      "k": 3,
+      "balance": 0.25
+    },
+    {
+      "recipe": "runtime_normalized",
+      "scale": true,
+      "k": 3,
+      "balance": 0.5
+    },
+    {
+      "recipe": "runtime_normalized",
+      "scale": true,
+      "k": 9,
+      "balance": 0.0
+    },
+    {
+      "recipe": "runtime_normalized",
+      "scale": true,
+      "k": 9,
+      "balance": 0.25
+    },
+    {
+      "recipe": "runtime_normalized",
+      "scale": true,
+      "k": 9,
+      "balance": 0.5
+    },
+    {
+      "recipe": "runtime_normalized",
+      "scale": true,
+      "k": 21,
+      "balance": 0.0
+    },
+    {
+      "recipe": "runtime_normalized",
+      "scale": true,
+      "k": 21,
+      "balance": 0.25
+    },
+    {
+      "recipe": "runtime_normalized",
+      "scale": true,
+      "k": 21,
+      "balance": 0.5
+    },
+    {
+      "recipe": "runtime_raw",
+      "scale": false,
+      "k": 3,
+      "balance": 0.0
+    },
+    {
+      "recipe": "runtime_raw",
+      "scale": false,
+      "k": 3,
+      "balance": 0.25
+    },
+    {
+      "recipe": "runtime_raw",
+      "scale": false,
+      "k": 3,
+      "balance": 0.5
+    },
+    {
+      "recipe": "runtime_raw",
+      "scale": false,
+      "k": 9,
+      "balance": 0.0
+    },
+    {
+      "recipe": "runtime_raw",
+      "scale": false,
+      "k": 9,
+      "balance": 0.25
+    },
+    {
+      "recipe": "runtime_raw",
+      "scale": false,
+      "k": 9,
+      "balance": 0.5
+    },
+    {
+      "recipe": "runtime_raw",
+      "scale": false,
+      "k": 21,
+      "balance": 0.0
+    },
+    {
+      "recipe": "runtime_raw",
+      "scale": false,
+      "k": 21,
+      "balance": 0.25
+    },
+    {
+      "recipe": "runtime_raw",
+      "scale": false,
+      "k": 21,
+      "balance": 0.5
+    },
+    {
+      "recipe": "runtime_raw",
+      "scale": true,
+      "k": 3,
+      "balance": 0.0
+    },
+    {
+      "recipe": "runtime_raw",
+      "scale": true,
+      "k": 3,
+      "balance": 0.25
+    },
+    {
+      "recipe": "runtime_raw",
+      "scale": true,
+      "k": 3,
+      "balance": 0.5
+    },
+    {
+      "recipe": "runtime_raw",
+      "scale": true,
+      "k": 9,
+      "balance": 0.0
+    },
+    {
+      "recipe": "runtime_raw",
+      "scale": true,
+      "k": 9,
+      "balance": 0.25
+    },
+    {
+      "recipe": "runtime_raw",
+      "scale": true,
+      "k": 9,
+      "balance": 0.5
+    },
+    {
+      "recipe": "runtime_raw",
+      "scale": true,
+      "k": 21,
+      "balance": 0.0
+    },
+    {
+      "recipe": "runtime_raw",
+      "scale": true,
+      "k": 21,
+      "balance": 0.25
+    },
+    {
+      "recipe": "runtime_raw",
+      "scale": true,
+      "k": 21,
+      "balance": 0.5
+    },
+    {
+      "recipe": "runtime_hs",
+      "scale": false,
+      "k": 3,
+      "balance": 0.0
+    },
+    {
+      "recipe": "runtime_hs",
+      "scale": false,
+      "k": 3,
+      "balance": 0.25
+    },
+    {
+      "recipe": "runtime_hs",
+      "scale": false,
+      "k": 3,
+      "balance": 0.5
+    },
+    {
+      "recipe": "runtime_hs",
+      "scale": false,
+      "k": 9,
+      "balance": 0.0
+    },
+    {
+      "recipe": "runtime_hs",
+      "scale": false,
+      "k": 9,
+      "balance": 0.25
+    },
+    {
+      "recipe": "runtime_hs",
+      "scale": false,
+      "k": 9,
+      "balance": 0.5
+    },
+    {
+      "recipe": "runtime_hs",
+      "scale": false,
+      "k": 21,
+      "balance": 0.0
+    },
+    {
+      "recipe": "runtime_hs",
+      "scale": false,
+      "k": 21,
+      "balance": 0.25
+    },
+    {
+      "recipe": "runtime_hs",
+      "scale": false,
+      "k": 21,
+      "balance": 0.5
+    },
+    {
+      "recipe": "runtime_hs",
+      "scale": true,
+      "k": 3,
+      "balance": 0.0
+    },
+    {
+      "recipe": "runtime_hs",
+      "scale": true,
+      "k": 3,
+      "balance": 0.25
+    },
+    {
+      "recipe": "runtime_hs",
+      "scale": true,
+      "k": 3,
+      "balance": 0.5
+    },
+    {
+      "recipe": "runtime_hs",
+      "scale": true,
+      "k": 9,
+      "balance": 0.0
+    },
+    {
+      "recipe": "runtime_hs",
+      "scale": true,
+      "k": 9,
+      "balance": 0.25
+    },
+    {
+      "recipe": "runtime_hs",
+      "scale": true,
+      "k": 9,
+      "balance": 0.5
+    },
+    {
+      "recipe": "runtime_hs",
+      "scale": true,
+      "k": 21,
+      "balance": 0.0
+    },
+    {
+      "recipe": "runtime_hs",
+      "scale": true,
+      "k": 21,
+      "balance": 0.25
+    },
+    {
+      "recipe": "runtime_hs",
+      "scale": true,
+      "k": 21,
+      "balance": 0.5
+    },
+    {
+      "recipe": "dense_normalized",
+      "scale": false,
+      "k": 3,
+      "balance": 0.0
+    },
+    {
+      "recipe": "dense_normalized",
+      "scale": false,
+      "k": 3,
+      "balance": 0.25
+    },
+    {
+      "recipe": "dense_normalized",
+      "scale": false,
+      "k": 3,
+      "balance": 0.5
+    },
+    {
+      "recipe": "dense_normalized",
+      "scale": false,
+      "k": 9,
+      "balance": 0.0
+    },
+    {
+      "recipe": "dense_normalized",
+      "scale": false,
+      "k": 9,
+      "balance": 0.25
+    },
+    {
+      "recipe": "dense_normalized",
+      "scale": false,
+      "k": 9,
+      "balance": 0.5
+    },
+    {
+      "recipe": "dense_normalized",
+      "scale": false,
+      "k": 21,
+      "balance": 0.0
+    },
+    {
+      "recipe": "dense_normalized",
+      "scale": false,
+      "k": 21,
+      "balance": 0.25
+    },
+    {
+      "recipe": "dense_normalized",
+      "scale": false,
+      "k": 21,
+      "balance": 0.5
+    },
+    {
+      "recipe": "dense_normalized",
+      "scale": true,
+      "k": 3,
+      "balance": 0.0
+    },
+    {
+      "recipe": "dense_normalized",
+      "scale": true,
+      "k": 3,
+      "balance": 0.25
+    },
+    {
+      "recipe": "dense_normalized",
+      "scale": true,
+      "k": 3,
+      "balance": 0.5
+    },
+    {
+      "recipe": "dense_normalized",
+      "scale": true,
+      "k": 9,
+      "balance": 0.0
+    },
+    {
+      "recipe": "dense_normalized",
+      "scale": true,
+      "k": 9,
+      "balance": 0.25
+    },
+    {
+      "recipe": "dense_normalized",
+      "scale": true,
+      "k": 9,
+      "balance": 0.5
+    },
+    {
+      "recipe": "dense_normalized",
+      "scale": true,
+      "k": 21,
+      "balance": 0.0
+    },
+    {
+      "recipe": "dense_normalized",
+      "scale": true,
+      "k": 21,
+      "balance": 0.25
+    },
+    {
+      "recipe": "dense_normalized",
+      "scale": true,
+      "k": 21,
+      "balance": 0.5
+    },
+    {
+      "recipe": "dense_raw",
+      "scale": false,
+      "k": 3,
+      "balance": 0.0
+    },
+    {
+      "recipe": "dense_raw",
+      "scale": false,
+      "k": 3,
+      "balance": 0.25
+    },
+    {
+      "recipe": "dense_raw",
+      "scale": false,
+      "k": 3,
+      "balance": 0.5
+    },
+    {
+      "recipe": "dense_raw",
+      "scale": false,
+      "k": 9,
+      "balance": 0.0
+    },
+    {
+      "recipe": "dense_raw",
+      "scale": false,
+      "k": 9,
+      "balance": 0.25
+    },
+    {
+      "recipe": "dense_raw",
+      "scale": false,
+      "k": 9,
+      "balance": 0.5
+    },
+    {
+      "recipe": "dense_raw",
+      "scale": false,
+      "k": 21,
+      "balance": 0.0
+    },
+    {
+      "recipe": "dense_raw",
+      "scale": false,
+      "k": 21,
+      "balance": 0.25
+    },
+    {
+      "recipe": "dense_raw",
+      "scale": false,
+      "k": 21,
+      "balance": 0.5
+    },
+    {
+      "recipe": "dense_raw",
+      "scale": true,
+      "k": 3,
+      "balance": 0.0
+    },
+    {
+      "recipe": "dense_raw",
+      "scale": true,
+      "k": 3,
+      "balance": 0.25
+    },
+    {
+      "recipe": "dense_raw",
+      "scale": true,
+      "k": 3,
+      "balance": 0.5
+    },
+    {
+      "recipe": "dense_raw",
+      "scale": true,
+      "k": 9,
+      "balance": 0.0
+    },
+    {
+      "recipe": "dense_raw",
+      "scale": true,
+      "k": 9,
+      "balance": 0.25
+    },
+    {
+      "recipe": "dense_raw",
+      "scale": true,
+      "k": 9,
+      "balance": 0.5
+    },
+    {
+      "recipe": "dense_raw",
+      "scale": true,
+      "k": 21,
+      "balance": 0.0
+    },
+    {
+      "recipe": "dense_raw",
+      "scale": true,
+      "k": 21,
+      "balance": 0.25
+    },
+    {
+      "recipe": "dense_raw",
+      "scale": true,
+      "k": 21,
+      "balance": 0.5
+    },
+    {
+      "recipe": "half_raw",
+      "scale": false,
+      "k": 3,
+      "balance": 0.0
+    },
+    {
+      "recipe": "half_raw",
+      "scale": false,
+      "k": 3,
+      "balance": 0.25
+    },
+    {
+      "recipe": "half_raw",
+      "scale": false,
+      "k": 3,
+      "balance": 0.5
+    },
+    {
+      "recipe": "half_raw",
+      "scale": false,
+      "k": 9,
+      "balance": 0.0
+    },
+    {
+      "recipe": "half_raw",
+      "scale": false,
+      "k": 9,
+      "balance": 0.25
+    },
+    {
+      "recipe": "half_raw",
+      "scale": false,
+      "k": 9,
+      "balance": 0.5
+    },
+    {
+      "recipe": "half_raw",
+      "scale": false,
+      "k": 21,
+      "balance": 0.0
+    },
+    {
+      "recipe": "half_raw",
+      "scale": false,
+      "k": 21,
+      "balance": 0.25
+    },
+    {
+      "recipe": "half_raw",
+      "scale": false,
+      "k": 21,
+      "balance": 0.5
+    },
+    {
+      "recipe": "half_raw",
+      "scale": true,
+      "k": 3,
+      "balance": 0.0
+    },
+    {
+      "recipe": "half_raw",
+      "scale": true,
+      "k": 3,
+      "balance": 0.25
+    },
+    {
+      "recipe": "half_raw",
+      "scale": true,
+      "k": 3,
+      "balance": 0.5
+    },
+    {
+      "recipe": "half_raw",
+      "scale": true,
+      "k": 9,
+      "balance": 0.0
+    },
+    {
+      "recipe": "half_raw",
+      "scale": true,
+      "k": 9,
+      "balance": 0.25
+    },
+    {
+      "recipe": "half_raw",
+      "scale": true,
+      "k": 9,
+      "balance": 0.5
+    },
+    {
+      "recipe": "half_raw",
+      "scale": true,
+      "k": 21,
+      "balance": 0.0
+    },
+    {
+      "recipe": "half_raw",
+      "scale": true,
+      "k": 21,
+      "balance": 0.25
+    },
+    {
+      "recipe": "half_raw",
+      "scale": true,
+      "k": 21,
+      "balance": 0.5
+    },
+    {
+      "recipe": "refined_raw",
+      "scale": false,
+      "k": 3,
+      "balance": 0.0
+    },
+    {
+      "recipe": "refined_raw",
+      "scale": false,
+      "k": 3,
+      "balance": 0.25
+    },
+    {
+      "recipe": "refined_raw",
+      "scale": false,
+      "k": 3,
+      "balance": 0.5
+    },
+    {
+      "recipe": "refined_raw",
+      "scale": false,
+      "k": 9,
+      "balance": 0.0
+    },
+    {
+      "recipe": "refined_raw",
+      "scale": false,
+      "k": 9,
+      "balance": 0.25
+    },
+    {
+      "recipe": "refined_raw",
+      "scale": false,
+      "k": 9,
+      "balance": 0.5
+    },
+    {
+      "recipe": "refined_raw",
+      "scale": false,
+      "k": 21,
+      "balance": 0.0
+    },
+    {
+      "recipe": "refined_raw",
+      "scale": false,
+      "k": 21,
+      "balance": 0.25
+    },
+    {
+      "recipe": "refined_raw",
+      "scale": false,
+      "k": 21,
+      "balance": 0.5
+    },
+    {
+      "recipe": "refined_raw",
+      "scale": true,
+      "k": 3,
+      "balance": 0.0
+    },
+    {
+      "recipe": "refined_raw",
+      "scale": true,
+      "k": 3,
+      "balance": 0.25
+    },
+    {
+      "recipe": "refined_raw",
+      "scale": true,
+      "k": 3,
+      "balance": 0.5
+    },
+    {
+      "recipe": "refined_raw",
+      "scale": true,
+      "k": 9,
+      "balance": 0.0
+    },
+    {
+      "recipe": "refined_raw",
+      "scale": true,
+      "k": 9,
+      "balance": 0.25
+    },
+    {
+      "recipe": "refined_raw",
+      "scale": true,
+      "k": 9,
+      "balance": 0.5
+    },
+    {
+      "recipe": "refined_raw",
+      "scale": true,
+      "k": 21,
+      "balance": 0.0
+    },
+    {
+      "recipe": "refined_raw",
+      "scale": true,
+      "k": 21,
+      "balance": 0.25
+    },
+    {
+      "recipe": "refined_raw",
+      "scale": true,
+      "k": 21,
+      "balance": 0.5
+    },
+    {
+      "recipe": "refined_normalized",
+      "scale": false,
+      "k": 3,
+      "balance": 0.0
+    },
+    {
+      "recipe": "refined_normalized",
+      "scale": false,
+      "k": 3,
+      "balance": 0.25
+    },
+    {
+      "recipe": "refined_normalized",
+      "scale": false,
+      "k": 3,
+      "balance": 0.5
+    },
+    {
+      "recipe": "refined_normalized",
+      "scale": false,
+      "k": 9,
+      "balance": 0.0
+    },
+    {
+      "recipe": "refined_normalized",
+      "scale": false,
+      "k": 9,
+      "balance": 0.25
+    },
+    {
+      "recipe": "refined_normalized",
+      "scale": false,
+      "k": 9,
+      "balance": 0.5
+    },
+    {
+      "recipe": "refined_normalized",
+      "scale": false,
+      "k": 21,
+      "balance": 0.0
+    },
+    {
+      "recipe": "refined_normalized",
+      "scale": false,
+      "k": 21,
+      "balance": 0.25
+    },
+    {
+      "recipe": "refined_normalized",
+      "scale": false,
+      "k": 21,
+      "balance": 0.5
+    },
+    {
+      "recipe": "refined_normalized",
+      "scale": true,
+      "k": 3,
+      "balance": 0.0
+    },
+    {
+      "recipe": "refined_normalized",
+      "scale": true,
+      "k": 3,
+      "balance": 0.25
+    },
+    {
+      "recipe": "refined_normalized",
+      "scale": true,
+      "k": 3,
+      "balance": 0.5
+    },
+    {
+      "recipe": "refined_normalized",
+      "scale": true,
+      "k": 9,
+      "balance": 0.0
+    },
+    {
+      "recipe": "refined_normalized",
+      "scale": true,
+      "k": 9,
+      "balance": 0.25
+    },
+    {
+      "recipe": "refined_normalized",
+      "scale": true,
+      "k": 9,
+      "balance": 0.5
+    },
+    {
+      "recipe": "refined_normalized",
+      "scale": true,
+      "k": 21,
+      "balance": 0.0
+    },
+    {
+      "recipe": "refined_normalized",
+      "scale": true,
+      "k": 21,
+      "balance": 0.25
+    },
+    {
+      "recipe": "refined_normalized",
+      "scale": true,
+      "k": 21,
+      "balance": 0.5
+    },
+    {
+      "recipe": "backing_raw",
+      "scale": false,
+      "k": 3,
+      "balance": 0.0
+    },
+    {
+      "recipe": "backing_raw",
+      "scale": false,
+      "k": 3,
+      "balance": 0.25
+    },
+    {
+      "recipe": "backing_raw",
+      "scale": false,
+      "k": 3,
+      "balance": 0.5
+    },
+    {
+      "recipe": "backing_raw",
+      "scale": false,
+      "k": 9,
+      "balance": 0.0
+    },
+    {
+      "recipe": "backing_raw",
+      "scale": false,
+      "k": 9,
+      "balance": 0.25
+    },
+    {
+      "recipe": "backing_raw",
+      "scale": false,
+      "k": 9,
+      "balance": 0.5
+    },
+    {
+      "recipe": "backing_raw",
+      "scale": false,
+      "k": 21,
+      "balance": 0.0
+    },
+    {
+      "recipe": "backing_raw",
+      "scale": false,
+      "k": 21,
+      "balance": 0.25
+    },
+    {
+      "recipe": "backing_raw",
+      "scale": false,
+      "k": 21,
+      "balance": 0.5
+    },
+    {
+      "recipe": "backing_raw",
+      "scale": true,
+      "k": 3,
+      "balance": 0.0
+    },
+    {
+      "recipe": "backing_raw",
+      "scale": true,
+      "k": 3,
+      "balance": 0.25
+    },
+    {
+      "recipe": "backing_raw",
+      "scale": true,
+      "k": 3,
+      "balance": 0.5
+    },
+    {
+      "recipe": "backing_raw",
+      "scale": true,
+      "k": 9,
+      "balance": 0.0
+    },
+    {
+      "recipe": "backing_raw",
+      "scale": true,
+      "k": 9,
+      "balance": 0.25
+    },
+    {
+      "recipe": "backing_raw",
+      "scale": true,
+      "k": 9,
+      "balance": 0.5
+    },
+    {
+      "recipe": "backing_raw",
+      "scale": true,
+      "k": 21,
+      "balance": 0.0
+    },
+    {
+      "recipe": "backing_raw",
+      "scale": true,
+      "k": 21,
+      "balance": 0.25
+    },
+    {
+      "recipe": "backing_raw",
+      "scale": true,
+      "k": 21,
+      "balance": 0.5
+    },
+    {
+      "recipe": "backing_hs",
+      "scale": false,
+      "k": 3,
+      "balance": 0.0
+    },
+    {
+      "recipe": "backing_hs",
+      "scale": false,
+      "k": 3,
+      "balance": 0.25
+    },
+    {
+      "recipe": "backing_hs",
+      "scale": false,
+      "k": 3,
+      "balance": 0.5
+    },
+    {
+      "recipe": "backing_hs",
+      "scale": false,
+      "k": 9,
+      "balance": 0.0
+    },
+    {
+      "recipe": "backing_hs",
+      "scale": false,
+      "k": 9,
+      "balance": 0.25
+    },
+    {
+      "recipe": "backing_hs",
+      "scale": false,
+      "k": 9,
+      "balance": 0.5
+    },
+    {
+      "recipe": "backing_hs",
+      "scale": false,
+      "k": 21,
+      "balance": 0.0
+    },
+    {
+      "recipe": "backing_hs",
+      "scale": false,
+      "k": 21,
+      "balance": 0.25
+    },
+    {
+      "recipe": "backing_hs",
+      "scale": false,
+      "k": 21,
+      "balance": 0.5
+    },
+    {
+      "recipe": "backing_hs",
+      "scale": true,
+      "k": 3,
+      "balance": 0.0
+    },
+    {
+      "recipe": "backing_hs",
+      "scale": true,
+      "k": 3,
+      "balance": 0.25
+    },
+    {
+      "recipe": "backing_hs",
+      "scale": true,
+      "k": 3,
+      "balance": 0.5
+    },
+    {
+      "recipe": "backing_hs",
+      "scale": true,
+      "k": 9,
+      "balance": 0.0
+    },
+    {
+      "recipe": "backing_hs",
+      "scale": true,
+      "k": 9,
+      "balance": 0.25
+    },
+    {
+      "recipe": "backing_hs",
+      "scale": true,
+      "k": 9,
+      "balance": 0.5
+    },
+    {
+      "recipe": "backing_hs",
+      "scale": true,
+      "k": 21,
+      "balance": 0.0
+    },
+    {
+      "recipe": "backing_hs",
+      "scale": true,
+      "k": 21,
+      "balance": 0.25
+    },
+    {
+      "recipe": "backing_hs",
+      "scale": true,
+      "k": 21,
+      "balance": 0.5
+    },
+    {
+      "recipe": "raw_lab",
+      "scale": false,
+      "k": 3,
+      "balance": 0.0
+    },
+    {
+      "recipe": "raw_lab",
+      "scale": false,
+      "k": 3,
+      "balance": 0.25
+    },
+    {
+      "recipe": "raw_lab",
+      "scale": false,
+      "k": 3,
+      "balance": 0.5
+    },
+    {
+      "recipe": "raw_lab",
+      "scale": false,
+      "k": 9,
+      "balance": 0.0
+    },
+    {
+      "recipe": "raw_lab",
+      "scale": false,
+      "k": 9,
+      "balance": 0.25
+    },
+    {
+      "recipe": "raw_lab",
+      "scale": false,
+      "k": 9,
+      "balance": 0.5
+    },
+    {
+      "recipe": "raw_lab",
+      "scale": false,
+      "k": 21,
+      "balance": 0.0
+    },
+    {
+      "recipe": "raw_lab",
+      "scale": false,
+      "k": 21,
+      "balance": 0.25
+    },
+    {
+      "recipe": "raw_lab",
+      "scale": false,
+      "k": 21,
+      "balance": 0.5
+    },
+    {
+      "recipe": "raw_lab",
+      "scale": true,
+      "k": 3,
+      "balance": 0.0
+    },
+    {
+      "recipe": "raw_lab",
+      "scale": true,
+      "k": 3,
+      "balance": 0.25
+    },
+    {
+      "recipe": "raw_lab",
+      "scale": true,
+      "k": 3,
+      "balance": 0.5
+    },
+    {
+      "recipe": "raw_lab",
+      "scale": true,
+      "k": 9,
+      "balance": 0.0
+    },
+    {
+      "recipe": "raw_lab",
+      "scale": true,
+      "k": 9,
+      "balance": 0.25
+    },
+    {
+      "recipe": "raw_lab",
+      "scale": true,
+      "k": 9,
+      "balance": 0.5
+    },
+    {
+      "recipe": "raw_lab",
+      "scale": true,
+      "k": 21,
+      "balance": 0.0
+    },
+    {
+      "recipe": "raw_lab",
+      "scale": true,
+      "k": 21,
+      "balance": 0.25
+    },
+    {
+      "recipe": "raw_lab",
+      "scale": true,
+      "k": 21,
+      "balance": 0.5
+    },
+    {
+      "recipe": "refined_lab",
+      "scale": false,
+      "k": 3,
+      "balance": 0.0
+    },
+    {
+      "recipe": "refined_lab",
+      "scale": false,
+      "k": 3,
+      "balance": 0.25
+    },
+    {
+      "recipe": "refined_lab",
+      "scale": false,
+      "k": 3,
+      "balance": 0.5
+    },
+    {
+      "recipe": "refined_lab",
+      "scale": false,
+      "k": 9,
+      "balance": 0.0
+    },
+    {
+      "recipe": "refined_lab",
+      "scale": false,
+      "k": 9,
+      "balance": 0.25
+    },
+    {
+      "recipe": "refined_lab",
+      "scale": false,
+      "k": 9,
+      "balance": 0.5
+    },
+    {
+      "recipe": "refined_lab",
+      "scale": false,
+      "k": 21,
+      "balance": 0.0
+    },
+    {
+      "recipe": "refined_lab",
+      "scale": false,
+      "k": 21,
+      "balance": 0.25
+    },
+    {
+      "recipe": "refined_lab",
+      "scale": false,
+      "k": 21,
+      "balance": 0.5
+    },
+    {
+      "recipe": "refined_lab",
+      "scale": true,
+      "k": 3,
+      "balance": 0.0
+    },
+    {
+      "recipe": "refined_lab",
+      "scale": true,
+      "k": 3,
+      "balance": 0.25
+    },
+    {
+      "recipe": "refined_lab",
+      "scale": true,
+      "k": 3,
+      "balance": 0.5
+    },
+    {
+      "recipe": "refined_lab",
+      "scale": true,
+      "k": 9,
+      "balance": 0.0
+    },
+    {
+      "recipe": "refined_lab",
+      "scale": true,
+      "k": 9,
+      "balance": 0.25
+    },
+    {
+      "recipe": "refined_lab",
+      "scale": true,
+      "k": 9,
+      "balance": 0.5
+    },
+    {
+      "recipe": "refined_lab",
+      "scale": true,
+      "k": 21,
+      "balance": 0.0
+    },
+    {
+      "recipe": "refined_lab",
+      "scale": true,
+      "k": 21,
+      "balance": 0.25
+    },
+    {
+      "recipe": "refined_lab",
+      "scale": true,
+      "k": 21,
+      "balance": 0.5
+    }
+  ],
+  "selection": "0.65 supported-reference macro F1 + 0.35 macro sensitivity",
+  "engineering_promotion_screen": "OOF macro F1 gain >= .02, no accuracy or macro-sensitivity loss, score improvement in at least 2 of 3 outer folds; not clinical acceptance criteria",
+  "label_changes": false,
+  "new_specimens": false,
+  "app_asset_replacement": false
+}

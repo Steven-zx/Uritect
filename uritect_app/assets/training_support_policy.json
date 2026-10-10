@@ -1,78 +1,78 @@
 {
   "schema": 1,
-  "model_sha256": "348ea1a6cf2c59e3ff6834e4fd042aba09a2a26cc041559096f13966fbd8fe80",
+  "model_sha256": "1380d9e04d044413b42bd045e3c7370bf3d06a720695d2654598657234742279",
   "method": "max_leave_one_distinct_training_vector_out_nearest_distance",
   "status": "training_only_engineering_guard_not_clinically_validated",
   "analytes": {
     "Leukocytes": {
       "metric": "manhattan",
       "dimensions": 4,
-      "training_vectors": 784,
-      "distinct_vectors": 784,
-      "maximum_distance": 3.46022113
+      "training_vectors": 565,
+      "distinct_vectors": 565,
+      "maximum_distance": 4.449738980000001
     },
     "Nitrite": {
       "metric": "manhattan",
       "dimensions": 3,
-      "training_vectors": 784,
-      "distinct_vectors": 784,
-      "maximum_distance": 2.09774201
+      "training_vectors": 565,
+      "distinct_vectors": 565,
+      "maximum_distance": 4.113507310000001
     },
     "Urobilinogen": {
       "metric": "chebyshev",
       "dimensions": 3,
-      "training_vectors": 784,
-      "distinct_vectors": 784,
-      "maximum_distance": 1.07611915
+      "training_vectors": 565,
+      "distinct_vectors": 565,
+      "maximum_distance": 2.85089221
     },
     "Protein": {
       "metric": "manhattan",
       "dimensions": 4,
-      "training_vectors": 784,
-      "distinct_vectors": 784,
-      "maximum_distance": 3.9145069000000006
+      "training_vectors": 565,
+      "distinct_vectors": 565,
+      "maximum_distance": 12.66038502
     },
     "pH": {
       "metric": "euclidean",
       "dimensions": 4,
-      "training_vectors": 784,
-      "distinct_vectors": 784,
-      "maximum_distance": 4.5647576635482
+      "training_vectors": 565,
+      "distinct_vectors": 565,
+      "maximum_distance": 6.168976072003974
     },
     "Blood": {
       "metric": "chebyshev",
       "dimensions": 4,
-      "training_vectors": 784,
-      "distinct_vectors": 784,
-      "maximum_distance": 3.27094134
+      "training_vectors": 565,
+      "distinct_vectors": 565,
+      "maximum_distance": 1.48061418
     },
     "Specific Gravity": {
       "metric": "chebyshev",
       "dimensions": 4,
-      "training_vectors": 784,
-      "distinct_vectors": 784,
-      "maximum_distance": 1.5580140500000002
+      "training_vectors": 565,
+      "distinct_vectors": 565,
+      "maximum_distance": 1.81922333
     },
     "Ketone": {
       "metric": "chebyshev",
       "dimensions": 3,
-      "training_vectors": 784,
-      "distinct_vectors": 784,
-      "maximum_distance": 1.1046412700000001
+      "training_vectors": 565,
+      "distinct_vectors": 565,
+      "maximum_distance": 3.38817884
     },
     "Bilirubin": {
       "metric": "euclidean",
       "dimensions": 3,
-      "training_vectors": 784,
-      "distinct_vectors": 784,
-      "maximum_distance": 1.6693747992746772
+      "training_vectors": 565,
+      "distinct_vectors": 565,
+      "maximum_distance": 7.7252595135242865
     },
     "Glucose": {
       "metric": "chebyshev",
       "dimensions": 3,
-      "training_vectors": 784,
-      "distinct_vectors": 784,
-      "maximum_distance": 1.0246489
+      "training_vectors": 565,
+      "distinct_vectors": 565,
+      "maximum_distance": 2.73439412
     }
   }
 }

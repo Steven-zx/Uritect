@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "status": "final_project_pad_order",
+  "confirmed_date": "2026-10-11",
+  "verification_basis": "Project owner explicitly reports MedTech verification of the displayed physical pad order. Reviewer identity and signed evidence were not supplied in this session.",
+  "physical_direction": "tip_to_handle",
+  "analytes": [
+    "Leukocytes",
+    "Nitrite",
+    "Urobilinogen",
+    "Protein",
+    "pH",
+    "Blood",
+    "Specific Gravity",
+    "Ketone",
+    "Bilirubin",
+    "Glucose"
+  ],
+  "codes": [
+    "LEU",
+    "NIT",
+    "URO",
+    "PRO",
+    "pH",
+    "BLD",
+    "SG",
+    "KET",
+    "BIL",
+    "GLU"
+  ],
+  "display_normalization": "tip_above_handle",
+  "scope": "URITECT supported ten-pad strip layout; camera and imported photos use the same physical assignment",
+  "uncertain_direction": "reject_without_guessing",
+  "numeric_readings": "classify_each_assigned_physical_pad_with_its_own_model; never_reverse_finished_result_values"
+}

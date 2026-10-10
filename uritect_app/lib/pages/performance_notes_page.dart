@@ -9,6 +9,19 @@ class PerformanceNotesPage extends StatelessWidget {
       padding: const EdgeInsets.all(20),
       children: const [
         Text(
+          'Corrected experimental classifier',
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Colors.red,
+          ),
+        ),
+        SizedBox(height: 12),
+        Text(
+          'For supervised research testing. The corrected model uses re-extracted features with the established LEU-to-GLU order from tip to handle. Its exploratory development evaluation was 79.92% individual-analyte accuracy and 13.56% all-ten accuracy on 118 test events. This changed subset is not directly comparable to the historical results below and does not establish independent phone or clinical performance. Older saved readings remain unverified.',
+        ),
+        SizedBox(height: 24),
+        Text(
           'Historical development evaluation',
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),

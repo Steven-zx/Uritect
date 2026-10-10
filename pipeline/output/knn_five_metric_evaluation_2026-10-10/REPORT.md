@@ -1,3 +1,5 @@
+> **Orientation audit alert (2026-10-11): historical results, not current verified performance.** A training image was confirmed to have reversed physical pad assignments. The old classifier is suspended. These historical metrics are retained for traceability and must not be presented as verified current scanner performance. See `docs/URITECT_PAD_ORIENTATION_INCIDENT_2026-10-11.md`.
+
 # URITECT per-analyte k-NN evaluation
 
 Evaluated 10 October 2026. Frozen production settings; constructed normalized-HSV feature dataset. No production artifacts changed.

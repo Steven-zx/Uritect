@@ -128,6 +128,19 @@ void main() {
       );
       await tester.pump();
       expect(find.byKey(const ValueKey('actual-pad-overlay')), findsOneWidget);
+      expect(find.text('1 sampling region located'), findsOneWidget);
+      for (var count = 2; count <= 10; count++) {
+        await tester.pump(const Duration(milliseconds: 180));
+        expect(find.text('$count sampling regions located'), findsOneWidget);
+        final overlay =
+            tester
+                    .widget<CustomPaint>(
+                      find.byKey(const ValueKey('actual-pad-overlay')),
+                    )
+                    .painter!
+                as SampleRegionPainter;
+        expect(overlay.localization.regions.length, count);
+      }
       expect(find.text('10 sampling regions located'), findsOneWidget);
       service.result.completeError(
         ScanAnalysisFailure(
@@ -185,6 +198,31 @@ void main() {
     service.result.complete(ScanResult.empty(imagePath: ''));
     await tester.pump();
   });
+  testWidgets(
+    'fast analysis waits for the real measured boxes to be presented',
+    (tester) async {
+      final service = PendingAnalysis();
+      await tester.pumpWidget(
+        MaterialApp(
+          home: AnalyzingPage(
+            imagePath: 'synthetic.jpg',
+            analysisService: service,
+          ),
+        ),
+      );
+      service.localization!(fixture());
+      service.result.complete(ScanResult.empty(imagePath: 'synthetic.jpg'));
+      await tester.pump();
+      expect(find.byType(ResultsPage), findsNothing);
+      for (var i = 0; i < 10; i++) {
+        await tester.pump(const Duration(milliseconds: 180));
+      }
+      await tester.pumpAndSettle();
+      expect(find.byType(ResultsPage), findsOneWidget);
+      expect(tester.takeException(), isNull);
+      await tester.pumpWidget(const SizedBox.shrink());
+    },
+  );
   testWidgets('animation pauses on background and disposes cleanly', (
     tester,
   ) async {

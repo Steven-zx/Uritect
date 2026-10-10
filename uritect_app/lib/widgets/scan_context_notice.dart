@@ -12,7 +12,16 @@ class ScanContextNotice extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final p = scan.provenance;
+    final experimental = scan.modelVersion.startsWith(
+      'direction_verified_experimental_',
+    );
     final messages = <String>[
+      if (scan.status == 'review_required')
+        'Some readings are provisional. Vote confidence is not a probability of correctness. Only adequately supported input pads can contribute to screening calculations.',
+      if (experimental)
+        'Experimental research readings: corrected pad order; clinical accuracy is not established.',
+      if (scan.hasQuarantinedOrientationModel)
+        'This record used a model with unverified pad direction. Its readings and derived screening estimates must not be relied on. The original record is preserved for audit.',
       if (scan.isLegacyUnverified)
         'Unverified archive: this record lacks the safety evidence required for a new interpretation.',
       if (p != null)
@@ -48,8 +57,12 @@ class ScanContextNotice extends StatelessWidget {
               shape: const Border(),
               collapsedShape: const Border(),
               title: Text(
-                scan.isLegacyUnverified
-                    ? 'Archived readings are unverified'
+                experimental
+                    ? 'Experimental research readings'
+                    : scan.isLegacyUnverified
+                    ? scan.hasQuarantinedOrientationModel
+                          ? 'Pad assignments unverified: do not rely on this record'
+                          : 'Archived readings are unverified'
                     : p != null && !p.canSupportCurrentContext
                     ? 'Review only: current-result screening unavailable'
                     : p?.isImported == true

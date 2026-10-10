@@ -1,0 +1,24 @@
+{
+  "sources": {
+    "pipeline/audit_ph_sg_errors.py": "2bc9b2598918eb8d32c7cac45309c406e6c6bace2cd114ffaf14f2e8560e46c6",
+    "pipeline/runtime_pad_features.py": "0336cc9ab45be5d96c5f62c8bd64c771bb9300b12c6323a69b5b4cf18145d724",
+    "pipeline/focused_pad_geometry.py": "4305afc466df718c51d89c62cb056369f9bee30f066faeb8d9ca19373107569d",
+    "pipeline/output/knn_improvement_2026-10-11/EXTRACTION_PROVENANCE.json": "fd66c4e68ef6fe5fb37dc5ab4fe01513b9aecd4138b2f2c08ab39d033f80bf87",
+    "pipeline/output/knn_improvement_2026-10-11/SPLIT_MANIFEST.json": "d457618d9cb4d50e958b11e307d8eb770fa4c5fb85872b4581ef299b20cccfc5",
+    "uritect_app/assets/production_semiquant_model.json": "1380d9e04d044413b42bd045e3c7370bf3d06a720695d2654598657234742279"
+  },
+  "recipes": [
+    "runtime_normalized",
+    "runtime_raw",
+    "runtime_hs",
+    "dense_normalized",
+    "dense_raw",
+    "half_raw",
+    "refined_raw",
+    "refined_normalized",
+    "backing_raw",
+    "backing_hs",
+    "raw_lab",
+    "refined_lab"
+  ]
+}

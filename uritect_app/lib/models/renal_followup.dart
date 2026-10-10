@@ -194,7 +194,9 @@ class RenalFollowupEngine {
 
     final protein = _findResult(scanResult.rows, 'PRO', 'Protein');
     final blood = _findResult(scanResult.rows, 'BLD', 'Blood');
-    final scanValid = scanResult.isUsableForCurrentInterpretation;
+    final scanValid = scanResult.hasUsableAnalytesForCurrentInterpretation(
+      const {'PRO', 'BLD'},
+    );
     final proteinValue = _normalize(protein?.result);
     final bloodValue = _normalize(blood?.result);
     final testQualityFailed =

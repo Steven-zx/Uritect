@@ -1,0 +1,78 @@
+{
+  "image_path": "C:/Users/acer/Downloads/Github/Uritect/tmp/orientation_audit/user_reported.jpeg",
+  "accepted": false,
+  "error": "Bad state: LOW_CONFIDENCE: All ten pads were located, but the pH pad could not be classified confidently. Retake under even lighting, with the strip in focus.",
+  "orientation": "exif",
+  "regions": [
+    {
+      "label": "LEU",
+      "left": 391.0,
+      "top": 114.0,
+      "width": 48.0,
+      "height": 48.0
+    },
+    {
+      "label": "NIT",
+      "left": 391.0,
+      "top": 190.0,
+      "width": 48.0,
+      "height": 48.0
+    },
+    {
+      "label": "URO",
+      "left": 391.0,
+      "top": 267.0,
+      "width": 48.0,
+      "height": 48.0
+    },
+    {
+      "label": "PRO",
+      "left": 391.0,
+      "top": 344.0,
+      "width": 48.0,
+      "height": 48.0
+    },
+    {
+      "label": "pH",
+      "left": 391.0,
+      "top": 425.0,
+      "width": 48.0,
+      "height": 48.0
+    },
+    {
+      "label": "BLD",
+      "left": 391.0,
+      "top": 503.0,
+      "width": 48.0,
+      "height": 48.0
+    },
+    {
+      "label": "SG",
+      "left": 391.0,
+      "top": 582.0,
+      "width": 48.0,
+      "height": 48.0
+    },
+    {
+      "label": "KET",
+      "left": 391.0,
+      "top": 662.0,
+      "width": 48.0,
+      "height": 48.0
+    },
+    {
+      "label": "BIL",
+      "left": 391.0,
+      "top": 738.0,
+      "width": 48.0,
+      "height": 48.0
+    },
+    {
+      "label": "GLU",
+      "left": 391.0,
+      "top": 814.0,
+      "width": 48.0,
+      "height": 48.0
+    }
+  ]
+}

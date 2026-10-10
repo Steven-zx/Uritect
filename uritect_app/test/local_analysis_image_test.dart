@@ -2,40 +2,59 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:image/image.dart' as img;
 import 'package:uritect_app/services/local_scan_analysis_service.dart';
-import 'package:uritect_app/models/scan_model.dart';
+import 'package:uritect_app/models/scan_analysis_failure.dart';
+import 'package:uritect_app/models/scan_localization.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   const analyzer = LocalScanAnalysisService();
+  Future<ScanLocalization> locate(String path) async {
+    final events = <ScanLocalization>[];
+    try {
+      final scan = await analyzer.analyze(
+        imagePath: path,
+        onLocalization: events.add,
+      );
+      expect(scan.stripDirectionVerified, isTrue);
+      expect(scan.modelDirectionReviewed, isTrue);
+      expect(scan.rows.length, 10);
+    } on ScanAnalysisFailure catch (error) {
+      expect(error.code, isIn(['LOW_CONFIDENCE', 'OUTSIDE_TRAINING_SUPPORT']));
+      expect(error.padsDetected, 10);
+    }
+    final located = events.where((event) => event.regions.isNotEmpty).toList();
+    expect(
+      located.map((event) => event.regions.length),
+      List.generate(10, (i) => i + 1),
+    );
+    for (final event in located) {
+      expect(event.preview, same(located.first.preview));
+      expect(event.orientation, located.first.orientation);
+      expect(
+        event.regions.map((region) => region.label),
+        located.last.regions
+            .take(event.regions.length)
+            .map((region) => region.label),
+      );
+    }
+    return events.last;
+  }
+
   test(
-    'camera and gallery copies of identical photo give identical accepted results',
+    'camera/gallery locate the same physical pads with corrected experimental classification',
     () async {
-      final source = File('test/fixtures/cabatuan_028_cool.jpg');
       final dir = await Directory.systemTemp.createTemp('uritect_parity_');
       try {
-        final camera = await source.copy('${dir.path}/camera.jpg');
-        final gallery = await source.copy('${dir.path}/gallery.jpg');
-        final first = await analyzer.analyze(imagePath: camera.path);
-        final second = await analyzer.analyze(imagePath: gallery.path);
-        expect(first.isReliableForInterpretation, isTrue);
-        expect(first.padsDetected, 10);
-        expect(second.padsDetected, 10);
+        final original = File('test/fixtures/urs10t_handle_reference.jpg');
+        final camera = await original.copy('${dir.path}/camera.jpg');
+        final gallery = await original.copy('${dir.path}/gallery.jpg');
+        final first = await locate(camera.path);
+        final second = await locate(gallery.path);
         expect(
-          first.rows.map((r) => r.result),
-          second.rows.map((r) => r.result),
+          first.regions.map((r) => r.rect),
+          second.regions.map((r) => r.rect),
         );
-        expect(first.analyteConfidences, second.analyteConfidences);
-        expect(first.modelVersion, second.modelVersion);
-        expect(
-          first.pipelineVersion,
-          'android_markerless_json_knn_v4_support_20261010',
-        );
-        expect(
-          ScanResult.fromJson(first.toJson()).pipelineVersion,
-          first.pipelineVersion,
-        );
-        final legacy = first.toJson()..remove('pipeline_version');
-        expect(ScanResult.fromJson(legacy).pipelineVersion, isNull);
+        expect(first.regions.length, 10);
       } finally {
         await dir.delete(recursive: true);
       }
@@ -43,37 +62,56 @@ void main() {
     timeout: const Timeout(Duration(minutes: 2)),
   );
   test(
-    'sideways and upside-down strips preserve analyte ordering',
+    'all rotations assign LEU at the physical tip and GLU next to the handle',
     () async {
-      final original = File('test/fixtures/cabatuan_028_cool.jpg');
-      final image = img.decodeImage(await original.readAsBytes())!;
-      final baseline = await analyzer.analyze(imagePath: original.path);
-      final dir = await Directory.systemTemp.createTemp('uritect_orientation_');
+      final image = img.decodeImage(
+        await File('test/fixtures/urs10t_handle_reference.jpg').readAsBytes(),
+      )!;
+      final dir = await Directory.systemTemp.createTemp('uritect_direction_');
       try {
-        for (final angle in [90, 180]) {
-          final file = File('${dir.path}/rotated_$angle.png');
+        for (final angle in [0, 90, 180, -90]) {
+          final file = File('${dir.path}/$angle.png');
           await file.writeAsBytes(
             img.encodePng(img.copyRotate(image, angle: angle)),
           );
-          final result = await analyzer.analyze(imagePath: file.path);
+          final evidence = await locate(file.path);
+          final leu = evidence.regions.firstWhere((r) => r.label == 'LEU');
+          final glu = evidence.regions.firstWhere((r) => r.label == 'GLU');
+          expect(leu.rect.top, lessThan(glu.rect.top));
+          final preview = img.decodeImage(evidence.preview)!;
+          final tip = preview.getPixel(
+            leu.rect.center.dx.round(),
+            leu.rect.center.dy.round(),
+          );
+          final last = preview.getPixel(
+            glu.rect.center.dx.round(),
+            glu.rect.center.dy.round(),
+          );
+          // These expectations are independently observed physical colors of this fixture,
+          // not equality with the previous classifier's possibly reversed output.
           expect(
-            result.rows.map((r) => r.result),
-            baseline.rows.map((r) => r.result),
-            reason: 'Rotation $angle',
+            last.g,
+            greaterThan(last.r + 20),
+            reason: 'GLU must sample the teal handle-adjacent pad',
+          );
+          expect(
+            tip.r,
+            greaterThan(last.r + 20),
+            reason: 'LEU must sample the pale/rose tip pad',
           );
         }
       } finally {
         await dir.delete(recursive: true);
       }
     },
-    timeout: const Timeout(Duration(minutes: 2)),
+    timeout: const Timeout(Duration(minutes: 3)),
   );
 
   test(
     'two visible strips are rejected instead of silently choosing one',
     () async {
       final source = img.decodeImage(
-        await File('test/fixtures/cabatuan_028_cool.jpg').readAsBytes(),
+        await File('test/fixtures/urs10t_handle_reference.jpg').readAsBytes(),
       )!;
       final pair = img.Image(width: source.width * 2, height: source.height);
       img.compositeImage(pair, source);

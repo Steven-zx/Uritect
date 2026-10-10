@@ -16,6 +16,8 @@ class ScanResult {
   final int? padsUnavailable;
   final String? rejectionCode;
   final String? rejectionReason;
+  final bool stripDirectionVerified;
+  final bool modelDirectionReviewed;
   final bool supportCheckPassed;
   final Map<String, double> nearestTrainingDistances;
   final ScanProvenance? provenance;
@@ -35,6 +37,8 @@ class ScanResult {
     this.padsUnavailable,
     this.rejectionCode,
     this.rejectionReason,
+    this.stripDirectionVerified = false,
+    this.modelDirectionReviewed = false,
     this.supportCheckPassed = false,
     this.nearestTrainingDistances = const {},
     this.provenance,
@@ -54,7 +58,14 @@ class ScanResult {
     'GLU': 'Glucose',
   };
 
+  bool get hasQuarantinedOrientationModel =>
+      modelVersion ==
+      'production_semiquant_knn_markerless_roi_topfix_v3_20260908';
+
   bool get hasCompleteSafetyMetadata =>
+      !hasQuarantinedOrientationModel &&
+      stripDirectionVerified &&
+      modelDirectionReviewed &&
       padsDetected == 10 &&
       padsUnavailable == 0 &&
       rows.length == 10 &&
@@ -74,6 +85,38 @@ class ScanResult {
       isReliableForInterpretation &&
       provenance?.canSupportCurrentContext == true;
 
+  // The experimental model's existing vote gate remains 0.55. A weak pH
+  // reading must not invalidate independently adequate UTI-input pads.
+  double get requiredAnalyteConfidence =>
+      modelVersion.startsWith('direction_verified_experimental_')
+      ? 0.55
+      : minimumInterpretationConfidence;
+
+  bool hasUsableAnalytesForCurrentInterpretation(Set<String> codes) =>
+      codes.isNotEmpty &&
+      codes.every(expectedAnalytes.containsKey) &&
+      const {
+        'complete',
+        'normal',
+        'moderate',
+        'critical',
+        'review_required',
+      }.contains(status) &&
+      hasCompleteSafetyMetadata &&
+      confidence.isFinite &&
+      confidence >=
+          (status == 'review_required' &&
+                  modelVersion.startsWith('direction_verified_experimental_')
+              ? 0
+              : minimumInterpretationConfidence) &&
+      confidence <= 1 &&
+      provenance?.canSupportCurrentContext == true &&
+      codes.every(
+        (code) =>
+            analyteConfidences[expectedAnalytes[code]]! >=
+            requiredAnalyteConfidence,
+      );
+
   bool get isReliableForInterpretation =>
       const {'complete', 'normal', 'moderate', 'critical'}.contains(status) &&
       hasCompleteSafetyMetadata &&
@@ -84,7 +127,7 @@ class ScanResult {
         final value = analyteConfidences[row.name];
         return value != null &&
             value.isFinite &&
-            value >= minimumInterpretationConfidence;
+            value >= requiredAnalyteConfidence;
       });
 
   factory ScanResult.empty({
@@ -118,6 +161,8 @@ class ScanResult {
     int? padsUnavailable,
     String? rejectionCode,
     String? rejectionReason,
+    bool? stripDirectionVerified,
+    bool? modelDirectionReviewed,
     bool? supportCheckPassed,
     Map<String, double>? nearestTrainingDistances,
     ScanProvenance? provenance,
@@ -137,6 +182,10 @@ class ScanResult {
       padsUnavailable: padsUnavailable ?? this.padsUnavailable,
       rejectionCode: rejectionCode ?? this.rejectionCode,
       rejectionReason: rejectionReason ?? this.rejectionReason,
+      stripDirectionVerified:
+          stripDirectionVerified ?? this.stripDirectionVerified,
+      modelDirectionReviewed:
+          modelDirectionReviewed ?? this.modelDirectionReviewed,
       supportCheckPassed: supportCheckPassed ?? this.supportCheckPassed,
       nearestTrainingDistances:
           nearestTrainingDistances ?? this.nearestTrainingDistances,
@@ -160,6 +209,8 @@ class ScanResult {
       'padsUnavailable': padsUnavailable,
       'rejectionCode': rejectionCode,
       'rejectionReason': rejectionReason,
+      'stripDirectionVerified': stripDirectionVerified,
+      'modelDirectionReviewed': modelDirectionReviewed,
       'supportCheckPassed': supportCheckPassed,
       'nearestTrainingDistances': nearestTrainingDistances,
       'provenance': provenance?.toJson(),
@@ -192,6 +243,8 @@ class ScanResult {
       padsUnavailable: count(json['padsUnavailable']),
       rejectionCode: json['rejectionCode'] as String?,
       rejectionReason: json['rejectionReason'] as String?,
+      stripDirectionVerified: json['stripDirectionVerified'] == true,
+      modelDirectionReviewed: json['modelDirectionReviewed'] == true,
       supportCheckPassed: json['supportCheckPassed'] == true,
       nearestTrainingDistances:
           (json['nearestTrainingDistances'] as Map<String, dynamic>? ?? {}).map(

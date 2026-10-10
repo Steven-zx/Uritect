@@ -12,6 +12,7 @@ import '../models/scan_model.dart';
 import '../models/scan_localization.dart';
 import '../models/scan_analysis_failure.dart';
 import 'training_support_policy.dart';
+import 'runtime_pad_features.dart';
 
 const List<String> _analyteOrder = [
   'Leukocytes',
@@ -64,15 +65,23 @@ class LocalScanAnalysisService {
     final events = ReceivePort();
     final sendPort = onLocalization == null ? null : events.sendPort;
     final eventsDone = Completer<void>();
+    Map<Object?, Object?>? previewMessage;
     final subscription = events.listen((message) {
       if ((message as Map)['done'] == true) {
         eventsDone.complete();
         return;
       }
-      final localization = ScanLocalization.fromMessage(message);
+      if (message.containsKey('preview')) previewMessage = Map.of(message);
+      final localization = ScanLocalization.fromMessage({
+        ...?previewMessage,
+        ...message,
+      });
       onLocalization?.call(localization);
       if (localization.regions.isNotEmpty) {
-        onProgress?.call(80, 'classifying_pads');
+        onProgress?.call(
+          45 + localization.regions.length * 3,
+          message['stage'] as String? ?? 'classifying_pads',
+        );
       }
     });
     late Map<String, dynamic> resultJson;
@@ -234,6 +243,8 @@ class LocalScanAnalysisService {
     final cropX = refinedCropX
         .clamp(0, math.max(0, image.width - padSize))
         .toInt();
+
+    _validateStripDirection(image, centers, cropX, padSize);
 
     final raw = <String, List<double>>{};
     final rois = <String, _Rect>{};
@@ -708,44 +719,72 @@ class LocalScanAnalysisService {
             'Ten separate reagent pads could not be confirmed. Keep every pad visible, reduce glare, and tap to focus before retaking.',
       );
     }
+    return runs.map((r) => (r.start + r.end) / 2).toList();
+  }
+
+  void _validateStripDirection(
+    img.Image image,
+    List<double> centers,
+    int cropX,
+    int padSize,
+  ) {
+    final gap = _median([
+      for (var i = 1; i < centers.length; i++) centers[i] - centers[i - 1],
+    ]);
+    final centerX = cropX + padSize ~/ 2;
     final offset = math.max(padSize + 8, (padSize * 1.5).round());
-    final centerX = (x0 + x1) ~/ 2;
-    double shaftContrast(int start, int end) {
-      final a = start.clamp(0, image.height);
-      final b = end.clamp(0, image.height);
-      if (b - a < padSize ||
-          centerX < offset ||
-          centerX + offset >= image.width) {
+    double shaftContrast(double start, double end) {
+      final a = start.ceil().clamp(0, image.height);
+      final b = end.floor().clamp(0, image.height);
+      if (b - a < gap || centerX < offset || centerX + offset >= image.width) {
         return 0;
       }
       final values = <double>[];
       for (var y = a; y < b; y++) {
-        final center = colors[y];
+        final rgb = [0.0, 0.0, 0.0];
+        var count = 0;
+        for (
+          var x = cropX;
+          x < cropX + padSize;
+          x += math.max(1, padSize ~/ 20)
+        ) {
+          final p = image.getPixel(x, y);
+          rgb[0] += p.r;
+          rgb[1] += p.g;
+          rgb[2] += p.b;
+          count++;
+        }
+        for (var i = 0; i < 3; i++) {
+          rgb[i] /= count;
+        }
         final left = image.getPixel(centerX - offset, y);
         final right = image.getPixel(centerX + offset, y);
-        double distance(img.Pixel p) => math.sqrt(
-          math.pow(center[0] - p.r, 2) +
-              math.pow(center[1] - p.g, 2) +
-              math.pow(center[2] - p.b, 2),
-        );
-        values.add(math.min(distance(left), distance(right)));
+        // Subtract interpolated local background, so a smooth lighting gradient
+        // is not mistaken for the shaft. Either a light or dark shaft is valid.
+        final dr = rgb[0] - (left.r + right.r) / 2;
+        final dg = rgb[1] - (left.g + right.g) / 2;
+        final db = rgb[2] - (left.b + right.b) / 2;
+        values.add(math.sqrt(dr * dr + dg * dg + db * db));
       }
+      if (values.where((v) => v >= 8).length < values.length * .65) return 0;
       return _mean(values);
     }
 
     final before = shaftContrast(
-      runs.first.start - padSize * 3,
-      runs.first.start - 4,
+      centers.first - gap * 3.5,
+      centers.first - gap * .5,
     );
-    final after = shaftContrast(runs.last.end + 4, runs.last.end + padSize * 3);
+    final after = shaftContrast(
+      centers.last + gap * .5,
+      centers.last + gap * 3.5,
+    );
     if (after < 8 || after <= before * 1.4) {
       throw ScanAnalysisFailure(
         code: 'STRIP_DIRECTION_UNCLEAR',
         guidance:
-            'The strip direction could not be confirmed. Include the plain handle below the last pad and keep all ten pads visible.',
+            'The handle direction could not be verified. Include the plain handle beyond GLU, keep all ten pads visible, and retake. No readings are available.',
       );
     }
-    return runs.map((r) => (r.start + r.end) / 2).toList();
   }
 
   List<double> _detectPadCenters(
@@ -1047,41 +1086,18 @@ class LocalScanAnalysisService {
   Map<String, List<double>> _normalizeHsvFeatures(
     Map<String, List<double>> raw,
   ) {
-    final hues = raw.values.map((v) => v[0]).toList();
-    final sats = raw.values.map((v) => v[1]).toList();
-    final vals = raw.values.map((v) => v[2]).toList();
-    final hueAnchor = _circularMeanDeg(hues);
-    final satAnchor = _mean(sats);
-    final valAnchor = _mean(vals);
-    return raw.map((analyte, hsv) {
-      return MapEntry(analyte, [
-        _normalizeHue(hsv[0] - hueAnchor),
-        (0.5 + (hsv[1] - satAnchor)).clamp(0.0, 1.0).toDouble(),
-        (0.5 + (hsv[2] - valAnchor)).clamp(0.0, 1.0).toDouble(),
-      ]);
-    });
+    return RuntimePadFeatures.normalizeHsv(raw);
   }
 
   List<double> _meanHsv(img.Image image, _Rect rect, List<double> gains) {
-    var sinH = 0.0;
-    var cosH = 0.0;
-    var sumS = 0.0;
-    var sumV = 0.0;
-    var count = 0;
-    final step = math.max(1, math.min(rect.width, rect.height) ~/ 12);
-    for (var y = rect.top; y < rect.top + rect.height; y += step) {
-      for (var x = rect.left; x < rect.left + rect.width; x += step) {
-        final rgb = _correctedRgb(image.getPixel(x, y), gains);
-        final hsv = _rgbToHsv(rgb[0], rgb[1], rgb[2]);
-        sinH += math.sin(hsv[0] * math.pi / 180.0);
-        cosH += math.cos(hsv[0] * math.pi / 180.0);
-        sumS += hsv[1];
-        sumV += hsv[2];
-        count++;
-      }
-    }
-    final hue = _normalizeHue(math.atan2(sinH, cosH) * 180.0 / math.pi);
-    return [hue, sumS / count, sumV / count];
+    return RuntimePadFeatures.meanHsv(
+      image,
+      left: rect.left,
+      top: rect.top,
+      width: rect.width,
+      height: rect.height,
+      rgbGains: gains,
+    );
   }
 }
 
@@ -1140,26 +1156,74 @@ Map<String, dynamic> _analyzeScanInBackground(
     localizationPort.send({
       'preview': img.encodeJpg(preview, quality: 85),
       'orientation': extraction.variantName,
+      'stage': model.reviewedPadDirections
+          ? 'classifying_pads'
+          : 'model_review_required',
       'width': extraction.imageWidth,
       'height': extraction.imageHeight,
-      'regions': [
-        for (final entry in extraction.padRois.entries)
-          {
-            'label': _codeForAnalyte(entry.key),
-            'left': entry.value.left,
-            'top': entry.value.top,
-            'width': entry.value.width,
-            'height': entry.value.height,
-          },
-      ],
+      'regions': <Map<String, Object>>[],
     });
   }
+  final locatedRegions = <Map<String, Object>>[];
+  void publishPad(String analyte) {
+    if (localizationPort == null) return;
+    final roi = extraction.padRois[analyte]!;
+    locatedRegions.add({
+      'label': _codeForAnalyte(analyte),
+      'left': roi.left,
+      'top': roi.top,
+      'width': roi.width,
+      'height': roi.height,
+    });
+    localizationPort.send({
+      'stage': 'reading_pad_regions',
+      'regions': List<Map<String, Object>>.of(locatedRegions),
+    });
+  }
+
+  if (!model.reviewedPadDirections) {
+    for (final analyte in _analyteOrder) {
+      publishPad(analyte);
+    }
+    throw ScanAnalysisFailure(
+      code: 'MODEL_ORIENTATION_REVIEW_REQUIRED',
+      guidance:
+          'Pad locations are shown, but the previous classifier is suspended because its training features include reversed pad assignments. No analyte readings or dipstick-based screening estimates are available until the corrected model is reviewed.',
+      padsDetected: 10,
+    );
+  }
+  try {
+    return _classifyVerifiedExtraction(
+      imagePath,
+      model,
+      support,
+      extraction,
+      onPadSample: publishPad,
+    );
+  } finally {
+    // Geometry was already direction-checked. A classification rejection must
+    // not erase the remaining measured regions or imply valid readings.
+    for (final analyte in _analyteOrder.skip(locatedRegions.length)) {
+      publishPad(analyte);
+    }
+  }
+}
+
+// Classify each physically assigned ROI using its own analyte model.
+Map<String, dynamic> _classifyVerifiedExtraction(
+  String imagePath,
+  _ProductionModel model,
+  TrainingSupportPolicy support,
+  _FeatureExtraction extraction, {
+  void Function(String analyte)? onPadSample,
+}) {
   final rows = <DipstickResultRow>[];
   final confidenceValues = <double>[];
   final confidenceByAnalyte = <String, double>{};
   final distancesByAnalyte = <String, double>{};
 
   for (final analyte in _analyteOrder) {
+    onPadSample?.call(analyte);
     final prediction = model.predict(analyte, extraction.featuresByAnalyte);
     support.validate(analyte, prediction.nearestDistance);
     distancesByAnalyte[analyte] = prediction.nearestDistance;
@@ -1178,7 +1242,13 @@ Map<String, dynamic> _analyzeScanInBackground(
       ),
     );
   }
-  model.validateConfidence(confidenceByAnalyte);
+  ScanAnalysisFailure? confidenceWarning;
+  try {
+    model.validateConfidence(confidenceByAnalyte);
+  } on ScanAnalysisFailure catch (error) {
+    if (error.code != 'LOW_CONFIDENCE') rethrow;
+    confidenceWarning = error;
+  }
 
   final averageConfidence = confidenceValues.isEmpty
       ? 0.0
@@ -1188,9 +1258,13 @@ Map<String, dynamic> _analyzeScanInBackground(
       id: 'scan_${DateTime.now().millisecondsSinceEpoch}',
       date: DateTime.now(),
       imagePath: imagePath,
-      status: 'complete',
+      status: confidenceWarning == null ? 'complete' : 'review_required',
+      rejectionCode: confidenceWarning?.code,
+      rejectionReason: confidenceWarning?.guidance,
       confidence: averageConfidence,
       analyteConfidences: confidenceByAnalyte,
+      stripDirectionVerified: true,
+      modelDirectionReviewed: true,
       supportCheckPassed: true,
       nearestTrainingDistances: distancesByAnalyte,
       riskBucket: 'Complete',
@@ -1200,7 +1274,8 @@ Map<String, dynamic> _analyzeScanInBackground(
       padsUnavailable:
           _analyteOrder.length - extraction.featuresByAnalyte.length,
     ).toJson()
-    ..['pipeline_version'] = 'android_markerless_json_knn_v4_support_20261010'
+    ..['pipeline_version'] =
+        'android_markerless_direction_guard_v6_experimental_20261011'
     ..['feature_space'] = 'normalized_hsv'
     ..['localization'] = 'markerless_strip_v1'
     ..['orientation'] = extraction.variantName;
@@ -1208,12 +1283,14 @@ Map<String, dynamic> _analyzeScanInBackground(
 
 class _ProductionModel {
   final String version;
+  final bool reviewedPadDirections;
   final bool abstainEnabled;
   final double abstainThreshold;
   final Map<String, _AnalyteModel> analytes;
 
   const _ProductionModel({
     required this.version,
+    required this.reviewedPadDirections,
     required this.abstainEnabled,
     required this.abstainThreshold,
     required this.analytes,
@@ -1226,6 +1303,11 @@ class _ProductionModel {
         payload['abstain_policy'] as Map<String, dynamic>? ?? {};
     return _ProductionModel(
       version: payload['model_version'] as String? ?? 'production_unknown',
+      reviewedPadDirections:
+          payload['engineering_pad_order_verified'] == true &&
+          (payload['model_version'] as String? ?? '').startsWith(
+            'direction_verified_',
+          ),
       abstainEnabled: abstainPolicy['enabled'] as bool? ?? false,
       abstainThreshold: (abstainPolicy['threshold'] as num?)?.toDouble() ?? 0.0,
       analytes: analytesJson.map((key, value) {
@@ -1564,17 +1646,6 @@ double _stdDev(List<double> values) {
   return math.sqrt(
     _mean(values.map((v) => math.pow(v - m, 2).toDouble()).toList()),
   );
-}
-
-double _circularMeanDeg(List<double> values) {
-  var sinSum = 0.0;
-  var cosSum = 0.0;
-  for (final hue in values) {
-    final radians = hue * math.pi / 180.0;
-    sinSum += math.sin(radians);
-    cosSum += math.cos(radians);
-  }
-  return _normalizeHue(math.atan2(sinSum, cosSum) * 180.0 / math.pi);
 }
 
 double _circularHueStd(List<double> hues) {

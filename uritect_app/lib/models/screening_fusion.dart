@@ -306,7 +306,10 @@ class ScreeningFusionEngine {
       'read_outside_60_seconds',
       'unsupported_strip',
     ].any((id) => flags[id] == true);
-    if ((scanResult != null && !scanResult.isUsableForCurrentInterpretation) ||
+    if ((scanResult != null &&
+            !scanResult.hasUsableAnalytesForCurrentInterpretation(
+              male ? const {'LEU', 'NIT'} : const {'LEU', 'NIT', 'BLD'},
+            )) ||
         testQualityFailed ||
         checklist.hasIncompleteSafetyReview ||
         checklist.hasUnconfirmedTestQuality ||

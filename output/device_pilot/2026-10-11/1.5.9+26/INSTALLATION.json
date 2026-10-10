@@ -1,0 +1,14 @@
+{
+  "installed_at": "2026-10-10T18:26:03.215474+00:00",
+  "device_model": "RMX3933",
+  "android_version": "16",
+  "version": "1.5.9+26",
+  "installed_apk_sha256": "5DA05E2721F977C3CDEEF2BF118ED27DEBA0321D658C06E9FFA39F4038B81273",
+  "installation": "Success",
+  "cold_launch": "Status: ok",
+  "running_pid": "13446",
+  "data_preservation": "Replacement install; no uninstall, clear-data or key reset performed",
+  "manual_phone_scan_testing": "Pending user test",
+  "numerical_results": "Supported readings retained, including explicitly flagged low-confidence predictions. Dependent calculations require adequate input-pad confidence and existing clinical/provenance gates.",
+  "experimental_research_only": true
+}

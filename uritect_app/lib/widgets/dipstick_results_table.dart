@@ -6,7 +6,14 @@ import '../models/dipstick_results_data.dart';
 /// Readable strip values; reference ranges are available on demand.
 class DipstickResultsTable extends StatelessWidget {
   final List<DipstickResultRow> rows;
-  const DipstickResultsTable({super.key, required this.rows});
+  final Map<String, double> analyteConfidences;
+  final double requiredConfidence;
+  const DipstickResultsTable({
+    super.key,
+    required this.rows,
+    this.analyteConfidences = const {},
+    this.requiredConfidence = 0.55,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -53,15 +60,33 @@ class DipstickResultsTable extends StatelessWidget {
                   ),
                   const SizedBox(width: 12),
                   Expanded(
-                    child: Text(
-                      row.result.toLowerCase() == 'neg'
-                          ? 'Negative'
-                          : row.result,
-                      textAlign: TextAlign.right,
-                      style: const TextStyle(
-                        color: AppColors.primaryDark,
-                        fontWeight: FontWeight.w700,
-                      ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          row.result.toLowerCase() == 'neg'
+                              ? 'Negative'
+                              : row.result,
+                          textAlign: TextAlign.right,
+                          style: const TextStyle(
+                            color: AppColors.primaryDark,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        if (analyteConfidences[row.name] != null)
+                          Text(
+                            'Vote confidence: ${(analyteConfidences[row.name]! * 100).toStringAsFixed(0)}%${analyteConfidences[row.name]! < requiredConfidence ? ' ? provisional' : ''}',
+                            textAlign: TextAlign.right,
+                            style: TextStyle(
+                              fontSize: 11,
+                              color:
+                                  analyteConfidences[row.name]! <
+                                      requiredConfidence
+                                  ? Colors.orange.shade900
+                                  : AppColors.textPrimary,
+                            ),
+                          ),
+                      ],
                     ),
                   ),
                 ],

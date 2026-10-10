@@ -1,0 +1,177 @@
+{
+  "version": "1.5.7+24",
+  "generated_at": "2026-10-10T17:38:35.876081+00:00",
+  "status": "orientation_containment_classifier_suspended_pending_physical_pad_and_label_review",
+  "apk": {
+    "path": "output/device_pilot/2026-10-11/1.5.7+24/Uritect_v1.5.7+24_release.apk",
+    "bytes": 57732639,
+    "sha256": "DD659666127A20B7191F21FA094A711E9CB283278AD7F736A1C088DA74CA8D45"
+  },
+  "certificate_sha256": "15D1138DCE077ADA624A140B3A145343D1A48305FD0847E9002869E488F19D39",
+  "source_snapshot_sha256": "650966B0B43F253A492E8CB392294E6D0196CF74B0D5A24046A70BF51D2BC30D",
+  "source_archive_sha256": "7BDCE5AEC9CAD3CEC54E5E52D2CBD0D4EA57F0C5E75E7E02F3FB58FA55085A3E",
+  "checks": {
+    "flutter_test": {
+      "exit_code": 0,
+      "tests_passed": 134
+    },
+    "flutter_analyze": {
+      "exit_code": 0
+    },
+    "development_image_regression": {
+      "exit_code": 0,
+      "cases": 18,
+      "classification_suspended": true
+    },
+    "overlay_geometry": {
+      "exit_code": 0,
+      "cases": 5
+    },
+    "python_direction": {
+      "exit_code": 0,
+      "upright_geometry": true,
+      "inverted_raw_rejected": true
+    },
+    "release_build": {
+      "exit_code": 0,
+      "native_compile": "included in successful signed release assembly"
+    }
+  },
+  "development_image_regression": {
+    "cases": 18,
+    "previously_accepted": 6,
+    "currently_accepted": 0,
+    "lost": [
+      "LAUAAN-P005-L4000",
+      "LAUAAN-P031-L4000",
+      "uritect_2026-7-15_Cabatuan_005_Cool",
+      "uritect_2026-7-15_Cabatuan_010_Cool",
+      "uritect_2026-7-15_Cabatuan_011_Daylight",
+      "uritect_2026-7-17_Cabatuan_028_Daylight"
+    ],
+    "changed_previously_accepted": [],
+    "scope": "Intentional classifier quarantine; lost acceptance is required containment, not restored prediction performance"
+  },
+  "pipeline": "android_markerless_direction_guard_v5_quarantine_20261011",
+  "classification_suspended": true,
+  "production_model_changed": false,
+  "vote_confidence_threshold_changed": false,
+  "bayesian_values_changed": false,
+  "support_policy_status": "training-only engineering guard, not clinically validated",
+  "native_security_device_tests": "Pending; mocked Flutter tests do not verify AndroidKeyStore on physical phones",
+  "clinical_validation": "Not established",
+  "files": [
+    {
+      "path": "docs/URITECT_SECURITY_AND_INPUT_REVIEW_2026-10-10.md",
+      "bytes": 10849,
+      "sha256": "857AC2B78F65369A0D952C9D8C85B8C42466FF04DF051E4F0ED5D13478304A6A"
+    },
+    {
+      "path": "output/device_pilot/2026-10-11/1.5.7+24/APK_IDENTITY.txt",
+      "bytes": 5975,
+      "sha256": "39E2F4A36F1E3972173725A257F7562E6A8922C1844E0A4E5CE7CEB4930F7A24"
+    },
+    {
+      "path": "output/device_pilot/2026-10-11/1.5.7+24/APK_PERMISSIONS.txt",
+      "bytes": 532,
+      "sha256": "2DDE9EECBAD5340347D8E684C4E92A9EA23E3D882A9B3F5049C47AD5783E1E60"
+    },
+    {
+      "path": "output/device_pilot/2026-10-11/1.5.7+24/APK_SECURITY_MANIFEST.txt",
+      "bytes": 8163,
+      "sha256": "415DFF7BEF37F64B028D67EEF5F11B9B6072250486F283CF1CE7D9FB43D1CC74"
+    },
+    {
+      "path": "output/device_pilot/2026-10-11/1.5.7+24/AUTOMATED_CHECKS.json",
+      "bytes": 553,
+      "sha256": "BE7E00335FE5F9E45D25CCBC491272247E9E4211D51E23BEF08BC77348D293A2"
+    },
+    {
+      "path": "output/device_pilot/2026-10-11/1.5.7+24/flutter_analyze.log",
+      "bytes": 1022,
+      "sha256": "D4AFA359BB5CC2F699F744176DDB5D16E88920913472112ECA1BCD0BA857A771"
+    },
+    {
+      "path": "output/device_pilot/2026-10-11/1.5.7+24/flutter_test.log",
+      "bytes": 48350,
+      "sha256": "CD946B438A4D3E4FDB0BECD5B5D58C02E271D766A31201704B763B65C19F2181"
+    },
+    {
+      "path": "output/device_pilot/2026-10-11/1.5.7+24/release_build.log",
+      "bytes": 8474,
+      "sha256": "8326E9D56831EA0BFCABF8DB826357B4CFC906BA3851B55A466E7B1C4780A90D"
+    },
+    {
+      "path": "output/device_pilot/2026-10-11/1.5.7+24/runtime_checks.log",
+      "bytes": 3352,
+      "sha256": "210710B4A84C010B62B60A7848A1B6F9B6B9549C448164B6E6B9CF4D911D3B90"
+    },
+    {
+      "path": "output/device_pilot/2026-10-11/1.5.7+24/runtime_comparison.json",
+      "bytes": 495,
+      "sha256": "6403EA89D4176EDE59D804D27239C68FA0353BE57AA94CB3510AF155D81564AF"
+    },
+    {
+      "path": "output/device_pilot/2026-10-11/1.5.7+24/runtime_regression.json",
+      "bytes": 11358,
+      "sha256": "D917BF8410645A820BC55A51B044B4960CFFA32A5BC3535878E1CB5298779C05"
+    },
+    {
+      "path": "output/device_pilot/2026-10-11/1.5.7+24/SOURCE_SNAPSHOT.json",
+      "bytes": 24004,
+      "sha256": "650966B0B43F253A492E8CB392294E6D0196CF74B0D5A24046A70BF51D2BC30D"
+    },
+    {
+      "path": "output/device_pilot/2026-10-11/1.5.7+24/URITECT_SOURCE_SNAPSHOT.zip",
+      "bytes": 6397564,
+      "sha256": "7BDCE5AEC9CAD3CEC54E5E52D2CBD0D4EA57F0C5E75E7E02F3FB58FA55085A3E"
+    },
+    {
+      "path": "pipeline/build_training_support_policy.py",
+      "bytes": 2511,
+      "sha256": "8C4A410441408D2B95E06919825AAEDF90EE8922F33CFE844E0738A109C0707D"
+    },
+    {
+      "path": "pipeline/test_training_support_policy.py",
+      "bytes": 2065,
+      "sha256": "52138A0FAFAEC7074A9AC6F951FE6FDB3C78F29472B3949183710C60E6836A64"
+    },
+    {
+      "path": "pipeline/verify_qa_pilot_build.py",
+      "bytes": 6833,
+      "sha256": "FCEB67F0AF3F06350FEDD97D5158F22F8E3AD26DC12DE7848D8CFFF5D95AC419"
+    },
+    {
+      "path": "docs/URITECT_PAD_ORIENTATION_INCIDENT_2026-10-11.md",
+      "bytes": 4674,
+      "sha256": "F1494C4675F88C3B8E5A57CBD854538BD96409004C810BDA4B3B180AF56EFA77"
+    },
+    {
+      "path": "pipeline/audit_pad_orientation.py",
+      "bytes": 5087,
+      "sha256": "BB36AF6D508B488C517F296452F4C9731DB7F117A23422DB0ABB948EB4A4EDC6"
+    },
+    {
+      "path": "pipeline/output/orientation_audit_2026-10-11_v3/SUMMARY.json",
+      "bytes": 314,
+      "sha256": "30E00584DD8FB5EE469576C424578CFF65DB2EABC548F7D0A3CD9C8D06AF8DC7"
+    },
+    {
+      "path": "pipeline/output/orientation_audit_2026-10-11_v3/candidate_grouped_evaluation.json",
+      "bytes": 4005,
+      "sha256": "633C887EE9BB146251358682AA7D6D83383A1AE67F0173E59BBC9AA8C7211606"
+    },
+    {
+      "path": "output/device_pilot/2026-10-11/1.5.7+24/python_direction_check.json",
+      "bytes": 894,
+      "sha256": "6E85817537C1ABB270C3F4EB6E7E9C9919425C81B15CD2819698BBE22699F274"
+    },
+    {
+      "path": "output/device_pilot/2026-10-11/1.5.7+24/overlay_geometry.json",
+      "bytes": 828,
+      "sha256": "1F3892CF562D5262D024DFAA95F4D8072F29EC02DFC20855D91B2C55FDBC8233"
+    }
+  ],
+  "model_review": "Corrected candidate not deployed. MedTech physical pad / reference-label review and new grouped validation remain required.",
+  "clinical_pilot_scope": "Capture and measured-region inspection only; no numerical analyte or dipstick-dependent screening outputs."
+}

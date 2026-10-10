@@ -1,0 +1,85 @@
+{
+  "sources": {
+    "pipeline/audit_ph_sg_errors.py": "2bc9b2598918eb8d32c7cac45309c406e6c6bace2cd114ffaf14f2e8560e46c6",
+    "pipeline/runtime_pad_features.py": "0336cc9ab45be5d96c5f62c8bd64c771bb9300b12c6323a69b5b4cf18145d724",
+    "pipeline/focused_pad_geometry.py": "4305afc466df718c51d89c62cb056369f9bee30f066faeb8d9ca19373107569d",
+    "pipeline/output/knn_improvement_2026-10-11/EXTRACTION_PROVENANCE.json": "fd66c4e68ef6fe5fb37dc5ab4fe01513b9aecd4138b2f2c08ab39d033f80bf87",
+    "pipeline/output/knn_improvement_2026-10-11/SPLIT_MANIFEST.json": "d457618d9cb4d50e958b11e307d8eb770fa4c5fb85872b4581ef299b20cccfc5",
+    "uritect_app/assets/production_semiquant_model.json": "1380d9e04d044413b42bd045e3c7370bf3d06a720695d2654598657234742279"
+  },
+  "reference_labels_changed": false,
+  "confirmation_used_for_tuning": false,
+  "app_model_unchanged": true,
+  "development_events": 453,
+  "audited_development_pads": 906,
+  "audit_summary": {
+    "pH": {
+      "reference_counts": {
+        "5.0": 324,
+        "6.0": 101,
+        "7.0": 14,
+        "7.5": 6,
+        "8.5": 4,
+        "6.5": 4
+      },
+      "reference_support_groups": {
+        "8.5": 2,
+        "6.0": 56,
+        "7.0": 8,
+        "7.5": 3,
+        "5.0": 178,
+        "6.5": 3
+      },
+      "errors": {
+        "n": 121,
+        "boundary_supported": 67,
+        "color_support_below_95": 0,
+        "median_neutral_fraction": 0.0,
+        "median_feature_hue_mismatch": 0.22716141694360203,
+        "hue_mismatch_above_5_degrees": 2
+      },
+      "correct": {
+        "n": 332,
+        "boundary_supported": 184,
+        "color_support_below_95": 0,
+        "median_neutral_fraction": 0.0,
+        "median_feature_hue_mismatch": 0.15264804783220143,
+        "hue_mismatch_above_5_degrees": 10
+      }
+    },
+    "Specific Gravity": {
+      "reference_counts": {
+        "1.025": 113,
+        "1.010": 73,
+        "1.015": 65,
+        "1.020": 48,
+        "1.005": 35,
+        "1.030": 119
+      },
+      "reference_support_groups": {
+        "1.025": 64,
+        "1.030": 64,
+        "1.020": 26,
+        "1.005": 20,
+        "1.015": 36,
+        "1.010": 40
+      },
+      "errors": {
+        "n": 192,
+        "boundary_supported": 89,
+        "color_support_below_95": 0,
+        "median_neutral_fraction": 0.0,
+        "median_feature_hue_mismatch": 0.22954512524773918,
+        "hue_mismatch_above_5_degrees": 5
+      },
+      "correct": {
+        "n": 261,
+        "boundary_supported": 127,
+        "color_support_below_95": 0,
+        "median_neutral_fraction": 0.0,
+        "median_feature_hue_mismatch": 0.15242923658979635,
+        "hue_mismatch_above_5_degrees": 9
+      }
+    }
+  }
+}

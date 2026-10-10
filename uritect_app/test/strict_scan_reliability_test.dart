@@ -26,6 +26,20 @@ ScanResult scan() => verifiedFixture(
   ),
 );
 void main() {
+  test(
+    'old production records remain preserved but cannot support interpretation',
+    () {
+      final old = scan().copyWith(
+        modelVersion:
+            'production_semiquant_knn_markerless_roi_topfix_v3_20260908',
+      );
+      final loaded = ScanResult.fromJson(old.toJson());
+      expect(loaded.rows.length, 10);
+      expect(loaded.hasQuarantinedOrientationModel, true);
+      expect(loaded.isReliableForInterpretation, false);
+      expect(loaded.isUsableForCurrentInterpretation, false);
+    },
+  );
   test('only complete exact unique analytes with all safety evidence pass', () {
     final good = scan();
     expect(good.isReliableForInterpretation, isTrue);
@@ -35,6 +49,8 @@ void main() {
       good.copyWith(padsDetected: 9),
       good.copyWith(padsUnavailable: 1),
       good.copyWith(rows: [...good.rows.take(9), good.rows.first]),
+      good.copyWith(stripDirectionVerified: false),
+      good.copyWith(modelDirectionReviewed: false),
       good.copyWith(supportCheckPassed: false),
       good.copyWith(nearestTrainingDistances: {}),
       good.copyWith(confidence: double.nan),

@@ -27,6 +27,9 @@ void main() {
           );
           entry['after'] = {
             'accepted': scan.isReliableForInterpretation,
+            'status': scan.status,
+            'rejection_code': scan.rejectionCode,
+            'readings_available': scan.rows.length,
             'predictions': {for (final r in scan.rows) r.name: r.result},
             'analyte_confidences': scan.analyteConfidences,
             'nearest_training_distances': scan.nearestTrainingDistances,

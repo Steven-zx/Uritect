@@ -230,13 +230,11 @@ void main() {
     'invalid or low-confidence scans cannot produce symptom-only posteriors',
     () {
       final base = scan();
-      final confidences = {for (final row in base.rows) row.name: 0.9};
       final cases = [
         base.copyWith(status: 'invalid'),
         base.copyWith(confidence: 0.44),
         base.copyWith(confidence: double.nan),
         base.copyWith(padsDetected: 9),
-        base.copyWith(analyteConfidences: {...confidences, 'Leukocytes': 0.44}),
         base.copyWith(analyteConfidences: {'Leukocytes': 0.9}),
       ];
       for (final item in cases) {

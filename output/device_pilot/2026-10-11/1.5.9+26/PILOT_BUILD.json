@@ -1,0 +1,200 @@
+{
+  "version": "Glucose+26",
+  "generated_at": "2026-10-10T18:24:13.995441+00:00",
+  "status": "corrected_experimental_research_classifier_not_clinically_validated",
+  "apk": {
+    "path": "output/device_pilot/2026-10-11/1.5.9+26/Uritect_v1.5.9+26_release.apk",
+    "bytes": 57689523,
+    "sha256": "5DA05E2721F977C3CDEEF2BF118ED27DEBA0321D658C06E9FFA39F4038B81273"
+  },
+  "certificate_sha256": "15D1138DCE077ADA624A140B3A145343D1A48305FD0847E9002869E488F19D39",
+  "source_snapshot_sha256": "5D2A535A875CAA91273352F4BCCAED753A249CB96F705D5D398405D90D410CCC",
+  "source_archive_sha256": "E78E13F5A05046516968CA6F877CBB8ACA858E131518EB3AA270140BC67239E5",
+  "checks": {
+    "flutter_test": {
+      "exit_code": 0,
+      "tests_passed": 140
+    },
+    "flutter_analyze": {
+      "exit_code": 0
+    },
+    "real_photo_tools": {
+      "exit_code": 0,
+      "regression_cases": 18,
+      "overlay_cases": 5,
+      "exact_photo_readings": 10
+    },
+    "release_build": {
+      "exit_code": 0,
+      "native_compile": "included in successful signed release assembly"
+    }
+  },
+  "development_image_regression": {
+    "cases": 18,
+    "previously_accepted": 1,
+    "currently_accepted": 1,
+    "lost": [],
+    "changed_previously_accepted": [],
+    "scans_with_readings": 7,
+    "provisional_scans": 6,
+    "scope": "Retrospective selected development photos. Numerical retention improved; model and confident predictions unchanged. Not independent accuracy or representative retake-rate evaluation."
+  },
+  "pipeline": "android_markerless_direction_guard_v6_experimental_20261011",
+  "classification_suspended": false,
+  "production_model_changed": true,
+  "vote_confidence_threshold_changed": false,
+  "bayesian_values_changed": false,
+  "support_policy_status": "training-only engineering guard, not clinically validated",
+  "native_security_device_tests": "Pending; mocked Flutter tests do not verify AndroidKeyStore on physical phones",
+  "clinical_validation": "Not established",
+  "files": [
+    {
+      "path": "docs/URITECT_SECURITY_AND_INPUT_REVIEW_2026-10-10.md",
+      "bytes": 10849,
+      "sha256": "857AC2B78F65369A0D952C9D8C85B8C42466FF04DF051E4F0ED5D13478304A6A"
+    },
+    {
+      "path": "output/device_pilot/2026-10-11/1.5.9+26/APK_IDENTITY.txt",
+      "bytes": 5975,
+      "sha256": "2F13622F16BD592AAEEE17487CE48922A08450AE545003C20679530046FEC580"
+    },
+    {
+      "path": "output/device_pilot/2026-10-11/1.5.9+26/APK_PERMISSIONS.txt",
+      "bytes": 532,
+      "sha256": "2DDE9EECBAD5340347D8E684C4E92A9EA23E3D882A9B3F5049C47AD5783E1E60"
+    },
+    {
+      "path": "output/device_pilot/2026-10-11/1.5.9+26/APK_SECURITY_MANIFEST.txt",
+      "bytes": 8163,
+      "sha256": "AFC0D653642F769D3D9A7780ECF8179C95D17359A568E03B8800D068C512A43D"
+    },
+    {
+      "path": "output/device_pilot/2026-10-11/1.5.9+26/AUTOMATED_CHECKS.json",
+      "bytes": 385,
+      "sha256": "70D27352B6668DA2EA7AD00A23E423102BD1C9525EFD231448BFA6920BA79586"
+    },
+    {
+      "path": "output/device_pilot/2026-10-11/1.5.9+26/flutter_analyze.log",
+      "bytes": 202,
+      "sha256": "0D9E114AE41AB761B63B30AC8A355E07F883E003A99BAB3231D3145B6FC4CA41"
+    },
+    {
+      "path": "output/device_pilot/2026-10-11/1.5.9+26/flutter_test.log",
+      "bytes": 51156,
+      "sha256": "B16676BE3DFCC49E1852C5E58F6F3B62066C37004B847CC49F320A80F0F7822F"
+    },
+    {
+      "path": "output/device_pilot/2026-10-11/1.5.9+26/release_build.log",
+      "bytes": 8474,
+      "sha256": "9FBD88AFB148604EBD47F4E09AEC51E24D23973E55CC0F6DA180AC1E124FC607"
+    },
+    {
+      "path": "output/device_pilot/2026-10-11/1.5.9+26/runtime_checks.log",
+      "bytes": 10326,
+      "sha256": "E7685A04D3F34A0EC8B2138AC30B66CDC0ACFF888D68963552165414E4E000A1"
+    },
+    {
+      "path": "output/device_pilot/2026-10-11/1.5.9+26/runtime_comparison.json",
+      "bytes": 383,
+      "sha256": "1FEA6A4CC52DF7D48985E24FB7F6854C5EF625AFE9EB6DE2F11FC5550937DB30"
+    },
+    {
+      "path": "output/device_pilot/2026-10-11/1.5.9+26/runtime_regression.json",
+      "bytes": 18211,
+      "sha256": "8FA5B4E5F85B97E59668E26309DE8F3FC0E0E3A84EF2DCF2077A9F1FF2C1D544"
+    },
+    {
+      "path": "output/device_pilot/2026-10-11/1.5.9+26/SOURCE_SNAPSHOT.json",
+      "bytes": 24192,
+      "sha256": "5D2A535A875CAA91273352F4BCCAED753A249CB96F705D5D398405D90D410CCC"
+    },
+    {
+      "path": "output/device_pilot/2026-10-11/1.5.9+26/targeted_before_fixture_update.log",
+      "bytes": 8822,
+      "sha256": "9A729A23994AAA63694F3953ACD0255EA56E85C7B5344786B5665C9C3CF75569"
+    },
+    {
+      "path": "output/device_pilot/2026-10-11/1.5.9+26/URITECT_SOURCE_SNAPSHOT.zip",
+      "bytes": 6361446,
+      "sha256": "E78E13F5A05046516968CA6F877CBB8ACA858E131518EB3AA270140BC67239E5"
+    },
+    {
+      "path": "pipeline/build_training_support_policy.py",
+      "bytes": 2511,
+      "sha256": "8C4A410441408D2B95E06919825AAEDF90EE8922F33CFE844E0738A109C0707D"
+    },
+    {
+      "path": "pipeline/test_training_support_policy.py",
+      "bytes": 2065,
+      "sha256": "52138A0FAFAEC7074A9AC6F951FE6FDB3C78F29472B3949183710C60E6836A64"
+    },
+    {
+      "path": "pipeline/verify_qa_pilot_build.py",
+      "bytes": 8811,
+      "sha256": "6F1F6BB22DA3AD72548A00834CC4874FDBC1D3525DBA596DC3112B1C3B12CB12"
+    },
+    {
+      "path": "output/device_pilot/2026-10-11/1.5.9+26/EXPERIMENTAL_MODEL_AUTHORIZATION.json",
+      "bytes": 419,
+      "sha256": "F729D71ECC0EB00ED73776E774C676D11988AB9BFE2E50C1D8426668F2F000A8"
+    },
+    {
+      "path": "output/device_pilot/2026-10-11/1.5.9+26/PHOTO_NUMERICAL_REPRODUCTION.json",
+      "bytes": 4815,
+      "sha256": "A8F6B244E00C835541B932398346C3F3F2DF14E07E584F40AE21242892ACA80F"
+    },
+    {
+      "path": "docs/URITECT_NUMERICAL_RESULTS_RESTORATION_2026-10-11.md",
+      "bytes": 2701,
+      "sha256": "C5965615627A93B30B3CA610000A85F8159B9A325C59928F2EB196F27D94BC76"
+    },
+    {
+      "path": "docs/URITECT_FINAL_PAD_ORDER.json",
+      "bytes": 1003,
+      "sha256": "E24F0423AB00549766ECED2C06EF4BD7B0AB997277B69E546FD93D6FEFCA8F40"
+    },
+    {
+      "path": "pipeline/output/orientation_audit_2026-10-11_v3/candidate_grouped_evaluation.json",
+      "bytes": 4005,
+      "sha256": "633C887EE9BB146251358682AA7D6D83383A1AE67F0173E59BBC9AA8C7211606"
+    },
+    {
+      "path": "output/device_pilot/2026-10-11/1.5.9+26/INSTALLATION.json",
+      "bytes": 728,
+      "sha256": "7B8AA8928B6D908E78ADD4AE09355F873E9A49CAD93E1B654A6F424DA8FCB0DC"
+    },
+    {
+      "path": "output/device_pilot/2026-10-11/1.5.9+26/COLD_LAUNCH.txt",
+      "bytes": 169,
+      "sha256": "DDF1B2776626E9BA547CDE27C0A62CB4601155DC525D1EAB742C91A5F9550F42"
+    },
+    {
+      "path": "output/device_pilot/2026-10-11/1.5.9+26/PER_ANALYTE_ACCURACY.md",
+      "bytes": 1460,
+      "sha256": "84D4E7E251857EC6E3A967597C14502A13118E1C508EF2707CACCAFD7C93279D"
+    },
+    {
+      "path": "output/device_pilot/2026-10-11/1.5.9+26/NITRITE_EVALUATION_CLASS_COUNTS.json",
+      "bytes": 18,
+      "sha256": "C8E2E6378274E1CB10F51408777B158A16DFA9BD6DCEF42DA78EAC583FC419AC"
+    }
+  ],
+  "model_and_support_policy_unchanged_since": "1.5.8+25",
+  "experimental_research_only": true,
+  "result_retention": "All supported classified rows retained; LOW_CONFIDENCE rows remain provisional.",
+  "dependent_confidence_gates": {
+    "female_uti": [
+      "LEU",
+      "NIT",
+      "BLD"
+    ],
+    "male_uti": [
+      "LEU",
+      "NIT"
+    ],
+    "renal": [
+      "PRO",
+      "BLD"
+    ]
+  }
+}

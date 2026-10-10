@@ -1,0 +1,70 @@
+{
+  "pH": {
+    "reference_counts": {
+      "5.0": 324,
+      "6.0": 101,
+      "7.0": 14,
+      "7.5": 6,
+      "8.5": 4,
+      "6.5": 4
+    },
+    "reference_support_groups": {
+      "8.5": 2,
+      "6.0": 56,
+      "7.0": 8,
+      "7.5": 3,
+      "5.0": 178,
+      "6.5": 3
+    },
+    "errors": {
+      "n": 121,
+      "boundary_supported": 67,
+      "color_support_below_95": 0,
+      "median_neutral_fraction": 0.0,
+      "median_feature_hue_mismatch": 0.22716141694360203,
+      "hue_mismatch_above_5_degrees": 2
+    },
+    "correct": {
+      "n": 332,
+      "boundary_supported": 184,
+      "color_support_below_95": 0,
+      "median_neutral_fraction": 0.0,
+      "median_feature_hue_mismatch": 0.15264804783220143,
+      "hue_mismatch_above_5_degrees": 10
+    }
+  },
+  "Specific Gravity": {
+    "reference_counts": {
+      "1.025": 113,
+      "1.010": 73,
+      "1.015": 65,
+      "1.020": 48,
+      "1.005": 35,
+      "1.030": 119
+    },
+    "reference_support_groups": {
+      "1.025": 64,
+      "1.030": 64,
+      "1.020": 26,
+      "1.005": 20,
+      "1.015": 36,
+      "1.010": 40
+    },
+    "errors": {
+      "n": 192,
+      "boundary_supported": 89,
+      "color_support_below_95": 0,
+      "median_neutral_fraction": 0.0,
+      "median_feature_hue_mismatch": 0.22954512524773918,
+      "hue_mismatch_above_5_degrees": 5
+    },
+    "correct": {
+      "n": 261,
+      "boundary_supported": 127,
+      "color_support_below_95": 0,
+      "median_neutral_fraction": 0.0,
+      "median_feature_hue_mismatch": 0.15242923658979635,
+      "hue_mismatch_above_5_degrees": 9
+    }
+  }
+}

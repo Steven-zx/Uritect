@@ -1,0 +1,10 @@
+{
+  "date": "2026-10-11 Asia/Manila",
+  "user_response": "Install corrected experimental classifier",
+  "disclosed_metrics": {
+    "individual_analyte_accuracy": 0.7991525423728814,
+    "all_ten_accuracy": 0.13559322033898305
+  },
+  "scope": "Supervised research testing; not clinically validated",
+  "pad_order": "Previously established LEU,NIT,URO,PRO,pH,BLD,SG,KET,BIL,GLU from physical tip toward handle"
+}

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:uritect_app/services/local_scan_analysis_service.dart';
+import 'package:uritect_app/models/scan_localization.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -11,15 +12,32 @@ void main() {
     'reproduce the identified phone capture without reference-label claims',
     () async {
       final output = <String, dynamic>{'image_path': imagePath};
+      final locations = <ScanLocalization>[];
       try {
         final scan = await const LocalScanAnalysisService().analyze(
           imagePath: imagePath,
+          onLocalization: locations.add,
         );
         output['scan'] = scan.toJson();
         output['accepted'] = scan.isReliableForInterpretation;
       } catch (error) {
         output['accepted'] = false;
         output['error'] = error.toString();
+      }
+      if (locations.isNotEmpty) {
+        final last = locations.last;
+        await File('$outputPath.preview.jpg').writeAsBytes(last.preview);
+        output['orientation'] = last.orientation;
+        output['regions'] = [
+          for (final r in last.regions)
+            {
+              'label': r.label,
+              'left': r.rect.left,
+              'top': r.rect.top,
+              'width': r.rect.width,
+              'height': r.rect.height,
+            },
+        ];
       }
       await File(
         outputPath,

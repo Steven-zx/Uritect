@@ -1,0 +1,16 @@
+{
+  "cases": 18,
+  "previously_accepted": 6,
+  "currently_accepted": 1,
+  "lost": [
+    "LAUAAN-P031-L4000",
+    "uritect_2026-7-15_Cabatuan_005_Cool",
+    "uritect_2026-7-15_Cabatuan_010_Cool",
+    "uritect_2026-7-15_Cabatuan_011_Daylight",
+    "uritect_2026-7-17_Cabatuan_028_Daylight"
+  ],
+  "changed_previously_accepted": [
+    "LAUAAN-P005-L4000"
+  ],
+  "scope": "Selected retrospective development regression; model intentionally replaced with explicitly authorized corrected experimental candidate. Changed predictions and reduced acceptance documented, not claimed as performance improvement."
+}

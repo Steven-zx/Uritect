@@ -1,0 +1,3998 @@
+{
+  "sources": {
+    "pipeline\\output\\orientation_audit_2026-10-11_v3\\candidate_deduped.csv": "77b65b09a515fbe0c356f3ccf184015764c0230466dc202b188dc9cd193736a0",
+    "pipeline\\output\\orientation_audit_2026-10-11_v3\\EVENT_AUDIT.json": "5a5a5a3a3d69575bbae75f4ca5657ac0ad632a721097597656ccbfce0be853a3",
+    "pipeline\\improve_direction_verified_knn.py": "59a1fbb57fd67bd5e6e253cd47d1ddeb7fd849015dd985f8c526773167fdc575",
+    "pipeline\\markerless_strip.py": "f1ae3eea337eb1f201bdc621b64028c4769ac9838f298266a4f7a5a7ba2ae5ce",
+    "pipeline\\specimen_grouping.py": "25ef2aa6e1b7593e2db72737f33054dcfdc7bcd28e42a7fec4ba576a92ee322c",
+    "pipeline\\output\\semiquant_optimization_results.json": "e6a1b2dd64190b7d044d7668ff39123d395ca9c540e46bfc3936c6720b896f23",
+    "uritect_app\\assets\\production_semiquant_model.json": "1380d9e04d044413b42bd045e3c7370bf3d06a720695d2654598657234742279"
+  },
+  "variants": [
+    [
+      true,
+      1.0,
+      "normalized_hsv"
+    ],
+    [
+      true,
+      1.0,
+      "hsv"
+    ],
+    [
+      true,
+      1.0,
+      "lab"
+    ],
+    [
+      true,
+      0.75,
+      "normalized_hsv"
+    ],
+    [
+      true,
+      0.75,
+      "hsv"
+    ],
+    [
+      true,
+      0.75,
+      "lab"
+    ],
+    [
+      true,
+      0.5,
+      "normalized_hsv"
+    ],
+    [
+      true,
+      0.5,
+      "hsv"
+    ],
+    [
+      true,
+      0.5,
+      "lab"
+    ],
+    [
+      false,
+      1.0,
+      "normalized_hsv"
+    ],
+    [
+      false,
+      1.0,
+      "hsv"
+    ],
+    [
+      false,
+      1.0,
+      "lab"
+    ],
+    [
+      false,
+      0.75,
+      "normalized_hsv"
+    ],
+    [
+      false,
+      0.75,
+      "hsv"
+    ],
+    [
+      false,
+      0.75,
+      "lab"
+    ],
+    [
+      false,
+      0.5,
+      "normalized_hsv"
+    ],
+    [
+      false,
+      0.5,
+      "hsv"
+    ],
+    [
+      false,
+      0.5,
+      "lab"
+    ]
+  ],
+  "configurations": [
+    {
+      "variant": 0,
+      "scale": false,
+      "k": 3,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 0,
+      "scale": false,
+      "k": 3,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 0,
+      "scale": false,
+      "k": 3,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 0,
+      "scale": false,
+      "k": 3,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 0,
+      "scale": false,
+      "k": 9,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 0,
+      "scale": false,
+      "k": 9,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 0,
+      "scale": false,
+      "k": 9,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 0,
+      "scale": false,
+      "k": 9,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 0,
+      "scale": false,
+      "k": 21,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 0,
+      "scale": false,
+      "k": 21,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 0,
+      "scale": false,
+      "k": 21,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 0,
+      "scale": false,
+      "k": 21,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 0,
+      "scale": true,
+      "k": 3,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 0,
+      "scale": true,
+      "k": 3,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 0,
+      "scale": true,
+      "k": 3,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 0,
+      "scale": true,
+      "k": 3,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 0,
+      "scale": true,
+      "k": 9,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 0,
+      "scale": true,
+      "k": 9,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 0,
+      "scale": true,
+      "k": 9,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 0,
+      "scale": true,
+      "k": 9,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 0,
+      "scale": true,
+      "k": 21,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 0,
+      "scale": true,
+      "k": 21,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 0,
+      "scale": true,
+      "k": 21,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 0,
+      "scale": true,
+      "k": 21,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 1,
+      "scale": false,
+      "k": 3,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 1,
+      "scale": false,
+      "k": 3,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 1,
+      "scale": false,
+      "k": 3,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 1,
+      "scale": false,
+      "k": 3,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 1,
+      "scale": false,
+      "k": 9,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 1,
+      "scale": false,
+      "k": 9,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 1,
+      "scale": false,
+      "k": 9,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 1,
+      "scale": false,
+      "k": 9,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 1,
+      "scale": false,
+      "k": 21,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 1,
+      "scale": false,
+      "k": 21,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 1,
+      "scale": false,
+      "k": 21,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 1,
+      "scale": false,
+      "k": 21,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 1,
+      "scale": true,
+      "k": 3,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 1,
+      "scale": true,
+      "k": 3,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 1,
+      "scale": true,
+      "k": 3,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 1,
+      "scale": true,
+      "k": 3,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 1,
+      "scale": true,
+      "k": 9,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 1,
+      "scale": true,
+      "k": 9,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 1,
+      "scale": true,
+      "k": 9,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 1,
+      "scale": true,
+      "k": 9,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 1,
+      "scale": true,
+      "k": 21,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 1,
+      "scale": true,
+      "k": 21,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 1,
+      "scale": true,
+      "k": 21,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 1,
+      "scale": true,
+      "k": 21,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 2,
+      "scale": false,
+      "k": 3,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 2,
+      "scale": false,
+      "k": 3,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 2,
+      "scale": false,
+      "k": 3,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 2,
+      "scale": false,
+      "k": 3,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 2,
+      "scale": false,
+      "k": 9,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 2,
+      "scale": false,
+      "k": 9,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 2,
+      "scale": false,
+      "k": 9,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 2,
+      "scale": false,
+      "k": 9,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 2,
+      "scale": false,
+      "k": 21,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 2,
+      "scale": false,
+      "k": 21,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 2,
+      "scale": false,
+      "k": 21,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 2,
+      "scale": false,
+      "k": 21,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 2,
+      "scale": true,
+      "k": 3,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 2,
+      "scale": true,
+      "k": 3,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 2,
+      "scale": true,
+      "k": 3,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 2,
+      "scale": true,
+      "k": 3,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 2,
+      "scale": true,
+      "k": 9,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 2,
+      "scale": true,
+      "k": 9,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 2,
+      "scale": true,
+      "k": 9,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 2,
+      "scale": true,
+      "k": 9,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 2,
+      "scale": true,
+      "k": 21,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 2,
+      "scale": true,
+      "k": 21,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 2,
+      "scale": true,
+      "k": 21,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 2,
+      "scale": true,
+      "k": 21,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 3,
+      "scale": false,
+      "k": 3,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 3,
+      "scale": false,
+      "k": 3,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 3,
+      "scale": false,
+      "k": 3,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 3,
+      "scale": false,
+      "k": 3,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 3,
+      "scale": false,
+      "k": 9,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 3,
+      "scale": false,
+      "k": 9,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 3,
+      "scale": false,
+      "k": 9,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 3,
+      "scale": false,
+      "k": 9,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 3,
+      "scale": false,
+      "k": 21,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 3,
+      "scale": false,
+      "k": 21,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 3,
+      "scale": false,
+      "k": 21,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 3,
+      "scale": false,
+      "k": 21,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 3,
+      "scale": true,
+      "k": 3,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 3,
+      "scale": true,
+      "k": 3,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 3,
+      "scale": true,
+      "k": 3,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 3,
+      "scale": true,
+      "k": 3,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 3,
+      "scale": true,
+      "k": 9,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 3,
+      "scale": true,
+      "k": 9,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 3,
+      "scale": true,
+      "k": 9,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 3,
+      "scale": true,
+      "k": 9,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 3,
+      "scale": true,
+      "k": 21,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 3,
+      "scale": true,
+      "k": 21,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 3,
+      "scale": true,
+      "k": 21,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 3,
+      "scale": true,
+      "k": 21,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 4,
+      "scale": false,
+      "k": 3,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 4,
+      "scale": false,
+      "k": 3,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 4,
+      "scale": false,
+      "k": 3,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 4,
+      "scale": false,
+      "k": 3,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 4,
+      "scale": false,
+      "k": 9,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 4,
+      "scale": false,
+      "k": 9,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 4,
+      "scale": false,
+      "k": 9,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 4,
+      "scale": false,
+      "k": 9,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 4,
+      "scale": false,
+      "k": 21,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 4,
+      "scale": false,
+      "k": 21,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 4,
+      "scale": false,
+      "k": 21,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 4,
+      "scale": false,
+      "k": 21,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 4,
+      "scale": true,
+      "k": 3,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 4,
+      "scale": true,
+      "k": 3,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 4,
+      "scale": true,
+      "k": 3,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 4,
+      "scale": true,
+      "k": 3,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 4,
+      "scale": true,
+      "k": 9,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 4,
+      "scale": true,
+      "k": 9,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 4,
+      "scale": true,
+      "k": 9,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 4,
+      "scale": true,
+      "k": 9,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 4,
+      "scale": true,
+      "k": 21,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 4,
+      "scale": true,
+      "k": 21,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 4,
+      "scale": true,
+      "k": 21,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 4,
+      "scale": true,
+      "k": 21,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 5,
+      "scale": false,
+      "k": 3,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 5,
+      "scale": false,
+      "k": 3,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 5,
+      "scale": false,
+      "k": 3,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 5,
+      "scale": false,
+      "k": 3,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 5,
+      "scale": false,
+      "k": 9,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 5,
+      "scale": false,
+      "k": 9,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 5,
+      "scale": false,
+      "k": 9,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 5,
+      "scale": false,
+      "k": 9,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 5,
+      "scale": false,
+      "k": 21,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 5,
+      "scale": false,
+      "k": 21,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 5,
+      "scale": false,
+      "k": 21,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 5,
+      "scale": false,
+      "k": 21,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 5,
+      "scale": true,
+      "k": 3,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 5,
+      "scale": true,
+      "k": 3,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 5,
+      "scale": true,
+      "k": 3,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 5,
+      "scale": true,
+      "k": 3,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 5,
+      "scale": true,
+      "k": 9,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 5,
+      "scale": true,
+      "k": 9,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 5,
+      "scale": true,
+      "k": 9,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 5,
+      "scale": true,
+      "k": 9,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 5,
+      "scale": true,
+      "k": 21,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 5,
+      "scale": true,
+      "k": 21,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 5,
+      "scale": true,
+      "k": 21,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 5,
+      "scale": true,
+      "k": 21,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 6,
+      "scale": false,
+      "k": 3,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 6,
+      "scale": false,
+      "k": 3,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 6,
+      "scale": false,
+      "k": 3,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 6,
+      "scale": false,
+      "k": 3,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 6,
+      "scale": false,
+      "k": 9,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 6,
+      "scale": false,
+      "k": 9,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 6,
+      "scale": false,
+      "k": 9,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 6,
+      "scale": false,
+      "k": 9,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 6,
+      "scale": false,
+      "k": 21,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 6,
+      "scale": false,
+      "k": 21,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 6,
+      "scale": false,
+      "k": 21,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 6,
+      "scale": false,
+      "k": 21,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 6,
+      "scale": true,
+      "k": 3,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 6,
+      "scale": true,
+      "k": 3,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 6,
+      "scale": true,
+      "k": 3,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 6,
+      "scale": true,
+      "k": 3,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 6,
+      "scale": true,
+      "k": 9,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 6,
+      "scale": true,
+      "k": 9,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 6,
+      "scale": true,
+      "k": 9,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 6,
+      "scale": true,
+      "k": 9,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 6,
+      "scale": true,
+      "k": 21,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 6,
+      "scale": true,
+      "k": 21,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 6,
+      "scale": true,
+      "k": 21,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 6,
+      "scale": true,
+      "k": 21,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 7,
+      "scale": false,
+      "k": 3,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 7,
+      "scale": false,
+      "k": 3,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 7,
+      "scale": false,
+      "k": 3,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 7,
+      "scale": false,
+      "k": 3,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 7,
+      "scale": false,
+      "k": 9,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 7,
+      "scale": false,
+      "k": 9,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 7,
+      "scale": false,
+      "k": 9,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 7,
+      "scale": false,
+      "k": 9,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 7,
+      "scale": false,
+      "k": 21,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 7,
+      "scale": false,
+      "k": 21,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 7,
+      "scale": false,
+      "k": 21,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 7,
+      "scale": false,
+      "k": 21,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 7,
+      "scale": true,
+      "k": 3,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 7,
+      "scale": true,
+      "k": 3,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 7,
+      "scale": true,
+      "k": 3,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 7,
+      "scale": true,
+      "k": 3,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 7,
+      "scale": true,
+      "k": 9,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 7,
+      "scale": true,
+      "k": 9,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 7,
+      "scale": true,
+      "k": 9,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 7,
+      "scale": true,
+      "k": 9,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 7,
+      "scale": true,
+      "k": 21,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 7,
+      "scale": true,
+      "k": 21,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 7,
+      "scale": true,
+      "k": 21,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 7,
+      "scale": true,
+      "k": 21,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 8,
+      "scale": false,
+      "k": 3,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 8,
+      "scale": false,
+      "k": 3,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 8,
+      "scale": false,
+      "k": 3,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 8,
+      "scale": false,
+      "k": 3,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 8,
+      "scale": false,
+      "k": 9,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 8,
+      "scale": false,
+      "k": 9,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 8,
+      "scale": false,
+      "k": 9,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 8,
+      "scale": false,
+      "k": 9,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 8,
+      "scale": false,
+      "k": 21,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 8,
+      "scale": false,
+      "k": 21,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 8,
+      "scale": false,
+      "k": 21,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 8,
+      "scale": false,
+      "k": 21,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 8,
+      "scale": true,
+      "k": 3,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 8,
+      "scale": true,
+      "k": 3,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 8,
+      "scale": true,
+      "k": 3,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 8,
+      "scale": true,
+      "k": 3,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 8,
+      "scale": true,
+      "k": 9,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 8,
+      "scale": true,
+      "k": 9,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 8,
+      "scale": true,
+      "k": 9,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 8,
+      "scale": true,
+      "k": 9,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 8,
+      "scale": true,
+      "k": 21,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 8,
+      "scale": true,
+      "k": 21,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 8,
+      "scale": true,
+      "k": 21,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 8,
+      "scale": true,
+      "k": 21,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 9,
+      "scale": false,
+      "k": 3,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 9,
+      "scale": false,
+      "k": 3,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 9,
+      "scale": false,
+      "k": 3,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 9,
+      "scale": false,
+      "k": 3,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 9,
+      "scale": false,
+      "k": 9,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 9,
+      "scale": false,
+      "k": 9,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 9,
+      "scale": false,
+      "k": 9,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 9,
+      "scale": false,
+      "k": 9,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 9,
+      "scale": false,
+      "k": 21,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 9,
+      "scale": false,
+      "k": 21,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 9,
+      "scale": false,
+      "k": 21,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 9,
+      "scale": false,
+      "k": 21,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 9,
+      "scale": true,
+      "k": 3,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 9,
+      "scale": true,
+      "k": 3,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 9,
+      "scale": true,
+      "k": 3,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 9,
+      "scale": true,
+      "k": 3,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 9,
+      "scale": true,
+      "k": 9,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 9,
+      "scale": true,
+      "k": 9,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 9,
+      "scale": true,
+      "k": 9,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 9,
+      "scale": true,
+      "k": 9,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 9,
+      "scale": true,
+      "k": 21,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 9,
+      "scale": true,
+      "k": 21,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 9,
+      "scale": true,
+      "k": 21,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 9,
+      "scale": true,
+      "k": 21,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 10,
+      "scale": false,
+      "k": 3,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 10,
+      "scale": false,
+      "k": 3,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 10,
+      "scale": false,
+      "k": 3,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 10,
+      "scale": false,
+      "k": 3,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 10,
+      "scale": false,
+      "k": 9,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 10,
+      "scale": false,
+      "k": 9,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 10,
+      "scale": false,
+      "k": 9,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 10,
+      "scale": false,
+      "k": 9,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 10,
+      "scale": false,
+      "k": 21,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 10,
+      "scale": false,
+      "k": 21,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 10,
+      "scale": false,
+      "k": 21,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 10,
+      "scale": false,
+      "k": 21,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 10,
+      "scale": true,
+      "k": 3,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 10,
+      "scale": true,
+      "k": 3,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 10,
+      "scale": true,
+      "k": 3,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 10,
+      "scale": true,
+      "k": 3,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 10,
+      "scale": true,
+      "k": 9,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 10,
+      "scale": true,
+      "k": 9,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 10,
+      "scale": true,
+      "k": 9,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 10,
+      "scale": true,
+      "k": 9,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 10,
+      "scale": true,
+      "k": 21,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 10,
+      "scale": true,
+      "k": 21,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 10,
+      "scale": true,
+      "k": 21,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 10,
+      "scale": true,
+      "k": 21,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 11,
+      "scale": false,
+      "k": 3,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 11,
+      "scale": false,
+      "k": 3,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 11,
+      "scale": false,
+      "k": 3,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 11,
+      "scale": false,
+      "k": 3,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 11,
+      "scale": false,
+      "k": 9,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 11,
+      "scale": false,
+      "k": 9,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 11,
+      "scale": false,
+      "k": 9,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 11,
+      "scale": false,
+      "k": 9,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 11,
+      "scale": false,
+      "k": 21,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 11,
+      "scale": false,
+      "k": 21,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 11,
+      "scale": false,
+      "k": 21,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 11,
+      "scale": false,
+      "k": 21,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 11,
+      "scale": true,
+      "k": 3,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 11,
+      "scale": true,
+      "k": 3,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 11,
+      "scale": true,
+      "k": 3,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 11,
+      "scale": true,
+      "k": 3,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 11,
+      "scale": true,
+      "k": 9,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 11,
+      "scale": true,
+      "k": 9,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 11,
+      "scale": true,
+      "k": 9,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 11,
+      "scale": true,
+      "k": 9,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 11,
+      "scale": true,
+      "k": 21,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 11,
+      "scale": true,
+      "k": 21,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 11,
+      "scale": true,
+      "k": 21,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 11,
+      "scale": true,
+      "k": 21,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 12,
+      "scale": false,
+      "k": 3,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 12,
+      "scale": false,
+      "k": 3,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 12,
+      "scale": false,
+      "k": 3,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 12,
+      "scale": false,
+      "k": 3,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 12,
+      "scale": false,
+      "k": 9,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 12,
+      "scale": false,
+      "k": 9,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 12,
+      "scale": false,
+      "k": 9,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 12,
+      "scale": false,
+      "k": 9,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 12,
+      "scale": false,
+      "k": 21,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 12,
+      "scale": false,
+      "k": 21,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 12,
+      "scale": false,
+      "k": 21,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 12,
+      "scale": false,
+      "k": 21,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 12,
+      "scale": true,
+      "k": 3,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 12,
+      "scale": true,
+      "k": 3,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 12,
+      "scale": true,
+      "k": 3,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 12,
+      "scale": true,
+      "k": 3,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 12,
+      "scale": true,
+      "k": 9,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 12,
+      "scale": true,
+      "k": 9,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 12,
+      "scale": true,
+      "k": 9,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 12,
+      "scale": true,
+      "k": 9,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 12,
+      "scale": true,
+      "k": 21,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 12,
+      "scale": true,
+      "k": 21,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 12,
+      "scale": true,
+      "k": 21,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 12,
+      "scale": true,
+      "k": 21,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 13,
+      "scale": false,
+      "k": 3,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 13,
+      "scale": false,
+      "k": 3,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 13,
+      "scale": false,
+      "k": 3,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 13,
+      "scale": false,
+      "k": 3,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 13,
+      "scale": false,
+      "k": 9,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 13,
+      "scale": false,
+      "k": 9,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 13,
+      "scale": false,
+      "k": 9,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 13,
+      "scale": false,
+      "k": 9,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 13,
+      "scale": false,
+      "k": 21,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 13,
+      "scale": false,
+      "k": 21,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 13,
+      "scale": false,
+      "k": 21,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 13,
+      "scale": false,
+      "k": 21,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 13,
+      "scale": true,
+      "k": 3,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 13,
+      "scale": true,
+      "k": 3,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 13,
+      "scale": true,
+      "k": 3,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 13,
+      "scale": true,
+      "k": 3,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 13,
+      "scale": true,
+      "k": 9,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 13,
+      "scale": true,
+      "k": 9,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 13,
+      "scale": true,
+      "k": 9,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 13,
+      "scale": true,
+      "k": 9,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 13,
+      "scale": true,
+      "k": 21,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 13,
+      "scale": true,
+      "k": 21,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 13,
+      "scale": true,
+      "k": 21,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 13,
+      "scale": true,
+      "k": 21,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 14,
+      "scale": false,
+      "k": 3,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 14,
+      "scale": false,
+      "k": 3,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 14,
+      "scale": false,
+      "k": 3,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 14,
+      "scale": false,
+      "k": 3,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 14,
+      "scale": false,
+      "k": 9,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 14,
+      "scale": false,
+      "k": 9,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 14,
+      "scale": false,
+      "k": 9,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 14,
+      "scale": false,
+      "k": 9,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 14,
+      "scale": false,
+      "k": 21,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 14,
+      "scale": false,
+      "k": 21,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 14,
+      "scale": false,
+      "k": 21,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 14,
+      "scale": false,
+      "k": 21,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 14,
+      "scale": true,
+      "k": 3,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 14,
+      "scale": true,
+      "k": 3,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 14,
+      "scale": true,
+      "k": 3,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 14,
+      "scale": true,
+      "k": 3,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 14,
+      "scale": true,
+      "k": 9,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 14,
+      "scale": true,
+      "k": 9,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 14,
+      "scale": true,
+      "k": 9,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 14,
+      "scale": true,
+      "k": 9,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 14,
+      "scale": true,
+      "k": 21,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 14,
+      "scale": true,
+      "k": 21,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 14,
+      "scale": true,
+      "k": 21,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 14,
+      "scale": true,
+      "k": 21,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 15,
+      "scale": false,
+      "k": 3,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 15,
+      "scale": false,
+      "k": 3,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 15,
+      "scale": false,
+      "k": 3,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 15,
+      "scale": false,
+      "k": 3,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 15,
+      "scale": false,
+      "k": 9,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 15,
+      "scale": false,
+      "k": 9,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 15,
+      "scale": false,
+      "k": 9,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 15,
+      "scale": false,
+      "k": 9,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 15,
+      "scale": false,
+      "k": 21,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 15,
+      "scale": false,
+      "k": 21,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 15,
+      "scale": false,
+      "k": 21,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 15,
+      "scale": false,
+      "k": 21,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 15,
+      "scale": true,
+      "k": 3,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 15,
+      "scale": true,
+      "k": 3,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 15,
+      "scale": true,
+      "k": 3,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 15,
+      "scale": true,
+      "k": 3,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 15,
+      "scale": true,
+      "k": 9,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 15,
+      "scale": true,
+      "k": 9,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 15,
+      "scale": true,
+      "k": 9,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 15,
+      "scale": true,
+      "k": 9,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 15,
+      "scale": true,
+      "k": 21,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 15,
+      "scale": true,
+      "k": 21,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 15,
+      "scale": true,
+      "k": 21,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 15,
+      "scale": true,
+      "k": 21,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 16,
+      "scale": false,
+      "k": 3,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 16,
+      "scale": false,
+      "k": 3,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 16,
+      "scale": false,
+      "k": 3,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 16,
+      "scale": false,
+      "k": 3,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 16,
+      "scale": false,
+      "k": 9,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 16,
+      "scale": false,
+      "k": 9,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 16,
+      "scale": false,
+      "k": 9,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 16,
+      "scale": false,
+      "k": 9,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 16,
+      "scale": false,
+      "k": 21,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 16,
+      "scale": false,
+      "k": 21,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 16,
+      "scale": false,
+      "k": 21,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 16,
+      "scale": false,
+      "k": 21,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 16,
+      "scale": true,
+      "k": 3,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 16,
+      "scale": true,
+      "k": 3,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 16,
+      "scale": true,
+      "k": 3,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 16,
+      "scale": true,
+      "k": 3,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 16,
+      "scale": true,
+      "k": 9,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 16,
+      "scale": true,
+      "k": 9,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 16,
+      "scale": true,
+      "k": 9,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 16,
+      "scale": true,
+      "k": 9,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 16,
+      "scale": true,
+      "k": 21,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 16,
+      "scale": true,
+      "k": 21,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 16,
+      "scale": true,
+      "k": 21,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 16,
+      "scale": true,
+      "k": 21,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 17,
+      "scale": false,
+      "k": 3,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 17,
+      "scale": false,
+      "k": 3,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 17,
+      "scale": false,
+      "k": 3,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 17,
+      "scale": false,
+      "k": 3,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 17,
+      "scale": false,
+      "k": 9,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 17,
+      "scale": false,
+      "k": 9,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 17,
+      "scale": false,
+      "k": 9,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 17,
+      "scale": false,
+      "k": 9,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 17,
+      "scale": false,
+      "k": 21,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 17,
+      "scale": false,
+      "k": 21,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 17,
+      "scale": false,
+      "k": 21,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 17,
+      "scale": false,
+      "k": 21,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 17,
+      "scale": true,
+      "k": 3,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 17,
+      "scale": true,
+      "k": 3,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 17,
+      "scale": true,
+      "k": 3,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 17,
+      "scale": true,
+      "k": 3,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 17,
+      "scale": true,
+      "k": 9,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 17,
+      "scale": true,
+      "k": 9,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 17,
+      "scale": true,
+      "k": 9,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 17,
+      "scale": true,
+      "k": 9,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 17,
+      "scale": true,
+      "k": 21,
+      "metric": "euclidean",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 17,
+      "scale": true,
+      "k": 21,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 17,
+      "scale": true,
+      "k": 21,
+      "metric": "manhattan",
+      "weights": "distance",
+      "augmentation": false,
+      "balanced_votes": false
+    },
+    {
+      "variant": 17,
+      "scale": true,
+      "k": 21,
+      "metric": "manhattan",
+      "weights": "uniform",
+      "augmentation": false,
+      "balanced_votes": false
+    }
+  ],
+  "objective": "0.65 supported-reference macro F1 + 0.35 macro sensitivity; when binary thresholds have both sides, 80% base + 20% mean threshold balanced accuracy",
+  "augmentation": "training only: brightness .97/1.03 (skip clipping), +/-1px diagonal central crop jitter, within existing ROI; no hue shifts; inherited labels not independently verified",
+  "refinement": "top three development configs, compare training augmentation and sqrt inverse-frequency vote weighting",
+  "deployment": "none; app model/assets unchanged",
+  "new_specimens_collected": false
+}

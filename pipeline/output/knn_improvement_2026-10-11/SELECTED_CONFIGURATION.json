@@ -1,0 +1,92 @@
+{
+  "Leukocytes": {
+    "variant": 11,
+    "scale": false,
+    "k": 3,
+    "metric": "manhattan",
+    "weights": "distance",
+    "augmentation": false,
+    "balanced_votes": false
+  },
+  "Nitrite": {
+    "variant": 0,
+    "scale": false,
+    "k": 3,
+    "metric": "euclidean",
+    "weights": "distance",
+    "augmentation": false,
+    "balanced_votes": false
+  },
+  "Urobilinogen": {
+    "variant": 5,
+    "scale": true,
+    "k": 9,
+    "metric": "euclidean",
+    "weights": "distance",
+    "augmentation": false,
+    "balanced_votes": true
+  },
+  "Protein": {
+    "variant": 1,
+    "scale": true,
+    "k": 3,
+    "metric": "manhattan",
+    "weights": "distance",
+    "augmentation": false,
+    "balanced_votes": false
+  },
+  "pH": {
+    "variant": 1,
+    "scale": false,
+    "k": 3,
+    "metric": "euclidean",
+    "weights": "distance",
+    "augmentation": false,
+    "balanced_votes": true
+  },
+  "Blood": {
+    "variant": 9,
+    "scale": true,
+    "k": 3,
+    "metric": "manhattan",
+    "weights": "uniform",
+    "augmentation": false,
+    "balanced_votes": true
+  },
+  "Specific Gravity": {
+    "variant": 15,
+    "scale": true,
+    "k": 9,
+    "metric": "manhattan",
+    "weights": "uniform",
+    "augmentation": false,
+    "balanced_votes": false
+  },
+  "Ketone": {
+    "variant": 4,
+    "scale": false,
+    "k": 21,
+    "metric": "euclidean",
+    "weights": "uniform",
+    "augmentation": false,
+    "balanced_votes": true
+  },
+  "Bilirubin": {
+    "variant": 2,
+    "scale": true,
+    "k": 9,
+    "metric": "euclidean",
+    "weights": "uniform",
+    "augmentation": false,
+    "balanced_votes": false
+  },
+  "Glucose": {
+    "variant": 2,
+    "scale": true,
+    "k": 3,
+    "metric": "euclidean",
+    "weights": "uniform",
+    "augmentation": false,
+    "balanced_votes": false
+  }
+}

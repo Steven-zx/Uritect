@@ -1,4 +1,6 @@
-# URITECT Project Handoff — current candidate and historical baseline
+# URITECT Project Handoff — historical baseline
+
+**Superseded as the current entry point on 2026-10-11.** Use [the developer evaluation handoff](URITECT_DEVELOPER_EVALUATION_HANDOFF.md) for build 1.5.11+28 and current evidence. The material below is retained as historical context.
 
 **2026-10-06 status:** source for 1.4.1+14 is frozen and its signed release APK is built for evaluation.
 Use `URITECT_RELEASE_ACCEPTANCE_2026-10-06.md` and the regenerated release manifest.

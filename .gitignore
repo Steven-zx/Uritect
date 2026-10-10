@@ -1,4 +1,5 @@
 # Python
+developer_evaluation/
 __pycache__/
 *.py[cod]
 *$py.class
@@ -53,6 +54,8 @@ tmp/
 
 # Local research photos and crop evidence remain outside source control.
 pipeline/output/abnormal_error_audit_*/image_evidence*/
+pipeline/output/knn_improvement_*/image_evidence/
+pipeline/output/ph_sg_error_audit_*/image_evidence/
 
 # Frozen release APKs and archives are distributed as artifacts, not Git source.
 output/release/**/*.apk

@@ -66,7 +66,10 @@ void main() {
           final scan = await analyzer.analyze(imagePath: file.path);
           expect(scan.padsDetected, 10);
         } on ScanAnalysisFailure catch (error) {
-          expect(error.code, 'LOW_CONFIDENCE');
+          expect(
+            error.code,
+            isIn(['LOW_CONFIDENCE', 'OUTSIDE_TRAINING_SUPPORT']),
+          );
           expect(error.padsDetected, 10);
         }
       } finally {

@@ -1,0 +1,191 @@
+{
+  "image_path": "C:/Users/acer/Downloads/Github/Uritect/tmp/orientation_audit/user_reported.jpeg",
+  "scan": {
+    "id": "scan_1791656279610",
+    "date": "2026-10-11T02:17:59.611195",
+    "imagePath": "C:/Users/acer/Downloads/Github/Uritect/tmp/orientation_audit/user_reported.jpeg",
+    "status": "review_required",
+    "confidence": 0.7598543296266012,
+    "analyteConfidences": {
+      "Leukocytes": 0.630540241546389,
+      "Nitrite": 0.9681707507442823,
+      "Urobilinogen": 0.7117102590605036,
+      "Protein": 1.0,
+      "pH": 0.5423058459107659,
+      "Blood": 1.0,
+      "Specific Gravity": 0.6186163867293215,
+      "Ketone": 0.5545864161987557,
+      "Bilirubin": 0.5726133960759926,
+      "Glucose": 1.0
+    },
+    "riskBucket": "Complete",
+    "modelVersion": "direction_verified_experimental_v1_20261011",
+    "pipeline_version": "android_markerless_direction_guard_v6_experimental_20261011",
+    "rows": [
+      {
+        "code": "LEU",
+        "name": "Leukocytes",
+        "result": "Trace 15",
+        "referenceRange": "Negative",
+        "status": "moderate"
+      },
+      {
+        "code": "NIT",
+        "name": "Nitrite",
+        "result": "Negative",
+        "referenceRange": "Negative",
+        "status": "negative"
+      },
+      {
+        "code": "URO",
+        "name": "Urobilinogen",
+        "result": "16",
+        "referenceRange": "3.2 - 128",
+        "status": "moderate"
+      },
+      {
+        "code": "PRO",
+        "name": "Protein",
+        "result": "Negative",
+        "referenceRange": "Negative",
+        "status": "negative"
+      },
+      {
+        "code": "pH",
+        "name": "pH",
+        "result": "7.5",
+        "referenceRange": "5.0 - 8.5",
+        "status": "moderate"
+      },
+      {
+        "code": "BLD",
+        "name": "Blood",
+        "result": "Negative",
+        "referenceRange": "Negative",
+        "status": "negative"
+      },
+      {
+        "code": "SG",
+        "name": "Specific Gravity",
+        "result": "1.015",
+        "referenceRange": "1.000 - 1.030",
+        "status": "moderate"
+      },
+      {
+        "code": "KET",
+        "name": "Ketone",
+        "result": "Trace 0.5",
+        "referenceRange": "Negative",
+        "status": "moderate"
+      },
+      {
+        "code": "BIL",
+        "name": "Bilirubin",
+        "result": "Negative",
+        "referenceRange": "Negative",
+        "status": "negative"
+      },
+      {
+        "code": "GLU",
+        "name": "Glucose",
+        "result": "Negative",
+        "referenceRange": "Negative",
+        "status": "negative"
+      }
+    ],
+    "padsDetected": 10,
+    "padsUnavailable": 0,
+    "rejectionCode": "LOW_CONFIDENCE",
+    "rejectionReason": "All ten pads were located, but the pH pad could not be classified confidently. Retake under even lighting, with the strip in focus.",
+    "stripDirectionVerified": true,
+    "modelDirectionReviewed": true,
+    "supportCheckPassed": true,
+    "nearestTrainingDistances": {
+      "Leukocytes": 0.28049082311213197,
+      "Nitrite": 0.08454066093337788,
+      "Urobilinogen": 0.12556662224625625,
+      "Protein": 0.34436375111506434,
+      "pH": 0.6914639744739122,
+      "Blood": 0.10196105874129036,
+      "Specific Gravity": 0.21360798253500035,
+      "Ketone": 0.08328275973782406,
+      "Bilirubin": 0.19497285688932856,
+      "Glucose": 0.1259857533341997
+    },
+    "provenance": null
+  },
+  "accepted": false,
+  "orientation": "exif",
+  "regions": [
+    {
+      "label": "LEU",
+      "left": 391.0,
+      "top": 114.0,
+      "width": 48.0,
+      "height": 48.0
+    },
+    {
+      "label": "NIT",
+      "left": 391.0,
+      "top": 190.0,
+      "width": 48.0,
+      "height": 48.0
+    },
+    {
+      "label": "URO",
+      "left": 391.0,
+      "top": 267.0,
+      "width": 48.0,
+      "height": 48.0
+    },
+    {
+      "label": "PRO",
+      "left": 391.0,
+      "top": 344.0,
+      "width": 48.0,
+      "height": 48.0
+    },
+    {
+      "label": "pH",
+      "left": 391.0,
+      "top": 425.0,
+      "width": 48.0,
+      "height": 48.0
+    },
+    {
+      "label": "BLD",
+      "left": 391.0,
+      "top": 503.0,
+      "width": 48.0,
+      "height": 48.0
+    },
+    {
+      "label": "SG",
+      "left": 391.0,
+      "top": 582.0,
+      "width": 48.0,
+      "height": 48.0
+    },
+    {
+      "label": "KET",
+      "left": 391.0,
+      "top": 662.0,
+      "width": 48.0,
+      "height": 48.0
+    },
+    {
+      "label": "BIL",
+      "left": 391.0,
+      "top": 738.0,
+      "width": 48.0,
+      "height": 48.0
+    },
+    {
+      "label": "GLU",
+      "left": 391.0,
+      "top": 814.0,
+      "width": 48.0,
+      "height": 48.0
+    }
+  ]
+}

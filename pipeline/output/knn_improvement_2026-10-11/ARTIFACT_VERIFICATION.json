@@ -1,0 +1,14 @@
+{
+  "status": "passed",
+  "source_and_app_hashes_verified": true,
+  "unchanged_reference_rows": 5650,
+  "event_count": 565,
+  "development_events": 453,
+  "confirmation_events": 112,
+  "cross_split_group_and_duplicate_image_overlap": 0,
+  "validation_events_predicted_exactly_once": true,
+  "recomputed_summary_metrics": true,
+  "all_failed_rows_have_real_local_crop_evidence": true,
+  "error_rows": 2130,
+  "clinical_validation_established": false
+}

@@ -1,0 +1,19 @@
+{
+  "flutter_test": {
+    "exit_code": 0,
+    "tests_passed": 140
+  },
+  "flutter_analyze": {
+    "exit_code": 0
+  },
+  "real_photo_tools": {
+    "exit_code": 0,
+    "regression_cases": 18,
+    "overlay_cases": 5,
+    "exact_photo_readings": 10
+  },
+  "release_build": {
+    "exit_code": 0,
+    "native_compile": "included in successful signed release assembly"
+  }
+}

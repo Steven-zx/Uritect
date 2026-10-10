@@ -17,6 +17,8 @@ class ResultsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final modelPaused =
+        scanResult.rejectionCode == 'MODEL_ORIENTATION_REVIEW_REQUIRED';
     final hasReadings = scanResult.rows.isNotEmpty;
     final reliable = scanResult.isReliableForInterpretation;
     return Scaffold(
@@ -94,7 +96,9 @@ class ResultsPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    reliable
+                    modelPaused
+                        ? 'Classifier under review'
+                        : reliable
                         ? 'Strip readings available'
                         : hasReadings
                         ? 'Readings need review'
@@ -105,13 +109,15 @@ class ResultsPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    reliable
+                    modelPaused
+                        ? 'Pad locations can be inspected below. Analyte readings are temporarily withheld while the model is reviewed.'
+                        : reliable
                         ? 'These are strip readings, not a diagnosis. Continue to the checklist for screening and safety guidance.'
                         : hasReadings
-                        ? 'These readings cannot support a reliable interpretation. Retake the photo or complete the safety checklist.'
+                        ? 'Provisional readings are marked below. Continue to the checklist; each screening calculation requires adequate confidence in its own input pads. Retake to improve uncertain readings.'
                         : 'No analyte results were produced. You can retake the photo or complete the safety checklist.',
                   ),
-                  if (!hasReadings && scanResult.rejectionReason != null) ...[
+                  if (scanResult.rejectionReason != null) ...[
                     const SizedBox(height: 8),
                     Text(scanResult.rejectionReason!),
                   ],
@@ -155,7 +161,12 @@ class ResultsPage extends StatelessWidget {
               ),
               const SizedBox(height: 12),
             ],
-            if (hasReadings) DipstickResultsTable(rows: scanResult.rows),
+            if (hasReadings)
+              DipstickResultsTable(
+                rows: scanResult.rows,
+                analyteConfidences: scanResult.analyteConfidences,
+                requiredConfidence: scanResult.requiredAnalyteConfidence,
+              ),
             if (scanResult.rejectionCode != null)
               ExpansionTile(
                 title: const Text('Scan details'),

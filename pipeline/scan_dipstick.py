@@ -110,7 +110,7 @@ def parse_args() -> argparse.Namespace:
         "--models-dir",
         type=Path,
         default=None,
-        help="Optional optimized semiquant models directory. Omit to use pipeline/output/semiquant_models.",
+        help="Optional optimized semiquant models directory. Omit to use pipeline/output/semiquant_models_direction_verified_experimental.",
     )
     return parser.parse_args()
 
@@ -142,7 +142,7 @@ def _optimized_models_dir(root: Path) -> Path:
     override = os.environ.get("URITECT_SEMIQUANT_MODELS_DIR", "").strip()
     if override:
         return Path(override)
-    return root / "pipeline" / "output" / "semiquant_models"
+    return root / "pipeline" / "output" / "semiquant_models_direction_verified_experimental"
 
 
 def _load_optimized_models(models_dir: Path) -> tuple[dict[str, Any], dict[str, Any]]:
@@ -330,6 +330,12 @@ def run_scan(
     if map_path is None:
         optimized_models, optimized_metadata = _load_optimized_models(models_dir)
 
+    if not optimized_models or any(
+        info.get('engineering_pad_order_verified') is not True
+        or not str(info.get('model_version','')).startswith('direction_verified_')
+        for info in optimized_metadata.values()
+    ):
+        raise ValueError('MODEL_ORIENTATION_REVIEW_REQUIRED: Old visual classifiers are suspended; use the corrected experimental model for supervised research testing.')
     if map_path is not None:
         map_path = Path(map_path).resolve()
     elif optimized_models:
@@ -498,6 +504,8 @@ def run_scan(
         "date": None,
         "image_path": str(image_path),
         "status": "complete",
+        "experimental_research_only": True,
+        "clinical_validation_established": False,
         "confidence": round(float(average_confidence), 6),
         "risk_bucket": None,
         "model_version": _optimized_model_version(optimized_metadata) if optimized_models else map_path.name,

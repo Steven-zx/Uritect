@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../config/theme.dart';
@@ -30,28 +31,85 @@ class _AnalyzingPageState extends State<AnalyzingPage> {
   ScanLocalization? _localization;
   String _currentStage = 'starting';
   late Future<ScanResult> _scanResultFuture;
+  ScanLocalization? _pendingLocalization;
+  Timer? _revealTimer;
+  Completer<void>? _previewDone;
+
+  void _receiveLocalization(ScanLocalization localization) {
+    if (!mounted) return;
+    final reduceMotion =
+        MediaQuery.maybeOf(context)?.disableAnimations == true ||
+        MediaQuery.maybeOf(context)?.accessibleNavigation == true;
+    if (localization.regions.isEmpty ||
+        reduceMotion ||
+        _localization?.orientation != localization.orientation) {
+      _revealTimer?.cancel();
+      _revealTimer = null;
+      if (_previewDone?.isCompleted == false) _previewDone!.complete();
+      setState(
+        () => _localization = ScanLocalization(
+          preview: localization.preview,
+          imageSize: localization.imageSize,
+          orientation: localization.orientation,
+          regions: reduceMotion ? localization.regions : const [],
+        ),
+      );
+    }
+    _pendingLocalization = localization;
+    if (localization.regions.isEmpty || reduceMotion) return;
+    if (_previewDone == null || _previewDone!.isCompleted) {
+      _previewDone = Completer<void>();
+    }
+    if (_revealTimer == null) _revealNextPad();
+  }
+
+  void _revealNextPad() {
+    if (!mounted) return;
+    final pending = _pendingLocalization!;
+    final count = _localization?.regions.length ?? 0;
+    if (count < pending.regions.length) {
+      setState(
+        () => _localization = ScanLocalization(
+          preview: pending.preview,
+          imageSize: pending.imageSize,
+          orientation: pending.orientation,
+          regions: List.unmodifiable(pending.regions.take(count + 1)),
+        ),
+      );
+      _revealTimer = Timer(const Duration(milliseconds: 180), _revealNextPad);
+    } else {
+      _revealTimer = null;
+      if (_previewDone?.isCompleted == false) _previewDone!.complete();
+    }
+  }
+
+  @override
+  void dispose() {
+    _revealTimer?.cancel();
+    if (_previewDone?.isCompleted == false) _previewDone!.complete();
+    super.dispose();
+  }
 
   @override
   void initState() {
     super.initState();
     _scanResultFuture = widget.analysisService.analyze(
       imagePath: widget.imagePath,
-      onLocalization: (localization) {
-        if (mounted) setState(() => _localization = localization);
-      },
+      onLocalization: _receiveLocalization,
       onProgress: (progress, stage) {
         if (!mounted) return;
         setState(() {
-          _currentStage = stage;
+          _currentStage =
+              _revealTimer != null &&
+                  (stage == 'complete' || stage == 'finalizing_results')
+              ? 'reading_pad_regions'
+              : stage;
         });
       },
     );
     _scanResultFuture
         .then((scanResult) async {
           if (!mounted) return;
-          setState(() {
-            _currentStage = 'complete';
-          });
           await _showResults(scanResult);
         })
         .catchError((error) async {
@@ -86,6 +144,9 @@ class _AnalyzingPageState extends State<AnalyzingPage> {
   // Keep the analysis route alive until results return so the retake reason
   // reaches the capture page instead of completing its push with null.
   Future<void> _showResults(ScanResult result) async {
+    await _previewDone?.future;
+    if (!mounted || ModalRoute.of(context)?.isCurrent != true) return;
+    setState(() => _currentStage = 'complete');
     final exitReason = await Navigator.of(context).push<ScanAnalysisExitReason>(
       MaterialPageRoute(
         builder: (_) => ResultsPage(
@@ -198,7 +259,9 @@ class _AnalyzingPageState extends State<AnalyzingPage> {
     'locating_markerless_strip' ||
     'locating_strip' ||
     'locating_marker' => 'Locating the strip and reading its pads...',
+    'model_review_required' => 'Pad-assignment review required...',
     'classifying_pads' => 'Comparing pad colors with offline references...',
+    'reading_pad_regions' => 'Identifying and reading each analyte pad...',
     'finalizing_results' => 'Checking the scan results...',
     'complete' => 'Opening your results...',
     _ => 'Preparing the scan...',

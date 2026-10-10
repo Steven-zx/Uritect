@@ -48,6 +48,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--deduped-output", type=pathlib.Path, default=DEFAULT_DEDUPED)
     parser.add_argument("--models-dir", type=pathlib.Path, default=DEFAULT_MODELS)
     parser.add_argument("--report", type=pathlib.Path, default=DEFAULT_REPORT)
+    parser.add_argument("--model-version", default=MODEL_VERSION)
+    parser.add_argument("--orientation-audit", type=pathlib.Path, required=True, help="Matching direction-verified feature audit; legacy features must not be frozen again")
     parser.add_argument("--test-size", type=float, default=0.20)
     parser.add_argument("--random-state", type=int, default=42)
     return parser.parse_args()
@@ -63,14 +65,8 @@ def _feature_columns(analyte: str) -> tuple[str, str, str]:
 
 
 def _specimen_group(row: dict[str, str]) -> str:
-    source = row.get("source_zip", "").strip()
-    event = row.get("event_id", "").strip()
-    batch = row.get("batch_id", "").strip()
-    raw = event or batch or source
-    raw = re.sub(r"(?i)(?:^|[_\\-\\s])(cool|warm|daylight|2700k|4000k|5500k)(?:$|[_\\-\\s])", "_", raw)
-    raw = re.sub(r"(?i)(_rhu|_labels|\\.zip)$", "", raw)
-    raw = re.sub(r"[_\\-\\s]+", "_", raw).strip("_")
-    return f"{source}|{raw}" if source else raw
+    from specimen_grouping import specimen_group
+    return specimen_group(row)
 
 
 def _dedupe_rows(rows: list[dict[str, str]]) -> tuple[list[dict[str, str]], int]:
@@ -146,7 +142,7 @@ def _rows_for_analyte(rows: list[dict[str, str]], analyte: str) -> tuple[list[li
         except (KeyError, TypeError, ValueError):
             continue
         y_values.append(level)
-        groups.append(row.get("specimen_group") or _specimen_group(row))
+        groups.append(_specimen_group(row))
         events.append(f"{row.get('source_zip','')}|{row.get('event_id','')}|{row.get('light_kelvin','')}")
     return x_values, y_values, groups, events
 
@@ -240,7 +236,14 @@ def _train_final_models(rows: list[dict[str, str]], opt: dict[str, Any], output_
 
 
 def main() -> None:
+    global MODEL_VERSION
     args = parse_args()
+    MODEL_VERSION = args.model_version
+    audit = json.loads(args.orientation_audit.read_text())
+    if audit.get('gold_labels_changed') is not False or audit.get('verified_events', 0) <= 0:
+        raise ValueError('A completed physical-direction audit is required.')
+    if args.features.resolve() != (args.orientation_audit.parent / 'features_direction_verified_candidate.csv').resolve():
+        raise ValueError('Only the matching direction-verified candidate features may be trained.')
     rows = _load_rows(args.features)
     with args.optimization_results.open(encoding="utf-8") as file:
         opt = json.load(file)

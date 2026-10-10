@@ -1,0 +1,309 @@
+{
+  "scope": "Retrospective development regression, not independent clinical validation",
+  "cases": [
+    {
+      "event_id": "LAUAAN-P003-L5500",
+      "after": {
+        "accepted": false,
+        "rejection_reason": "Bad state: INVALID_IMAGE: PAD_BOUNDARIES_UNCLEAR: A strip-like region was found, but ten separate reagent pads could not be confirmed. Lay the strip flat on a plain background, reduce glare, tap to focus, and retake the photo.",
+        "rejection_code": "PAD_BOUNDARIES_UNCLEAR",
+        "elapsed_ms": 7783
+      },
+      "localization": {
+        "preview_events": 1,
+        "located_regions": 0,
+        "width": 825.0,
+        "height": 1100.0
+      }
+    },
+    {
+      "event_id": "LAUAAN-P152-L5500",
+      "after": {
+        "accepted": false,
+        "rejection_reason": "Bad state: LOW_CONFIDENCE: All ten pads were located, but the Blood pad could not be classified confidently. Retake under even lighting, with the strip in focus.",
+        "rejection_code": "LOW_CONFIDENCE",
+        "elapsed_ms": 4511
+      },
+      "localization": {
+        "preview_events": 2,
+        "located_regions": 10,
+        "width": 825.0,
+        "height": 1100.0
+      }
+    },
+    {
+      "event_id": "LAUAAN-P005-L4000",
+      "after": {
+        "accepted": true,
+        "predictions": {
+          "Leukocytes": "Negative",
+          "Nitrite": "Negative",
+          "Urobilinogen": "3.2",
+          "Protein": "Negative",
+          "pH": "5.0",
+          "Blood": "Negative",
+          "Specific Gravity": "1.030",
+          "Ketone": "Negative",
+          "Bilirubin": "Negative",
+          "Glucose": "Negative"
+        },
+        "analyte_confidences": {
+          "Leukocytes": 0.6638870656145004,
+          "Nitrite": 1.0,
+          "Urobilinogen": 0.8863240598906666,
+          "Protein": 1.0,
+          "pH": 0.9027162238142662,
+          "Blood": 1.0,
+          "Specific Gravity": 1.0,
+          "Ketone": 0.8713185671668877,
+          "Bilirubin": 0.6718867653746221,
+          "Glucose": 0.8455722823781601
+        },
+        "nearest_training_distances": {
+          "Leukocytes": 0.9681988634610048,
+          "Nitrite": 0.07088683452959166,
+          "Urobilinogen": 0.052817340919224964,
+          "Protein": 0.12111575463417971,
+          "pH": 0.05193023294190677,
+          "Blood": 0.10518901727110797,
+          "Specific Gravity": 0.1246247821502437,
+          "Ketone": 0.028517232444273954,
+          "Bilirubin": 0.21536669458556704,
+          "Glucose": 0.10342250490225524
+        },
+        "elapsed_ms": 4423
+      },
+      "localization": {
+        "preview_events": 2,
+        "located_regions": 10,
+        "width": 825.0,
+        "height": 1100.0
+      }
+    },
+    {
+      "event_id": "LAUAAN-P031-L4000",
+      "after": {
+        "accepted": false,
+        "rejection_reason": "Bad state: INVALID_IMAGE: STRIP_DIRECTION_UNCLEAR: The handle direction could not be verified. Include the plain handle beyond GLU, keep all ten pads visible, and retake. No readings are available.",
+        "rejection_code": "STRIP_DIRECTION_UNCLEAR",
+        "elapsed_ms": 8947
+      },
+      "localization": {
+        "preview_events": 1,
+        "located_regions": 0,
+        "width": 825.0,
+        "height": 1100.0
+      }
+    },
+    {
+      "event_id": "LAUAAN-P018-L2700",
+      "after": {
+        "accepted": false,
+        "rejection_reason": "Bad state: INVALID_IMAGE: Could not locate a complete ten-pad strip. exif_legacy: Bad state: INVALID_IMAGE: Strip candidate is not plausible.; rot90_ccw_local_contrast_backing: Bad state: INVALID_IMAGE: No narrow local-contrast strip candidate.",
+        "rejection_code": null,
+        "elapsed_ms": 5965
+      },
+      "localization": {
+        "preview_events": 1,
+        "located_regions": 0,
+        "width": 825.0,
+        "height": 1100.0
+      }
+    },
+    {
+      "event_id": "LAUAAN-P094-L2700",
+      "after": {
+        "accepted": false,
+        "rejection_reason": "Bad state: INVALID_IMAGE: Could not locate a complete ten-pad strip. exif_legacy: Bad state: INVALID_IMAGE: Strip candidate is not plausible.; rot90_ccw_local_contrast_backing: Bad state: INVALID_IMAGE: No narrow local-contrast strip candidate.",
+        "rejection_code": null,
+        "elapsed_ms": 5752
+      },
+      "localization": {
+        "preview_events": 1,
+        "located_regions": 0,
+        "width": 825.0,
+        "height": 1100.0
+      }
+    },
+    {
+      "event_id": "uritect_2026-7-15_Cabatuan_005_Cool",
+      "after": {
+        "accepted": false,
+        "rejection_reason": "Bad state: LOW_CONFIDENCE: All ten pads were located, but the Ketone pad could not be classified confidently. Retake under even lighting, with the strip in focus.",
+        "rejection_code": "LOW_CONFIDENCE",
+        "elapsed_ms": 4787
+      },
+      "localization": {
+        "preview_events": 2,
+        "located_regions": 10,
+        "width": 825.0,
+        "height": 1100.0
+      }
+    },
+    {
+      "event_id": "uritect_2026-7-15_Cabatuan_010_Cool",
+      "after": {
+        "accepted": false,
+        "rejection_reason": "Bad state: LOW_CONFIDENCE: All ten pads were located, but the Protein pad could not be classified confidently. Retake under even lighting, with the strip in focus.",
+        "rejection_code": "LOW_CONFIDENCE",
+        "elapsed_ms": 3968
+      },
+      "localization": {
+        "preview_events": 2,
+        "located_regions": 10,
+        "width": 825.0,
+        "height": 1100.0
+      }
+    },
+    {
+      "event_id": "uritect_2026-7-15_Cabatuan_005_Warm",
+      "after": {
+        "accepted": false,
+        "rejection_reason": "Bad state: INVALID_IMAGE: PAD_BOUNDARIES_UNCLEAR: A strip-like region was found, but ten separate reagent pads could not be confirmed. Lay the strip flat on a plain background, reduce glare, tap to focus, and retake the photo.",
+        "rejection_code": "PAD_BOUNDARIES_UNCLEAR",
+        "elapsed_ms": 7371
+      },
+      "localization": {
+        "preview_events": 1,
+        "located_regions": 0,
+        "width": 825.0,
+        "height": 1100.0
+      }
+    },
+    {
+      "event_id": "uritect_2026-7-15_Cabatuan_H_Warm",
+      "after": {
+        "accepted": false,
+        "rejection_reason": "Bad state: INVALID_IMAGE: PAD_BOUNDARIES_UNCLEAR: A strip-like region was found, but ten separate reagent pads could not be confirmed. Lay the strip flat on a plain background, reduce glare, tap to focus, and retake the photo.",
+        "rejection_code": "PAD_BOUNDARIES_UNCLEAR",
+        "elapsed_ms": 7568
+      },
+      "localization": {
+        "preview_events": 1,
+        "located_regions": 0,
+        "width": 825.0,
+        "height": 1100.0
+      }
+    },
+    {
+      "event_id": "uritect_2026-7-15_Cabatuan_005_Daylight",
+      "after": {
+        "accepted": false,
+        "rejection_reason": "Bad state: INVALID_IMAGE: STRIP_DIRECTION_UNCLEAR: The handle direction could not be verified. Include the plain handle beyond GLU, keep all ten pads visible, and retake. No readings are available.",
+        "rejection_code": "STRIP_DIRECTION_UNCLEAR",
+        "elapsed_ms": 7686
+      },
+      "localization": {
+        "preview_events": 1,
+        "located_regions": 0,
+        "width": 825.0,
+        "height": 1100.0
+      }
+    },
+    {
+      "event_id": "uritect_2026-7-15_Cabatuan_011_Daylight",
+      "after": {
+        "accepted": false,
+        "rejection_reason": "Bad state: LOW_CONFIDENCE: All ten pads were located, but the pH pad could not be classified confidently. Retake under even lighting, with the strip in focus.",
+        "rejection_code": "LOW_CONFIDENCE",
+        "elapsed_ms": 5534
+      },
+      "localization": {
+        "preview_events": 2,
+        "located_regions": 10,
+        "width": 825.0,
+        "height": 1100.0
+      }
+    },
+    {
+      "event_id": "uritect_2026-7-17_Cabatuan_002_Cool",
+      "after": {
+        "accepted": false,
+        "rejection_reason": "Bad state: INVALID_IMAGE: PAD_BOUNDARIES_UNCLEAR: A strip-like region was found, but ten separate reagent pads could not be confirmed. Lay the strip flat on a plain background, reduce glare, tap to focus, and retake the photo.",
+        "rejection_code": "PAD_BOUNDARIES_UNCLEAR",
+        "elapsed_ms": 6049
+      },
+      "localization": {
+        "preview_events": 1,
+        "located_regions": 0,
+        "width": 825.0,
+        "height": 1100.0
+      }
+    },
+    {
+      "event_id": "uritect_2026-7-17_Cabatuan_015_Cool",
+      "after": {
+        "accepted": false,
+        "rejection_reason": "Bad state: INVALID_IMAGE: Could not locate a complete ten-pad strip. exif_legacy: Bad state: INVALID_IMAGE: Strip candidate is not plausible.; rot90_ccw_local_contrast_backing: Bad state: INVALID_IMAGE: No narrow local-contrast strip candidate.",
+        "rejection_code": null,
+        "elapsed_ms": 5764
+      },
+      "localization": {
+        "preview_events": 1,
+        "located_regions": 0,
+        "width": 825.0,
+        "height": 1100.0
+      }
+    },
+    {
+      "event_id": "uritect_2026-7-17_Cabatuan_015_Warm",
+      "after": {
+        "accepted": false,
+        "rejection_reason": "Bad state: INVALID_IMAGE: Could not locate a complete ten-pad strip. exif_legacy: Bad state: INVALID_IMAGE: Strip candidate is not plausible.; rot90_ccw_local_contrast_backing: Bad state: INVALID_IMAGE: No narrow local-contrast strip candidate.",
+        "rejection_code": null,
+        "elapsed_ms": 5972
+      },
+      "localization": {
+        "preview_events": 1,
+        "located_regions": 0,
+        "width": 825.0,
+        "height": 1100.0
+      }
+    },
+    {
+      "event_id": "uritect_2026-7-17_Cabatuan_028_Warm",
+      "after": {
+        "accepted": false,
+        "rejection_reason": "Bad state: INVALID_IMAGE: PAD_BOUNDARIES_UNCLEAR: A strip-like region was found, but ten separate reagent pads could not be confirmed. Lay the strip flat on a plain background, reduce glare, tap to focus, and retake the photo.",
+        "rejection_code": "PAD_BOUNDARIES_UNCLEAR",
+        "elapsed_ms": 6708
+      },
+      "localization": {
+        "preview_events": 1,
+        "located_regions": 0,
+        "width": 825.0,
+        "height": 1100.0
+      }
+    },
+    {
+      "event_id": "uritect_2026-7-17_Cabatuan_028_Daylight",
+      "after": {
+        "accepted": false,
+        "rejection_reason": "Bad state: LOW_CONFIDENCE: All ten pads were located, but the Specific Gravity pad could not be classified confidently. Retake under even lighting, with the strip in focus.",
+        "rejection_code": "LOW_CONFIDENCE",
+        "elapsed_ms": 5096
+      },
+      "localization": {
+        "preview_events": 2,
+        "located_regions": 10,
+        "width": 825.0,
+        "height": 1100.0
+      }
+    },
+    {
+      "event_id": "uritect_2026-7-17_Cabatuan_031_Daylight",
+      "after": {
+        "accepted": false,
+        "rejection_reason": "Bad state: LOW_CONFIDENCE: All ten pads were located, but the pH pad could not be classified confidently. Retake under even lighting, with the strip in focus.",
+        "rejection_code": "LOW_CONFIDENCE",
+        "elapsed_ms": 4531
+      },
+      "localization": {
+        "preview_events": 2,
+        "located_regions": 10,
+        "width": 825.0,
+        "height": 1100.0
+      }
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "audit_provenance_and_output_checks": "passed",
+  "development_events": 453,
+  "confirmation_events_not_evaluated": 112,
+  "reference_labels_unchanged": true,
+  "app_classifier_sha256_unchanged": "1380d9e04d044413b42bd045e3c7370bf3d06a720695d2654598657234742279",
+  "candidate_promoted": false,
+  "python_tests": {
+    "command": ".venv\\Scripts\\python.exe -m unittest discover -s pipeline -p 'test_*.py'",
+    "passed": 50
+  },
+  "flutter_tests": {
+    "command": "flutter test --no-pub (uritect_app)",
+    "passed": 143
+  },
+  "static_analysis": {
+    "command": "flutter analyze --no-pub (repository root)",
+    "result": "No issues found",
+    "exit_code": 0
+  },
+  "test_evidence_scope": "CLI results observed in this work session; test counts are recorded results, not rerun by this verifier.",
+  "parity_scope": "Thirty identical decoded RGB pixel/ROI/gain cases verify feature math; full decoder/detector/new-classifier parity is not claimed.",
+  "manual_review": "Original and regenerated targeted pH/SG contact sheets plus the enlarged Cabatuan_025_Daylight SG context were visually inspected. Sampled review, not exhaustive reference adjudication.",
+  "sources": {
+    "pipeline/verify_ph_sg_audit.py": "1f686a3e7aa8d18bcea3aec86bcc8e92a91413f632e4b8b97e710a1d5c99e742",
+    "pipeline/summarize_ph_sg_audit.py": "41333974cdf233c3225ccc50cf391b52ea2d13d6085ee83010fa403b1f33ff26",
+    "uritect_app/lib/services/runtime_pad_features.dart": "f399e36c9a81255d5ec85cfb3f80d86891be8e75a4c57d5ea7f2f9d28d194308",
+    "uritect_app/lib/services/local_scan_analysis_service.dart": "fc17467c6ad889b4d5f01a7d24252a68eae38041be329a9f8abda217bea4be69",
+    "uritect_app/test/runtime_pad_features_test.dart": "05a2b3b0ddf80c9501f6a26fb52198fe7a2ec90501d78ab1a267c63b5c2be3c0",
+    "uritect_app/test/fixtures/runtime_pad_color_parity.json": "431c69a4cd1accebc1c1c511db4822ad81bec3e445feb15e40dfece3f0c206dc"
+  }
+}

@@ -1,0 +1,243 @@
+{
+  "pH": {
+    "development_events": 453,
+    "baseline_predicted_counts": {
+      "5.0": 410,
+      "6.0": 36,
+      "7.0": 6,
+      "7.5": 1
+    },
+    "baseline_error_pairs": {
+      "6.0 -> 5.0": 84,
+      "5.0 -> 6.0": 13,
+      "7.0 -> 6.0": 5,
+      "7.5 -> 7.0": 2,
+      "7.5 -> 5.0": 4,
+      "8.5 -> 5.0": 3,
+      "8.5 -> 7.5": 1,
+      "7.0 -> 5.0": 5,
+      "6.5 -> 5.0": 3,
+      "6.5 -> 6.0": 1
+    },
+    "nested_predicted_counts": {
+      "5.0": 322,
+      "6.0": 93,
+      "7.5": 4,
+      "7.0": 19,
+      "6.5": 9,
+      "8.5": 6
+    },
+    "feature_neighborhoods": {
+      "runtime_normalized": {
+        "nearest_other_group_label_disagreement": 0.3355408388520971,
+        "per_reference_disagreement": {
+          "5.0": 0.2037037037037037,
+          "6.0": 0.693069306930693,
+          "6.5": 0.5,
+          "7.0": 0.7142857142857143,
+          "7.5": 0.6666666666666666,
+          "8.5": 0.0
+        }
+      },
+      "runtime_raw": {
+        "nearest_other_group_label_disagreement": 0.2847682119205298,
+        "per_reference_disagreement": {
+          "5.0": 0.16049382716049382,
+          "6.0": 0.6138613861386139,
+          "6.5": 0.5,
+          "7.0": 0.6428571428571429,
+          "7.5": 0.6666666666666666,
+          "8.5": 0.0
+        }
+      },
+      "backing_raw": {
+        "nearest_other_group_label_disagreement": 0.2958057395143488,
+        "per_reference_disagreement": {
+          "5.0": 0.17592592592592593,
+          "6.0": 0.5544554455445545,
+          "6.5": 0.5,
+          "7.0": 0.7857142857142857,
+          "7.5": 1.0,
+          "8.5": 0.5
+        }
+      },
+      "raw_lab": {
+        "nearest_other_group_label_disagreement": 0.32450331125827814,
+        "per_reference_disagreement": {
+          "5.0": 0.19444444444444445,
+          "6.0": 0.594059405940594,
+          "6.5": 1.0,
+          "7.0": 1.0,
+          "7.5": 0.8333333333333334,
+          "8.5": 0.25
+        }
+      }
+    },
+    "reference_integrity": {
+      "retained_reference_counts": {
+        "5.0": 406,
+        "6.0": 126,
+        "7.5": 8,
+        "7.0": 15,
+        "8.5": 4,
+        "6.5": 6
+      },
+      "raw_to_canonical_mismatches": 0,
+      "inferred_groups_with_conflicting_reference_labels": [],
+      "scope": "Recorded-label consistency only; does not verify chart reading, laboratory reference, or reaction time."
+    },
+    "contact_sheet_events": [
+      "LAUAAN-P060-L2700",
+      "LAUAAN-P121-L5500",
+      "LAUAAN-P060-L5500",
+      "LAUAAN-P004-L4000",
+      "LAUAAN-P177-L4000",
+      "LAUAAN-P093-L4000",
+      "LAUAAN-P152-L4000",
+      "LAUAAN-P022-L4000",
+      "LAUAAN-P007-L5500",
+      "LAUAAN-P013-L5500",
+      "LAUAAN-P017-L5500",
+      "LAUAAN-P018-L5500",
+      "LAUAAN-P052-L4000",
+      "LAUAAN-P013-L4000",
+      "LAUAAN-P231-L4000",
+      "LAUAAN-P043-L4000",
+      "LAUAAN-P060-L4000",
+      "LAUAAN-P071-L4000",
+      "LAUAAN-P002-L5500",
+      "LAUAAN-P002-L4000",
+      "LAUAAN-P001-L4000",
+      "LAUAAN-P007-L4000"
+    ]
+  },
+  "Specific Gravity": {
+    "development_events": 453,
+    "baseline_predicted_counts": {
+      "1.015": 70,
+      "1.025": 107,
+      "1.010": 76,
+      "1.020": 42,
+      "1.005": 24,
+      "1.030": 134
+    },
+    "baseline_error_pairs": {
+      "1.010 -> 1.015": 15,
+      "1.020 -> 1.025": 15,
+      "1.025 -> 1.020": 12,
+      "1.025 -> 1.030": 23,
+      "1.005 -> 1.010": 17,
+      "1.015 -> 1.020": 11,
+      "1.015 -> 1.025": 7,
+      "1.015 -> 1.010": 13,
+      "1.005 -> 1.015": 2,
+      "1.025 -> 1.015": 8,
+      "1.025 -> 1.010": 4,
+      "1.030 -> 1.025": 16,
+      "1.020 -> 1.015": 13,
+      "1.015 -> 1.030": 5,
+      "1.010 -> 1.025": 3,
+      "1.010 -> 1.005": 10,
+      "1.020 -> 1.030": 5,
+      "1.010 -> 1.020": 2,
+      "1.010 -> 1.030": 2,
+      "1.030 -> 1.015": 3,
+      "1.030 -> 1.020": 3,
+      "1.020 -> 1.010": 1,
+      "1.005 -> 1.030": 2
+    },
+    "nested_predicted_counts": {
+      "1.015": 69,
+      "1.025": 93,
+      "1.005": 29,
+      "1.020": 61,
+      "1.010": 69,
+      "1.030": 132
+    },
+    "feature_neighborhoods": {
+      "runtime_normalized": {
+        "nearest_other_group_label_disagreement": 0.44150110375275936,
+        "per_reference_disagreement": {
+          "1.005": 0.5428571428571428,
+          "1.010": 0.4794520547945205,
+          "1.015": 0.5846153846153846,
+          "1.020": 0.8125,
+          "1.025": 0.3805309734513274,
+          "1.030": 0.2184873949579832
+        }
+      },
+      "runtime_raw": {
+        "nearest_other_group_label_disagreement": 0.4503311258278146,
+        "per_reference_disagreement": {
+          "1.005": 0.5142857142857142,
+          "1.010": 0.589041095890411,
+          "1.015": 0.5692307692307692,
+          "1.020": 0.75,
+          "1.025": 0.35398230088495575,
+          "1.030": 0.25210084033613445
+        }
+      },
+      "backing_raw": {
+        "nearest_other_group_label_disagreement": 0.445916114790287,
+        "per_reference_disagreement": {
+          "1.005": 0.6,
+          "1.010": 0.5068493150684932,
+          "1.015": 0.6153846153846154,
+          "1.020": 0.6875,
+          "1.025": 0.36283185840707965,
+          "1.030": 0.25210084033613445
+        }
+      },
+      "raw_lab": {
+        "nearest_other_group_label_disagreement": 0.47240618101545256,
+        "per_reference_disagreement": {
+          "1.005": 0.5428571428571428,
+          "1.010": 0.547945205479452,
+          "1.015": 0.6615384615384615,
+          "1.020": 0.6875,
+          "1.025": 0.4247787610619469,
+          "1.030": 0.2605042016806723
+        }
+      }
+    },
+    "reference_integrity": {
+      "retained_reference_counts": {
+        "1.010": 87,
+        "1.025": 126,
+        "1.015": 92,
+        "1.020": 62,
+        "1.005": 42,
+        "1.030": 156
+      },
+      "raw_to_canonical_mismatches": 0,
+      "inferred_groups_with_conflicting_reference_labels": [],
+      "scope": "Recorded-label consistency only; does not verify chart reading, laboratory reference, or reaction time."
+    },
+    "errors_within_one_0_005_step": 145,
+    "total_errors": 192,
+    "contact_sheet_events": [
+      "LAUAAN-P092-L2700",
+      "LAUAAN-P063-L5500",
+      "LAUAAN-P160-L5500",
+      "LAUAAN-P069-L2700",
+      "LAUAAN-P126-L5500",
+      "LAUAAN-P032-L4000",
+      "LAUAAN-P184-L4000",
+      "LAUAAN-P059-L4000",
+      "LAUAAN-P009-L5500",
+      "LAUAAN-P015-L4000",
+      "LAUAAN-P017-L5500",
+      "LAUAAN-P018-L5500",
+      "LAUAAN-P021-L4000",
+      "LAUAAN-P001-L4000",
+      "LAUAAN-P022-L5500",
+      "LAUAAN-P042-L5500",
+      "LAUAAN-P017-L4000",
+      "LAUAAN-P041-L4000",
+      "LAUAAN-P002-L5500",
+      "LAUAAN-P002-L4000",
+      "LAUAAN-P004-L4000",
+      "LAUAAN-P007-L4000"
+    ]
+  }
+}

@@ -663,6 +663,29 @@ def _detect_pad_column(
     return int(round(center_x - pad_size / 2.0))
 
 
+def verify_handle_direction(image_bgr: np.ndarray, centers: list[float], crop_x: int, pad_size: int) -> dict[str, float]:
+    """Physical direction evidence, independent of pad categories/model votes."""
+    h, w = image_bgr.shape[:2]
+    gap = float(np.median(np.diff(centers)))
+    center_x = crop_x + pad_size // 2
+    offset = max(pad_size + 8, int(round(pad_size * 1.5)))
+    def contrast(start: float, end: float) -> float:
+        a, b = max(0, int(np.ceil(start))), min(h, int(np.floor(end)))
+        if b-a < gap or center_x-offset < 0 or center_x+offset >= w:
+            return 0.0
+        center = image_bgr[a:b, crop_x:crop_x+pad_size].astype(np.float32).mean(axis=1)
+        left = image_bgr[a:b, center_x-offset].astype(np.float32)
+        right = image_bgr[a:b, center_x+offset].astype(np.float32)
+        values=np.linalg.norm(center-(left+right)/2,axis=1)
+        if float((values>=8).mean())<.65:return 0.0
+        return float(values.mean())
+    before = contrast(centers[0]-gap*3.5,centers[0]-gap*.5)
+    after = contrast(centers[-1]+gap*.5,centers[-1]+gap*3.5)
+    if after < 8 or after <= before*1.4:
+        raise ValueError('STRIP_DIRECTION_UNCLEAR: Include a visible plain handle beyond GLU; pad identity is not established.')
+    return {'before_contrast':before,'handle_contrast':after}
+
+
 def extract_markerless_features(
     image_bgr: np.ndarray,
     *,
@@ -690,6 +713,7 @@ def extract_markerless_features(
     if detected_crop_x0 is None:
         detected_crop_x0 = initial_crop_x0
     crop_x0 = max(0, min(corrected.shape[1] - pad_size, detected_crop_x0))
+    verify_handle_direction(image_bgr, centers, crop_x0, pad_size)
     features: dict[str, tuple[float, float, float]] = {}
     rois: dict[str, tuple[int, int, int, int]] = {}
     crop_y_values: list[int] = []

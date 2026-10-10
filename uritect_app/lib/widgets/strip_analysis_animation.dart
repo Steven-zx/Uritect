@@ -18,8 +18,9 @@ class StripAnalysisAnimation extends StatefulWidget {
 }
 
 class _StripAnalysisAnimationState extends State<StripAnalysisAnimation>
-    with SingleTickerProviderStateMixin, WidgetsBindingObserver {
+    with TickerProviderStateMixin, WidgetsBindingObserver {
   late final AnimationController _controller;
+  late final AnimationController _popController;
   bool _active = true;
   bool _reduceMotion = false;
   @override
@@ -30,6 +31,24 @@ class _StripAnalysisAnimationState extends State<StripAnalysisAnimation>
       vsync: this,
       duration: const Duration(seconds: 4),
     );
+    _popController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 180),
+      value: 1,
+    );
+  }
+
+  @override
+  void didUpdateWidget(StripAnalysisAnimation oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if ((widget.localization?.regions.length ?? 0) >
+        (oldWidget.localization?.regions.length ?? 0)) {
+      if (_reduceMotion || !_active) {
+        _popController.value = 1;
+      } else {
+        _popController.forward(from: 0);
+      }
+    }
   }
 
   @override
@@ -44,8 +63,13 @@ class _StripAnalysisAnimationState extends State<StripAnalysisAnimation>
   void _updateAnimation() {
     if (_active && !_reduceMotion) {
       if (!_controller.isAnimating) _controller.repeat();
+      if (_popController.value < 1 && !_popController.isAnimating) {
+        _popController.forward();
+      }
     } else {
       _controller.stop();
+      _popController.stop();
+      if (_reduceMotion) _popController.value = 1;
     }
   }
 
@@ -59,6 +83,7 @@ class _StripAnalysisAnimationState extends State<StripAnalysisAnimation>
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     _controller.dispose();
+    _popController.dispose();
     super.dispose();
   }
 
@@ -112,7 +137,10 @@ class _StripAnalysisAnimationState extends State<StripAnalysisAnimation>
                                     child,
                                     if (located)
                                       AnimatedBuilder(
-                                        animation: _controller,
+                                        animation: Listenable.merge([
+                                          _controller,
+                                          _popController,
+                                        ]),
                                         builder: (_, _) => CustomPaint(
                                           key: const ValueKey(
                                             'actual-pad-overlay',
@@ -126,6 +154,9 @@ class _StripAnalysisAnimationState extends State<StripAnalysisAnimation>
                                                   context,
                                                 ).textTheme.labelSmall ??
                                                 const TextStyle(),
+                                            popProgress: _reduceMotion
+                                                ? 1
+                                                : _popController.value,
                                           ),
                                         ),
                                       )
@@ -151,7 +182,7 @@ class _StripAnalysisAnimationState extends State<StripAnalysisAnimation>
             const SizedBox(height: 12),
             Text(
               located
-                  ? '${evidence!.regions.length} sampling regions located'
+                  ? '${evidence!.regions.length} sampling ${evidence.regions.length == 1 ? 'region' : 'regions'} located'
                   : 'Locating the strip. Regions appear when confirmed.',
               textAlign: TextAlign.center,
             ),
@@ -172,7 +203,13 @@ class SampleRegionPainter extends CustomPainter {
   final ScanLocalization localization;
   final double phase;
   final TextStyle labelStyle;
-  SampleRegionPainter(this.localization, this.phase, this.labelStyle);
+  final double popProgress;
+  SampleRegionPainter(
+    this.localization,
+    this.phase,
+    this.labelStyle, {
+    this.popProgress = 1,
+  });
   @override
   void paint(Canvas canvas, Size size) {
     final image = localization.imageSize;
@@ -182,7 +219,20 @@ class SampleRegionPainter extends CustomPainter {
     );
     for (var i = 0; i < localization.regions.length; i++) {
       final region = localization.regions[i];
-      final rect = displayedSampleRect(region.rect, image, size);
+      var rect = displayedSampleRect(region.rect, image, size);
+      final newest = i == localization.regions.length - 1;
+      if (newest && popProgress < 1) {
+        final progress = Curves.easeOutCubic.transform(popProgress);
+        rect = Rect.fromCenter(
+          center: rect.center,
+          width: rect.width * (.8 + .2 * progress),
+          height: rect.height * (.8 + .2 * progress),
+        );
+        canvas.saveLayer(
+          null,
+          Paint()..color = Colors.white.withValues(alpha: progress),
+        );
+      }
       // All boxes are measured; the moving highlight is a visual explanation.
       canvas.drawRect(
         rect,
@@ -231,12 +281,15 @@ class SampleRegionPainter extends CustomPainter {
         Paint()..color = const Color(0xFF0B6F8D),
       );
       label.paint(canvas, Offset(left.toDouble(), top));
+      if (newest && popProgress < 1) canvas.restore();
     }
   }
 
   @override
   bool shouldRepaint(SampleRegionPainter oldDelegate) =>
-      oldDelegate.localization != localization || oldDelegate.phase != phase;
+      oldDelegate.localization != localization ||
+      oldDelegate.phase != phase ||
+      oldDelegate.popProgress != popProgress;
 }
 
 /// An illustrative search sweep, never a measured boundary or progress value.

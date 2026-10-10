@@ -1,0 +1,15 @@
+{
+  "cases": 18,
+  "previously_accepted": 6,
+  "currently_accepted": 0,
+  "lost": [
+    "LAUAAN-P005-L4000",
+    "LAUAAN-P031-L4000",
+    "uritect_2026-7-15_Cabatuan_005_Cool",
+    "uritect_2026-7-15_Cabatuan_010_Cool",
+    "uritect_2026-7-15_Cabatuan_011_Daylight",
+    "uritect_2026-7-17_Cabatuan_028_Daylight"
+  ],
+  "changed_previously_accepted": [],
+  "scope": "Intentional classifier quarantine; lost acceptance is required containment, not restored prediction performance"
+}

@@ -1,0 +1,275 @@
+{
+  "scope": "Retrospective development regression, not independent clinical validation",
+  "cases": [
+    {
+      "event_id": "LAUAAN-P003-L5500",
+      "after": {
+        "accepted": false,
+        "rejection_reason": "Bad state: INVALID_IMAGE: PAD_BOUNDARIES_UNCLEAR: A strip-like region was found, but ten separate reagent pads could not be confirmed. Lay the strip flat on a plain background, reduce glare, tap to focus, and retake the photo.",
+        "rejection_code": "PAD_BOUNDARIES_UNCLEAR",
+        "elapsed_ms": 3812
+      },
+      "localization": {
+        "preview_events": 1,
+        "located_regions": 0,
+        "width": 825.0,
+        "height": 1100.0
+      }
+    },
+    {
+      "event_id": "LAUAAN-P152-L5500",
+      "after": {
+        "accepted": false,
+        "rejection_reason": "Bad state: INVALID_IMAGE: MODEL_ORIENTATION_REVIEW_REQUIRED: Pad locations are shown, but the previous classifier is suspended because its training features include reversed pad assignments. No analyte readings or dipstick-based screening estimates are available until the corrected model is reviewed.",
+        "rejection_code": "MODEL_ORIENTATION_REVIEW_REQUIRED",
+        "elapsed_ms": 2382
+      },
+      "localization": {
+        "preview_events": 2,
+        "located_regions": 10,
+        "width": 825.0,
+        "height": 1100.0
+      }
+    },
+    {
+      "event_id": "LAUAAN-P005-L4000",
+      "after": {
+        "accepted": false,
+        "rejection_reason": "Bad state: INVALID_IMAGE: MODEL_ORIENTATION_REVIEW_REQUIRED: Pad locations are shown, but the previous classifier is suspended because its training features include reversed pad assignments. No analyte readings or dipstick-based screening estimates are available until the corrected model is reviewed.",
+        "rejection_code": "MODEL_ORIENTATION_REVIEW_REQUIRED",
+        "elapsed_ms": 2445
+      },
+      "localization": {
+        "preview_events": 2,
+        "located_regions": 10,
+        "width": 825.0,
+        "height": 1100.0
+      }
+    },
+    {
+      "event_id": "LAUAAN-P031-L4000",
+      "after": {
+        "accepted": false,
+        "rejection_reason": "Bad state: INVALID_IMAGE: STRIP_DIRECTION_UNCLEAR: The handle direction could not be verified. Include the plain handle beyond GLU, keep all ten pads visible, and retake. No readings are available.",
+        "rejection_code": "STRIP_DIRECTION_UNCLEAR",
+        "elapsed_ms": 3977
+      },
+      "localization": {
+        "preview_events": 1,
+        "located_regions": 0,
+        "width": 825.0,
+        "height": 1100.0
+      }
+    },
+    {
+      "event_id": "LAUAAN-P018-L2700",
+      "after": {
+        "accepted": false,
+        "rejection_reason": "Bad state: INVALID_IMAGE: Could not locate a complete ten-pad strip. exif_legacy: Bad state: INVALID_IMAGE: Strip candidate is not plausible.; rot90_ccw_local_contrast_backing: Bad state: INVALID_IMAGE: No narrow local-contrast strip candidate.",
+        "rejection_code": null,
+        "elapsed_ms": 3102
+      },
+      "localization": {
+        "preview_events": 1,
+        "located_regions": 0,
+        "width": 825.0,
+        "height": 1100.0
+      }
+    },
+    {
+      "event_id": "LAUAAN-P094-L2700",
+      "after": {
+        "accepted": false,
+        "rejection_reason": "Bad state: INVALID_IMAGE: Could not locate a complete ten-pad strip. exif_legacy: Bad state: INVALID_IMAGE: Strip candidate is not plausible.; rot90_ccw_local_contrast_backing: Bad state: INVALID_IMAGE: No narrow local-contrast strip candidate.",
+        "rejection_code": null,
+        "elapsed_ms": 2800
+      },
+      "localization": {
+        "preview_events": 1,
+        "located_regions": 0,
+        "width": 825.0,
+        "height": 1100.0
+      }
+    },
+    {
+      "event_id": "uritect_2026-7-15_Cabatuan_005_Cool",
+      "after": {
+        "accepted": false,
+        "rejection_reason": "Bad state: INVALID_IMAGE: MODEL_ORIENTATION_REVIEW_REQUIRED: Pad locations are shown, but the previous classifier is suspended because its training features include reversed pad assignments. No analyte readings or dipstick-based screening estimates are available until the corrected model is reviewed.",
+        "rejection_code": "MODEL_ORIENTATION_REVIEW_REQUIRED",
+        "elapsed_ms": 2437
+      },
+      "localization": {
+        "preview_events": 2,
+        "located_regions": 10,
+        "width": 825.0,
+        "height": 1100.0
+      }
+    },
+    {
+      "event_id": "uritect_2026-7-15_Cabatuan_010_Cool",
+      "after": {
+        "accepted": false,
+        "rejection_reason": "Bad state: INVALID_IMAGE: MODEL_ORIENTATION_REVIEW_REQUIRED: Pad locations are shown, but the previous classifier is suspended because its training features include reversed pad assignments. No analyte readings or dipstick-based screening estimates are available until the corrected model is reviewed.",
+        "rejection_code": "MODEL_ORIENTATION_REVIEW_REQUIRED",
+        "elapsed_ms": 2284
+      },
+      "localization": {
+        "preview_events": 2,
+        "located_regions": 10,
+        "width": 825.0,
+        "height": 1100.0
+      }
+    },
+    {
+      "event_id": "uritect_2026-7-15_Cabatuan_005_Warm",
+      "after": {
+        "accepted": false,
+        "rejection_reason": "Bad state: INVALID_IMAGE: PAD_BOUNDARIES_UNCLEAR: A strip-like region was found, but ten separate reagent pads could not be confirmed. Lay the strip flat on a plain background, reduce glare, tap to focus, and retake the photo.",
+        "rejection_code": "PAD_BOUNDARIES_UNCLEAR",
+        "elapsed_ms": 3732
+      },
+      "localization": {
+        "preview_events": 1,
+        "located_regions": 0,
+        "width": 825.0,
+        "height": 1100.0
+      }
+    },
+    {
+      "event_id": "uritect_2026-7-15_Cabatuan_H_Warm",
+      "after": {
+        "accepted": false,
+        "rejection_reason": "Bad state: INVALID_IMAGE: PAD_BOUNDARIES_UNCLEAR: A strip-like region was found, but ten separate reagent pads could not be confirmed. Lay the strip flat on a plain background, reduce glare, tap to focus, and retake the photo.",
+        "rejection_code": "PAD_BOUNDARIES_UNCLEAR",
+        "elapsed_ms": 4253
+      },
+      "localization": {
+        "preview_events": 1,
+        "located_regions": 0,
+        "width": 825.0,
+        "height": 1100.0
+      }
+    },
+    {
+      "event_id": "uritect_2026-7-15_Cabatuan_005_Daylight",
+      "after": {
+        "accepted": false,
+        "rejection_reason": "Bad state: INVALID_IMAGE: STRIP_DIRECTION_UNCLEAR: The handle direction could not be verified. Include the plain handle beyond GLU, keep all ten pads visible, and retake. No readings are available.",
+        "rejection_code": "STRIP_DIRECTION_UNCLEAR",
+        "elapsed_ms": 4477
+      },
+      "localization": {
+        "preview_events": 1,
+        "located_regions": 0,
+        "width": 825.0,
+        "height": 1100.0
+      }
+    },
+    {
+      "event_id": "uritect_2026-7-15_Cabatuan_011_Daylight",
+      "after": {
+        "accepted": false,
+        "rejection_reason": "Bad state: INVALID_IMAGE: MODEL_ORIENTATION_REVIEW_REQUIRED: Pad locations are shown, but the previous classifier is suspended because its training features include reversed pad assignments. No analyte readings or dipstick-based screening estimates are available until the corrected model is reviewed.",
+        "rejection_code": "MODEL_ORIENTATION_REVIEW_REQUIRED",
+        "elapsed_ms": 3524
+      },
+      "localization": {
+        "preview_events": 2,
+        "located_regions": 10,
+        "width": 825.0,
+        "height": 1100.0
+      }
+    },
+    {
+      "event_id": "uritect_2026-7-17_Cabatuan_002_Cool",
+      "after": {
+        "accepted": false,
+        "rejection_reason": "Bad state: INVALID_IMAGE: PAD_BOUNDARIES_UNCLEAR: A strip-like region was found, but ten separate reagent pads could not be confirmed. Lay the strip flat on a plain background, reduce glare, tap to focus, and retake the photo.",
+        "rejection_code": "PAD_BOUNDARIES_UNCLEAR",
+        "elapsed_ms": 3242
+      },
+      "localization": {
+        "preview_events": 1,
+        "located_regions": 0,
+        "width": 825.0,
+        "height": 1100.0
+      }
+    },
+    {
+      "event_id": "uritect_2026-7-17_Cabatuan_015_Cool",
+      "after": {
+        "accepted": false,
+        "rejection_reason": "Bad state: INVALID_IMAGE: Could not locate a complete ten-pad strip. exif_legacy: Bad state: INVALID_IMAGE: Strip candidate is not plausible.; rot90_ccw_local_contrast_backing: Bad state: INVALID_IMAGE: No narrow local-contrast strip candidate.",
+        "rejection_code": null,
+        "elapsed_ms": 3183
+      },
+      "localization": {
+        "preview_events": 1,
+        "located_regions": 0,
+        "width": 825.0,
+        "height": 1100.0
+      }
+    },
+    {
+      "event_id": "uritect_2026-7-17_Cabatuan_015_Warm",
+      "after": {
+        "accepted": false,
+        "rejection_reason": "Bad state: INVALID_IMAGE: Could not locate a complete ten-pad strip. exif_legacy: Bad state: INVALID_IMAGE: Strip candidate is not plausible.; rot90_ccw_local_contrast_backing: Bad state: INVALID_IMAGE: No narrow local-contrast strip candidate.",
+        "rejection_code": null,
+        "elapsed_ms": 3201
+      },
+      "localization": {
+        "preview_events": 1,
+        "located_regions": 0,
+        "width": 825.0,
+        "height": 1100.0
+      }
+    },
+    {
+      "event_id": "uritect_2026-7-17_Cabatuan_028_Warm",
+      "after": {
+        "accepted": false,
+        "rejection_reason": "Bad state: INVALID_IMAGE: PAD_BOUNDARIES_UNCLEAR: A strip-like region was found, but ten separate reagent pads could not be confirmed. Lay the strip flat on a plain background, reduce glare, tap to focus, and retake the photo.",
+        "rejection_code": "PAD_BOUNDARIES_UNCLEAR",
+        "elapsed_ms": 3621
+      },
+      "localization": {
+        "preview_events": 1,
+        "located_regions": 0,
+        "width": 825.0,
+        "height": 1100.0
+      }
+    },
+    {
+      "event_id": "uritect_2026-7-17_Cabatuan_028_Daylight",
+      "after": {
+        "accepted": false,
+        "rejection_reason": "Bad state: INVALID_IMAGE: MODEL_ORIENTATION_REVIEW_REQUIRED: Pad locations are shown, but the previous classifier is suspended because its training features include reversed pad assignments. No analyte readings or dipstick-based screening estimates are available until the corrected model is reviewed.",
+        "rejection_code": "MODEL_ORIENTATION_REVIEW_REQUIRED",
+        "elapsed_ms": 2554
+      },
+      "localization": {
+        "preview_events": 2,
+        "located_regions": 10,
+        "width": 825.0,
+        "height": 1100.0
+      }
+    },
+    {
+      "event_id": "uritect_2026-7-17_Cabatuan_031_Daylight",
+      "after": {
+        "accepted": false,
+        "rejection_reason": "Bad state: INVALID_IMAGE: MODEL_ORIENTATION_REVIEW_REQUIRED: Pad locations are shown, but the previous classifier is suspended because its training features include reversed pad assignments. No analyte readings or dipstick-based screening estimates are available until the corrected model is reviewed.",
+        "rejection_code": "MODEL_ORIENTATION_REVIEW_REQUIRED",
+        "elapsed_ms": 2302
+      },
+      "localization": {
+        "preview_events": 2,
+        "located_regions": 10,
+        "width": 825.0,
+        "height": 1100.0
+      }
+    }
+  ]
+}

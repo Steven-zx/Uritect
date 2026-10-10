@@ -1,0 +1,24 @@
+{
+  "runtime": {
+    "python": "3.12.1 (tags/v3.12.1:2305ca5, Dec  7 2023, 22:03:25) [MSC v.1937 64 bit (AMD64)]",
+    "sklearn": "1.8.0",
+    "numpy": "2.4.3",
+    "opencv": "4.13.0"
+  },
+  "sources": {
+    "pipeline/output/orientation_audit_2026-10-11_v3/candidate_deduped.csv": "77b65b09a515fbe0c356f3ccf184015764c0230466dc202b188dc9cd193736a0",
+    "pipeline/output/orientation_audit_2026-10-11_v3/EVENT_AUDIT.json": "5a5a5a3a3d69575bbae75f4ca5657ac0ad632a721097597656ccbfce0be853a3",
+    "pipeline/improve_direction_verified_knn.py": "12d97110c42993cbbca41bb4128f90f2c8fbac8f0c5b6f299a8dd5b11093f36f",
+    "pipeline/markerless_strip.py": "f1ae3eea337eb1f201bdc621b64028c4769ac9838f298266a4f7a5a7ba2ae5ce",
+    "pipeline/specimen_grouping.py": "25ef2aa6e1b7593e2db72737f33054dcfdc7bcd28e42a7fec4ba576a92ee322c",
+    "pipeline/output/semiquant_optimization_results.json": "e6a1b2dd64190b7d044d7668ff39123d395ca9c540e46bfc3936c6720b896f23",
+    "uritect_app/assets/production_semiquant_model.json": "1380d9e04d044413b42bd045e3c7370bf3d06a720695d2654598657234742279"
+  },
+  "app_model_unchanged": true,
+  "new_specimens_collected": false,
+  "gold_labels_changed": false,
+  "group_overlap": 0,
+  "image_hash_overlap": 0,
+  "configuration_sha256": "c8b68808031c824349e63a935ffbd974ce79fb1135c6621579b51f418a1b69a1",
+  "within_group_category_disagreements": 0
+}

@@ -1,0 +1,67 @@
+{
+  "scope": "Exact physical tip/handle fixture regression, not clinical validation",
+  "upright_accepted": true,
+  "inverted_raw_rejected": true,
+  "pad_rois": {
+    "Leukocytes": [
+      396,
+      120,
+      37,
+      37
+    ],
+    "Nitrite": [
+      396,
+      194,
+      37,
+      37
+    ],
+    "Urobilinogen": [
+      396,
+      271,
+      37,
+      37
+    ],
+    "Protein": [
+      396,
+      350,
+      37,
+      37
+    ],
+    "pH": [
+      396,
+      430,
+      37,
+      37
+    ],
+    "Blood": [
+      396,
+      508,
+      37,
+      37
+    ],
+    "Specific Gravity": [
+      396,
+      587,
+      37,
+      37
+    ],
+    "Ketone": [
+      396,
+      666,
+      37,
+      37
+    ],
+    "Bilirubin": [
+      396,
+      743,
+      37,
+      37
+    ],
+    "Glucose": [
+      396,
+      820,
+      37,
+      37
+    ]
+  }
+}

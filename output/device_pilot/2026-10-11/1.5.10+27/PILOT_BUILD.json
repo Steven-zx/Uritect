@@ -1,0 +1,15 @@
+{
+  "version": "1.5.10+27",
+  "apk": "output/device_pilot/2026-10-11/1.5.10+27/Uritect_v1.5.10+27_release.apk",
+  "bytes": 57705911,
+  "sha256": "BF2B53328B9EFBE929D32C90B008A992B6BEB377FE17484FADD575DA6F93FAEF",
+  "certificate_sha256": "15D1138DCE077ADA624A140B3A145343D1A48305FD0847E9002869E488F19D39",
+  "source_matches_archive": true,
+  "model_and_support_policy_match_existing_assets": true,
+  "offline_permissions_verified": true,
+  "flutter_tests_passed": 141,
+  "static_analysis": "No issues found",
+  "purpose": "Actual-photo per-pad sampling overlay UI update; existing experimental classifier unchanged",
+  "clinical_validation_established": false,
+  "phone_installation": "not performed in this task"
+}
