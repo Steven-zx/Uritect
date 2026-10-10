@@ -1,0 +1,10 @@
+{
+  "cases": 18,
+  "previously_accepted": 6,
+  "currently_accepted": 6,
+  "lost": [],
+  "changed_previously_accepted": [],
+  "changed_rejections": [],
+  "newly_accepted": [],
+  "scope": "Retrospective development regression with actual localization callbacks, not independent clinical validation"
+}

@@ -3,7 +3,12 @@ import '../models/scan_model.dart';
 
 class ScanContextNotice extends StatelessWidget {
   final ScanResult scan;
-  const ScanContextNotice({super.key, required this.scan});
+  final bool compact;
+  const ScanContextNotice({
+    super.key,
+    required this.scan,
+    this.compact = false,
+  });
   @override
   Widget build(BuildContext context) {
     final p = scan.provenance;
@@ -36,10 +41,30 @@ class ScanContextNotice extends StatelessWidget {
         color: const Color(0xffeef7f8),
         borderRadius: BorderRadius.circular(12),
       ),
-      child: Text(
-        messages.join('\n\n'),
-        style: Theme.of(context).textTheme.bodySmall,
-      ),
+      child: compact
+          ? ExpansionTile(
+              tilePadding: EdgeInsets.zero,
+              childrenPadding: const EdgeInsets.only(bottom: 8),
+              shape: const Border(),
+              collapsedShape: const Border(),
+              title: Text(
+                scan.isLegacyUnverified
+                    ? 'Archived readings are unverified'
+                    : p != null && !p.canSupportCurrentContext
+                    ? 'Review only: current-result screening unavailable'
+                    : p?.isImported == true
+                    ? 'Imported photo'
+                    : 'Photo captured in URITECT',
+                style: Theme.of(
+                  context,
+                ).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w600),
+              ),
+              children: [Text(messages.join('\n\n'))],
+            )
+          : Text(
+              messages.join('\n\n'),
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
     );
   }
 }

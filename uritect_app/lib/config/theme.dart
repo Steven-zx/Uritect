@@ -29,6 +29,7 @@ class AppColors {
 class AppTheme {
   static ThemeData lightTheme = ThemeData(
     useMaterial3: true,
+    fontFamily: GoogleFonts.inter().fontFamily,
     colorScheme: ColorScheme.light(
       primary: AppColors.primaryMain,
       secondary: AppColors.primaryLight,

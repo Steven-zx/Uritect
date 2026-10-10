@@ -1,0 +1,33 @@
+{
+  "status": "prior development image regression retained; not rerun as accuracy evaluation",
+  "previous_evidence_directory": "output/device_pilot/2026-10-10/1.5.3+19",
+  "changed_source_paths": [
+    "uritect_app/android/app/src/main/res/drawable-v21/launch_background.xml",
+    "uritect_app/android/app/src/main/res/drawable/launch_background.xml",
+    "uritect_app/android/app/src/main/res/values-night-v31/styles.xml",
+    "uritect_app/android/app/src/main/res/values-night/styles.xml",
+    "uritect_app/android/app/src/main/res/values/colors.xml",
+    "uritect_app/android/app/src/main/res/values/styles.xml",
+    "uritect_app/lib/config/theme.dart",
+    "uritect_app/lib/main.dart",
+    "uritect_app/lib/pages/analyzing_page.dart",
+    "uritect_app/lib/pages/app_splash_page.dart",
+    "uritect_app/lib/pages/dashboard_navigation.dart",
+    "uritect_app/lib/pages/overall_results_page.dart",
+    "uritect_app/lib/pages/results_page.dart",
+    "uritect_app/lib/widgets/dipstick_results_table.dart",
+    "uritect_app/lib/widgets/scan_context_notice.dart",
+    "uritect_app/pubspec.yaml",
+    "uritect_app/test/app_splash_page_test.dart",
+    "uritect_app/test/bayesian_workflow_ui_test.dart",
+    "uritect_app/test/dashboard_return_navigation_test.dart",
+    "uritect_app/test/goldens/app_splash_phone.png",
+    "uritect_app/test/goldens/bayesian_results_phone.png",
+    "uritect_app/test/goldens/dipstick_readings_phone.png",
+    "uritect_app/test/scan_rejection_reporting_test.dart",
+    "uritect_app/test/widget_test.dart"
+  ],
+  "classifier_models_reliability_rules_storage_and_security_code_unchanged": true,
+  "navigation_callback_change_tested_separately": true,
+  "new_accuracy_evaluation": false
+}

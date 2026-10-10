@@ -1,6 +1,7 @@
 import 'package:uritect_app/models/scan_model.dart';
 import 'package:uritect_app/services/scan_analysis_service.dart';
 import 'package:flutter/material.dart';
+import 'package:uritect_app/models/scan_localization.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:uritect_app/models/scan_analysis_exit_reason.dart';
 import 'package:uritect_app/pages/analyzing_page.dart';
@@ -78,6 +79,7 @@ class _InvalidAnalysis extends ScanAnalysisService {
   Future<ScanResult> analyze({
     required String imagePath,
     void Function(double progress, String stage)? onProgress,
+    void Function(ScanLocalization)? onLocalization,
   }) async {
     throw StateError('INVALID_IMAGE: no strip');
   }

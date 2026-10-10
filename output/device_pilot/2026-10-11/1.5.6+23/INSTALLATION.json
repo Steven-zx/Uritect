@@ -1,0 +1,15 @@
+{
+  "installed_at": "2026-10-10T16:46:44.049185+00:00",
+  "device": "192.168.1.37:44111",
+  "model": "RMX3933",
+  "android_version": "16",
+  "version_name": "1.5.6",
+  "version_code": 23,
+  "installed_apk_sha256": "5E6E1A3E257F9D6712CA6B9E7101FF92B9E184F9DB141AD98509E72869E62F4E",
+  "matches_sealed_apk": true,
+  "install_mode": "adb install --no-streaming -r",
+  "app_data_cleared": false,
+  "cold_launch_status": "ok",
+  "process_id": "29521",
+  "manual_overlay_acceptance": "Pending a new physical strip scan"
+}

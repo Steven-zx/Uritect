@@ -1,0 +1,155 @@
+{
+  "version": "1.5.5+21",
+  "generated_at": "2026-10-10T16:10:09.537542+00:00",
+  "status": "signed_QA_pilot_candidate_installed_pending_animation_device_acceptance",
+  "apk": {
+    "path": "output/device_pilot/2026-10-11/1.5.5+21/Uritect_v1.5.5+21_release.apk",
+    "bytes": 57388579,
+    "sha256": "6A897CE4F70F078E1E8537A46E5E82F82178FB0BD0F0689049D501CAF6EDDB0B"
+  },
+  "certificate_sha256": "15D1138DCE077ADA624A140B3A145343D1A48305FD0847E9002869E488F19D39",
+  "source_snapshot_sha256": "31107139DA72DCB1CE8E21A3C3F7FBD88AFD2E7B9A2F8AC0D0408C1E01469BA7",
+  "source_archive_sha256": "8076904E3CF28E13322C76A9A46CCAA0014843A6EA800B2BE30AD067FCBE8279",
+  "checks": {
+    "flutter_test": {
+      "exit_code": 0,
+      "tests_passed": 132
+    },
+    "flutter_analyze": {
+      "exit_code": 0
+    },
+    "classifier_regression_reuse": {
+      "exit_code": 0,
+      "status": "prior development image evidence retained; classifier, clinical rules, assets and storage unchanged"
+    },
+    "release_build": {
+      "exit_code": 0,
+      "native_compile": "included in successful signed release assembly"
+    }
+  },
+  "development_image_regression": {
+    "cases": 18,
+    "previously_accepted": 6,
+    "currently_accepted": 6,
+    "lost": [],
+    "changed_previously_accepted": [],
+    "newly_accepted": [],
+    "scope": "Retrospective development regression, not independent performance validation"
+  },
+  "pipeline": "android_markerless_json_knn_v4_support_20261010",
+  "production_model_changed": false,
+  "vote_confidence_threshold_changed": false,
+  "bayesian_values_changed": false,
+  "support_policy_status": "training-only engineering guard, not clinically validated",
+  "native_security_device_tests": "History unlock was user-confirmed in 1.5.1+17; security and storage code unchanged. Full security acceptance remains pending.",
+  "clinical_validation": "Not established",
+  "files": [
+    {
+      "path": "docs/URITECT_SECURITY_AND_INPUT_REVIEW_2026-10-10.md",
+      "bytes": 10849,
+      "sha256": "857AC2B78F65369A0D952C9D8C85B8C42466FF04DF051E4F0ED5D13478304A6A"
+    },
+    {
+      "path": "output/device_pilot/2026-10-11/1.5.5+21/APK_IDENTITY.txt",
+      "bytes": 5975,
+      "sha256": "900C522AB445173FE71E01946DD7AD15E1A4395762368473A23706625570DA1D"
+    },
+    {
+      "path": "output/device_pilot/2026-10-11/1.5.5+21/APK_PERMISSIONS.txt",
+      "bytes": 532,
+      "sha256": "2DDE9EECBAD5340347D8E684C4E92A9EA23E3D882A9B3F5049C47AD5783E1E60"
+    },
+    {
+      "path": "output/device_pilot/2026-10-11/1.5.5+21/APK_SECURITY_MANIFEST.txt",
+      "bytes": 8163,
+      "sha256": "C33ECF29E1C6AF1924AAD5453136F48001FE3F1A6ED31AE03D3C3FCF578B4B6E"
+    },
+    {
+      "path": "output/device_pilot/2026-10-11/1.5.5+21/AUTOMATED_CHECKS.json",
+      "bytes": 429,
+      "sha256": "CF8CA5F0117AD8F104E2DACA6EDF9F99A06BAFC8D84EE5E23D893706ACAE737A"
+    },
+    {
+      "path": "output/device_pilot/2026-10-11/1.5.5+21/flutter_analyze.log",
+      "bytes": 200,
+      "sha256": "F697DF51C953C5169714BAD8C4CEDA0DE994F119F24A40E95E9DBD67F1FC5B53"
+    },
+    {
+      "path": "output/device_pilot/2026-10-11/1.5.5+21/flutter_test.log",
+      "bytes": 44520,
+      "sha256": "CB3D72EDAEF6F2D90D9261300F6AF0E91978221A94B8B53EC04F9D56CC536FF7"
+    },
+    {
+      "path": "output/device_pilot/2026-10-11/1.5.5+21/release_build.log",
+      "bytes": 8474,
+      "sha256": "76EB73DC85E68C2166BFA17AFDEA247D8A2D8D73458F758069AF146D16EFB55A"
+    },
+    {
+      "path": "output/device_pilot/2026-10-11/1.5.5+21/runtime_comparison.json",
+      "bytes": 246,
+      "sha256": "E18A98D692F384CD8CB6E378AA562EA9E68B24E089E25277AD7519D03FEAF99E"
+    },
+    {
+      "path": "output/device_pilot/2026-10-11/1.5.5+21/runtime_regression.json",
+      "bytes": 13872,
+      "sha256": "A3A5F051B39E46F920AB5E356FDBAF9A02BE3F08F54659056755160AB03E6F27"
+    },
+    {
+      "path": "output/device_pilot/2026-10-11/1.5.5+21/SOURCE_SNAPSHOT.json",
+      "bytes": 23238,
+      "sha256": "31107139DA72DCB1CE8E21A3C3F7FBD88AFD2E7B9A2F8AC0D0408C1E01469BA7"
+    },
+    {
+      "path": "output/device_pilot/2026-10-11/1.5.5+21/URITECT_SOURCE_SNAPSHOT.zip",
+      "bytes": 6330662,
+      "sha256": "8076904E3CF28E13322C76A9A46CCAA0014843A6EA800B2BE30AD067FCBE8279"
+    },
+    {
+      "path": "pipeline/build_training_support_policy.py",
+      "bytes": 2511,
+      "sha256": "8C4A410441408D2B95E06919825AAEDF90EE8922F33CFE844E0738A109C0707D"
+    },
+    {
+      "path": "pipeline/test_training_support_policy.py",
+      "bytes": 2065,
+      "sha256": "52138A0FAFAEC7074A9AC6F951FE6FDB3C78F29472B3949183710C60E6836A64"
+    },
+    {
+      "path": "pipeline/verify_qa_pilot_build.py",
+      "bytes": 5831,
+      "sha256": "5F13A003D795012B263A28C5BA7C9A2AAC0CDD3B4470801891491B8BB9FCE45B"
+    },
+    {
+      "path": "output/device_pilot/2026-10-11/1.5.5+21/CLASSIFIER_REGRESSION_REUSE.json",
+      "bytes": 641,
+      "sha256": "26C647A6F0D67E062F92E5E11565E91C39F861AAB385FFD31EB7DF32F423A090"
+    },
+    {
+      "path": "output/device_pilot/2026-10-11/1.5.5+21/INSTALLATION.json",
+      "bytes": 593,
+      "sha256": "5429D66CCC0EB20940D17E86B7EE95C8E96AEF9C91D0506F3CFB4295F23C6164"
+    },
+    {
+      "path": "output/device_pilot/2026-10-11/1.5.5+21/COLD_LAUNCH.txt",
+      "bytes": 179,
+      "sha256": "CD19A5B0C95E0185D865F1AB3241B1F764ABA8032C6A6CDC475C9278057884EC"
+    },
+    {
+      "path": "docs/URITECT_STRIP_ANALYSIS_ANIMATION_2026-10-11.md",
+      "bytes": 3205,
+      "sha256": "79722813C8E5EC94DB61B2F18CF9E71DF919F009F6D686581F0D4C33E13DB468"
+    }
+  ],
+  "features": [
+    "vector strip/ROI/color-reference explanatory animation",
+    "real service-stage status; no simulated percent or minimum animation delay",
+    "reduced-motion static overview; background pause and clean disposal"
+  ],
+  "installation": {
+    "path": "output/device_pilot/2026-10-11/1.5.5+21/INSTALLATION.json",
+    "bytes": 593,
+    "sha256": "5429D66CCC0EB20940D17E86B7EE95C8E96AEF9C91D0506F3CFB4295F23C6164"
+  },
+  "development_image_regression_reused": true,
+  "device_UI_acceptance": "Pending scan animation walkthrough; cold launch succeeded and installed APK hash was verified."
+}

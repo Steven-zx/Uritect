@@ -64,6 +64,9 @@ void main() {
         find.text('Located: 10/10 pads; results unavailable'),
         findsOneWidget,
       );
+      expect(find.text('Scan check: LOW_CONFIDENCE'), findsNothing);
+      await tester.tap(find.text('Scan details'));
+      await tester.pumpAndSettle();
       expect(find.text('Scan check: LOW_CONFIDENCE'), findsOneWidget);
       expect(find.text('Detected: 0/10 pads'), findsNothing);
       expect(find.text('COMPLETE SAFETY CHECKLIST'), findsOneWidget);

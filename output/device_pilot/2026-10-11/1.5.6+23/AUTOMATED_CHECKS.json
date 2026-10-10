@@ -1,0 +1,23 @@
+{
+  "flutter_test": {
+    "exit_code": 0,
+    "tests_passed": 133
+  },
+  "flutter_analyze": {
+    "exit_code": 0
+  },
+  "development_image_regression": {
+    "exit_code": 0,
+    "cases": 18,
+    "classification_outputs_changed": false
+  },
+  "overlay_geometry": {
+    "exit_code": 0,
+    "cases": 5,
+    "scope": "four rotations, EXIF orientation, resizing, pixel correspondence and region bounds"
+  },
+  "release_build": {
+    "exit_code": 0,
+    "native_compile": "included in successful signed release assembly"
+  }
+}

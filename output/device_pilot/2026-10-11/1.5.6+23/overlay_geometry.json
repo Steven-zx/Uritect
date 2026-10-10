@@ -1,0 +1,40 @@
+{
+  "scope": "Engineering coordinate checks, not clinical validation",
+  "cases": [
+    {
+      "input_rotation": 0,
+      "selected_orientation": "exif",
+      "width": 825.0,
+      "height": 1100.0,
+      "regions": 10
+    },
+    {
+      "input_rotation": 90,
+      "selected_orientation": "rot90_ccw",
+      "width": 825.0,
+      "height": 1100.0,
+      "regions": 10
+    },
+    {
+      "input_rotation": 180,
+      "selected_orientation": "rot180",
+      "width": 825.0,
+      "height": 1100.0,
+      "regions": 10
+    },
+    {
+      "input_rotation": -90,
+      "selected_orientation": "rot90_cw",
+      "width": 825.0,
+      "height": 1100.0,
+      "regions": 10
+    },
+    {
+      "input_rotation": 6,
+      "selected_orientation": "rot90_ccw",
+      "width": 825.0,
+      "height": 1100.0,
+      "regions": 10
+    }
+  ]
+}

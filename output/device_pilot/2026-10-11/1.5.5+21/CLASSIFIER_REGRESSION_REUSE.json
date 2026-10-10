@@ -1,0 +1,14 @@
+{
+  "status": "prior development image regression retained; not rerun as accuracy evaluation",
+  "previous_evidence_directory": "output/device_pilot/2026-10-10/1.5.4+20",
+  "changed_source_paths": [
+    "uritect_app/lib/pages/analyzing_page.dart",
+    "uritect_app/lib/widgets/strip_analysis_animation.dart",
+    "uritect_app/pubspec.yaml",
+    "uritect_app/test/goldens/strip_analysis_phone.png",
+    "uritect_app/test/strip_analysis_animation_test.dart"
+  ],
+  "classifier_models_reliability_rules_storage_and_security_code_unchanged": true,
+  "analysis_presentation_changed_only": true,
+  "new_accuracy_evaluation": false
+}

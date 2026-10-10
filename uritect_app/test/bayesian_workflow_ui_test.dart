@@ -1,5 +1,8 @@
 import 'verified_scan_fixture.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:uritect_app/config/theme.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:uritect_app/models/clinical_symptoms.dart';
 import 'package:uritect_app/models/dipstick_results_data.dart';
@@ -86,9 +89,17 @@ ClinicalChecklistResult _eligibleMaleChecklist() {
   );
 }
 
-Widget _app(Widget child) => MaterialApp(home: child);
+Widget _app(Widget child) =>
+    MaterialApp(theme: AppTheme.lightTheme, home: child);
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+  setUpAll(() async {
+    GoogleFonts.config.allowRuntimeFetching = false;
+    final icons = FontLoader('MaterialIcons')
+      ..addFont(rootBundle.load('fonts/MaterialIcons-Regular.otf'));
+    await icons.load();
+  });
   testWidgets('results display Bayesian percentage and applied factors', (
     tester,
   ) async {
@@ -105,9 +116,19 @@ void main() {
         ),
       ),
     );
+    await tester.runAsync(() async => GoogleFonts.pendingFonts());
     await tester.pumpAndSettle();
 
-    expect(find.text('Female Bayesian UTI Research Estimate'), findsOneWidget);
+    expect(find.text('Female research model'), findsOneWidget);
+    expect(find.text('LR 7.20'), findsNothing);
+    await expectLater(
+      find.byType(Scaffold),
+      matchesGoldenFile('goldens/bayesian_results_phone.png'),
+    );
+    await tester.ensureVisible(find.byKey(const Key('bayesian_details')));
+    await tester.tap(find.text('How this estimate was calculated'));
+    await tester.runAsync(() async => GoogleFonts.pendingFonts());
+    await tester.pumpAndSettle();
     expect(find.text('91.5%'), findsOneWidget);
     expect(find.text('LR 7.20'), findsOneWidget);
     expect(find.text('LR 1.50'), findsOneWidget);
@@ -119,24 +140,22 @@ void main() {
     );
     expect(
       find.textContaining('No local culture-confirmed calibration'),
-      findsOneWidget,
+      findsWidgets,
     );
     expect(find.text('Consultation suggested'), findsOneWidget);
-    await expectLater(
-      find.byType(Scaffold),
-      matchesGoldenFile('goldens/bayesian_results_phone.png'),
-    );
   });
 
   testWidgets('checklist begins with age and sex before pathway questions', (
     tester,
   ) async {
     await tester.pumpWidget(_app(SymptomChecklistPage(scanResult: _scan())));
+    await tester.runAsync(() async => GoogleFonts.pendingFonts());
     await tester.pumpAndSettle();
     expect(find.text('Basic information'), findsWidgets);
     expect(find.text('Step 1 of 5'), findsOneWidget);
     expect(find.text('Are you currently pregnant?'), findsNothing);
     await tester.tap(find.text('NEXT'));
+    await tester.runAsync(() async => GoogleFonts.pendingFonts());
     await tester.pumpAndSettle();
     expect(find.text('Step 1 of 5'), findsOneWidget);
     expect(find.textContaining('Answer each question'), findsOneWidget);
@@ -158,9 +177,15 @@ void main() {
         ),
       ),
     );
+    await tester.runAsync(() async => GoogleFonts.pendingFonts());
     await tester.pumpAndSettle();
 
-    expect(find.text('Male Bayesian UTI Research Estimate'), findsOneWidget);
+    expect(find.text('Male research model'), findsOneWidget);
+    expect(find.text('LR 5.14'), findsNothing);
+    await tester.ensureVisible(find.byKey(const Key('bayesian_details')));
+    await tester.tap(find.text('How this estimate was calculated'));
+    await tester.runAsync(() async => GoogleFonts.pendingFonts());
+    await tester.pumpAndSettle();
     expect(find.text('LR 5.14'), findsOneWidget);
     expect(
       find.textContaining(
@@ -182,10 +207,16 @@ void main() {
     addTearDown(tester.view.resetDevicePixelRatio);
 
     await tester.pumpWidget(_app(ResultsPage(scanResult: _scan())));
+    await tester.runAsync(() async => GoogleFonts.pendingFonts());
     await tester.pumpAndSettle();
 
+    await expectLater(
+      find.byType(Scaffold),
+      matchesGoldenFile('goldens/dipstick_readings_phone.png'),
+    );
     expect(find.text('CONTINUE TO CHECKLIST'), findsOneWidget);
     await tester.tap(find.text('CONTINUE TO CHECKLIST'));
+    await tester.runAsync(() async => GoogleFonts.pendingFonts());
     await tester.pumpAndSettle();
     expect(find.text('Basic information'), findsWidgets);
   });
@@ -208,6 +239,7 @@ void main() {
           ),
         ),
       );
+      await tester.runAsync(() async => GoogleFonts.pendingFonts());
       await tester.pumpAndSettle();
       expect(find.text('12.0%'), findsOneWidget);
       expect(find.text('91.5%'), findsNothing);

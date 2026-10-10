@@ -1,0 +1,6 @@
+{
+  "status": "superseded_unsealed_candidate",
+  "reason": "Preview/overlay frame synchronization improved before installation",
+  "replacement": "1.5.6+23",
+  "installed": false
+}

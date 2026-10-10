@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:isolate';
@@ -8,6 +9,7 @@ import 'package:image/image.dart' as img;
 
 import '../models/dipstick_results_data.dart';
 import '../models/scan_model.dart';
+import '../models/scan_localization.dart';
 import '../models/scan_analysis_failure.dart';
 import 'training_support_policy.dart';
 
@@ -43,6 +45,7 @@ class LocalScanAnalysisService {
   Future<ScanResult> analyze({
     required String imagePath,
     void Function(double progress, String stage)? onProgress,
+    void Function(ScanLocalization localization)? onLocalization,
   }) async {
     onProgress?.call(5, 'loading_production_model');
     final modelText = await rootBundle.loadString(
@@ -58,9 +61,35 @@ class LocalScanAnalysisService {
     }
 
     onProgress?.call(32, 'locating_markerless_strip');
-    final resultJson = await Isolate.run(
-      () => _analyzeScanInBackground(imagePath, modelText, policyText),
-    );
+    final events = ReceivePort();
+    final sendPort = onLocalization == null ? null : events.sendPort;
+    final eventsDone = Completer<void>();
+    final subscription = events.listen((message) {
+      if ((message as Map)['done'] == true) {
+        eventsDone.complete();
+        return;
+      }
+      final localization = ScanLocalization.fromMessage(message);
+      onLocalization?.call(localization);
+      if (localization.regions.isNotEmpty) {
+        onProgress?.call(80, 'classifying_pads');
+      }
+    });
+    late Map<String, dynamic> resultJson;
+    try {
+      final request = _AnalysisRequest(
+        imagePath,
+        modelText,
+        policyText,
+        sendPort,
+      );
+      resultJson = await Isolate.run(request.run);
+    } finally {
+      // Drain detector messages before returning or propagating rejection.
+      if (sendPort != null) await eventsDone.future;
+      await subscription.cancel();
+      events.close();
+    }
 
     onProgress?.call(92, 'finalizing_results');
     final scanResult = ScanResult.fromJson(resultJson);
@@ -1056,10 +1085,30 @@ class LocalScanAnalysisService {
   }
 }
 
+// A bound method avoids capturing UI callbacks/receive ports in the worker.
+class _AnalysisRequest {
+  final String imagePath, modelText, policyText;
+  final SendPort? port;
+  const _AnalysisRequest(
+    this.imagePath,
+    this.modelText,
+    this.policyText,
+    this.port,
+  );
+  Map<String, dynamic> run() {
+    try {
+      return _analyzeScanInBackground(imagePath, modelText, policyText, port);
+    } finally {
+      port?.send({'done': true});
+    }
+  }
+}
+
 Map<String, dynamic> _analyzeScanInBackground(
   String imagePath,
   String modelText,
   String policyText,
+  SendPort? localizationPort,
 ) {
   final service = const LocalScanAnalysisService();
   final model = _ProductionModel.fromText(modelText);
@@ -1071,7 +1120,40 @@ Map<String, dynamic> _analyzeScanInBackground(
   }
 
   final baseImage = service._imageForAnalysis(img.bakeOrientation(decoded));
+  localizationPort?.send({
+    'preview': img.encodeJpg(baseImage, quality: 85),
+    'width': baseImage.width,
+    'height': baseImage.height,
+    'regions': <Map<String, Object>>[],
+  });
   final extraction = service._extractBestPadFeatures(baseImage);
+  if (localizationPort != null) {
+    // Use the exact selected detector orientation, not a separate UI guess.
+    final name = extraction.variantName;
+    final preview = name.startsWith('rot90_cw')
+        ? img.copyRotate(baseImage, angle: 90)
+        : name.startsWith('rot90_ccw')
+        ? img.copyRotate(baseImage, angle: -90)
+        : name.startsWith('rot180')
+        ? img.copyRotate(baseImage, angle: 180)
+        : baseImage;
+    localizationPort.send({
+      'preview': img.encodeJpg(preview, quality: 85),
+      'orientation': extraction.variantName,
+      'width': extraction.imageWidth,
+      'height': extraction.imageHeight,
+      'regions': [
+        for (final entry in extraction.padRois.entries)
+          {
+            'label': _codeForAnalyte(entry.key),
+            'left': entry.value.left,
+            'top': entry.value.top,
+            'width': entry.value.width,
+            'height': entry.value.height,
+          },
+      ],
+    });
+  }
   final rows = <DipstickResultRow>[];
   final confidenceValues = <double>[];
   final confidenceByAnalyte = <String, double>{};

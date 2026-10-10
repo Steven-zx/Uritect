@@ -7,6 +7,7 @@ import '../models/screening_fusion.dart';
 import '../models/renal_followup.dart';
 import '../widgets/dipstick_results_table.dart';
 import 'renal_results_page.dart';
+import 'dashboard_navigation.dart';
 import 'protected_history_page.dart';
 import '../widgets/scan_context_notice.dart';
 import '../services/scan_history_service.dart';
@@ -65,166 +66,147 @@ class OverallResultsPage extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: AppColors.bgMain,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(8, 8, 8, 16),
-          child: Column(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: const Text('Screening Summary'),
+        actions: [
+          IconButton(
+            tooltip: 'Home',
+            onPressed: () => returnToDashboard(context),
+            icon: const Icon(Icons.home_outlined),
+          ),
+        ],
+      ),
+      bottomNavigationBar: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
+          child: Row(
             children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(4, 0, 4, 0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const SizedBox(width: 64),
-                    Expanded(
-                      child: Column(
-                        children: [
-                          Text(
-                            'Results',
-                            textAlign: TextAlign.center,
-                            style: Theme.of(context).textTheme.titleLarge
-                                ?.copyWith(
-                                  color: AppColors.primaryMain,
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 20,
-                                ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            'Dipstick analysis and clinical\ninterpretation',
-                            textAlign: TextAlign.center,
-                            style: Theme.of(context).textTheme.bodyMedium
-                                ?.copyWith(
-                                  fontSize: 12,
-                                  color: AppColors.textSecondary,
-                                ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(width: 64),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 14),
-              if (onEditPatientName != null)
-                ListTile(
-                  leading: const Icon(Icons.person_outline),
-                  title: Text(
-                    patientName ?? 'Unnamed patient',
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  subtitle: const Text('Saved record name'),
-                  trailing: IconButton(
-                    tooltip: patientName == null
-                        ? 'Add patient name'
-                        : 'Edit patient name',
-                    icon: const Icon(Icons.edit_outlined),
-                    onPressed: onEditPatientName,
+              if (savedUtiEstimate == null) ...[
+                Expanded(
+                  child: OutlinedButton.icon(
+                    onPressed: () => Navigator.of(context).pop(),
+                    icon: const Icon(Icons.edit_outlined, size: 18),
+                    label: const Text('EDIT CHECKLIST'),
                   ),
                 ),
-              ScanContextNotice(scan: scanResult),
-              if (clinicalChecklistResult.hasIncompleteSafetyReview)
-                const Padding(
-                  padding: EdgeInsets.only(bottom: 12),
-                  child: Text(
-                    'Safety answers are incomplete or uncertain. Available follow-up rules cannot exclude unreported warning symptoms. Review the checklist before relying on these results.',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontWeight: FontWeight.w600),
-                  ),
-                ),
-              _bayesianEstimateCard(
-                context,
-                savedUtiEstimate ?? fusionResult.utiEstimate,
-              ),
-              if (savedUtiEstimate != null)
-                const Padding(
-                  padding: EdgeInsets.only(top: 8),
-                  child: Text(
-                    'Saved research estimate shown as recorded. Follow-up guidance is re-evaluated with current rules.',
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              const SizedBox(height: 12),
-              _riskCard(context, fusionResult),
-              if (fusionResult.hasEvidenceConflict) ...[
-                const SizedBox(height: 12),
-                _evidenceConflictCard(context, fusionResult),
+                const SizedBox(width: 12),
               ],
-              const SizedBox(height: 12),
-              _conditionCard(
-                context,
-                fusionResult,
-                selectedCount,
-                relevantSymptoms.length,
-              ),
-              const SizedBox(height: 12),
-              _renalFollowupCard(context, renalResult),
-              const SizedBox(height: 12),
-              if (tableRows.isNotEmpty)
-                DipstickResultsTable(rows: tableRows)
-              else
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(14),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFFFF7E6),
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: const Color(0xFFF2C36B)),
-                  ),
-                  child: const Text(
-                    'Invalid scan: no analyte values were interpreted. Follow symptom-based safety advice and retake the strip scan.',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: Color(0xFF704600), fontSize: 12),
-                  ),
-                ),
-              const SizedBox(height: 12),
-              _checklistAnswersCard(context),
-              const SizedBox(height: 20),
-              SizedBox(
-                width: double.infinity,
-                height: 48,
-                child: OutlinedButton.icon(
-                  onPressed: () => Navigator.of(context).pop(),
-                  icon: const Icon(Icons.edit_outlined, size: 19),
-                  label: const Text('EDIT CHECKLIST'),
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: AppColors.primaryMain,
-                    side: const BorderSide(color: AppColors.primaryMain),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 10),
-              SizedBox(
-                width: double.infinity,
-                height: 52,
-                child: ElevatedButton(
-                  onPressed: () =>
-                      Navigator.of(context).popUntil((route) => route.isFirst),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primaryMain,
-                    foregroundColor: Colors.white,
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  child: const Text(
-                    'HOME',
-                    style: TextStyle(
-                      fontSize: 17,
-                      fontWeight: FontWeight.w700,
-                      letterSpacing: 0.3,
-                    ),
-                  ),
+              Expanded(
+                child: FilledButton.icon(
+                  onPressed: () => returnToDashboard(context),
+                  icon: const Icon(Icons.home_outlined, size: 18),
+                  label: const Text('HOME'),
                 ),
               ),
             ],
           ),
+        ),
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.fromLTRB(16, 8, 16, 20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            if (onEditPatientName != null)
+              ListTile(
+                contentPadding: EdgeInsets.zero,
+                leading: const Icon(Icons.person_outline),
+                title: Text(
+                  patientName ?? 'Unnamed patient',
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                subtitle: const Text('Saved record name'),
+                trailing: IconButton(
+                  tooltip: patientName == null
+                      ? 'Add patient name'
+                      : 'Edit patient name',
+                  icon: const Icon(Icons.edit_outlined),
+                  onPressed: onEditPatientName,
+                ),
+              ),
+            _riskCard(context, fusionResult),
+            if (clinicalChecklistResult.hasIncompleteSafetyReview) ...[
+              const SizedBox(height: 12),
+              const Text(
+                'Safety answers are incomplete or uncertain. Review the checklist; unreported warning symptoms cannot be excluded.',
+                style: TextStyle(fontWeight: FontWeight.w600),
+              ),
+            ],
+            // Keep actionable warnings visible rather than inside detail drawers.
+            for (final item in fusionResult.interpretations.where(
+              (item) =>
+                  item.category != 'uti_screening' &&
+                  (item.severity == 'high' ||
+                      item.severity == 'moderate' ||
+                      item.severity == 'caution'),
+            ))
+              Padding(
+                padding: const EdgeInsets.only(top: 12),
+                child: ListTile(
+                  contentPadding: const EdgeInsets.all(12),
+                  tileColor: const Color(0xFFFFF7E6),
+                  leading: Icon(
+                    _iconForSeverity(item.severity),
+                    color: _colorForSeverity(item.severity),
+                  ),
+                  title: Text(
+                    item.title,
+                    style: const TextStyle(fontWeight: FontWeight.w700),
+                  ),
+                  subtitle: Text(item.message),
+                ),
+              ),
+            if (fusionResult.hasEvidenceConflict) ...[
+              const SizedBox(height: 12),
+              _evidenceConflictCard(context, fusionResult),
+            ],
+            const SizedBox(height: 12),
+            _renalFollowupCard(context, renalResult),
+            const SizedBox(height: 12),
+            _bayesianEstimateCard(
+              context,
+              savedUtiEstimate ?? fusionResult.utiEstimate,
+            ),
+            if (savedUtiEstimate != null)
+              const Padding(
+                padding: EdgeInsets.only(top: 8),
+                child: Text(
+                  'Saved research estimate shown as recorded. Follow-up guidance uses current rules.',
+                  style: TextStyle(fontSize: 12),
+                ),
+              ),
+            const SizedBox(height: 16),
+            ScanContextNotice(scan: scanResult, compact: true),
+            if (tableRows.isNotEmpty)
+              ExpansionTile(
+                title: const Text('Dipstick measurements'),
+                subtitle: Text('${tableRows.length} analyte readings'),
+                tilePadding: EdgeInsets.zero,
+                children: [DipstickResultsTable(rows: tableRows)],
+              )
+            else
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 12),
+                child: Text(
+                  'No analyte readings are available. Retake the photo; symptom-based safety guidance still applies.',
+                ),
+              ),
+            ExpansionTile(
+              title: const Text('Safety and checklist details'),
+              tilePadding: EdgeInsets.zero,
+              children: [
+                _conditionCard(
+                  context,
+                  fusionResult,
+                  selectedCount,
+                  relevantSymptoms.length,
+                ),
+              ],
+            ),
+            _checklistAnswersCard(context),
+          ],
         ),
       ),
     );
@@ -235,198 +217,107 @@ class OverallResultsPage extends StatelessWidget {
     BayesianUtiEstimate estimate,
   ) {
     final calculated = estimate.isCalculable;
+    final male =
+        estimate.modelVersion == ScreeningFusionEngine.maleModelVersion;
     return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(14),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: calculated ? const Color(0xFFEAF7F9) : AppColors.bgCard,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(
-          color: calculated ? const Color(0xFF9DCDD2) : AppColors.border,
-        ),
+        color: const Color(0xFFEAF7F9),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: const Color(0xFF9DCDD2)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Container(
-                width: 38,
-                height: 38,
-                decoration: BoxDecoration(
-                  color: calculated
-                      ? AppColors.primaryMain
-                      : const Color(0xFFE9EEF2),
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  calculated
-                      ? Icons.calculate_rounded
-                      : Icons.info_outline_rounded,
-                  color: calculated ? Colors.white : AppColors.textSecondary,
-                  size: 21,
-                ),
+          Text(
+            'UTI screening estimate',
+            style: Theme.of(
+              context,
+            ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
+          ),
+          const SizedBox(height: 6),
+          if (calculated) ...[
+            Text(
+              '${estimate.posteriorPercent.toStringAsFixed(1)}%',
+              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                color: AppColors.primaryDark,
+                fontWeight: FontWeight.w800,
               ),
-              const SizedBox(width: 10),
-              Expanded(
+            ),
+            Text(male ? 'Male research model' : 'Female research model'),
+          ] else
+            Text(estimate.statusReason),
+          const SizedBox(height: 8),
+          const Text(
+            'Provisional research estimate. Not a diagnosis. No local culture-confirmed calibration.',
+            style: TextStyle(fontSize: 12, height: 1.4),
+          ),
+          ExpansionTile(
+            key: const Key('bayesian_details'),
+            tilePadding: EdgeInsets.zero,
+            title: const Text(
+              'How this estimate was calculated',
+              style: TextStyle(fontSize: 13),
+            ),
+            shape: const Border(),
+            collapsedShape: const Border(),
+            children: [
+              Align(
+                alignment: Alignment.centerLeft,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      estimate.modelVersion ==
-                              ScreeningFusionEngine.maleModelVersion
-                          ? 'Male Bayesian UTI Research Estimate'
-                          : estimate.modelVersion ==
-                                ScreeningFusionEngine.femaleModelVersion
-                          ? 'Female Bayesian UTI Research Estimate'
-                          : 'Bayesian UTI Research Estimate',
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        color: AppColors.primaryDark,
-                        fontSize: 15,
-                        fontWeight: FontWeight.w700,
+                    if (calculated) ...[
+                      Text(
+                        'Starting prior: ${(estimate.priorProbability * 100).toStringAsFixed(male ? 1 : 0)}%',
                       ),
+                      const SizedBox(height: 10),
+                      const Text(
+                        'Evidence applied',
+                        style: TextStyle(fontWeight: FontWeight.w700),
+                      ),
+                      for (final factor in estimate.factors)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 6),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'LR ${factor.likelihoodRatio.toStringAsFixed(2)}',
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              Text(factor.finding),
+                              Text(
+                                factor.group,
+                                style: const TextStyle(fontSize: 12),
+                              ),
+                            ],
+                          ),
+                        ),
+                      const SizedBox(height: 8),
+                      Text(
+                        male
+                            ? 'Prior odds x one selected dipstick-threshold LR = posterior odds'
+                            : 'Prior odds x selected dipstick LR x selected symptom LR = posterior odds',
+                      ),
+                      const SizedBox(height: 10),
+                    ],
+                    Text(
+                      male
+                          ? 'Provisional literature-derived screening estimate. The ordered-threshold branches and transfer of the study prior and LRs remain assumptions. No local culture-confirmed calibration has been performed. This is not a diagnosis or treatment recommendation.'
+                          : 'Provisional literature-derived screening estimate. Combining symptom and dipstick LRs remains an assumption. No local culture-confirmed calibration has been performed. This is not a diagnosis or treatment recommendation.',
                     ),
+                    const SizedBox(height: 8),
                     Text(
-                      calculated
-                          ? estimate.modelVersion ==
-                                    ScreeningFusionEngine.maleModelVersion
-                                ? 'Provisional male model based on culture-referenced evidence'
-                                : 'Calculated from the female v1.1 evidence hierarchy'
-                          : 'No ordinary estimate was calculated',
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: AppColors.textSecondary,
-                      ),
+                      estimate.modelVersion,
+                      style: const TextStyle(fontSize: 11),
                     ),
                   ],
                 ),
               ),
             ],
-          ),
-          const SizedBox(height: 12),
-          if (calculated) ...[
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  '${estimate.posteriorPercent.toStringAsFixed(1)}%',
-                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                    color: AppColors.primaryDark,
-                    fontSize: 34,
-                    fontWeight: FontWeight.w800,
-                  ),
-                ),
-                Text(
-                  'screening estimate',
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: AppColors.textSecondary,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
-            ),
-            Text(
-              'Starting prior: ${(estimate.priorProbability * 100).toStringAsFixed(estimate.modelVersion == ScreeningFusionEngine.maleModelVersion ? 1 : 0)}%',
-              style: Theme.of(
-                context,
-              ).textTheme.bodySmall?.copyWith(color: AppColors.textSecondary),
-            ),
-            const SizedBox(height: 12),
-            Text(
-              'Evidence applied',
-              style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                color: AppColors.textPrimary,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-            const SizedBox(height: 6),
-            for (final factor in estimate.factors)
-              Padding(
-                padding: const EdgeInsets.only(bottom: 7),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 7,
-                        vertical: 3,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(6),
-                        border: Border.all(color: AppColors.border),
-                      ),
-                      child: Text(
-                        'LR ${factor.likelihoodRatio.toStringAsFixed(2)}',
-                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                          color: AppColors.primaryDark,
-                          fontWeight: FontWeight.w800,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            factor.finding,
-                            style: Theme.of(context).textTheme.bodySmall
-                                ?.copyWith(
-                                  color: AppColors.textPrimary,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                          ),
-                          Text(
-                            factor.group,
-                            style: Theme.of(context).textTheme.bodySmall
-                                ?.copyWith(
-                                  color: AppColors.textSecondary,
-                                  fontSize: 10,
-                                ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            const Divider(height: 20),
-            Text(
-              estimate.modelVersion == ScreeningFusionEngine.maleModelVersion
-                  ? 'Prior odds x one selected dipstick-threshold LR = posterior odds'
-                  : 'Prior odds x selected dipstick LR x selected symptom LR = posterior odds',
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: AppColors.textSecondary,
-                fontSize: 10,
-                height: 1.3,
-              ),
-            ),
-          ] else
-            Text(
-              estimate.statusReason,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: AppColors.textPrimary,
-                height: 1.35,
-              ),
-            ),
-          const SizedBox(height: 10),
-          Text(
-            estimate.modelVersion == ScreeningFusionEngine.maleModelVersion
-                ? 'Provisional literature-derived screening estimate. The ordered-threshold branches and transfer of the study prior and LRs remain assumptions. No local culture-confirmed calibration has been performed. This is not a diagnosis or treatment recommendation.'
-                : 'Provisional literature-derived screening estimate. Combining symptom and dipstick LRs remains an assumption. No local culture-confirmed calibration has been performed. This is not a diagnosis or treatment recommendation.',
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: const Color(0xFF4E5962),
-              fontWeight: FontWeight.w600,
-              height: 1.35,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            estimate.modelVersion,
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: AppColors.textSecondary,
-              fontSize: 9,
-            ),
           ),
         ],
       ),
@@ -458,7 +349,7 @@ class OverallResultsPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Renal follow-up',
+                  'Kidney-related follow-up',
                   style: Theme.of(context).textTheme.titleSmall?.copyWith(
                     color: AppColors.primaryMain,
                     fontSize: 14,
@@ -466,7 +357,9 @@ class OverallResultsPage extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  renalResult.finalAction.heading,
+                  renalResult.finalAction == RenalAction.observe
+                      ? 'No kidney-related follow-up trigger identified'
+                      : renalResult.finalAction.heading,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: AppColors.textPrimary,
                     fontSize: 12,
@@ -570,7 +463,7 @@ class OverallResultsPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Clinical Action',
+                  'What to do next',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     color: AppColors.textSecondary,
                     fontSize: 16,
@@ -596,7 +489,7 @@ class OverallResultsPage extends StatelessWidget {
                 const SizedBox(height: 1),
                 Text(
                   fusionResult.utiEstimate.isCalculable
-                      ? 'Based on the evidence and safety pathways shown below'
+                      ? 'Based on the strip readings, checklist and safety checks.'
                       : fusionResult.utiEstimate.statusReason,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: AppColors.textSecondary,
@@ -655,7 +548,7 @@ class OverallResultsPage extends StatelessWidget {
           ),
           const SizedBox(height: 2),
           Text(
-            'Separated evidence outputs',
+            'Why this guidance was shown',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
               color: AppColors.textSecondary,
               fontSize: 12,

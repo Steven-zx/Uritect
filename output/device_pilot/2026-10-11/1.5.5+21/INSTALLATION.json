@@ -1,0 +1,13 @@
+{
+  "installed_at": "2026-10-10T16:11:54.686979+00:00",
+  "device_serial": "192.168.1.37:44111",
+  "model": "RMX3933",
+  "android_version": "16",
+  "method": "adb install --no-streaming -r; app data preserved",
+  "version": "1.5.5+21",
+  "remote_apk_sha256": "6A897CE4F70F078E1E8537A46E5E82F82178FB0BD0F0689049D501CAF6EDDB0B",
+  "verified_against_sealed_apk": true,
+  "cold_launch_status": "ok",
+  "pid": "19397",
+  "device_animation_acceptance": "Pending real scan walkthrough for motion smoothness and clarity; automated animation, accessibility and navigation tests passed."
+}

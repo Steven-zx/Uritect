@@ -1,0 +1,7 @@
+Starting: Intent { cmp=ph.edu.wvsu.uritect/.MainActivity }
+Status: ok
+LaunchState: COLD
+Activity: ph.edu.wvsu.uritect/.MainActivity
+TotalTime: 1039
+WaitTime: 1047
+Complete

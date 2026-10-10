@@ -1,0 +1,13 @@
+{
+  "installed_at": "2026-10-10T15:46:58.769660+00:00",
+  "device_serial": "192.168.1.37:44111",
+  "model": "RMX3933",
+  "android_version": "16",
+  "method": "adb install --no-streaming -r; app data preserved",
+  "version": "1.5.4+20",
+  "remote_apk_sha256": "E78AA2DE107057BFEA42B750C6CD40D196A583D778AE42E41A80AF5FE3094B20",
+  "verified_against_sealed_apk": true,
+  "cold_launch_status": "ok",
+  "pid": "8297",
+  "device_workflow_acceptance": "Pending user walkthrough of native startup, results clarity, Home and retake; automated route tests passed."
+}

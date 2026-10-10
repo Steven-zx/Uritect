@@ -1,0 +1,479 @@
+{
+  "scope": "Retrospective development regression, not independent clinical validation",
+  "cases": [
+    {
+      "event_id": "LAUAAN-P003-L5500",
+      "after": {
+        "accepted": false,
+        "rejection_reason": "Bad state: INVALID_IMAGE: PAD_BOUNDARIES_UNCLEAR: A strip-like region was found, but ten separate reagent pads could not be confirmed. Lay the strip flat on a plain background, reduce glare, tap to focus, and retake the photo.",
+        "rejection_code": "PAD_BOUNDARIES_UNCLEAR",
+        "elapsed_ms": 3921
+      },
+      "localization": {
+        "preview_events": 1,
+        "located_regions": 0,
+        "width": 825.0,
+        "height": 1100.0
+      }
+    },
+    {
+      "event_id": "LAUAAN-P152-L5500",
+      "after": {
+        "accepted": false,
+        "rejection_reason": "Bad state: LOW_CONFIDENCE: All ten pads were located, but the pH pad could not be classified confidently. Retake under even lighting, with the strip in focus.",
+        "rejection_code": "LOW_CONFIDENCE",
+        "elapsed_ms": 2483
+      },
+      "localization": {
+        "preview_events": 2,
+        "located_regions": 10,
+        "width": 825.0,
+        "height": 1100.0
+      }
+    },
+    {
+      "event_id": "LAUAAN-P005-L4000",
+      "after": {
+        "accepted": true,
+        "predictions": {
+          "Leukocytes": "Negative",
+          "Nitrite": "Negative",
+          "Urobilinogen": "3.2",
+          "Protein": "Negative",
+          "pH": "5.0",
+          "Blood": "Negative",
+          "Specific Gravity": "1.015",
+          "Ketone": "Negative",
+          "Bilirubin": "Negative",
+          "Glucose": "Negative"
+        },
+        "analyte_confidences": {
+          "Leukocytes": 0.6724985260913318,
+          "Nitrite": 0.9634876025438944,
+          "Urobilinogen": 1.0,
+          "Protein": 0.7399546389680548,
+          "pH": 0.5551459621195038,
+          "Blood": 0.8602142855146512,
+          "Specific Gravity": 0.9213061039787688,
+          "Ketone": 0.7526598542746308,
+          "Bilirubin": 0.9321082470604699,
+          "Glucose": 1.0
+        },
+        "nearest_training_distances": {
+          "Leukocytes": 0.3022190489190597,
+          "Nitrite": 0.14840657346231678,
+          "Urobilinogen": 0.013894042537474283,
+          "Protein": 0.15324966215204505,
+          "pH": 0.23882440027737042,
+          "Blood": 0.05263530731347796,
+          "Specific Gravity": 0.061280214613038675,
+          "Ketone": 0.03863443981969139,
+          "Bilirubin": 0.13282010665742947,
+          "Glucose": 0.09751751598346803
+        },
+        "elapsed_ms": 2322
+      },
+      "localization": {
+        "preview_events": 2,
+        "located_regions": 10,
+        "width": 825.0,
+        "height": 1100.0
+      }
+    },
+    {
+      "event_id": "LAUAAN-P031-L4000",
+      "after": {
+        "accepted": true,
+        "predictions": {
+          "Leukocytes": "Negative",
+          "Nitrite": "Negative",
+          "Urobilinogen": "3.2",
+          "Protein": "Negative",
+          "pH": "5.0",
+          "Blood": "Negative",
+          "Specific Gravity": "1.015",
+          "Ketone": "Negative",
+          "Bilirubin": "Negative",
+          "Glucose": "Negative"
+        },
+        "analyte_confidences": {
+          "Leukocytes": 0.8725284147721042,
+          "Nitrite": 0.9281199148337577,
+          "Urobilinogen": 1.0,
+          "Protein": 0.6021776949122942,
+          "pH": 0.7845308196761118,
+          "Blood": 0.8225068173442464,
+          "Specific Gravity": 0.8428457399268334,
+          "Ketone": 0.7706637999085822,
+          "Bilirubin": 0.906907280985074,
+          "Glucose": 0.694921587894862
+        },
+        "nearest_training_distances": {
+          "Leukocytes": 0.1803237675687136,
+          "Nitrite": 0.34571200073573094,
+          "Urobilinogen": 0.013827248804342274,
+          "Protein": 0.5888720743285567,
+          "pH": 0.1548854460896265,
+          "Blood": 0.06041397866130349,
+          "Specific Gravity": 0.07973482309635649,
+          "Ketone": 0.046353477365350615,
+          "Bilirubin": 0.08613873889835988,
+          "Glucose": 0.17788438960826758
+        },
+        "elapsed_ms": 2374
+      },
+      "localization": {
+        "preview_events": 2,
+        "located_regions": 10,
+        "width": 825.0,
+        "height": 1100.0
+      }
+    },
+    {
+      "event_id": "LAUAAN-P018-L2700",
+      "after": {
+        "accepted": false,
+        "rejection_reason": "Bad state: INVALID_IMAGE: Could not locate a complete ten-pad strip. exif_legacy: Bad state: INVALID_IMAGE: Strip candidate is not plausible.; rot90_ccw_local_contrast_backing: Bad state: INVALID_IMAGE: No narrow local-contrast strip candidate.",
+        "rejection_code": null,
+        "elapsed_ms": 3061
+      },
+      "localization": {
+        "preview_events": 1,
+        "located_regions": 0,
+        "width": 825.0,
+        "height": 1100.0
+      }
+    },
+    {
+      "event_id": "LAUAAN-P094-L2700",
+      "after": {
+        "accepted": false,
+        "rejection_reason": "Bad state: INVALID_IMAGE: Could not locate a complete ten-pad strip. exif_legacy: Bad state: INVALID_IMAGE: Strip candidate is not plausible.; rot90_ccw_local_contrast_backing: Bad state: INVALID_IMAGE: No narrow local-contrast strip candidate.",
+        "rejection_code": null,
+        "elapsed_ms": 2918
+      },
+      "localization": {
+        "preview_events": 1,
+        "located_regions": 0,
+        "width": 825.0,
+        "height": 1100.0
+      }
+    },
+    {
+      "event_id": "uritect_2026-7-15_Cabatuan_005_Cool",
+      "after": {
+        "accepted": true,
+        "predictions": {
+          "Leukocytes": "Trace 15",
+          "Nitrite": "Negative",
+          "Urobilinogen": "3.2",
+          "Protein": "Negative",
+          "pH": "5.0",
+          "Blood": "Negative",
+          "Specific Gravity": "1.015",
+          "Ketone": "Negative",
+          "Bilirubin": "Negative",
+          "Glucose": "Negative"
+        },
+        "analyte_confidences": {
+          "Leukocytes": 0.5861749913565916,
+          "Nitrite": 1.0,
+          "Urobilinogen": 0.5535943445268534,
+          "Protein": 0.9752215193841391,
+          "pH": 0.6699403382158025,
+          "Blood": 0.8366057651882384,
+          "Specific Gravity": 0.5016739779767145,
+          "Ketone": 0.6014766022757876,
+          "Bilirubin": 0.7319531790927613,
+          "Glucose": 1.0
+        },
+        "nearest_training_distances": {
+          "Leukocytes": 0.391121916025373,
+          "Nitrite": 0.04941590135213072,
+          "Urobilinogen": 0.09789590528504921,
+          "Protein": 0.23621267882062477,
+          "pH": 0.0624069256769929,
+          "Blood": 0.12462131125306683,
+          "Specific Gravity": 0.07758126466488868,
+          "Ketone": 0.017825313616435745,
+          "Bilirubin": 0.05189005748553094,
+          "Glucose": 0.037306262423079474
+        },
+        "elapsed_ms": 2525
+      },
+      "localization": {
+        "preview_events": 2,
+        "located_regions": 10,
+        "width": 825.0,
+        "height": 1100.0
+      }
+    },
+    {
+      "event_id": "uritect_2026-7-15_Cabatuan_010_Cool",
+      "after": {
+        "accepted": true,
+        "predictions": {
+          "Leukocytes": "Negative",
+          "Nitrite": "Negative",
+          "Urobilinogen": "16",
+          "Protein": "Negative",
+          "pH": "5.0",
+          "Blood": "Negative",
+          "Specific Gravity": "1.030",
+          "Ketone": "Trace 0.5",
+          "Bilirubin": "Small 17",
+          "Glucose": "Negative"
+        },
+        "analyte_confidences": {
+          "Leukocytes": 0.5939659773419439,
+          "Nitrite": 1.0,
+          "Urobilinogen": 0.6055496879757651,
+          "Protein": 0.4584266775238991,
+          "pH": 0.920737616784551,
+          "Blood": 1.0,
+          "Specific Gravity": 0.9001519626914852,
+          "Ketone": 0.8218612965013014,
+          "Bilirubin": 0.9535825400816538,
+          "Glucose": 1.0
+        },
+        "nearest_training_distances": {
+          "Leukocytes": 0.3391545394561344,
+          "Nitrite": 0.6336795702297566,
+          "Urobilinogen": 0.07812486771027585,
+          "Protein": 0.08397441464053754,
+          "pH": 0.05203648362178695,
+          "Blood": 0.04878705409746982,
+          "Specific Gravity": 0.052044207493472716,
+          "Ketone": 0.035219631480736854,
+          "Bilirubin": 0.12356277189856059,
+          "Glucose": 0.06684915375199796
+        },
+        "elapsed_ms": 2232
+      },
+      "localization": {
+        "preview_events": 2,
+        "located_regions": 10,
+        "width": 825.0,
+        "height": 1100.0
+      }
+    },
+    {
+      "event_id": "uritect_2026-7-15_Cabatuan_005_Warm",
+      "after": {
+        "accepted": false,
+        "rejection_reason": "Bad state: INVALID_IMAGE: PAD_BOUNDARIES_UNCLEAR: A strip-like region was found, but ten separate reagent pads could not be confirmed. Lay the strip flat on a plain background, reduce glare, tap to focus, and retake the photo.",
+        "rejection_code": "PAD_BOUNDARIES_UNCLEAR",
+        "elapsed_ms": 4187
+      },
+      "localization": {
+        "preview_events": 1,
+        "located_regions": 0,
+        "width": 825.0,
+        "height": 1100.0
+      }
+    },
+    {
+      "event_id": "uritect_2026-7-15_Cabatuan_H_Warm",
+      "after": {
+        "accepted": false,
+        "rejection_reason": "Bad state: INVALID_IMAGE: PAD_BOUNDARIES_UNCLEAR: A strip-like region was found, but ten separate reagent pads could not be confirmed. Lay the strip flat on a plain background, reduce glare, tap to focus, and retake the photo.",
+        "rejection_code": "PAD_BOUNDARIES_UNCLEAR",
+        "elapsed_ms": 4112
+      },
+      "localization": {
+        "preview_events": 1,
+        "located_regions": 0,
+        "width": 825.0,
+        "height": 1100.0
+      }
+    },
+    {
+      "event_id": "uritect_2026-7-15_Cabatuan_005_Daylight",
+      "after": {
+        "accepted": false,
+        "rejection_reason": "Bad state: INVALID_IMAGE: PAD_BOUNDARIES_UNCLEAR: Ten separate reagent pads could not be confirmed. Keep every pad visible, reduce glare, and tap to focus before retaking.",
+        "rejection_code": "PAD_BOUNDARIES_UNCLEAR",
+        "elapsed_ms": 3724
+      },
+      "localization": {
+        "preview_events": 1,
+        "located_regions": 0,
+        "width": 825.0,
+        "height": 1100.0
+      }
+    },
+    {
+      "event_id": "uritect_2026-7-15_Cabatuan_011_Daylight",
+      "after": {
+        "accepted": true,
+        "predictions": {
+          "Leukocytes": "Negative",
+          "Nitrite": "Negative",
+          "Urobilinogen": "3.2",
+          "Protein": "Negative",
+          "pH": "5.0",
+          "Blood": "Non-hemolyzed 10",
+          "Specific Gravity": "1.015",
+          "Ketone": "Negative",
+          "Bilirubin": "Negative",
+          "Glucose": "Negative"
+        },
+        "analyte_confidences": {
+          "Leukocytes": 0.7921513255563524,
+          "Nitrite": 1.0,
+          "Urobilinogen": 0.9258026165133756,
+          "Protein": 0.5444683048664727,
+          "pH": 0.9322320962623837,
+          "Blood": 0.5969813690628671,
+          "Specific Gravity": 0.45262103326363723,
+          "Ketone": 0.7873471491814483,
+          "Bilirubin": 0.8523531279812363,
+          "Glucose": 1.0
+        },
+        "nearest_training_distances": {
+          "Leukocytes": 0.2833948616081149,
+          "Nitrite": 0.5640070890639846,
+          "Urobilinogen": 0.5720108227190471,
+          "Protein": 0.9666455650547155,
+          "pH": 0.2914395209431173,
+          "Blood": 0.1631904989884856,
+          "Specific Gravity": 0.18822640538446467,
+          "Ketone": 0.0276277418146047,
+          "Bilirubin": 0.03343138685631847,
+          "Glucose": 0.33924490623985815
+        },
+        "elapsed_ms": 2680
+      },
+      "localization": {
+        "preview_events": 2,
+        "located_regions": 10,
+        "width": 825.0,
+        "height": 1100.0
+      }
+    },
+    {
+      "event_id": "uritect_2026-7-17_Cabatuan_002_Cool",
+      "after": {
+        "accepted": false,
+        "rejection_reason": "Bad state: INVALID_IMAGE: PAD_BOUNDARIES_UNCLEAR: A strip-like region was found, but ten separate reagent pads could not be confirmed. Lay the strip flat on a plain background, reduce glare, tap to focus, and retake the photo.",
+        "rejection_code": "PAD_BOUNDARIES_UNCLEAR",
+        "elapsed_ms": 3176
+      },
+      "localization": {
+        "preview_events": 1,
+        "located_regions": 0,
+        "width": 825.0,
+        "height": 1100.0
+      }
+    },
+    {
+      "event_id": "uritect_2026-7-17_Cabatuan_015_Cool",
+      "after": {
+        "accepted": false,
+        "rejection_reason": "Bad state: INVALID_IMAGE: Could not locate a complete ten-pad strip. exif_legacy: Bad state: INVALID_IMAGE: Strip candidate is not plausible.; rot90_ccw_local_contrast_backing: Bad state: INVALID_IMAGE: No narrow local-contrast strip candidate.",
+        "rejection_code": null,
+        "elapsed_ms": 3088
+      },
+      "localization": {
+        "preview_events": 1,
+        "located_regions": 0,
+        "width": 825.0,
+        "height": 1100.0
+      }
+    },
+    {
+      "event_id": "uritect_2026-7-17_Cabatuan_015_Warm",
+      "after": {
+        "accepted": false,
+        "rejection_reason": "Bad state: INVALID_IMAGE: Could not locate a complete ten-pad strip. exif_legacy: Bad state: INVALID_IMAGE: Strip candidate is not plausible.; rot90_ccw_local_contrast_backing: Bad state: INVALID_IMAGE: No narrow local-contrast strip candidate.",
+        "rejection_code": null,
+        "elapsed_ms": 3219
+      },
+      "localization": {
+        "preview_events": 1,
+        "located_regions": 0,
+        "width": 825.0,
+        "height": 1100.0
+      }
+    },
+    {
+      "event_id": "uritect_2026-7-17_Cabatuan_028_Warm",
+      "after": {
+        "accepted": false,
+        "rejection_reason": "Bad state: INVALID_IMAGE: PAD_BOUNDARIES_UNCLEAR: A strip-like region was found, but ten separate reagent pads could not be confirmed. Lay the strip flat on a plain background, reduce glare, tap to focus, and retake the photo.",
+        "rejection_code": "PAD_BOUNDARIES_UNCLEAR",
+        "elapsed_ms": 3682
+      },
+      "localization": {
+        "preview_events": 1,
+        "located_regions": 0,
+        "width": 825.0,
+        "height": 1100.0
+      }
+    },
+    {
+      "event_id": "uritect_2026-7-17_Cabatuan_028_Daylight",
+      "after": {
+        "accepted": true,
+        "predictions": {
+          "Leukocytes": "Negative",
+          "Nitrite": "Negative",
+          "Urobilinogen": "3.2",
+          "Protein": "Negative",
+          "pH": "5.0",
+          "Blood": "Negative",
+          "Specific Gravity": "1.015",
+          "Ketone": "Negative",
+          "Bilirubin": "Negative",
+          "Glucose": "Negative"
+        },
+        "analyte_confidences": {
+          "Leukocytes": 0.8715076256857082,
+          "Nitrite": 0.9775082629939923,
+          "Urobilinogen": 1.0,
+          "Protein": 0.5941764968799875,
+          "pH": 0.7893041705276765,
+          "Blood": 1.0,
+          "Specific Gravity": 0.9333436986686275,
+          "Ketone": 0.8294394654824384,
+          "Bilirubin": 0.9045751300433615,
+          "Glucose": 0.5058494611054808
+        },
+        "nearest_training_distances": {
+          "Leukocytes": 0.3398216520747649,
+          "Nitrite": 0.13059697474591692,
+          "Urobilinogen": 0.08888147082870697,
+          "Protein": 0.7943930022543639,
+          "pH": 0.09664089873751984,
+          "Blood": 0.04992609685175041,
+          "Specific Gravity": 0.06002388907433681,
+          "Ketone": 0.025107926550805515,
+          "Bilirubin": 0.2631010522852703,
+          "Glucose": 0.09219337342920264
+        },
+        "elapsed_ms": 2844
+      },
+      "localization": {
+        "preview_events": 2,
+        "located_regions": 10,
+        "width": 825.0,
+        "height": 1100.0
+      }
+    },
+    {
+      "event_id": "uritect_2026-7-17_Cabatuan_031_Daylight",
+      "after": {
+        "accepted": false,
+        "rejection_reason": "Bad state: LOW_CONFIDENCE: All ten pads were located, but the Specific Gravity pad could not be classified confidently. Retake under even lighting, with the strip in focus.",
+        "rejection_code": "LOW_CONFIDENCE",
+        "elapsed_ms": 2495
+      },
+      "localization": {
+        "preview_events": 2,
+        "located_regions": 10,
+        "width": 825.0,
+        "height": 1100.0
+      }
+    }
+  ]
+}

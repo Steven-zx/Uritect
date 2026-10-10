@@ -1,13 +1,13 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 
 import '../config/theme.dart';
 import '../models/scan_model.dart';
+import '../models/scan_localization.dart';
 import '../models/scan_analysis_exit_reason.dart';
 import '../models/scan_analysis_failure.dart';
 import '../models/scan_provenance.dart';
 import '../services/scan_analysis_service.dart';
+import '../widgets/strip_analysis_animation.dart';
 import 'results_page.dart';
 
 class AnalyzingPage extends StatefulWidget {
@@ -27,24 +27,22 @@ class AnalyzingPage extends StatefulWidget {
 }
 
 class _AnalyzingPageState extends State<AnalyzingPage> {
-  Timer? _progressTimer;
-  double _currentProgress = 1.0;
-  double _targetProgress = 8.0;
+  ScanLocalization? _localization;
   String _currentStage = 'starting';
   late Future<ScanResult> _scanResultFuture;
 
   @override
   void initState() {
     super.initState();
-    _startProgressLoop();
-
     _scanResultFuture = widget.analysisService.analyze(
       imagePath: widget.imagePath,
+      onLocalization: (localization) {
+        if (mounted) setState(() => _localization = localization);
+      },
       onProgress: (progress, stage) {
         if (!mounted) return;
         setState(() {
           _currentStage = stage;
-          _targetProgress = _stageTarget(progress, stage);
         });
       },
     );
@@ -53,10 +51,7 @@ class _AnalyzingPageState extends State<AnalyzingPage> {
           if (!mounted) return;
           setState(() {
             _currentStage = 'complete';
-            _targetProgress = 100.0;
           });
-          await _finishProgress();
-          if (!mounted) return;
           await _showResults(scanResult);
         })
         .catchError((error) async {
@@ -91,70 +86,18 @@ class _AnalyzingPageState extends State<AnalyzingPage> {
   // Keep the analysis route alive until results return so the retake reason
   // reaches the capture page instead of completing its push with null.
   Future<void> _showResults(ScanResult result) async {
-    _progressTimer?.cancel();
     final exitReason = await Navigator.of(context).push<ScanAnalysisExitReason>(
       MaterialPageRoute(
         builder: (_) => ResultsPage(
           scanResult: result.copyWith(provenance: widget.provenance),
+          localization: _localization,
         ),
       ),
     );
-    if (!mounted) return;
+    // Home can remove this route while the results future completes. During
+    // the removal animation mounted is still true: never pop the new dashboard.
+    if (!mounted || ModalRoute.of(context)?.isCurrent != true) return;
     Navigator.of(context).pop(exitReason);
-  }
-
-  @override
-  void dispose() {
-    _progressTimer?.cancel();
-    super.dispose();
-  }
-
-  void _startProgressLoop() {
-    _progressTimer = Timer.periodic(const Duration(milliseconds: 80), (_) {
-      if (!mounted || _currentProgress >= _targetProgress) {
-        return;
-      }
-
-      final distance = _targetProgress - _currentProgress;
-      final step = distance > 35
-          ? 1.6
-          : distance > 15
-          ? 1.0
-          : distance > 4
-          ? 0.45
-          : 0.16;
-      setState(() {
-        _currentProgress = (_currentProgress + step).clamp(
-          1.0,
-          _targetProgress,
-        );
-      });
-    });
-  }
-
-  Future<void> _finishProgress() async {
-    while (mounted && _currentProgress < 100.0) {
-      setState(() {
-        _currentProgress = (_currentProgress + 2.5).clamp(1.0, 100.0);
-      });
-      await Future<void>.delayed(const Duration(milliseconds: 24));
-    }
-    await Future<void>.delayed(const Duration(milliseconds: 180));
-  }
-
-  double _stageTarget(double reportedProgress, String stage) {
-    final reported = reportedProgress.clamp(1.0, 100.0).toDouble();
-    final stageTarget = switch (stage) {
-      'loading_reference_map' => 18.0,
-      'preparing_image' || 'decoding_image' => 32.0,
-      'locating_strip' => 95.0,
-      'locating_marker' => 95.0,
-      'classifying_pads' => 96.0,
-      'finalizing_results' => 98.0,
-      'complete' => 100.0,
-      _ => reported,
-    };
-    return stageTarget > _targetProgress ? stageTarget : _targetProgress;
   }
 
   bool _isInvalidScanError(Object error) {
@@ -169,172 +112,95 @@ class _AnalyzingPageState extends State<AnalyzingPage> {
 
   @override
   Widget build(BuildContext context) {
+    final reduceMotion =
+        MediaQuery.disableAnimationsOf(context) ||
+        MediaQuery.accessibleNavigationOf(context);
     return Scaffold(
       backgroundColor: AppColors.bgMain,
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Column(
-            children: [
-              const SizedBox(height: 18),
-              Text(
-                'Analyzing',
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  color: AppColors.primaryMain,
-                  fontWeight: FontWeight.w700,
-                  fontSize: 20,
+        child: LayoutBuilder(
+          builder: (context, constraints) => SingleChildScrollView(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(minHeight: constraints.maxHeight),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 24,
                 ),
-              ),
-              const SizedBox(height: 10),
-              Text(
-                'Please wait while Uritect reads\nthe dipstick on this device',
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: AppColors.textSecondary,
-                  fontSize: 12,
-                  height: 1.25,
-                ),
-              ),
-              const Spacer(),
-              Center(
-                child: SizedBox(
-                  width: 190,
-                  height: 190,
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      // Circular progress indicator
-                      SizedBox.expand(
-                        child: CustomPaint(
-                          painter: _CircularProgressPainter(
-                            progress: _currentProgress / 100.0,
-                            progressColor: AppColors.primaryMain,
-                            backgroundColor: const Color(0xFFE0E0E0),
-                            strokeWidth: 12,
-                          ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Analyzing your strip',
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        color: AppColors.primaryDark,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    const Text(
+                      'Reading your photo on this device',
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 28),
+                    ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 360),
+                      child: StripAnalysisAnimation(
+                        stage: _currentStage,
+                        imagePath: widget.imagePath,
+                        localization: _localization,
+                      ),
+                    ),
+                    const SizedBox(height: 28),
+                    if (!reduceMotion)
+                      SizedBox(
+                        width: 160,
+                        child: LinearProgressIndicator(
+                          value: _currentStage == 'complete' ? 1 : null,
+                          minHeight: 3,
+                          borderRadius: BorderRadius.circular(3),
+                          semanticsLabel: 'Analysis in progress',
                         ),
                       ),
-                      // Progress percentage text
-                      Text(
-                        '${_currentProgress.toStringAsFixed(0)}%',
-                        style: const TextStyle(
-                          color: AppColors.primaryMain,
-                          fontSize: 36,
-                          fontWeight: FontWeight.w700,
-                          letterSpacing: 0.2,
-                        ),
+                    const SizedBox(height: 14),
+                    Text(
+                      _stageText(_currentStage),
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: AppColors.primaryDark,
+                        fontWeight: FontWeight.w600,
                       ),
-                    ],
-                  ),
+                    ),
+                    const SizedBox(height: 8),
+                    const Text(
+                      'Please keep URITECT open while the scan is read.',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: AppColors.textSecondary,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              const SizedBox(height: 44),
-              Text(
-                _stageText(_currentStage, _currentProgress),
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: AppColors.textSecondary,
-                  fontSize: 12,
-                ),
-              ),
-              const Spacer(flex: 2),
-            ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  String _stageText(String stage, double progress) {
-    if (stage == 'locating_strip' || stage == 'locating_marker') {
-      if (progress < 48) {
-        return 'Finding the dipstick strip...';
-      }
-      if (progress < 66) {
-        return 'Locating the reagent pads...';
-      }
-      if (progress < 82) {
-        return 'Reading the reagent pad colors...';
-      }
-      if (progress < 94) {
-        return 'Comparing colors with offline references...';
-      }
-      return 'Waiting for the final scan result...';
-    }
-
-    switch (stage) {
-      case 'starting':
-        return 'Preparing the scan...';
-      case 'loading_reference_map':
-        return 'Loading offline reference data...';
-      case 'preparing_image':
-      case 'decoding_image':
-        return 'Preparing the captured image...';
-      case 'locating_strip':
-        return 'Finding the dipstick strip...';
-      case 'locating_marker':
-        return 'Finding the dipstick strip...';
-      case 'classifying_pads':
-        return 'Reading the reagent pad colors...';
-      case 'finalizing_results':
-      case 'complete':
-        return 'Finalizing the dipstick results...';
-      default:
-        return 'Analyzing the dipstick...';
-    }
-  }
-}
-
-class _CircularProgressPainter extends CustomPainter {
-  final double progress; // 0.0 to 1.0
-  final Color progressColor;
-  final Color backgroundColor;
-  final double strokeWidth;
-
-  _CircularProgressPainter({
-    required this.progress,
-    required this.progressColor,
-    required this.backgroundColor,
-    required this.strokeWidth,
-  });
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final center = Offset(size.width / 2, size.height / 2);
-    final radius = (size.width - strokeWidth) / 2;
-
-    // Background circle
-    canvas.drawCircle(
-      center,
-      radius,
-      Paint()
-        ..color = backgroundColor
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = strokeWidth
-        ..strokeCap = StrokeCap.round,
-    );
-
-    // Progress arc
-    final progressPaint = Paint()
-      ..color = progressColor
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = strokeWidth
-      ..strokeCap = StrokeCap.round;
-
-    final startAngle = -3.14159 / 2; // Start at top
-    final sweepAngle = 2 * 3.14159 * progress; // Full circle is 2π
-
-    canvas.drawArc(
-      Rect.fromCircle(center: center, radius: radius),
-      startAngle,
-      sweepAngle,
-      false,
-      progressPaint,
-    );
-  }
-
-  @override
-  bool shouldRepaint(covariant _CircularProgressPainter oldDelegate) {
-    return oldDelegate.progress != progress;
-  }
+  String _stageText(String stage) => switch (stage) {
+    'loading_production_model' ||
+    'loading_reference_map' => 'Loading offline references...',
+    'preparing_image' || 'decoding_image' => 'Preparing your photo...',
+    'locating_markerless_strip' ||
+    'locating_strip' ||
+    'locating_marker' => 'Locating the strip and reading its pads...',
+    'classifying_pads' => 'Comparing pad colors with offline references...',
+    'finalizing_results' => 'Checking the scan results...',
+    'complete' => 'Opening your results...',
+    _ => 'Preparing the scan...',
+  };
 }

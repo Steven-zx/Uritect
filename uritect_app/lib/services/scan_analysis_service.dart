@@ -1,4 +1,5 @@
 import '../models/scan_model.dart';
+import '../models/scan_localization.dart';
 import 'local_scan_analysis_service.dart';
 
 class ScanAnalysisService {
@@ -10,7 +11,12 @@ class ScanAnalysisService {
   Future<ScanResult> analyze({
     required String imagePath,
     void Function(double progress, String stage)? onProgress,
+    void Function(ScanLocalization localization)? onLocalization,
   }) {
-    return _localAnalyzer.analyze(imagePath: imagePath, onProgress: onProgress);
+    return _localAnalyzer.analyze(
+      imagePath: imagePath,
+      onProgress: onProgress,
+      onLocalization: onLocalization,
+    );
   }
 }

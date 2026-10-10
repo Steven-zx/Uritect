@@ -1,0 +1,186 @@
+{
+  "version": "1.5.6+23",
+  "generated_at": "2026-10-10T16:43:11.470924+00:00",
+  "status": "signed_QA_pilot_installed_pending_manual_overlay_acceptance",
+  "apk": {
+    "path": "output/device_pilot/2026-10-11/1.5.6+23/Uritect_v1.5.6+23_release.apk",
+    "bytes": 57716259,
+    "sha256": "5E6E1A3E257F9D6712CA6B9E7101FF92B9E184F9DB141AD98509E72869E62F4E"
+  },
+  "certificate_sha256": "15D1138DCE077ADA624A140B3A145343D1A48305FD0847E9002869E488F19D39",
+  "source_snapshot_sha256": "EF7E0AC5FE5726AEF31BEC53085685C44282859A9075DF96804AE58469CE49DC",
+  "source_archive_sha256": "E0B41DFC179A450F452C5C254F78B21B4E9145617713FDB3DFC15B667864FC77",
+  "checks": {
+    "flutter_test": {
+      "exit_code": 0,
+      "tests_passed": 133
+    },
+    "flutter_analyze": {
+      "exit_code": 0
+    },
+    "development_image_regression": {
+      "exit_code": 0,
+      "cases": 18,
+      "classification_outputs_changed": false
+    },
+    "overlay_geometry": {
+      "exit_code": 0,
+      "cases": 5,
+      "scope": "four rotations, EXIF orientation, resizing, pixel correspondence and region bounds"
+    },
+    "release_build": {
+      "exit_code": 0,
+      "native_compile": "included in successful signed release assembly"
+    }
+  },
+  "development_image_regression": {
+    "cases": 18,
+    "previously_accepted": 6,
+    "currently_accepted": 6,
+    "lost": [],
+    "changed_previously_accepted": [],
+    "changed_rejections": [],
+    "newly_accepted": [],
+    "scope": "Retrospective development regression with actual localization callbacks, not independent clinical validation"
+  },
+  "pipeline": "android_markerless_json_knn_v4_support_20261010",
+  "production_model_changed": false,
+  "vote_confidence_threshold_changed": false,
+  "bayesian_values_changed": false,
+  "support_policy_status": "training-only engineering guard, not clinically validated",
+  "native_security_device_tests": "Security implementation unchanged; prior device evidence retained; new overlay visual acceptance is pending",
+  "clinical_validation": "Not established",
+  "files": [
+    {
+      "path": "docs/URITECT_SECURITY_AND_INPUT_REVIEW_2026-10-10.md",
+      "bytes": 10849,
+      "sha256": "857AC2B78F65369A0D952C9D8C85B8C42466FF04DF051E4F0ED5D13478304A6A"
+    },
+    {
+      "path": "output/device_pilot/2026-10-11/1.5.6+23/APK_IDENTITY.txt",
+      "bytes": 5975,
+      "sha256": "8437592C81B4E55EC85D7941C86A67E078B5976ACB1FCD73D525178F4F6718A7"
+    },
+    {
+      "path": "output/device_pilot/2026-10-11/1.5.6+23/APK_PERMISSIONS.txt",
+      "bytes": 532,
+      "sha256": "2DDE9EECBAD5340347D8E684C4E92A9EA23E3D882A9B3F5049C47AD5783E1E60"
+    },
+    {
+      "path": "output/device_pilot/2026-10-11/1.5.6+23/APK_SECURITY_MANIFEST.txt",
+      "bytes": 8163,
+      "sha256": "7D93C5288D525764D249CF7057D5AD997271021E9D0FDFB9DCA7D06F77D711A3"
+    },
+    {
+      "path": "output/device_pilot/2026-10-11/1.5.6+23/AUTOMATED_CHECKS.json",
+      "bytes": 544,
+      "sha256": "3D16B8859D1A7AED0707691CC7A1A4A62C1BF9B5EA0330DA5EB1B85D3DFA4D05"
+    },
+    {
+      "path": "output/device_pilot/2026-10-11/1.5.6+23/flutter_analyze.log",
+      "bytes": 202,
+      "sha256": "5C01CC4BE74D2A530CAB2262E4471B73BF8D602D1F347E7A1E5B7E3FDEBAAD56"
+    },
+    {
+      "path": "output/device_pilot/2026-10-11/1.5.6+23/flutter_test.log",
+      "bytes": 46416,
+      "sha256": "81B84A0DDCA8925019138CF3ED219E92DC6A4AA462234877340B73D46FCC028B"
+    },
+    {
+      "path": "output/device_pilot/2026-10-11/1.5.6+23/release_build.log",
+      "bytes": 8474,
+      "sha256": "91A442C0ADA6B57BDF0D074EEB4232BD99A7FE17EC14B70EC9AE0C3CF9DF202F"
+    },
+    {
+      "path": "output/device_pilot/2026-10-11/1.5.6+23/runtime_checks.log",
+      "bytes": 3340,
+      "sha256": "890969263AB633E79F8F17803D33B30E241A78B676F9619BB11B367AAF781B52"
+    },
+    {
+      "path": "output/device_pilot/2026-10-11/1.5.6+23/runtime_comparison.json",
+      "bytes": 309,
+      "sha256": "DFA5B2C5E255B0ACA911C2D01A48283AD36EDD51B683B36978F2092B42B94A75"
+    },
+    {
+      "path": "output/device_pilot/2026-10-11/1.5.6+23/runtime_regression.json",
+      "bytes": 16418,
+      "sha256": "6C5C9CA936CE088A123458F581193F2A81A56A3DE11CDC75A0476070EB085799"
+    },
+    {
+      "path": "output/device_pilot/2026-10-11/1.5.6+23/SOURCE_SNAPSHOT.json",
+      "bytes": 23809,
+      "sha256": "EF7E0AC5FE5726AEF31BEC53085685C44282859A9075DF96804AE58469CE49DC"
+    },
+    {
+      "path": "output/device_pilot/2026-10-11/1.5.6+23/URITECT_SOURCE_SNAPSHOT.zip",
+      "bytes": 6368968,
+      "sha256": "E0B41DFC179A450F452C5C254F78B21B4E9145617713FDB3DFC15B667864FC77"
+    },
+    {
+      "path": "pipeline/build_training_support_policy.py",
+      "bytes": 2511,
+      "sha256": "8C4A410441408D2B95E06919825AAEDF90EE8922F33CFE844E0738A109C0707D"
+    },
+    {
+      "path": "pipeline/test_training_support_policy.py",
+      "bytes": 2065,
+      "sha256": "52138A0FAFAEC7074A9AC6F951FE6FDB3C78F29472B3949183710C60E6836A64"
+    },
+    {
+      "path": "pipeline/verify_qa_pilot_build.py",
+      "bytes": 5831,
+      "sha256": "5F13A003D795012B263A28C5BA7C9A2AAC0CDD3B4470801891491B8BB9FCE45B"
+    },
+    {
+      "path": "output/device_pilot/2026-10-11/1.5.6+23/INSTALLATION.json",
+      "bytes": 531,
+      "sha256": "DB3CCACADC5EFEB758A464376607572B99A1D4FA7E8EAB62246849F201888E26"
+    },
+    {
+      "path": "output/device_pilot/2026-10-11/1.5.6+23/COLD_LAUNCH.txt",
+      "bytes": 179,
+      "sha256": "67CC35493F8F9C1B9656A49D7D8B6DFC588A3C32BEE1A60BC59D93F6028FCFDF"
+    },
+    {
+      "path": "output/device_pilot/2026-10-11/1.5.6+23/installation.log",
+      "bytes": 1106,
+      "sha256": "968DCAF8804F5FE9000AD46408CB5AC1B153C1D14800EEBADB74E805AB4E6719"
+    },
+    {
+      "path": "output/device_pilot/2026-10-11/1.5.6+23/runtime_manifest.json",
+      "bytes": 12231,
+      "sha256": "B477F048FC4617EA76CF6CC7C703B5E03C28E10FD7DBB0C50B06DA3517D3A098"
+    },
+    {
+      "path": "output/device_pilot/2026-10-11/1.5.6+23/overlay_geometry.json",
+      "bytes": 829,
+      "sha256": "171A128F736FBCFD3A18EF854C1271EE9CF599ED068B32BF98EC9DF653AF0E41"
+    },
+    {
+      "path": "docs/URITECT_ACTUAL_PHOTO_ROI_ANIMATION_2026-10-11.md",
+      "bytes": 2793,
+      "sha256": "C522874F0412A22FE4CA6951B7046B03C6AADC4E90A49672A39A6125581B71DA"
+    }
+  ],
+  "actual_photo_overlay": true,
+  "localization_coordinates": "Exact selected detector sample rectangles on its EXIF-baked/resized/oriented preview",
+  "preview_persistence": "Memory only; not added to saved records or plaintext photo files",
+  "preview_frame_synchronization": "Overlay waits for matching image frame",
+  "classification_regression": "18 development cases unchanged, including all previous rejections",
+  "overlay_geometry_checks": "Four rotations plus EXIF orientation 6, including resize and pixel correspondence",
+  "installation": {
+    "installed_at": "2026-10-10T16:46:44.049185+00:00",
+    "device": "192.168.1.37:44111",
+    "model": "RMX3933",
+    "android_version": "16",
+    "version_name": "1.5.6",
+    "version_code": 23,
+    "installed_apk_sha256": "5E6E1A3E257F9D6712CA6B9E7101FF92B9E184F9DB141AD98509E72869E62F4E",
+    "matches_sealed_apk": true,
+    "install_mode": "adb install --no-streaming -r",
+    "app_data_cleared": false,
+    "cold_launch_status": "ok",
+    "process_id": "29521",
+    "manual_overlay_acceptance": "Pending a new physical strip scan"
+  }
+}
