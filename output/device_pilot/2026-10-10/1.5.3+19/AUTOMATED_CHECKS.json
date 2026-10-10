@@ -1,0 +1,17 @@
+{
+  "flutter_test": {
+    "exit_code": 0,
+    "tests_passed": 126
+  },
+  "flutter_analyze": {
+    "exit_code": 0
+  },
+  "classifier_regression_reuse": {
+    "exit_code": 0,
+    "status": "analysis sources and assets identical; prior development image evidence retained"
+  },
+  "release_build": {
+    "exit_code": 0,
+    "native_compile": "included in successful signed release assembly"
+  }
+}

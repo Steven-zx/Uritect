@@ -1,0 +1,5 @@
+{
+  "image_path": "C:/Users/acer/Downloads/Github/Uritect/output/device_pilot/2026-10-07/IMG_20261007_093746.jpg",
+  "accepted": false,
+  "error": "Bad state: INVALID_IMAGE: PAD_BOUNDARIES_UNCLEAR: A strip-like region was found, but ten separate reagent pads could not be confirmed. Lay the strip flat on a plain background, reduce glare, tap to focus, and retake the photo."
+}

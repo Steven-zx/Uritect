@@ -1,0 +1,162 @@
+{
+  "version": "1.5.2+18",
+  "generated_at": "2026-10-10T01:35:18.900097+00:00",
+  "status": "signed_QA_pilot_candidate_pending_native_security_and_device_acceptance",
+  "apk": {
+    "path": "output/device_pilot/2026-10-10/1.5.2+18/Uritect_v1.5.2+18_release.apk",
+    "bytes": 57371815,
+    "sha256": "A85CFC7C81079BC4935EC1574D88AD7B664B4495E1EBC45D54CD1DCEEF37F2FD"
+  },
+  "certificate_sha256": "15D1138DCE077ADA624A140B3A145343D1A48305FD0847E9002869E488F19D39",
+  "source_snapshot_sha256": "1A1F448377D088D03DB658E52713B36CCA8B7F458BF0CC87A14356CBE72B1283",
+  "source_archive_sha256": "B0288F735263041EADBB1C5A53FDCCD3347190C137E6C7E8A7D9C3920322650A",
+  "checks": {
+    "flutter_test": {
+      "exit_code": 0,
+      "tests_passed": 125,
+      "evidence": "flutter_test.log"
+    },
+    "flutter_analyze": {
+      "exit_code": 0,
+      "evidence": "flutter_analyze.log"
+    },
+    "release_build": {
+      "exit_code": 0,
+      "evidence": "release_build.log",
+      "signed_APK_candidates_built": 1,
+      "native_compilation": "Included in successful release assembly"
+    },
+    "classifier_regression_evidence_reuse": {
+      "exit_code": 0,
+      "runtime_evaluation_rerun": false,
+      "evidence": "CLASSIFIER_REGRESSION_REUSE.json",
+      "note": "Classifier, model, scan gates and image runtime tool unchanged; prior 18-image regression retained with provenance"
+    }
+  },
+  "development_image_regression": {
+    "cases": 18,
+    "previously_accepted": 6,
+    "currently_accepted": 6,
+    "lost": [],
+    "changed_previously_accepted": [],
+    "newly_accepted": [],
+    "scope": "Retrospective development regression, not independent performance validation",
+    "evidence_status": "Retained prior regression; not rerun. Classifier and assets unchanged."
+  },
+  "pipeline": "android_markerless_json_knn_v4_support_20261010",
+  "production_model_changed": false,
+  "vote_confidence_threshold_changed": false,
+  "bayesian_values_changed": false,
+  "support_policy_status": "training-only engineering guard, not clinically validated",
+  "native_security_device_tests": "Pending; mocked Flutter tests do not verify AndroidKeyStore on physical phones",
+  "clinical_validation": "Not established",
+  "files": [
+    {
+      "path": "docs/URITECT_SECURITY_AND_INPUT_REVIEW_2026-10-10.md",
+      "bytes": 10849,
+      "sha256": "857AC2B78F65369A0D952C9D8C85B8C42466FF04DF051E4F0ED5D13478304A6A"
+    },
+    {
+      "path": "output/device_pilot/2026-10-10/1.5.2+18/APK_IDENTITY.txt",
+      "bytes": 5975,
+      "sha256": "1FEC4D3658F3CA2010D74CB30AFD0DCA183203AC9DB9C8C9846645F27325D6FB"
+    },
+    {
+      "path": "output/device_pilot/2026-10-10/1.5.2+18/APK_PERMISSIONS.txt",
+      "bytes": 532,
+      "sha256": "2DDE9EECBAD5340347D8E684C4E92A9EA23E3D882A9B3F5049C47AD5783E1E60"
+    },
+    {
+      "path": "output/device_pilot/2026-10-10/1.5.2+18/APK_SECURITY_MANIFEST.txt",
+      "bytes": 8163,
+      "sha256": "7ADF4A73FFB90D04FB732391B28E118FDC229994FF091A078BDF2A8DCE90A8B5"
+    },
+    {
+      "path": "output/device_pilot/2026-10-10/1.5.2+18/AUTOMATED_CHECKS.json",
+      "bytes": 695,
+      "sha256": "F6B5285AA69A6B37EA0291C08BF44C0D31DEDBDAD539B716B8061E39649F4F8A"
+    },
+    {
+      "path": "output/device_pilot/2026-10-10/1.5.2+18/flutter_analyze.log",
+      "bytes": 200,
+      "sha256": "0E22B80125739367B35F0F25C76A1DC20303C7EA2B051E952C91952F59F370C2"
+    },
+    {
+      "path": "output/device_pilot/2026-10-10/1.5.2+18/flutter_test.log",
+      "bytes": 41024,
+      "sha256": "D0169E7E8659B45297F971CBF100E4085C2A825684ACF370034BE78780A13CCA"
+    },
+    {
+      "path": "output/device_pilot/2026-10-10/1.5.2+18/release_build.log",
+      "bytes": 8474,
+      "sha256": "1DC1CEBA1899E0451348BCAF130AF2E048A7CFCE84B5E4F2953DE854A333F14E"
+    },
+    {
+      "path": "output/device_pilot/2026-10-10/1.5.2+18/runtime_comparison.json",
+      "bytes": 246,
+      "sha256": "E18A98D692F384CD8CB6E378AA562EA9E68B24E089E25277AD7519D03FEAF99E"
+    },
+    {
+      "path": "output/device_pilot/2026-10-10/1.5.2+18/runtime_regression.json",
+      "bytes": 13872,
+      "sha256": "A3A5F051B39E46F920AB5E356FDBAF9A02BE3F08F54659056755160AB03E6F27"
+    },
+    {
+      "path": "output/device_pilot/2026-10-10/1.5.2+18/SOURCE_SNAPSHOT.json",
+      "bytes": 22449,
+      "sha256": "1A1F448377D088D03DB658E52713B36CCA8B7F458BF0CC87A14356CBE72B1283"
+    },
+    {
+      "path": "output/device_pilot/2026-10-10/1.5.2+18/URITECT_SOURCE_SNAPSHOT.zip",
+      "bytes": 6187413,
+      "sha256": "B0288F735263041EADBB1C5A53FDCCD3347190C137E6C7E8A7D9C3920322650A"
+    },
+    {
+      "path": "pipeline/build_training_support_policy.py",
+      "bytes": 2511,
+      "sha256": "8C4A410441408D2B95E06919825AAEDF90EE8922F33CFE844E0738A109C0707D"
+    },
+    {
+      "path": "pipeline/test_training_support_policy.py",
+      "bytes": 2065,
+      "sha256": "52138A0FAFAEC7074A9AC6F951FE6FDB3C78F29472B3949183710C60E6836A64"
+    },
+    {
+      "path": "pipeline/verify_qa_pilot_build.py",
+      "bytes": 5831,
+      "sha256": "5F13A003D795012B263A28C5BA7C9A2AAC0CDD3B4470801891491B8BB9FCE45B"
+    },
+    {
+      "path": "output/device_pilot/2026-10-10/1.5.2+18/INSTALLATION.json",
+      "bytes": 646,
+      "sha256": "2E4784D7A5135A2AD29E8BC0F1E7EF02FA0A40E484B6C0C86C07F1F721FEF1C8"
+    },
+    {
+      "path": "output/device_pilot/2026-10-10/1.5.2+18/CLASSIFIER_REGRESSION_REUSE.json",
+      "bytes": 857,
+      "sha256": "0C51A4E950BC2CC36921EED931AB2782F47D375AA70C4309A80CC41433AD9463"
+    },
+    {
+      "path": "docs/URITECT_CAMERA_AND_PATIENT_NAMES_2026-10-10.md",
+      "bytes": 2100,
+      "sha256": "D1CE26A4C20C4D5AAFC0FD737795FAA902E787F0A68C53B62FFC493FA4F8B914"
+    }
+  ],
+  "installation": {
+    "verified_at": "2026-10-10T01:36:14.239894+00:00",
+    "device_model": "RMX3933",
+    "android_version": "16",
+    "serial": "192.168.1.37:41885",
+    "version": "1.5.2+18",
+    "installed_apk_sha256": "A85CFC7C81079BC4935EC1574D88AD7B664B4495E1EBC45D54CD1DCEEF37F2FD",
+    "install_mode": "adb install -r; app data not cleared",
+    "launch_result": "Starting: Intent { cmp=ph.edu.wvsu.uritect/.MainActivity }\nStatus: ok\nLaunchState: COLD\nActivity: ph.edu.wvsu.uritect/.MainActivity\nTotalTime: 592\nWaitTime: 597\nComplete",
+    "process_id": "23355",
+    "device_acceptance": "Camera visual check and actual patient-name save/edit pending"
+  },
+  "features": [
+    "Foreground camera frame border",
+    "Optional encrypted patient names editable in protected history",
+    "User confirmed preceding 1.5.1+17 unlock fix works"
+  ]
+}

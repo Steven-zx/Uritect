@@ -1,13 +1,16 @@
-import 'dart:io';
+import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 
 import '../config/theme.dart';
 import '../models/saved_scan_record.dart';
 import '../services/scan_history_service.dart';
+import '../services/history_cipher.dart';
 import '../widgets/common_widgets.dart';
 import 'capture_dipstick_page.dart';
-import 'overall_results_page.dart';
+import 'protected_history_page.dart';
+import 'performance_notes_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -16,20 +19,87 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   final ScanHistoryService _historyService = const ScanHistoryService();
   late Future<List<SavedScanRecord>> _recordsFuture;
+  bool _historyUnlocked = false;
+  bool _unlocking = false;
+  Timer? _historyTimer;
 
   @override
   void initState() {
     super.initState();
-    _recordsFuture = _historyService.loadRecords();
+    WidgetsBinding.instance.addObserver(this);
+    _recordsFuture = Future.value([]);
   }
 
-  void _refreshHistory() {
-    setState(() {
-      _recordsFuture = _historyService.loadRecords();
-    });
+  Future<void> _refreshHistory() async {
+    if (_unlocking) return;
+    _unlocking = true;
+    try {
+      await HistoryPrivacy.acquire(this);
+      final records = await _historyService.loadRecords();
+      await _historyService.authenticate();
+      if (!mounted ||
+          WidgetsBinding.instance.lifecycleState != AppLifecycleState.resumed) {
+        await HistoryPrivacy.release(this);
+        return;
+      }
+      await HistoryPrivacy.acquire(this);
+      if (!mounted ||
+          WidgetsBinding.instance.lifecycleState != AppLifecycleState.resumed) {
+        await HistoryPrivacy.release(this);
+        return;
+      }
+      setState(() {
+        _historyUnlocked = true;
+        _recordsFuture = Future.value(records);
+      });
+      _historyTimer?.cancel();
+      final remaining =
+          _historyService.cipher.remainingSession - const Duration(seconds: 2);
+      _historyTimer = Timer(
+        remaining.isNegative ? Duration.zero : remaining,
+        _hideHistory,
+      );
+    } catch (e) {
+      await HistoryPrivacy.release(this);
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(historyAccessMessage(e))));
+      }
+    } finally {
+      _unlocking = false;
+    }
+  }
+
+  void _hideHistory() {
+    _historyTimer?.cancel();
+    if (mounted) {
+      setState(() {
+        _historyUnlocked = false;
+        _recordsFuture = Future.value([]);
+      });
+    }
+    unawaited(HistoryPrivacy.release(this));
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state != AppLifecycleState.resumed) {
+      _hideHistory();
+    } else if (!_historyUnlocked) {
+      unawaited(HistoryPrivacy.release(this));
+    }
+  }
+
+  @override
+  void dispose() {
+    _historyTimer?.cancel();
+    unawaited(HistoryPrivacy.release(this));
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
   }
 
   Future<void> _deleteScanRecord(SavedScanRecord record) async {
@@ -58,7 +128,17 @@ class _HomePageState extends State<HomePage> {
       return;
     }
 
-    final deleted = await _historyService.deleteRecord(record.id);
+    bool deleted;
+    try {
+      deleted = await _historyService.deleteRecord(record.id);
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Deletion could not be completed: $e')),
+        );
+      }
+      return;
+    }
     if (!mounted) return;
     _refreshHistory();
     ScaffoldMessenger.of(context).showSnackBar(
@@ -120,6 +200,14 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ],
+        ),
+        const Spacer(),
+        IconButton(
+          tooltip: 'Research performance and limits',
+          onPressed: () => Navigator.of(context).push(
+            MaterialPageRoute(builder: (_) => const PerformanceNotesPage()),
+          ),
+          icon: const Icon(Icons.info_outline),
         ),
       ],
     );
@@ -282,7 +370,7 @@ class _HomePageState extends State<HomePage> {
                         builder: (_) => const CaptureDipstickPage(),
                       ),
                     )
-                    .then((_) => _refreshHistory());
+                    .then((_) => _hideHistory());
               },
               icon: const Icon(Icons.photo_camera_outlined, size: 20),
               label: const Text(
@@ -347,6 +435,13 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildRecentScansList(BuildContext context) {
+    if (!_historyUnlocked) {
+      return OutlinedButton.icon(
+        onPressed: _refreshHistory,
+        icon: const Icon(Icons.lock_outline),
+        label: const Text('Unlock saved history'),
+      );
+    }
     return FutureBuilder<List<SavedScanRecord>>(
       future: _recordsFuture,
       builder: (context, snapshot) {
@@ -362,14 +457,28 @@ class _HomePageState extends State<HomePage> {
           );
         }
 
+        if (snapshot.hasError) {
+          return Text('History could not be loaded: ${snapshot.error}');
+        }
         final records = snapshot.data ?? const <SavedScanRecord>[];
         if (records.isEmpty) {
-          return _buildEmptyHistoryCard(context);
+          return Column(
+            children: [
+              if (ScanHistoryService.recoveryNotice != null)
+                Text(ScanHistoryService.recoveryNotice!),
+              _buildEmptyHistoryCard(context),
+            ],
+          );
         }
 
         final recent = records.take(5).toList();
         return Column(
           children: [
+            if (ScanHistoryService.recoveryNotice != null)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child: Text(ScanHistoryService.recoveryNotice!),
+              ),
             for (var index = 0; index < recent.length; index++) ...[
               _buildRecentScanCard(context, recent[index]),
               if (index != recent.length - 1) const SizedBox(height: 10),
@@ -407,16 +516,13 @@ class _HomePageState extends State<HomePage> {
 
     return InkWell(
       borderRadius: BorderRadius.circular(14),
-      onTap: () {
-        Navigator.of(context).push(
+      onTap: () async {
+        await Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (_) => OverallResultsPage(
-              scanResult: record.scanResult,
-              clinicalChecklistResult: record.checklistResult,
-              savedUtiEstimate: record.recordedUtiEstimate,
-            ),
+            builder: (_) => ProtectedHistoryPage(recordId: record.id),
           ),
         );
+        if (mounted) await _refreshHistory();
       },
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
@@ -441,7 +547,9 @@ class _HomePageState extends State<HomePage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    _formatDate(record.savedAt),
+                    record.patientName ?? 'Unnamed patient',
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
@@ -450,7 +558,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    _formatTime(record.savedAt),
+                    '${_formatDate(record.savedAt)} · ${_formatTime(record.savedAt)}',
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       fontSize: 11,
                       color: AppColors.textSecondary,
@@ -471,7 +579,9 @@ class _HomePageState extends State<HomePage> {
                       const SizedBox(width: 7),
                       Expanded(
                         child: Text(
-                          record.clinicalAction,
+                          record.scanResult.isLegacyUnverified
+                              ? 'Unverified archive'
+                              : record.clinicalAction,
                           style: Theme.of(context).textTheme.labelSmall
                               ?.copyWith(
                                 color: statusColor,
@@ -486,6 +596,25 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             const SizedBox(width: 4),
+            IconButton(
+              onPressed: () async {
+                await Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => ProtectedHistoryPage(
+                      recordId: record.id,
+                      editNameInitially: true,
+                    ),
+                  ),
+                );
+                if (mounted) await _refreshHistory();
+              },
+              tooltip: record.patientName == null
+                  ? 'Add patient name'
+                  : 'Edit patient name',
+              icon: const Icon(Icons.edit_outlined, size: 20),
+              constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
+              padding: EdgeInsets.zero,
+            ),
             IconButton(
               onPressed: () => _deleteScanRecord(record),
               icon: const Icon(Icons.delete_outline_rounded, size: 20),
@@ -506,11 +635,24 @@ class _HomePageState extends State<HomePage> {
     Color statusColor,
     Color iconBackground,
   ) {
-    final imageFile = File(record.scanResult.imagePath);
-    if (record.scanResult.imagePath.isNotEmpty && imageFile.existsSync()) {
+    if (record.scanResult.imagePath.endsWith('.enc')) {
       return ClipRRect(
         borderRadius: BorderRadius.circular(19),
-        child: Image.file(imageFile, width: 38, height: 38, fit: BoxFit.cover),
+        child: FutureBuilder<Uint8List>(
+          future: _historyService.readImage(record.scanResult.imagePath),
+          builder: (context, snapshot) => snapshot.hasData
+              ? Image.memory(
+                  snapshot.data!,
+                  width: 38,
+                  height: 38,
+                  fit: BoxFit.cover,
+                )
+              : SizedBox(
+                  width: 38,
+                  height: 38,
+                  child: Icon(icon, color: statusColor),
+                ),
+        ),
       );
     }
     return Container(

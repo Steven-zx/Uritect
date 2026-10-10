@@ -1,5 +1,10 @@
 # URITECT Manuscript Final Revision Guide
 
+**2026-10-06 correction:** target release candidate 1.4.1+14. Keep final results and
+manuscript export pending until the exact signed APK, device evidence, IFU confirmation
+and human evaluation are frozen. Reviews are pending, so do not yet call it expert-reviewed.
+The editable thesis source is absent. Do not overwrite the historical PDF with invented results.
+
 The current source available in the repository is
 `docs/BSCS_Group5_Manuscript_50.pdf`; no editable manuscript source is present.
 The PDF cannot be safely rewritten as a thesis source document. Apply the
@@ -20,8 +25,8 @@ and conclusion.
 | Four sentinel analytes GLU/PRO/LEU/NIT in one Bayesian disease engine | Bayesian inference is limited to gated lower-UTI screening using LEU/NIT/BLD. Renal follow-up is a separate deterministic rule engine using protein, blood, symptoms, repeat history, safety, and interference inputs. |
 | Low/Moderate/High UTI risk or 20/80, 30/70, or 35/70 thresholds | Display the provisional posterior with its prior and applied LRs only for eligible calculations, plus Observe, Consultation suggested, Prompt medical consultation suggested, or Insufficient evidence. Do not convert the number into a probability band. |
 | Bayesian renal probability | Deterministic renal follow-up action; no renal probability and no renal diagnosis. |
-| 80% overall app/scan accuracy | 82.52% individual-analyte accuracy and 17.18% all-ten-correct whole-scan accuracy under specimen-grouped evaluation. |
-| Random train/test split with images treated independently | Specimen-grouped 80/20 split; all lighting variants from one specimen remain on one side. |
+| 80% overall app/scan accuracy | 82.52% individual-analyte accuracy (1,345/1,630) and 17.18% all-ten-correct whole-scan accuracy (28/163), reproduced retrospectively from the original development split with known related-capture leakage. |
+| Random train/test split with images treated independently | The original source/event grouping was intended to prevent leakage but the October 5 audit found related captures across splits. New development grouping and an untouched participant/specimen-level final cohort are required. |
 | ISO compliance/certification | Evaluation guided by ISO/IEC 25010. |
 
 ## Title and Abstract
@@ -30,7 +35,7 @@ Keep “Bayesian Late Fusion” only if the abstract immediately limits it to th
 provisional, literature-derived UTI research pathway. State that renal output
 uses deterministic follow-up rules. Include offline Android execution,
 markerless ten-pad processing, the exact model version, grouped evaluation, and
-both individual and whole-scan accuracy. Do not call the posterior clinically
+both historical individual and whole-scan accuracy, the audited split leakage and the absence of independent confirmation. Do not call the posterior clinically
 calibrated or validated.
 
 ## Chapter 1
@@ -88,7 +93,8 @@ Document these exact reproducible details:
 - 257 capture bursts rejected during corrected markerless ingest.
 - Normalized HSV features and analyte-specific `k`, distance metric, and feature
   transform from the final report.
-- GroupShuffleSplit, test size 0.20, random state 42, group `specimen_group`.
+- Historical GroupShuffleSplit, test size 0.20, random state 42, group `specimen_group`; source/event identities were not sufficient to prevent related-capture leakage.
+- Separate the reviewed development split from any new untouched participant/specimen cohort; report identity checks and classifier selection protocol.
 - Confidence threshold 0.45 applied to every analyte at scan acceptance.
 - Sex-specific female v1.1/male v0.1 eligibility, source mappings, selected LR
   hierarchy, displayed provisional posterior, and local audit details.
@@ -112,7 +118,7 @@ risk buckets. The final flow is:
 Android image capture/gallery
   -> image-quality rejection
   -> orientation search
-  -> markerless strip localization
+  -> legacy markerless strip localization, with background-relative fallback if geometry fails
   -> neutral strip/plastic AWB
   -> ten-pad ROI validation
   -> normalized HSV extraction
@@ -129,8 +135,9 @@ algorithm is executed in Dart on Android.
 
 ## Results
 
-Use `pipeline/output/production_grouped_metrics_complete.json` as the classifier
-source. Report the full per-analyte table from `FINAL_PROJECT_HANDOFF.md`, class
+Use `pipeline/output/production_grouped_metrics_complete.json` only as the historical classifier
+source, alongside `pipeline/output/abnormal_error_audit_2026-10-05/` for the leakage,
+missed-abnormal and source-image audit. No current-runtime final accuracy is established. Report the full per-analyte table from `FINAL_PROJECT_HANDOFF.md`, class
 support/confusion matrices where space permits, and the confidence-gated
 coverage results. Explain that weak macro F1/sensitivity for some analytes
 reflect class imbalance and rare-level performance despite high aggregate
@@ -150,7 +157,7 @@ certification. Do not mark Objective 5 complete before data collection.
 ## Conclusion
 
 Conclude only that the offline prototype achieved the stated individual-analyte
-performance under the frozen grouped evaluation and implements conservative
+performance under the retrospective development evaluation with its disclosed leakage and implements conservative
 screening/referral-support logic. Explicitly retain these limitations:
 
 - Whole-scan all-ten-correct accuracy is 17.18%.
@@ -169,3 +176,13 @@ content review nor classifier metrics validates the complete posterior model.
 After review, synchronize source specs, generated PDFs, forms, APK version/hash,
 editable Chapter 3, Chapter 4 diagrams, discussion and audit/history behavior.
 The editable manuscript and review decisions are not present in this repository.
+
+## Final synchronization checklist
+
+Use the sealed APK/hash/version and its source snapshot, not the old release or pilot APKs.
+Synchronize Chapters 1–5, abstract, objectives, architecture/sequence diagrams, equations,
+classifier result tables, class supports, acceptance/retake rates, device logs, usability
+results and conclusions after actual evaluation. Describe the five-step progressive checklist,
+startup splash, camera lifecycle fixes, background-relative localization fallback and full
+pad-spacing checks. Preserve current abnormal-class, physical-strip and clinical-calibration
+limitations. Expert review does not supply culture-confirmed calibration data.

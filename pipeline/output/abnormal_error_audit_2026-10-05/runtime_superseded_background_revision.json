@@ -1,0 +1,630 @@
+{
+  "scope": "Superseded direct-background-mask revision; NOT the prepared APK. Replaced by legacy-preserving fallback after accepted-capture regression.",
+  "cases": [
+    {
+      "event_id": "LAUAAN-P003-L5500",
+      "source_zip": "LAUAAN_20260730_ID_CLEANED_2026-07-30.zip",
+      "light_kelvin": "5500",
+      "reference_labels": {
+        "Leukocytes": "Trace 15",
+        "Nitrite": "Neg",
+        "Urobilinogen": "3.2",
+        "Protein": "Neg",
+        "pH": "5.0",
+        "Blood": "Neg",
+        "Specific Gravity": "1.020",
+        "Ketone": "Trace 0.5",
+        "Bilirubin": "Neg",
+        "Glucose": "Neg"
+      },
+      "before": {
+        "accepted": false,
+        "rejection_reason": "Bad state: INVALID_IMAGE: Could not locate a complete ten-pad strip. exif: Bad state: INVALID_IMAGE: Strip candidate is not plausible.; rot90_cw: Bad state: INVALID_IMAGE: Strip candidate is not plausible.",
+        "elapsed_ms": 1792
+      },
+      "after": {
+        "accepted": false,
+        "rejection_reason": "Bad state: INVALID_IMAGE: Could not locate a complete ten-pad strip. exif: Bad state: INVALID_IMAGE: Ten reliable reagent-pad regions were not found.; rot90_cw: Bad state: INVALID_IMAGE: Strip candidate is not plausible.",
+        "elapsed_ms": 2235
+      }
+    },
+    {
+      "event_id": "LAUAAN-P152-L5500",
+      "source_zip": "LAUAAN_20260730_ID_CLEANED_2026-07-30.zip",
+      "light_kelvin": "5500",
+      "reference_labels": {
+        "Leukocytes": "Trace 15",
+        "Nitrite": "Positive",
+        "Urobilinogen": "3.2",
+        "Protein": "Neg",
+        "pH": "5.0",
+        "Blood": "Neg",
+        "Specific Gravity": "1.030",
+        "Ketone": "Trace 0.5",
+        "Bilirubin": "Small 17",
+        "Glucose": "Neg"
+      },
+      "before": {
+        "accepted": false,
+        "rejection_reason": "Bad state: LOW_CONFIDENCE: pH result is low confidence. Please retake scan under better lighting.",
+        "elapsed_ms": 1673
+      },
+      "after": {
+        "accepted": false,
+        "rejection_reason": "Bad state: INVALID_IMAGE: Could not locate a complete ten-pad strip. exif: Bad state: INVALID_IMAGE: Strip candidate is not plausible.; rot90_cw: Bad state: INVALID_IMAGE: Strip candidate is not plausible.",
+        "elapsed_ms": 1221
+      }
+    },
+    {
+      "event_id": "LAUAAN-P005-L4000",
+      "source_zip": "LAUAAN_20260730_ID_CLEANED_2026-07-30.zip",
+      "light_kelvin": "4000",
+      "reference_labels": {
+        "Leukocytes": "Trace 15",
+        "Nitrite": "Neg",
+        "Urobilinogen": "3.2",
+        "Protein": "Neg",
+        "pH": "5.0",
+        "Blood": "Non-hemolyzed 10",
+        "Specific Gravity": "1.015",
+        "Ketone": "Trace 0.5",
+        "Bilirubin": "Neg",
+        "Glucose": "Neg"
+      },
+      "before": {
+        "accepted": true,
+        "predictions": {
+          "Leukocytes": "Negative",
+          "Nitrite": "Negative",
+          "Urobilinogen": "3.2",
+          "Protein": "Negative",
+          "pH": "5.0",
+          "Blood": "Negative",
+          "Specific Gravity": "1.015",
+          "Ketone": "Negative",
+          "Bilirubin": "Negative",
+          "Glucose": "Negative"
+        },
+        "analyte_confidences": {
+          "Leukocytes": 0.6724985260913318,
+          "Nitrite": 0.9634876025438944,
+          "Urobilinogen": 1,
+          "Protein": 0.7399546389680548,
+          "pH": 0.5551459621195038,
+          "Blood": 0.8602142855146512,
+          "Specific Gravity": 0.9213061039787688,
+          "Ketone": 0.7526598542746308,
+          "Bilirubin": 0.9321082470604699,
+          "Glucose": 1
+        },
+        "elapsed_ms": 1576
+      },
+      "after": {
+        "accepted": false,
+        "rejection_reason": "Bad state: INVALID_IMAGE: Could not locate a complete ten-pad strip. exif: Bad state: INVALID_IMAGE: Strip candidate is not plausible.; rot90_cw: Bad state: INVALID_IMAGE: Strip candidate is not plausible.",
+        "elapsed_ms": 1220
+      }
+    },
+    {
+      "event_id": "LAUAAN-P031-L4000",
+      "source_zip": "LAUAAN_20260730_ID_CLEANED_2026-07-30.zip",
+      "light_kelvin": "4000",
+      "reference_labels": {
+        "Leukocytes": "Trace 15",
+        "Nitrite": "Neg",
+        "Urobilinogen": "3.2",
+        "Protein": "Neg",
+        "pH": "5.0",
+        "Blood": "Neg",
+        "Specific Gravity": "1.005",
+        "Ketone": "Neg",
+        "Bilirubin": "Neg",
+        "Glucose": "Neg"
+      },
+      "before": {
+        "accepted": true,
+        "predictions": {
+          "Leukocytes": "Negative",
+          "Nitrite": "Negative",
+          "Urobilinogen": "3.2",
+          "Protein": "Negative",
+          "pH": "5.0",
+          "Blood": "Negative",
+          "Specific Gravity": "1.015",
+          "Ketone": "Negative",
+          "Bilirubin": "Negative",
+          "Glucose": "Negative"
+        },
+        "analyte_confidences": {
+          "Leukocytes": 0.8725284147721042,
+          "Nitrite": 0.9281199148337577,
+          "Urobilinogen": 1,
+          "Protein": 0.6021776949122942,
+          "pH": 0.7845308196761118,
+          "Blood": 0.8225068173442464,
+          "Specific Gravity": 0.8428457399268334,
+          "Ketone": 0.7706637999085822,
+          "Bilirubin": 0.906907280985074,
+          "Glucose": 0.694921587894862
+        },
+        "elapsed_ms": 1517
+      },
+      "after": {
+        "accepted": false,
+        "rejection_reason": "Bad state: INVALID_IMAGE: Could not locate a complete ten-pad strip. exif: Bad state: INVALID_IMAGE: Strip candidate is not plausible.; rot90_cw: Bad state: INVALID_IMAGE: Strip candidate is not plausible.",
+        "elapsed_ms": 1268
+      }
+    },
+    {
+      "event_id": "LAUAAN-P018-L2700",
+      "source_zip": "LAUAAN_20260730_ID_CLEANED_2026-07-30.zip",
+      "light_kelvin": "2700",
+      "reference_labels": {
+        "Leukocytes": "Trace 15",
+        "Nitrite": "Neg",
+        "Urobilinogen": "3.2",
+        "Protein": "Trace",
+        "pH": "5.0",
+        "Blood": "Neg",
+        "Specific Gravity": "1.025",
+        "Ketone": "Trace 0.5",
+        "Bilirubin": "Small 17",
+        "Glucose": "Neg"
+      },
+      "before": {
+        "accepted": false,
+        "rejection_reason": "Bad state: INVALID_IMAGE: Could not locate a complete ten-pad strip. exif: Bad state: INVALID_IMAGE: Strip candidate is not plausible.; rot90_cw: Bad state: INVALID_IMAGE: Strip candidate is not plausible.",
+        "elapsed_ms": 1121
+      },
+      "after": {
+        "accepted": false,
+        "rejection_reason": "Bad state: INVALID_IMAGE: Could not locate a complete ten-pad strip. exif: Bad state: INVALID_IMAGE: Strip candidate is not plausible.; rot90_cw: Bad state: INVALID_IMAGE: Strip candidate is not plausible.",
+        "elapsed_ms": 1204
+      }
+    },
+    {
+      "event_id": "LAUAAN-P094-L2700",
+      "source_zip": "LAUAAN_20260730_ID_CLEANED_2026-07-30.zip",
+      "light_kelvin": "2700",
+      "reference_labels": {
+        "Leukocytes": "Trace 15",
+        "Nitrite": "Neg",
+        "Urobilinogen": "3.2",
+        "Protein": "Neg",
+        "pH": "5.0",
+        "Blood": "Neg",
+        "Specific Gravity": "1.015",
+        "Ketone": "Neg",
+        "Bilirubin": "Neg",
+        "Glucose": "Neg"
+      },
+      "before": {
+        "accepted": false,
+        "rejection_reason": "Bad state: INVALID_IMAGE: Could not locate a complete ten-pad strip. exif: Bad state: INVALID_IMAGE: Strip candidate is not plausible.; rot90_cw: Bad state: INVALID_IMAGE: Strip candidate is not plausible.",
+        "elapsed_ms": 1117
+      },
+      "after": {
+        "accepted": false,
+        "rejection_reason": "Bad state: INVALID_IMAGE: Could not locate a complete ten-pad strip. exif: Bad state: INVALID_IMAGE: Strip candidate is not plausible.; rot90_cw: Bad state: INVALID_IMAGE: Strip candidate is not plausible.",
+        "elapsed_ms": 1229
+      }
+    },
+    {
+      "event_id": "uritect_2026-7-15_Cabatuan_005_Cool",
+      "source_zip": "uritect_2026-7-15_Cabatuan_holdout_package.zip",
+      "light_kelvin": "Cool",
+      "reference_labels": {
+        "Leukocytes": "Trace 15",
+        "Nitrite": "Neg",
+        "Urobilinogen": "3.2",
+        "Protein": "Neg",
+        "pH": "5.0",
+        "Blood": "Neg",
+        "Specific Gravity": "1.015",
+        "Ketone": "Neg",
+        "Bilirubin": "Neg",
+        "Glucose": "Neg"
+      },
+      "before": {
+        "accepted": true,
+        "predictions": {
+          "Leukocytes": "Trace 15",
+          "Nitrite": "Negative",
+          "Urobilinogen": "3.2",
+          "Protein": "Negative",
+          "pH": "5.0",
+          "Blood": "Negative",
+          "Specific Gravity": "1.015",
+          "Ketone": "Negative",
+          "Bilirubin": "Negative",
+          "Glucose": "Negative"
+        },
+        "analyte_confidences": {
+          "Leukocytes": 0.5861749913565916,
+          "Nitrite": 1,
+          "Urobilinogen": 0.5535943445268534,
+          "Protein": 0.9752215193841391,
+          "pH": 0.6699403382158025,
+          "Blood": 0.8366057651882384,
+          "Specific Gravity": 0.5016739779767145,
+          "Ketone": 0.6014766022757876,
+          "Bilirubin": 0.7319531790927613,
+          "Glucose": 1
+        },
+        "elapsed_ms": 1552
+      },
+      "after": {
+        "accepted": false,
+        "rejection_reason": "Bad state: LOW_CONFIDENCE: Protein result is low confidence. Please retake scan under better lighting.",
+        "elapsed_ms": 1747
+      }
+    },
+    {
+      "event_id": "uritect_2026-7-15_Cabatuan_010_Cool",
+      "source_zip": "uritect_2026-7-15_Cabatuan_holdout_package.zip",
+      "light_kelvin": "Cool",
+      "reference_labels": {
+        "Leukocytes": "Trace 15",
+        "Nitrite": "Neg",
+        "Urobilinogen": "16",
+        "Protein": "0.3",
+        "pH": "5.0",
+        "Blood": "Neg",
+        "Specific Gravity": "1.025",
+        "Ketone": "Trace 0.5",
+        "Bilirubin": "Small 17",
+        "Glucose": "Neg"
+      },
+      "before": {
+        "accepted": true,
+        "predictions": {
+          "Leukocytes": "Negative",
+          "Nitrite": "Negative",
+          "Urobilinogen": "16",
+          "Protein": "Negative",
+          "pH": "5.0",
+          "Blood": "Negative",
+          "Specific Gravity": "1.030",
+          "Ketone": "Trace 0.5",
+          "Bilirubin": "Small 17",
+          "Glucose": "Negative"
+        },
+        "analyte_confidences": {
+          "Leukocytes": 0.5939659773419439,
+          "Nitrite": 1,
+          "Urobilinogen": 0.6055496879757651,
+          "Protein": 0.4584266775238991,
+          "pH": 0.920737616784551,
+          "Blood": 1,
+          "Specific Gravity": 0.9001519626914852,
+          "Ketone": 0.8218612965013014,
+          "Bilirubin": 0.9535825400816538,
+          "Glucose": 1
+        },
+        "elapsed_ms": 1620
+      },
+      "after": {
+        "accepted": false,
+        "rejection_reason": "Bad state: LOW_CONFIDENCE: Specific Gravity result is low confidence. Please retake scan under better lighting.",
+        "elapsed_ms": 1572
+      }
+    },
+    {
+      "event_id": "uritect_2026-7-15_Cabatuan_005_Warm",
+      "source_zip": "uritect_2026-7-15_Cabatuan_holdout_package.zip",
+      "light_kelvin": "Warm",
+      "reference_labels": {
+        "Leukocytes": "Trace 15",
+        "Nitrite": "Neg",
+        "Urobilinogen": "3.2",
+        "Protein": "Neg",
+        "pH": "5.0",
+        "Blood": "Neg",
+        "Specific Gravity": "1.015",
+        "Ketone": "Neg",
+        "Bilirubin": "Neg",
+        "Glucose": "Neg"
+      },
+      "before": {
+        "accepted": false,
+        "rejection_reason": "Bad state: INVALID_IMAGE: Could not locate a complete ten-pad strip. exif: Bad state: INVALID_IMAGE: Strip candidate is not plausible.; rot90_cw: Bad state: INVALID_IMAGE: Strip candidate is not plausible.",
+        "elapsed_ms": 1401
+      },
+      "after": {
+        "accepted": false,
+        "rejection_reason": "Bad state: INVALID_IMAGE: Could not locate a complete ten-pad strip. exif: Bad state: INVALID_IMAGE: Ten reliable reagent-pad regions were not found.; rot90_cw: Bad state: INVALID_IMAGE: Strip candidate is not plausible.",
+        "elapsed_ms": 2036
+      }
+    },
+    {
+      "event_id": "uritect_2026-7-15_Cabatuan_H_Warm",
+      "source_zip": "uritect_2026-7-15_Cabatuan_holdout_package.zip",
+      "light_kelvin": "Warm",
+      "reference_labels": {
+        "Leukocytes": "Small 70",
+        "Nitrite": "Neg",
+        "Urobilinogen": "16",
+        "Protein": "Neg",
+        "pH": "5.0",
+        "Blood": "Neg",
+        "Specific Gravity": "1.020",
+        "Ketone": "Trace 0.5",
+        "Bilirubin": "Neg",
+        "Glucose": "110 ++++"
+      },
+      "before": {
+        "accepted": false,
+        "rejection_reason": "Bad state: INVALID_IMAGE: Could not locate a complete ten-pad strip. exif: Bad state: INVALID_IMAGE: Strip candidate is not plausible.; rot90_cw: Bad state: INVALID_IMAGE: Strip candidate is not plausible.",
+        "elapsed_ms": 1324
+      },
+      "after": {
+        "accepted": false,
+        "rejection_reason": "Bad state: INVALID_IMAGE: Could not locate a complete ten-pad strip. exif: Bad state: INVALID_IMAGE: Ten reliable reagent-pad regions were not found.; rot90_cw: Bad state: INVALID_IMAGE: Strip candidate is not plausible.",
+        "elapsed_ms": 1716
+      }
+    },
+    {
+      "event_id": "uritect_2026-7-15_Cabatuan_005_Daylight",
+      "source_zip": "uritect_2026-7-15_Cabatuan_holdout_package.zip",
+      "light_kelvin": "Daylight",
+      "reference_labels": {
+        "Leukocytes": "Trace 15",
+        "Nitrite": "Neg",
+        "Urobilinogen": "3.2",
+        "Protein": "Neg",
+        "pH": "5.0",
+        "Blood": "Neg",
+        "Specific Gravity": "1.015",
+        "Ketone": "Neg",
+        "Bilirubin": "Neg",
+        "Glucose": "Neg"
+      },
+      "before": {
+        "accepted": false,
+        "rejection_reason": "Bad state: INVALID_IMAGE: Could not locate a complete ten-pad strip. exif: Bad state: INVALID_IMAGE: Strip candidate is not plausible.; rot90_cw: Bad state: INVALID_IMAGE: Strip candidate is not plausible.",
+        "elapsed_ms": 1235
+      },
+      "after": {
+        "accepted": false,
+        "rejection_reason": "Bad state: INVALID_IMAGE: Could not locate a complete ten-pad strip. exif: Bad state: INVALID_IMAGE: A pad is missing or a background region was selected.; rot90_cw: Bad state: INVALID_IMAGE: Strip candidate is not plausible.",
+        "elapsed_ms": 1707
+      }
+    },
+    {
+      "event_id": "uritect_2026-7-15_Cabatuan_011_Daylight",
+      "source_zip": "uritect_2026-7-15_Cabatuan_holdout_package.zip",
+      "light_kelvin": "Daylight",
+      "reference_labels": {
+        "Leukocytes": "Trace 15",
+        "Nitrite": "Neg",
+        "Urobilinogen": "16",
+        "Protein": "Neg",
+        "pH": "7.5",
+        "Blood": "Neg",
+        "Specific Gravity": "1.015",
+        "Ketone": "Trace 0.5",
+        "Bilirubin": "Neg",
+        "Glucose": "Neg"
+      },
+      "before": {
+        "accepted": false,
+        "rejection_reason": "Bad state: INVALID_IMAGE: Could not locate a complete ten-pad strip. exif: Bad state: INVALID_IMAGE: Strip candidate is not plausible.; rot90_cw: Bad state: INVALID_IMAGE: Strip candidate is not plausible.",
+        "elapsed_ms": 1187
+      },
+      "after": {
+        "accepted": true,
+        "predictions": {
+          "Leukocytes": "Negative",
+          "Nitrite": "Negative",
+          "Urobilinogen": "3.2",
+          "Protein": "Negative",
+          "pH": "5.0",
+          "Blood": "Non-hemolyzed 10",
+          "Specific Gravity": "1.015",
+          "Ketone": "Negative",
+          "Bilirubin": "Negative",
+          "Glucose": "Negative"
+        },
+        "analyte_confidences": {
+          "Leukocytes": 0.7921513255563524,
+          "Nitrite": 1,
+          "Urobilinogen": 0.9258026165133756,
+          "Protein": 0.5444683048664727,
+          "pH": 0.9322320962623837,
+          "Blood": 0.5969813690628671,
+          "Specific Gravity": 0.45262103326363723,
+          "Ketone": 0.7873471491814483,
+          "Bilirubin": 0.8523531279812363,
+          "Glucose": 1
+        },
+        "elapsed_ms": 1697
+      }
+    },
+    {
+      "event_id": "uritect_2026-7-17_Cabatuan_002_Cool",
+      "source_zip": "uritect_2026-7-17_Cabatuan_holdout_package.zip",
+      "light_kelvin": "Cool",
+      "reference_labels": {
+        "Leukocytes": "Trace 15",
+        "Nitrite": "Neg",
+        "Urobilinogen": "3.2",
+        "Protein": "Neg",
+        "pH": "5.0",
+        "Blood": "Neg",
+        "Specific Gravity": "1.015",
+        "Ketone": "Neg",
+        "Bilirubin": "Neg",
+        "Glucose": "Neg"
+      },
+      "before": {
+        "accepted": false,
+        "rejection_reason": "Bad state: INVALID_IMAGE: Could not locate a complete ten-pad strip. exif: Bad state: INVALID_IMAGE: Strip candidate is not plausible.; rot90_cw: Bad state: INVALID_IMAGE: Multiple plausible strips or strip-like objects were found.",
+        "elapsed_ms": 1070
+      },
+      "after": {
+        "accepted": false,
+        "rejection_reason": "Bad state: INVALID_IMAGE: Could not locate a complete ten-pad strip. exif: Bad state: INVALID_IMAGE: Ten reliable reagent-pad regions were not found.; rot90_cw: Bad state: INVALID_IMAGE: Strip candidate is not plausible.",
+        "elapsed_ms": 1415
+      }
+    },
+    {
+      "event_id": "uritect_2026-7-17_Cabatuan_015_Cool",
+      "source_zip": "uritect_2026-7-17_Cabatuan_holdout_package.zip",
+      "light_kelvin": "Cool",
+      "reference_labels": {
+        "Leukocytes": "Trace 15",
+        "Nitrite": "Neg",
+        "Urobilinogen": "3.2",
+        "Protein": "Neg",
+        "pH": "5.0",
+        "Blood": "Neg",
+        "Specific Gravity": "1.025",
+        "Ketone": "Trace 0.5",
+        "Bilirubin": "Small 17",
+        "Glucose": "Neg"
+      },
+      "before": {
+        "accepted": false,
+        "rejection_reason": "Bad state: INVALID_IMAGE: Could not locate a complete ten-pad strip. exif: Bad state: INVALID_IMAGE: Strip candidate is not plausible.; rot90_cw: Bad state: INVALID_IMAGE: Multiple plausible strips or strip-like objects were found.",
+        "elapsed_ms": 1215
+      },
+      "after": {
+        "accepted": false,
+        "rejection_reason": "Bad state: INVALID_IMAGE: Could not locate a complete ten-pad strip. exif: Bad state: INVALID_IMAGE: Strip candidate is not plausible.; rot90_cw: Bad state: INVALID_IMAGE: Strip candidate is not plausible.",
+        "elapsed_ms": 1269
+      }
+    },
+    {
+      "event_id": "uritect_2026-7-17_Cabatuan_015_Warm",
+      "source_zip": "uritect_2026-7-17_Cabatuan_holdout_package.zip",
+      "light_kelvin": "Warm",
+      "reference_labels": {
+        "Leukocytes": "Trace 15",
+        "Nitrite": "Neg",
+        "Urobilinogen": "3.2",
+        "Protein": "Neg",
+        "pH": "5.0",
+        "Blood": "Neg",
+        "Specific Gravity": "1.025",
+        "Ketone": "Trace 0.5",
+        "Bilirubin": "Small 17",
+        "Glucose": "Neg"
+      },
+      "before": {
+        "accepted": false,
+        "rejection_reason": "Bad state: INVALID_IMAGE: Could not locate a complete ten-pad strip. exif: Bad state: INVALID_IMAGE: Strip candidate is not plausible.; rot90_cw: Bad state: INVALID_IMAGE: Strip candidate is not plausible.",
+        "elapsed_ms": 1152
+      },
+      "after": {
+        "accepted": false,
+        "rejection_reason": "Bad state: INVALID_IMAGE: Could not locate a complete ten-pad strip. exif: Bad state: INVALID_IMAGE: Strip candidate is not plausible.; rot90_cw: Bad state: INVALID_IMAGE: Strip candidate is not plausible.",
+        "elapsed_ms": 1226
+      }
+    },
+    {
+      "event_id": "uritect_2026-7-17_Cabatuan_028_Warm",
+      "source_zip": "uritect_2026-7-17_Cabatuan_holdout_package.zip",
+      "light_kelvin": "Warm",
+      "reference_labels": {
+        "Leukocytes": "Small 70",
+        "Nitrite": "Neg",
+        "Urobilinogen": "16",
+        "Protein": "Neg",
+        "pH": "5.0",
+        "Blood": "Neg",
+        "Specific Gravity": "1.015",
+        "Ketone": "Neg",
+        "Bilirubin": "Neg",
+        "Glucose": "Neg"
+      },
+      "before": {
+        "accepted": false,
+        "rejection_reason": "Bad state: INVALID_IMAGE: Could not locate a complete ten-pad strip. exif: Bad state: INVALID_IMAGE: Strip candidate is not plausible.; rot90_cw: Bad state: INVALID_IMAGE: Strip candidate is not plausible.",
+        "elapsed_ms": 1246
+      },
+      "after": {
+        "accepted": false,
+        "rejection_reason": "Bad state: INVALID_IMAGE: Could not locate a complete ten-pad strip. exif: Bad state: INVALID_IMAGE: Ten reliable reagent-pad regions were not found.; rot90_cw: Bad state: INVALID_IMAGE: Strip candidate is not plausible.",
+        "elapsed_ms": 1497
+      }
+    },
+    {
+      "event_id": "uritect_2026-7-17_Cabatuan_028_Daylight",
+      "source_zip": "uritect_2026-7-17_Cabatuan_holdout_package.zip",
+      "light_kelvin": "Daylight",
+      "reference_labels": {
+        "Leukocytes": "Small 70",
+        "Nitrite": "Neg",
+        "Urobilinogen": "16",
+        "Protein": "Neg",
+        "pH": "5.0",
+        "Blood": "Neg",
+        "Specific Gravity": "1.015",
+        "Ketone": "Neg",
+        "Bilirubin": "Neg",
+        "Glucose": "Neg"
+      },
+      "before": {
+        "accepted": false,
+        "rejection_reason": "Bad state: INVALID_IMAGE: Could not locate a complete ten-pad strip. exif: Bad state: INVALID_IMAGE: Strip candidate is not plausible.; rot90_cw: Bad state: INVALID_IMAGE: Strip candidate is not plausible.",
+        "elapsed_ms": 1258
+      },
+      "after": {
+        "accepted": true,
+        "predictions": {
+          "Leukocytes": "Negative",
+          "Nitrite": "Negative",
+          "Urobilinogen": "3.2",
+          "Protein": "Negative",
+          "pH": "5.0",
+          "Blood": "Negative",
+          "Specific Gravity": "1.015",
+          "Ketone": "Negative",
+          "Bilirubin": "Negative",
+          "Glucose": "Negative"
+        },
+        "analyte_confidences": {
+          "Leukocytes": 0.8715076256857082,
+          "Nitrite": 0.9775082629939923,
+          "Urobilinogen": 1,
+          "Protein": 0.5941764968799875,
+          "pH": 0.7893041705276765,
+          "Blood": 1,
+          "Specific Gravity": 0.9333436986686275,
+          "Ketone": 0.8294394654824384,
+          "Bilirubin": 0.9045751300433615,
+          "Glucose": 0.5058494611054808
+        },
+        "elapsed_ms": 1772
+      }
+    },
+    {
+      "event_id": "uritect_2026-7-17_Cabatuan_031_Daylight",
+      "source_zip": "uritect_2026-7-17_Cabatuan_holdout_package.zip",
+      "light_kelvin": "Daylight",
+      "reference_labels": {
+        "Leukocytes": "Trace 15",
+        "Nitrite": "Neg",
+        "Urobilinogen": "16",
+        "Protein": "Neg",
+        "pH": "5.0",
+        "Blood": "Neg",
+        "Specific Gravity": "1.030",
+        "Ketone": "Trace 0.5",
+        "Bilirubin": "Small 17",
+        "Glucose": "Neg"
+      },
+      "before": {
+        "accepted": false,
+        "rejection_reason": "Bad state: INVALID_IMAGE: Could not locate a complete ten-pad strip. exif: Bad state: INVALID_IMAGE: Strip candidate is not plausible.; rot90_cw: Bad state: INVALID_IMAGE: Strip candidate is not plausible.",
+        "elapsed_ms": 1003
+      },
+      "after": {
+        "accepted": false,
+        "rejection_reason": "Bad state: LOW_CONFIDENCE: Specific Gravity result is low confidence. Please retake scan under better lighting.",
+        "elapsed_ms": 1664
+      }
+    }
+  ],
+  "model_changed": false
+}

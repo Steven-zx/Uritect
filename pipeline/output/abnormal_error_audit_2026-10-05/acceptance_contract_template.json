@@ -1,0 +1,14 @@
+{
+  "status": "pending_clinical_and_statistical_approval",
+  "clinical_adviser": null,
+  "statistician": null,
+  "signed_at": null,
+  "minimum_sensitivity": null,
+  "minimum_specificity": null,
+  "maximum_retake_rate": null,
+  "maximum_ci_width": null,
+  "independent_specimens_per_threshold": null,
+  "locked_model_sha256": null,
+  "locked_analysis_plan_sha256": null,
+  "notes": "Do not infer safety from arbitrary accuracy cutoffs. Complete a prespecified analysis plan with thresholds, eligible population, reference methods, unit of analysis, handling of invalid scans, cluster uncertainty, and independent sample sizes before sealing a new final cohort."
+}

@@ -1,0 +1,5 @@
+{
+  "image_path": "C:/Users/acer/Downloads/Github/Uritect/output/device_pilot/2026-10-07/IMG_20261007_092336.jpg",
+  "accepted": false,
+  "error": "Bad state: INVALID_IMAGE: Could not locate a complete ten-pad strip. exif: Bad state: INVALID_IMAGE: Multiple plausible strips or strip-like objects were found.; rot90_ccw: Bad state: INVALID_IMAGE: Strip candidate is not plausible."
+}

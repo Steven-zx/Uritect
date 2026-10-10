@@ -1,0 +1,8 @@
+﻿{
+    "python_tests":  {
+                         "exit_code":  0
+                     },
+    "model_export_parity":  {
+                                "exit_code":  0
+                            }
+}

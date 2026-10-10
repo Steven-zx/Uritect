@@ -1,0 +1,11 @@
+{
+  "resolved_source_events": 146,
+  "linked_review_records": 408,
+  "priority_events": 63,
+  "geometry_extractions_requiring_review": 57,
+  "geometry_rejections": 6,
+  "cached_feature_review_events": 14,
+  "clinical_labels_changed": 0,
+  "production_models_changed": false,
+  "note": "A passed geometric check does not establish correct anatomical pad identity, timing or clinical reference. Review remains pending."
+}

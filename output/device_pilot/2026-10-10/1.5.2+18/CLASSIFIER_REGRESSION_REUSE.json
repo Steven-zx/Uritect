@@ -1,0 +1,16 @@
+{
+  "reason": "Camera decoration, protected patient-name UI and encrypted record-name persistence only. Classifier service, model assets, scan reliability/provenance gates and runtime tool are byte-identical to 1.5.1+17.",
+  "previous_evidence_directory": "output\\device_pilot\\2026-10-10\\1.5.1+17",
+  "runtime_evaluation_rerun": false,
+  "source_changes": [
+    "uritect_app/lib/models/saved_scan_record.dart",
+    "uritect_app/lib/pages/capture_dipstick_page.dart",
+    "uritect_app/lib/pages/home_page.dart",
+    "uritect_app/lib/pages/overall_results_page.dart",
+    "uritect_app/lib/pages/protected_history_page.dart",
+    "uritect_app/lib/services/scan_history_service.dart",
+    "uritect_app/pubspec.yaml",
+    "uritect_app/test/protected_history_storage_test.dart",
+    "uritect_app/test/provenance_and_history_ui_test.dart"
+  ]
+}

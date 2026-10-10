@@ -47,3 +47,28 @@ output/apk/*.apk
 
 # Local render previews and document-build scratch files.
 tmp/
+
+# Small de-identified analyzer regression fixture.
+!uritect_app/test/fixtures/*.jpg
+
+# Local research photos and crop evidence remain outside source control.
+pipeline/output/abnormal_error_audit_*/image_evidence*/
+
+# Frozen release APKs and archives are distributed as artifacts, not Git source.
+output/release/**/*.apk
+uritect_app/test/failures/
+
+# Installable builds are local/release artifacts, never Git source.
+*.apk
+*.aab
+*.apks
+*.ipa
+
+# Device captures stay local; keep de-identified test fixtures in test/fixtures.
+output/device_pilot/**/*.jpg
+output/device_pilot/**/*.jpeg
+output/device_pilot/**/*.png
+
+# IDE caches and local diagnostic logs.
+.idea/
+output/*.log

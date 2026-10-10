@@ -1,0 +1,12 @@
+{
+  "verified_at": "2026-10-10T01:36:14.239894+00:00",
+  "device_model": "RMX3933",
+  "android_version": "16",
+  "serial": "192.168.1.37:41885",
+  "version": "1.5.2+18",
+  "installed_apk_sha256": "A85CFC7C81079BC4935EC1574D88AD7B664B4495E1EBC45D54CD1DCEEF37F2FD",
+  "install_mode": "adb install -r; app data not cleared",
+  "launch_result": "Starting: Intent { cmp=ph.edu.wvsu.uritect/.MainActivity }\nStatus: ok\nLaunchState: COLD\nActivity: ph.edu.wvsu.uritect/.MainActivity\nTotalTime: 592\nWaitTime: 597\nComplete",
+  "process_id": "23355",
+  "device_acceptance": "Camera visual check and actual patient-name save/edit pending"
+}

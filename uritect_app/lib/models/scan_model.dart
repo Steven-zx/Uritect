@@ -1,4 +1,5 @@
 import 'dipstick_results_data.dart';
+import 'scan_provenance.dart';
 
 class ScanResult {
   final String id;
@@ -9,9 +10,15 @@ class ScanResult {
   final Map<String, double> analyteConfidences;
   final String riskBucket;
   final String modelVersion;
+  final String? pipelineVersion;
   final List<DipstickResultRow> rows;
   final int? padsDetected;
   final int? padsUnavailable;
+  final String? rejectionCode;
+  final String? rejectionReason;
+  final bool supportCheckPassed;
+  final Map<String, double> nearestTrainingDistances;
+  final ScanProvenance? provenance;
 
   const ScanResult({
     required this.id,
@@ -22,28 +29,63 @@ class ScanResult {
     this.analyteConfidences = const {},
     required this.riskBucket,
     required this.modelVersion,
+    this.pipelineVersion,
     required this.rows,
     this.padsDetected,
     this.padsUnavailable,
+    this.rejectionCode,
+    this.rejectionReason,
+    this.supportCheckPassed = false,
+    this.nearestTrainingDistances = const {},
+    this.provenance,
   });
 
   static const double minimumInterpretationConfidence = 0.45;
+  static const Map<String, String> expectedAnalytes = {
+    'LEU': 'Leukocytes',
+    'NIT': 'Nitrite',
+    'URO': 'Urobilinogen',
+    'PRO': 'Protein',
+    'pH': 'pH',
+    'BLD': 'Blood',
+    'SG': 'Specific Gravity',
+    'KET': 'Ketone',
+    'BIL': 'Bilirubin',
+    'GLU': 'Glucose',
+  };
+
+  bool get hasCompleteSafetyMetadata =>
+      padsDetected == 10 &&
+      padsUnavailable == 0 &&
+      rows.length == 10 &&
+      rows.map((r) => r.code).toSet().length == 10 &&
+      rows.every((r) => expectedAnalytes[r.code] == r.name) &&
+      analyteConfidences.length == 10 &&
+      analyteConfidences.keys.toSet().containsAll(expectedAnalytes.values) &&
+      analyteConfidences.values.every((v) => v.isFinite && v >= 0 && v <= 1) &&
+      supportCheckPassed &&
+      nearestTrainingDistances.length == 10 &&
+      nearestTrainingDistances.keys.toSet().containsAll(
+        expectedAnalytes.values,
+      ) &&
+      nearestTrainingDistances.values.every((v) => v.isFinite && v >= 0);
+  bool get isLegacyUnverified => rows.isNotEmpty && !hasCompleteSafetyMetadata;
+  bool get isUsableForCurrentInterpretation =>
+      isReliableForInterpretation &&
+      provenance?.canSupportCurrentContext == true;
 
   bool get isReliableForInterpretation =>
       const {'complete', 'normal', 'moderate', 'critical'}.contains(status) &&
-      rows.length == 10 &&
+      hasCompleteSafetyMetadata &&
       confidence.isFinite &&
       confidence >= minimumInterpretationConfidence &&
-      (padsDetected == null || padsDetected == 10) &&
-      (padsUnavailable == null || padsUnavailable == 0) &&
-      (analyteConfidences.isEmpty ||
-          (analyteConfidences.length == 10 &&
-              rows.every((row) {
-                final value = analyteConfidences[row.name];
-                return value != null &&
-                    value.isFinite &&
-                    value >= minimumInterpretationConfidence;
-              })));
+      confidence <= 1 &&
+      rows.every((row) {
+        final value = analyteConfidences[row.name];
+        return value != null &&
+            value.isFinite &&
+            value >= minimumInterpretationConfidence;
+      });
 
   factory ScanResult.empty({
     required String imagePath,
@@ -70,9 +112,15 @@ class ScanResult {
     Map<String, double>? analyteConfidences,
     String? riskBucket,
     String? modelVersion,
+    String? pipelineVersion,
     List<DipstickResultRow>? rows,
     int? padsDetected,
     int? padsUnavailable,
+    String? rejectionCode,
+    String? rejectionReason,
+    bool? supportCheckPassed,
+    Map<String, double>? nearestTrainingDistances,
+    ScanProvenance? provenance,
   }) {
     return ScanResult(
       id: id ?? this.id,
@@ -83,9 +131,16 @@ class ScanResult {
       analyteConfidences: analyteConfidences ?? this.analyteConfidences,
       riskBucket: riskBucket ?? this.riskBucket,
       modelVersion: modelVersion ?? this.modelVersion,
+      pipelineVersion: pipelineVersion ?? this.pipelineVersion,
       rows: rows ?? this.rows,
       padsDetected: padsDetected ?? this.padsDetected,
       padsUnavailable: padsUnavailable ?? this.padsUnavailable,
+      rejectionCode: rejectionCode ?? this.rejectionCode,
+      rejectionReason: rejectionReason ?? this.rejectionReason,
+      supportCheckPassed: supportCheckPassed ?? this.supportCheckPassed,
+      nearestTrainingDistances:
+          nearestTrainingDistances ?? this.nearestTrainingDistances,
+      provenance: provenance ?? this.provenance,
     );
   }
 
@@ -99,14 +154,24 @@ class ScanResult {
       'analyteConfidences': analyteConfidences,
       'riskBucket': riskBucket,
       'modelVersion': modelVersion,
+      'pipeline_version': pipelineVersion,
       'rows': rows.map((row) => row.toJson()).toList(),
       'padsDetected': padsDetected,
       'padsUnavailable': padsUnavailable,
+      'rejectionCode': rejectionCode,
+      'rejectionReason': rejectionReason,
+      'supportCheckPassed': supportCheckPassed,
+      'nearestTrainingDistances': nearestTrainingDistances,
+      'provenance': provenance?.toJson(),
     };
   }
 
   factory ScanResult.fromJson(Map<String, dynamic> json) {
     final rawRows = json['rows'] as List<dynamic>? ?? const [];
+    int? count(Object? value) =>
+        value is num && value.isFinite && value == value.roundToDouble()
+        ? value.toInt()
+        : null;
     return ScanResult(
       id: json['id'] as String? ?? 'scan_missing',
       date: DateTime.tryParse(json['date'] as String? ?? '') ?? DateTime.now(),
@@ -119,12 +184,22 @@ class ScanResult {
           ),
       riskBucket: json['riskBucket'] as String? ?? 'Moderate',
       modelVersion: json['modelVersion'] as String? ?? 'unknown',
+      pipelineVersion: json['pipeline_version'] as String?,
       rows: rawRows
-          .whereType<Map<String, dynamic>>()
-          .map(DipstickResultRow.fromJson)
+          .map((row) => DipstickResultRow.fromJson(row as Map<String, dynamic>))
           .toList(),
-      padsDetected: (json['padsDetected'] as num?)?.toInt(),
-      padsUnavailable: (json['padsUnavailable'] as num?)?.toInt(),
+      padsDetected: count(json['padsDetected']),
+      padsUnavailable: count(json['padsUnavailable']),
+      rejectionCode: json['rejectionCode'] as String?,
+      rejectionReason: json['rejectionReason'] as String?,
+      supportCheckPassed: json['supportCheckPassed'] == true,
+      nearestTrainingDistances:
+          (json['nearestTrainingDistances'] as Map<String, dynamic>? ?? {}).map(
+            (k, v) => MapEntry(k, (v as num).toDouble()),
+          ),
+      provenance: json['provenance'] is Map<String, dynamic>
+          ? ScanProvenance.fromJson(json['provenance'] as Map<String, dynamic>)
+          : null,
     );
   }
 }

@@ -1,0 +1,78 @@
+{
+  "schema": 1,
+  "model_sha256": "348ea1a6cf2c59e3ff6834e4fd042aba09a2a26cc041559096f13966fbd8fe80",
+  "method": "max_leave_one_distinct_training_vector_out_nearest_distance",
+  "status": "training_only_engineering_guard_not_clinically_validated",
+  "analytes": {
+    "Leukocytes": {
+      "metric": "manhattan",
+      "dimensions": 4,
+      "training_vectors": 784,
+      "distinct_vectors": 784,
+      "maximum_distance": 3.46022113
+    },
+    "Nitrite": {
+      "metric": "manhattan",
+      "dimensions": 3,
+      "training_vectors": 784,
+      "distinct_vectors": 784,
+      "maximum_distance": 2.09774201
+    },
+    "Urobilinogen": {
+      "metric": "chebyshev",
+      "dimensions": 3,
+      "training_vectors": 784,
+      "distinct_vectors": 784,
+      "maximum_distance": 1.07611915
+    },
+    "Protein": {
+      "metric": "manhattan",
+      "dimensions": 4,
+      "training_vectors": 784,
+      "distinct_vectors": 784,
+      "maximum_distance": 3.9145069000000006
+    },
+    "pH": {
+      "metric": "euclidean",
+      "dimensions": 4,
+      "training_vectors": 784,
+      "distinct_vectors": 784,
+      "maximum_distance": 4.5647576635482
+    },
+    "Blood": {
+      "metric": "chebyshev",
+      "dimensions": 4,
+      "training_vectors": 784,
+      "distinct_vectors": 784,
+      "maximum_distance": 3.27094134
+    },
+    "Specific Gravity": {
+      "metric": "chebyshev",
+      "dimensions": 4,
+      "training_vectors": 784,
+      "distinct_vectors": 784,
+      "maximum_distance": 1.5580140500000002
+    },
+    "Ketone": {
+      "metric": "chebyshev",
+      "dimensions": 3,
+      "training_vectors": 784,
+      "distinct_vectors": 784,
+      "maximum_distance": 1.1046412700000001
+    },
+    "Bilirubin": {
+      "metric": "euclidean",
+      "dimensions": 3,
+      "training_vectors": 784,
+      "distinct_vectors": 784,
+      "maximum_distance": 1.6693747992746772
+    },
+    "Glucose": {
+      "metric": "chebyshev",
+      "dimensions": 3,
+      "training_vectors": 784,
+      "distinct_vectors": 784,
+      "maximum_distance": 1.0246489
+    }
+  }
+}

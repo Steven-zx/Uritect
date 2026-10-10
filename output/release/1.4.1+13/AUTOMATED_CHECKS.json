@@ -1,0 +1,11 @@
+﻿{
+    "flutter_test":  {
+                         "exit_code":  0
+                     },
+    "flutter_analyze":  {
+                            "exit_code":  0
+                        },
+    "release_build":  {
+                          "exit_code":  1
+                      }
+}

@@ -1,0 +1,168 @@
+{
+  "version": "1.5.0+16",
+  "generated_at": "2026-10-09T23:21:13.978623+00:00",
+  "status": "signed_QA_pilot_candidate_pending_native_security_and_device_acceptance",
+  "apk": {
+    "path": "output/device_pilot/2026-10-10/1.5.0+16/Uritect_v1.5.0+16_release.apk",
+    "bytes": 57273475,
+    "sha256": "E0DFB01B55B92D534CCB650E96B464834D5F43D73FEC340C0513779076F67A0B"
+  },
+  "certificate_sha256": "15D1138DCE077ADA624A140B3A145343D1A48305FD0847E9002869E488F19D39",
+  "source_snapshot_sha256": "A0CDC1EC4B6ABBB4A9E04626DEBD5046ADC77DEA3783A8EA5828C183A8E0DBFE",
+  "source_archive_sha256": "A5870EBEB0FB0E2F350A4830DCA4F9AE59BA1843C120A477F1D3BEEF1B07B900",
+  "checks": {
+    "flutter_test": {
+      "exit_code": 0,
+      "tests_passed": 119,
+      "evidence": "flutter_test.log"
+    },
+    "flutter_analyze": {
+      "exit_code": 0,
+      "evidence": "flutter_analyze.log"
+    },
+    "python_tests": {
+      "exit_code": 0,
+      "tests_passed": 35,
+      "command": ".venv/Scripts/python.exe -m unittest discover -s pipeline -p test_*.py -v",
+      "observed_result": "Ran 35 tests; OK"
+    },
+    "native_compile": {
+      "exit_code": 0,
+      "evidence": "native_compile.log"
+    },
+    "runtime_regression": {
+      "exit_code": 0,
+      "cases": 18,
+      "evidence": "runtime_regression.log"
+    },
+    "production_model_identity": {
+      "exit_code": 0,
+      "source": "Installed 1.4.2+15 source snapshot; exact model asset SHA-256 checked while sealing"
+    },
+    "release_build": {
+      "exit_code": 0,
+      "evidence": "release_build.log",
+      "signed_APK_candidates_built": 1
+    }
+  },
+  "development_image_regression": {
+    "cases": 18,
+    "previously_accepted": 6,
+    "currently_accepted": 6,
+    "lost": [],
+    "changed_previously_accepted": [],
+    "newly_accepted": [],
+    "scope": "Retrospective development regression, not independent performance validation"
+  },
+  "pipeline": "android_markerless_json_knn_v4_support_20261010",
+  "production_model_changed": false,
+  "vote_confidence_threshold_changed": false,
+  "bayesian_values_changed": false,
+  "support_policy_status": "training-only engineering guard, not clinically validated",
+  "native_security_device_tests": "Pending; mocked Flutter tests do not verify AndroidKeyStore on physical phones",
+  "clinical_validation": "Not established",
+  "files": [
+    {
+      "path": "docs/URITECT_SECURITY_AND_INPUT_REVIEW_2026-10-10.md",
+      "bytes": 10849,
+      "sha256": "857AC2B78F65369A0D952C9D8C85B8C42466FF04DF051E4F0ED5D13478304A6A"
+    },
+    {
+      "path": "output/device_pilot/2026-10-10/1.5.0+16/APK_IDENTITY.txt",
+      "bytes": 5917,
+      "sha256": "29A084DAF3B2F4A10714BD92CEF915CFE140FBA8FCC70DB19B49F0CA9C856408"
+    },
+    {
+      "path": "output/device_pilot/2026-10-10/1.5.0+16/APK_PERMISSIONS.txt",
+      "bytes": 474,
+      "sha256": "78FFC5ACA0B6D0505FBA038C21B2C4EADD0C444906FD57A140DBE3636F198FB8"
+    },
+    {
+      "path": "output/device_pilot/2026-10-10/1.5.0+16/APK_SECURITY_MANIFEST.txt",
+      "bytes": 8017,
+      "sha256": "7098255A3FA1829A61EFC6F2845AF8239A2042E18A0E2B5749E4AB2EA7C60953"
+    },
+    {
+      "path": "output/device_pilot/2026-10-10/1.5.0+16/AUTOMATED_CHECKS.json",
+      "bytes": 903,
+      "sha256": "4018CB08D0DEB01BDE82A8714F5A5E0CD42A2C7473CEF585E65F3E4A114BA514"
+    },
+    {
+      "path": "output/device_pilot/2026-10-10/1.5.0+16/flutter_analyze.log",
+      "bytes": 200,
+      "sha256": "3B1F59DD3BA5896B75920B172D485CB25286EB705FEAD40CF8E292A357ACD573"
+    },
+    {
+      "path": "output/device_pilot/2026-10-10/1.5.0+16/flutter_test.log",
+      "bytes": 39342,
+      "sha256": "582CBFACB457A36D2F0FBD58C0686F593F8B4FFD07D67B6065093488FEE2B3E4"
+    },
+    {
+      "path": "output/device_pilot/2026-10-10/1.5.0+16/native_compile.log",
+      "bytes": 19722,
+      "sha256": "9BF54F0EBD3B3A861BA34DA97E42C4ACA892D2CF7D9E7A8B0784D68745DB04E7"
+    },
+    {
+      "path": "output/device_pilot/2026-10-10/1.5.0+16/release_build.log",
+      "bytes": 8474,
+      "sha256": "BE8563D67E0619B328E2F7D307B19F55CE0E8DB2A3F4D74E6AF8D508A856C9B1"
+    },
+    {
+      "path": "output/device_pilot/2026-10-10/1.5.0+16/runtime_comparison.json",
+      "bytes": 246,
+      "sha256": "E18A98D692F384CD8CB6E378AA562EA9E68B24E089E25277AD7519D03FEAF99E"
+    },
+    {
+      "path": "output/device_pilot/2026-10-10/1.5.0+16/runtime_regression.json",
+      "bytes": 13872,
+      "sha256": "A3A5F051B39E46F920AB5E356FDBAF9A02BE3F08F54659056755160AB03E6F27"
+    },
+    {
+      "path": "output/device_pilot/2026-10-10/1.5.0+16/runtime_regression.log",
+      "bytes": 2868,
+      "sha256": "2471B04B533C946810D4677E12DC4F80D987F357879D6A67EAF2A158E5C050DB"
+    },
+    {
+      "path": "output/device_pilot/2026-10-10/1.5.0+16/SOURCE_SNAPSHOT.json",
+      "bytes": 22258,
+      "sha256": "A0CDC1EC4B6ABBB4A9E04626DEBD5046ADC77DEA3783A8EA5828C183A8E0DBFE"
+    },
+    {
+      "path": "output/device_pilot/2026-10-10/1.5.0+16/URITECT_SOURCE_SNAPSHOT.zip",
+      "bytes": 6182963,
+      "sha256": "A5870EBEB0FB0E2F350A4830DCA4F9AE59BA1843C120A477F1D3BEEF1B07B900"
+    },
+    {
+      "path": "pipeline/build_training_support_policy.py",
+      "bytes": 2511,
+      "sha256": "8C4A410441408D2B95E06919825AAEDF90EE8922F33CFE844E0738A109C0707D"
+    },
+    {
+      "path": "pipeline/test_training_support_policy.py",
+      "bytes": 2065,
+      "sha256": "52138A0FAFAEC7074A9AC6F951FE6FDB3C78F29472B3949183710C60E6836A64"
+    },
+    {
+      "path": "pipeline/verify_qa_pilot_build.py",
+      "bytes": 5831,
+      "sha256": "5F13A003D795012B263A28C5BA7C9A2AAC0CDD3B4470801891491B8BB9FCE45B"
+    },
+    {
+      "path": "output/device_pilot/2026-10-10/1.5.0+16/INSTALLATION.json",
+      "bytes": 702,
+      "sha256": "FA0AE170915954755787AC56C999FE1999343CA484CB6C46817EA8677E3EFA72"
+    }
+  ],
+  "installation": {
+    "device": "RMX3933",
+    "android": "16",
+    "installed_version": "1.5.0+16",
+    "installed_apk_hash_matches": true,
+    "launch_succeeded": true,
+    "app_scoped_launch_error_entries": 0,
+    "evidence": "INSTALLATION.json",
+    "history_unlock_and_migration": "Pending hands-on verification"
+  },
+  "evidence_updated_at": "2026-10-09T23:27:07.097589+00:00",
+  "evidence_update_scope": "QA notes and installation evidence; frozen source and APK unchanged"
+}

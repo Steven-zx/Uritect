@@ -74,3 +74,8 @@ Fail and recapture if any are present:
 - CSV templates complete and saved
 - Transfer status recorded
 - Backup copy stored on laptop and secure drive
+
+
+## 2026-10-05 abnormal-class validation addendum
+
+For targeted abnormal-specimen collection and final validation, follow [the abnormal detection recovery plan](URITECT_ABNORMAL_DETECTION_RECOVERY_2026-10-05.md). The daily image target above is operational; repeated photographs do not replace independently labeled specimens. Keep all captures/specimens from each globally identified participant together, preserve failed attempts, document per-pad IFU timing and medtech adjudication, and obtain clinical/statistical sample-size approval before sealing a new final test cohort.

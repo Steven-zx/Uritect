@@ -1,0 +1,27 @@
+{
+  "flutter_test": {
+    "exit_code": 0,
+    "tests_passed": 91
+  },
+  "dependency_resolution": {
+    "exit_code": 0
+  },
+  "flutter_analyze": {
+    "exit_code": 0
+  },
+  "release_build": {
+    "attempt": 2,
+    "gradle_cache": "standard user .gradle",
+    "exit_code": 0
+  },
+  "python_tests": {
+    "exit_code": 0,
+    "tests_passed": 32
+  },
+  "model_export_parity": {
+    "source": "Unchanged model asset; full comparison completed during this session",
+    "mismatches": 0,
+    "checked_predictions": 7840,
+    "exit_code": 0
+  }
+}

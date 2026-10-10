@@ -1,0 +1,11 @@
+﻿{
+    "python_tests":  {
+                         "exit_code":  0
+                     },
+    "model_export_parity":  {
+                                "source":  "Unchanged model asset; full comparison completed during this session",
+                                "mismatches":  0,
+                                "checked_predictions":  7840,
+                                "exit_code":  0
+                            }
+}

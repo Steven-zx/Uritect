@@ -1,0 +1,58 @@
+{
+  "release": "URITECT 1.4.0+10 startup splash pilot",
+  "date": "2026-10-04",
+  "application_id": "ph.edu.wvsu.uritect",
+  "apk": {
+    "path": "output/device_pilot/2026-10-04/Uritect_v1.4.0+10_startup_splash_pilot.apk",
+    "bytes": 52591529,
+    "sha256": "4EEA19252264233AE1CC5D22424371DDA87573DB8BF86D4879080511447CBB59"
+  },
+  "source_files": [
+    {
+      "path": "uritect_app/lib/main.dart",
+      "sha256": "5B04274FB13D818972F2DC45BEC71FA06E3BF211EF428027A9ADAC22F948E035"
+    },
+    {
+      "path": "uritect_app/lib/pages/app_splash_page.dart",
+      "sha256": "8A9B47D9F7AC9FC4C055D5C92712066F22766A102C8E2574ABDBCB0E892EC42F"
+    },
+    {
+      "path": "uritect_app/android/app/src/main/res/values-v31/styles.xml",
+      "sha256": "524206BBF86C8FB1B707610E406C7CEE8A79B64714812180CEE905F26FA19467"
+    },
+    {
+      "path": "uritect_app/android/app/src/main/res/values-night-v31/styles.xml",
+      "sha256": "98E225ADADD70BD9A06B49B0C8B1F7F5FEDBCF4B8E30C0161657E18AF8D71F8F"
+    },
+    {
+      "path": "uritect_app/android/app/src/main/res/values/styles.xml",
+      "sha256": "DB247AF00D9F1DBF02212B951A5CAB69ECF1361BF319F8018CCF6BF8385D69C0"
+    },
+    {
+      "path": "uritect_app/android/app/src/main/res/values-night/styles.xml",
+      "sha256": "84A284934F2B53BD82D544C2527759C4AFD3C2101B16396FE65ACBF3FA071BBF"
+    },
+    {
+      "path": "uritect_app/android/app/src/main/res/values/colors.xml",
+      "sha256": "F7EA6797023A8637EA4224D7F5BACE8E53AB80D843C6E60433E17C15C3403883"
+    },
+    {
+      "path": "uritect_app/android/app/src/main/res/drawable/launch_background.xml",
+      "sha256": "85A9465A3B6A3E867AD5D3948566AD8AECAB4984077924CAAE0E30304F4C31A9"
+    },
+    {
+      "path": "uritect_app/android/app/src/main/res/drawable-v21/launch_background.xml",
+      "sha256": "85A9465A3B6A3E867AD5D3948566AD8AECAB4984077924CAAE0E30304F4C31A9"
+    }
+  ],
+  "verification": {
+    "tests_passed": 74,
+    "analysis": "No issues found",
+    "build": "Success",
+    "rendered_reference": "test/goldens/app_splash_phone.png visually inspected",
+    "install": "Success; Android package versionCode 10/versionName 1.4.0 verified",
+    "physical_launch": "Pending phone unlock",
+    "other_devices": "Not tested"
+  },
+  "note": "Includes preceding camera acquisition fixes. Startup branding/navigation only; original release manifest preserved."
+}

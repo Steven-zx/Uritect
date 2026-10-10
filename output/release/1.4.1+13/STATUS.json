@@ -1,0 +1,5 @@
+{
+  "status": "superseded_unsealed_build_cancelled",
+  "reason": "Offline font-fetch dependency found before sealing. No final APK produced; replaced by 1.4.1+14.",
+  "date": "2026-10-06"
+}

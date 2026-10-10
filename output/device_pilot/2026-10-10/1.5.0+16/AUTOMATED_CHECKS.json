@@ -1,0 +1,35 @@
+{
+  "flutter_test": {
+    "exit_code": 0,
+    "tests_passed": 119,
+    "evidence": "flutter_test.log"
+  },
+  "flutter_analyze": {
+    "exit_code": 0,
+    "evidence": "flutter_analyze.log"
+  },
+  "python_tests": {
+    "exit_code": 0,
+    "tests_passed": 35,
+    "command": ".venv/Scripts/python.exe -m unittest discover -s pipeline -p test_*.py -v",
+    "observed_result": "Ran 35 tests; OK"
+  },
+  "native_compile": {
+    "exit_code": 0,
+    "evidence": "native_compile.log"
+  },
+  "runtime_regression": {
+    "exit_code": 0,
+    "cases": 18,
+    "evidence": "runtime_regression.log"
+  },
+  "production_model_identity": {
+    "exit_code": 0,
+    "source": "Installed 1.4.2+15 source snapshot; exact model asset SHA-256 checked while sealing"
+  },
+  "release_build": {
+    "exit_code": 0,
+    "evidence": "release_build.log",
+    "signed_APK_candidates_built": 1
+  }
+}

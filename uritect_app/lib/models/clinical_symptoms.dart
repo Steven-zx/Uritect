@@ -267,18 +267,73 @@ final List<ClinicalSymptom> clinicalSymptoms = [
   ),
 ];
 
+const checklistSafetyIds = [
+  'fever',
+  'flank',
+  'nausea',
+  'hematuria',
+  'blood_clots',
+  'unable_to_urinate',
+  'reduced_urine_output',
+  'edema',
+  'shortness_of_breath',
+  'cannot_hydrate_or_medicate',
+  'confusion_fainting_weakness',
+  'severe_flank_abdominal_pain',
+];
+
 class ClinicalChecklistResult {
   final Map<String, bool> selectedSymptoms;
+  final Map<String, String> answers;
+  final String? questionnaireVersion;
 
-  const ClinicalChecklistResult({required this.selectedSymptoms});
+  const ClinicalChecklistResult({
+    required this.selectedSymptoms,
+    this.answers = const {},
+    this.questionnaireVersion,
+  });
+
+  bool get hasIncompleteSafetyReview =>
+      questionnaireVersion != null &&
+      (answers['safety_review'] != 'no' &&
+          (answers['safety_review'] != 'yes' ||
+              checklistSafetyIds.any(
+                (id) => answers[id] != 'yes' && answers[id] != 'no',
+              ) ||
+              (answers['edema'] == 'yes' &&
+                  answers['persistent_edema'] != 'yes' &&
+                  answers['persistent_edema'] != 'no')));
+
+  bool get hasUnconfirmedTestQuality =>
+      questionnaireVersion != null && answers['quality_review'] != 'no';
+
+  String responseLabel(String id) => switch (answers[id]) {
+    'yes' => 'Yes',
+    'no' => 'No',
+    'unsure' => 'Not sure',
+    _ =>
+      questionnaireVersion != null
+          ? 'Not asked / unanswered'
+          : selectedSymptoms[id] == true
+          ? 'Selected'
+          : 'Not confirmed',
+  };
 
   Map<String, dynamic> toJson() {
-    return {'selectedSymptoms': selectedSymptoms};
+    return {
+      'selectedSymptoms': selectedSymptoms,
+      'answers': answers,
+      'questionnaireVersion': questionnaireVersion,
+    };
   }
 
   factory ClinicalChecklistResult.fromJson(Map<String, dynamic> json) {
     final raw = json['selectedSymptoms'] as Map<String, dynamic>? ?? const {};
     return ClinicalChecklistResult(
+      answers: (json['answers'] as Map<String, dynamic>? ?? {}).map(
+        (key, value) => MapEntry(key, value.toString()),
+      ),
+      questionnaireVersion: json['questionnaireVersion'] as String?,
       selectedSymptoms: {
         for (final symptom in clinicalSymptoms)
           symptom.id: raw[symptom.id] == true,

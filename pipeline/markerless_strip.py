@@ -466,6 +466,13 @@ def _select_consecutive_pad_centers(
     if len(candidates) < required_count:
         return None
     if len(candidates) == required_count:
+        centers = [item[0] for item in candidates]
+        gaps = np.diff(np.asarray(centers, dtype=np.float32))
+        median_gap = float(np.median(gaps)) if gaps.size else 0.0
+        if (median_gap <= 0 or float(np.std(gaps) / median_gap) > 0.24
+                or float(np.min(gaps)) < median_gap * 0.60
+                or float(np.max(gaps)) > median_gap * 1.40):
+            return None
         border_touches = sum(1 for _, _, _, touches_top, touches_bottom in candidates if touches_top or touches_bottom)
         if border_touches <= 1:
             return [center for center, *_rest in candidates]
@@ -481,6 +488,12 @@ def _select_consecutive_pad_centers(
         if median_gap <= 0:
             continue
         gap_cv = float(np.std(gaps) / median_gap)
+        # Match the current app spacing gate. A high-scoring ten-region count
+        # can still contain background or miss physical pads. Never publish
+        # features for an irregular sequence just because ten boxes exist.
+        if (gap_cv > 0.24 or float(np.min(gaps)) < median_gap * 0.60
+                or float(np.max(gaps)) > median_gap * 1.40):
+            continue
         mean_strength = float(np.mean([item[2] for item in window]))
         mean_width = float(np.mean([item[1] for item in window]))
         border_penalty = sum(1 for item in window if item[3] or item[4]) * 0.55

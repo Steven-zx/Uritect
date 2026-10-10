@@ -1,0 +1,13 @@
+{
+  "verified_at": "2026-10-09T23:26:22.916020+00:00",
+  "device_model": "RMX3933",
+  "android_version": "16",
+  "serial": "192.168.1.37:41885",
+  "version": "1.5.0+16",
+  "installed_apk_sha256": "E0DFB01B55B92D534CCB650E96B464834D5F43D73FEC340C0513779076F67A0B",
+  "install_mode": "adb install -r; app data not cleared",
+  "launch_result": "Starting: Intent { cmp=ph.edu.wvsu.uritect/.MainActivity }\nStatus: ok\nLaunchState: COLD\nActivity: ph.edu.wvsu.uritect/.MainActivity\nTotalTime: 850\nWaitTime: 857\nComplete",
+  "process_id": "11102",
+  "native_authentication_and_legacy_migration": "Pending user credential entry and hands-on verification",
+  "clinical_acceptance": "Pending"
+}

@@ -1,0 +1,14 @@
+{
+  "status": "previous development image regression retained; not rerun for preview-only UI change",
+  "previous_evidence_directory": "output/device_pilot/2026-10-10/1.5.2+18",
+  "changed_source_paths": [
+    "uritect_app/lib/pages/capture_dipstick_page.dart",
+    "uritect_app/lib/widgets/scan_camera_preview.dart",
+    "uritect_app/lib/widgets/ten_pad_alignment_guide.dart",
+    "uritect_app/pubspec.yaml",
+    "uritect_app/test/capture_lifecycle_test.dart",
+    "uritect_app/test/scan_camera_preview_test.dart"
+  ],
+  "analysis_code_assets_reliability_gates_unchanged": true,
+  "new_accuracy_evaluation": false
+}

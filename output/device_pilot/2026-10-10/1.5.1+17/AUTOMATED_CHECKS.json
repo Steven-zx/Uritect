@@ -1,0 +1,27 @@
+{
+  "flutter_test": {
+    "exit_code": 0,
+    "tests_passed": 122,
+    "evidence": "flutter_test.log",
+    "note": "Removed only an unused test import after the passing run; executable code unchanged."
+  },
+  "flutter_analyze": {
+    "exit_code": 0,
+    "evidence": "flutter_analyze.log"
+  },
+  "native_compile": {
+    "exit_code": 0,
+    "evidence": "native_compile.log"
+  },
+  "release_build": {
+    "exit_code": 0,
+    "evidence": "release_build.log",
+    "signed_APK_candidates_built": 1
+  },
+  "classifier_regression_evidence_reuse": {
+    "exit_code": 0,
+    "runtime_evaluation_rerun": false,
+    "evidence": "CLASSIFIER_REGRESSION_REUSE.json",
+    "note": "Model, classifier, assets, scan gates and runtime tool byte-identical to 1.5.0+16; prior 18-image regression retained with provenance."
+  }
+}

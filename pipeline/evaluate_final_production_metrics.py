@@ -2,8 +2,8 @@
 """Reproduce the frozen grouped split and report all thesis classifier metrics.
 
 This script evaluates the frozen model configuration without rewriting the
-production model artifacts. Related lighting captures remain grouped by
-specimen, matching the production freeze protocol.
+production model artifacts. This reproduces the historical freeze protocol, whose grouping has known
+related-capture leakage. These results are development evidence only.
 """
 
 from __future__ import annotations
@@ -42,7 +42,7 @@ except ImportError:
     from semiquant_schema import ANALYTE_ORDER
 
 
-DEFAULT_OUTPUT = pathlib.Path(__file__).parent / "output" / "production_grouped_metrics_complete.json"
+DEFAULT_OUTPUT = pathlib.Path(__file__).parent / "output" / "historical_reproduction_metrics.json"
 
 
 def parse_args() -> argparse.Namespace:
@@ -145,7 +145,8 @@ def main() -> None:
             "group": "specimen_group",
             "test_size": args.test_size,
             "random_state": args.random_state,
-            "note": "Lighting variants from one specimen remain on the same split side.",
+            "status": "retrospective_development_only",
+            "note": "Historical grouping does not reliably combine lighting variants. Configurations were selected on this split. See audit_abnormal_detection.py; do not use this as untouched final-test evidence.",
         },
         "summary": {
             "individual_analyte_accuracy": float(accuracy_score(all_true, all_pred)),

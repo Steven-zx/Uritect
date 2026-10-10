@@ -1,18 +1,24 @@
-# URITECT Final Project Handoff
+# URITECT Project Handoff — current candidate and historical baseline
 
-**Release candidate:** 1.4.0+5
+**2026-10-06 status:** source for 1.4.1+14 is frozen and its signed release APK is built for evaluation.
+Use `URITECT_RELEASE_ACCEPTANCE_2026-10-06.md` and the regenerated release manifest.
+Two-phone tests, physical IFU confirmation and human reviews remain pending.
+User asked to defer the phone connection and to ask for the strip details next session.
+The older 1.4.0+5 material below is historical, not final acceptance evidence.
 
-**Finalization date:** 2026-10-01
+**Historical baseline:** 1.4.0+5
+
+**Historical baseline date:** 2026-10-01
 
 **Scope:** Offline Android thesis prototype; ten-analyte semiquantitative URS-10T interpretation
 **Android application ID:** `ph.edu.wvsu.uritect`
 
-## What Is Finished
+## Historical baseline implementation
 
 | Area | Final state | Evidence |
 | --- | --- | --- |
 | Dataset | Laua-an and Cabatuan packages cleaned, aligned, and ingested; exact-row deduplication applied | `pipeline/dataset/features_normalized_hsv_deduped_production.csv` |
-| Leakage control | Specimen-grouped 80/20 split; lighting variants stay together | `pipeline/output/production_grouped_metrics_complete.json` |
+| Leakage control | Historical source/event grouping was intended to prevent leakage; October 5 audit found related identities across splits | `pipeline/output/production_grouped_metrics_complete.json` |
 | Visual classifier | Ten per-analyte k-NN configurations frozen | `pipeline/output/semiquant_models` |
 | Android inference | Model and image pipeline execute locally in Dart | `uritect_app/lib/services/local_scan_analysis_service.dart` |
 | Network independence | No Internet permission in the production manifest; no HTTP scan path | `uritect_app/android/app/src/main/AndroidManifest.xml` |
@@ -26,10 +32,12 @@
 | Automated tests | 56 tests pass across sex-specific Bayesian, renal, invalid-scan, persistence, navigation, and phone-width UI behavior | `uritect_app/test` |
 | Release integrity | Final checksums stored in a machine-readable manifest | `output/release/URITECT_FINAL_RELEASE_MANIFEST.json` |
 
-## Final Metrics
+## Historical development metrics — not independent final validation
 
-All metrics below use the frozen grouped split. They evaluate reagent-pad class
-prediction, not UTI diagnosis or renal-disease diagnosis.
+All metrics below reproduce the historical development split. The October 5 audit
+found related captures across splits and inspected results used for parameter selection.
+These values are retrospective and do not independently validate the changed runtime
+image pipeline. They evaluate reagent-pad classes, not UTI or renal-disease diagnosis.
 
 | Analyte | Accuracy | Macro F1 | Macro sensitivity | Macro specificity | Kappa |
 | --- | ---: | ---: | ---: | ---: | ---: |
@@ -55,6 +63,9 @@ Aggregate results:
 - At confidence 0.45: 73.62% scan acceptance, 83.75% accepted
   individual-analyte accuracy, and 19.17% accepted all-ten-correct accuracy.
 
+The confidence/coverage numbers above were reconstructed from cached features, not measured
+end-to-end phone retake rates; they exclude input/localization failures.
+
 Rare semiquantitative classes have small support, so accuracy can look strong
 while macro F1, sensitivity, or kappa remains modest. Report the complete table
 and class supports; do not report only the 82.52% aggregate.
@@ -66,7 +77,7 @@ and class supports; do not report only the 82.52% aggregate.
 | 1. Calibrated combined dataset under three lights | Engineering work complete. The manuscript must accurately enumerate volunteer/control composition and collection provenance. |
 | 2. Strip-plastic-referenced AWB | Implemented. Final wording must match the neutral strip/plastic gray-world method. |
 | 3. Offline automated ten-pad ROI | Implemented markerlessly. Real-device ROI overlay acceptance remains a manual verification gate. |
-| 4. Per-analyte k-NN plus UTI/renal interpretation | Implemented and fully re-evaluated. Bayesian applies to gated UTI only; renal is rule-based. |
+| 4. Per-analyte k-NN plus UTI/renal interpretation | Implemented; independent validation remains pending. Bayesian is provisional UTI interpretation; renal is rule-based. |
 | 5. ISO/IEC 25010-guided app evaluation | Instrument and release are ready. Not complete until 10 medtechs test the app and results are analyzed. |
 
 ## Do Not Use as Final Evidence

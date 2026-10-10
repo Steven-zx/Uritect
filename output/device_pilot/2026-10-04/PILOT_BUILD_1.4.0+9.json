@@ -1,0 +1,38 @@
+{
+  "release": "URITECT 1.4.0+9 camera parity pilot",
+  "date": "2026-10-04",
+  "application_id": "ph.edu.wvsu.uritect",
+  "apk": {
+    "path": "output/device_pilot/2026-10-04/Uritect_v1.4.0+9_camera_parity_pilot.apk",
+    "bytes": 52492781,
+    "sha256": "BABC92FAD7B2C1CAE06ADFAB58F49869D39935CE64E772D89037E9A902D0C5AF"
+  },
+  "source_files": [
+    {
+      "path": "uritect_app/lib/pages/capture_dipstick_page.dart",
+      "sha256": "DBC00C006E302FA9065577D6191EE73E4B977CA5BD67096A4D5FEBF48D70DC50"
+    },
+    {
+      "path": "uritect_app/lib/widgets/scan_camera_preview.dart",
+      "sha256": "1A9E8AAA7E93AC13376522747A485530B41E8ACE00ECF7FAEFD4CE4529D78FFD"
+    },
+    {
+      "path": "uritect_app/lib/pages/analyzing_page.dart",
+      "sha256": "3427221548CC19E2D68D448EA38158F180C4D27A9FE0FCC239124E787E9C71C5"
+    },
+    {
+      "path": "uritect_app/assets/production_semiquant_model.json",
+      "sha256": "348EA1A6CF2C59E3FF6834E4FD042ABA09A2A26CC041559096F13966FBD8FE80"
+    }
+  ],
+  "verification": {
+    "tests_passed": 71,
+    "analysis": "No issues found",
+    "build": "Success",
+    "install": "Success; device versionCode 9/versionName 1.4.0 verified",
+    "launch": "Android am start Status ok; cold launch 1059 ms (not scan latency)",
+    "physical_detection_parity": "Pending user paired retest",
+    "visible_launch": "Pass: URITECT landing screen visible in pilot9_launch.png"
+  },
+  "note": "Camera acquisition and preview fix; detector/model/clinical thresholds unchanged. Highest supported camera profile does not guarantee identical native Camera app processing."
+}

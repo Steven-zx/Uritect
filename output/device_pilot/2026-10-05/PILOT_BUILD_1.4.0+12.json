@@ -1,0 +1,62 @@
+{
+  "prepared_on": "2026-10-05",
+  "timezone": "Asia/Manila",
+  "app_id": "ph.edu.wvsu.uritect",
+  "build_name": "1.4.0",
+  "build_number": 12,
+  "build_type": "debug_research_pilot",
+  "apk": "Uritect_v1.4.0+12_workflow_image_fixes_pilot.apk",
+  "apk_sha256": "8C1C606DEB1361B105D3F5A4FBD23D6388B9CC24B5499C4CAC16CC3A0EBC62C9",
+  "apk_bytes": 152855652,
+  "installed": false,
+  "device": "RMX3933",
+  "device_status": "ADB had no connected device; physical walkthrough pending",
+  "pipeline_version": "android_markerless_json_knn_v2_background_20261005",
+  "model_version": "production_semiquant_knn_markerless_roi_topfix_v3_20260908",
+  "model_asset_sha256": "348ea1a6cf2c59e3ff6834e4fd042aba09a2a26cc041559096f13966fbd8fe80",
+  "model_changed": false,
+  "clinical_labels_changed": 0,
+  "verification": {
+    "flutter_tests_passed": 90,
+    "python_tests_passed": 18,
+    "flutter_analysis": "No issues found",
+    "pickle_json_predictions_checked": 7840,
+    "pickle_json_mismatches": 0,
+    "runtime_development_images": 18,
+    "previously_accepted_preserved": 4,
+    "newly_accepted": 2,
+    "after_accepted": 6,
+    "after_retaken": 12,
+    "all_ten_exact_correct_before": 1,
+    "all_ten_exact_correct_after": 1
+  },
+  "source_review": {
+    "linked_records": 408,
+    "resolved_events": 146,
+    "priority_images": 63,
+    "geometry_candidates_for_review": 57,
+    "geometry_rejections": 6,
+    "cached_feature_review_events": 14,
+    "medtech_adjudication": "pending"
+  },
+  "regression_fixture_sha256": "7c7fc90fdeaf480cca7ddda0a31c0dbea8e572ff69deeddfea2c13636f223f93",
+  "handoff": "docs/URITECT_WORKFLOW_AND_IMAGE_FIXES_2026-10-05.md",
+  "remaining": [
+    "Physical phone workflow/capture testing",
+    "Medtech reference-label and IFU timing adjudication",
+    "Consistent full development feature re-extraction after crop verification",
+    "New independent specimens, approved acceptance/sample-size plan and untouched final evaluation"
+  ],
+  "apk_badging_verified": {
+    "app_id": "ph.edu.wvsu.uritect",
+    "version_name": "1.4.0",
+    "version_code": 12,
+    "min_sdk": 24,
+    "target_sdk": 36,
+    "abis": [
+      "arm64-v8a",
+      "armeabi-v7a",
+      "x86_64"
+    ]
+  }
+}

@@ -8,6 +8,8 @@ import 'package:image/image.dart' as img;
 
 import '../models/dipstick_results_data.dart';
 import '../models/scan_model.dart';
+import '../models/scan_analysis_failure.dart';
+import 'training_support_policy.dart';
 
 const List<String> _analyteOrder = [
   'Leukocytes',
@@ -46,6 +48,9 @@ class LocalScanAnalysisService {
     final modelText = await rootBundle.loadString(
       'assets/production_semiquant_model.json',
     );
+    final policyText = await rootBundle.loadString(
+      'assets/training_support_policy.json',
+    );
 
     onProgress?.call(18, 'preparing_image');
     if (!await File(imagePath).exists()) {
@@ -54,7 +59,7 @@ class LocalScanAnalysisService {
 
     onProgress?.call(32, 'locating_markerless_strip');
     final resultJson = await Isolate.run(
-      () => _analyzeScanInBackground(imagePath, modelText),
+      () => _analyzeScanInBackground(imagePath, modelText, policyText),
     );
 
     onProgress?.call(92, 'finalizing_results');
@@ -84,41 +89,80 @@ class LocalScanAnalysisService {
       _ImageVariant('rot90_ccw', img.copyRotate(image, angle: -90)),
     ];
 
-    _FeatureExtraction? best;
-    final errors = <String>[];
-    for (final variant in variants) {
+    // Do not let a detector that selects one strip override a clear second
+    // narrow bright strip. Checking the two axes covers both capture rotations.
+    for (final variant in variants.take(2)) {
       try {
-        final extraction = _extractMarkerlessFeatures(
-          variant.image,
-          variant.name,
-        );
-        if (best == null || extraction.qualityScore > best.qualityScore) {
-          best = extraction;
+        _detectStripBoxLocalContrast(variant.image);
+      } on StateError catch (error) {
+        if (error.message.toString().contains(
+          'Multiple local-contrast strip candidates',
+        )) {
+          rethrow;
         }
-      } catch (error) {
-        errors.add('${variant.name}: $error');
       }
     }
 
-    if (best == null) {
-      throw StateError(
-        'INVALID_IMAGE: Could not locate a complete ten-pad strip. ${errors.take(2).join("; ")}',
-      );
+    final errors = <String>[];
+    ScanAnalysisFailure? padBoundaryFailure;
+    // Preserve established geometry on captures the existing detector reads.
+    // Use background-relative detection only when no legacy orientation passes
+    // the full geometry checks. Confidence never selects a detector or bypasses
+    // the abstention policy.
+    for (final detector in [
+      'legacy',
+      'background_relative',
+      'local_contrast',
+      'legacy_backing',
+      'background_relative_backing',
+      'local_contrast_backing',
+    ]) {
+      _FeatureExtraction? best;
+      for (final variant in variants) {
+        try {
+          final extraction = _extractMarkerlessFeatures(
+            variant.image,
+            variant.name + (detector == 'legacy' ? '' : '_$detector'),
+            relativeBackground: detector.startsWith('background_relative'),
+            localContrast: detector.startsWith('local_contrast'),
+            backingContrast: detector.endsWith('_backing'),
+          );
+          _validateReadableCapture(extraction);
+          if (best == null || extraction.qualityScore > best.qualityScore) {
+            best = extraction;
+          }
+        } catch (error) {
+          if (error is ScanAnalysisFailure) padBoundaryFailure ??= error;
+          errors.add('${variant.name}_$detector: $error');
+        }
+      }
+      if (best != null) return best;
     }
-    _validateReadableCapture(best);
-    return best;
+    if (padBoundaryFailure != null) throw padBoundaryFailure;
+    throw StateError(
+      'INVALID_IMAGE: Could not locate a complete ten-pad strip. ${[errors.first, errors.last].join('; ')}',
+    );
   }
 
   _FeatureExtraction _extractMarkerlessFeatures(
     img.Image image,
-    String orientation,
-  ) {
+    String orientation, {
+    bool relativeBackground = false,
+    bool localContrast = false,
+    bool backingContrast = false,
+  }) {
     _rejectBlankOrBlurred(image);
-    final strip = _detectStripBox(image);
+    var strip = localContrast
+        ? _detectStripBoxLocalContrast(image)
+        : relativeBackground
+        ? _detectStripBoxRelative(image)
+        : _detectStripBoxLegacy(image);
     final gains = _grayWorldGains(image, strip);
     final padSize = math.max(8, (strip.width * 0.58).round());
     final initialDetectedCropX =
-        _detectGlobalPadColumn(image, padSize, gains) ??
+        (localContrast || backingContrast
+            ? null
+            : _detectGlobalPadColumn(image, padSize, gains)) ??
         (strip.left + strip.width / 2.0 - padSize / 2.0).round();
     final initialCropX = initialDetectedCropX
         .clamp(0, math.max(0, image.width - padSize))
@@ -131,12 +175,32 @@ class LocalScanAnalysisService {
       area: padSize * strip.height,
       quality: strip.quality,
     );
-    final centers = _detectPadCenters(image, padColumn, padSize, gains);
+    final centers = backingContrast
+        ? _detectPadCentersAgainstBacking(image, padColumn, padSize)
+        : _detectPadCenters(image, padColumn, padSize, gains);
     if (centers.length != _analyteOrder.length) {
       throw StateError('INVALID_IMAGE: Expected ten reagent pads.');
     }
+    if (backingContrast) {
+      // Extend to measured pale endpoint pads, never extrapolated pad positions.
+      final top = math.min(strip.top, (centers.first - padSize / 2).floor());
+      final bottom = math.max(
+        strip.top + strip.height,
+        (centers.last + padSize / 2).ceil(),
+      );
+      strip = _StripRect(
+        left: strip.left,
+        top: top,
+        width: strip.width,
+        height: bottom - top,
+        area: strip.width * (bottom - top),
+        quality: strip.quality,
+      );
+    }
     final refinedCropX =
-        _detectPadColumn(image, centers, padSize, padColumn, gains) ??
+        (localContrast || backingContrast
+            ? null
+            : _detectPadColumn(image, centers, padSize, padColumn, gains)) ??
         initialCropX;
     final cropX = refinedCropX
         .clamp(0, math.max(0, image.width - padSize))
@@ -245,7 +309,52 @@ class LocalScanAnalysisService {
     }
   }
 
-  _StripRect _detectStripBox(img.Image image) {
+  // Compare with the background on the same row, interpolating the side
+  // margins to account for a lighting gradient. Absolute saturation treats a
+  // blue/orange-lit background as one enormous strip and rejects real strips.
+  List<List<double>> _rowBackground(img.Image image) {
+    final margin = math.max(2, (image.width * .04).round());
+    return [
+      for (var y = 0; y < image.height; y++)
+        [
+          for (final side in [0, 1]) ...[
+            for (var channel = 0; channel < 3; channel++)
+              _median([
+                for (var i = 0; i < margin; i += math.max(1, margin ~/ 8))
+                  _pixelChannel(
+                    image.getPixel(side == 0 ? i : image.width - 1 - i, y),
+                    channel,
+                  ),
+              ]),
+          ],
+        ],
+    ];
+  }
+
+  double _pixelChannel(img.Pixel pixel, int channel) => channel == 0
+      ? pixel.r.toDouble()
+      : channel == 1
+      ? pixel.g.toDouble()
+      : pixel.b.toDouble();
+
+  bool _differsFromBackground(
+    img.Pixel pixel,
+    int x,
+    int width,
+    List<double> row,
+  ) {
+    final fraction = x / math.max(1, width - 1);
+    var sum = 0.0;
+    for (var channel = 0; channel < 3; channel++) {
+      final expected =
+          row[channel] * (1 - fraction) + row[channel + 3] * fraction;
+      final delta = (_pixelChannel(pixel, channel) - expected) / 255.0;
+      sum += delta * delta;
+    }
+    return math.sqrt(sum) > .08;
+  }
+
+  _StripRect _detectStripBoxLegacy(img.Image image) {
     final colScores = List<double>.filled(image.width, 0.0);
     final rowStep = math.max(1, image.height ~/ 500);
     for (var x = 0; x < image.width; x++) {
@@ -339,6 +448,277 @@ class LocalScanAnalysisService {
     );
   }
 
+  _StripRect _detectStripBoxRelative(img.Image image) {
+    final background = _rowBackground(image);
+    final colScores = List<double>.filled(image.width, 0.0);
+    final rowStep = math.max(1, image.height ~/ 500);
+    for (var x = 0; x < image.width; x++) {
+      var active = 0;
+      var total = 0;
+      for (var y = 0; y < image.height; y += rowStep) {
+        final p = image.getPixel(x, y);
+        final hsv = _rgbToHsv(p.r.toDouble(), p.g.toDouble(), p.b.toDouble());
+        if (_differsFromBackground(p, x, image.width, background[y]) &&
+            hsv[2] > 0.10 &&
+            hsv[2] < 0.995) {
+          active++;
+        }
+        total++;
+      }
+      colScores[x] = total == 0 ? 0.0 : active / total;
+    }
+    final smoothedCols = _smooth(colScores, math.max(9, image.width ~/ 100));
+    final threshold = math.max(0.035, _percentile(smoothedCols, 95) * 0.40);
+    final runs = _runs(smoothedCols.map((v) => v >= threshold).toList());
+    if (runs.isEmpty) {
+      throw StateError('INVALID_IMAGE: No vertical strip candidate.');
+    }
+
+    _Run? best;
+    double bestScore = -1;
+    final plausibleScores = <double>[];
+    for (final run in runs) {
+      final width = run.end - run.start + 1;
+      if (width < 14 || width > image.width * 0.24) continue;
+      final score = _mean(smoothedCols.sublist(run.start, run.end + 1));
+      plausibleScores.add(score);
+      if (score > bestScore) {
+        best = run;
+        bestScore = score;
+      }
+    }
+    if (best == null) {
+      throw StateError('INVALID_IMAGE: Strip candidate is not plausible.');
+    }
+    final strongRunCount = plausibleScores
+        .where((score) => score >= math.max(0.03, bestScore * 0.72))
+        .length;
+    if (strongRunCount > 1) {
+      throw StateError(
+        'INVALID_IMAGE: Multiple plausible strips or strip-like objects were found.',
+      );
+    }
+
+    var x0 = best.start;
+    var x1 = best.end;
+    final xPad = ((x1 - x0 + 1) * 0.18).round();
+    x0 = math.max(0, x0 - xPad);
+    x1 = math.min(image.width - 1, x1 + xPad);
+    final stripWidth = x1 - x0 + 1;
+
+    final rowScores = List<double>.filled(image.height, 0.0);
+    final colStep = math.max(1, stripWidth ~/ 40);
+    for (var y = 0; y < image.height; y++) {
+      var active = 0;
+      var total = 0;
+      for (var x = x0; x <= x1; x += colStep) {
+        final p = image.getPixel(x, y);
+        final hsv = _rgbToHsv(p.r.toDouble(), p.g.toDouble(), p.b.toDouble());
+        if (_differsFromBackground(p, x, image.width, background[y]) &&
+            hsv[2] > 0.10 &&
+            hsv[2] < 0.995) {
+          active++;
+        }
+        total++;
+      }
+      rowScores[y] = total == 0 ? 0.0 : active / total;
+    }
+    final smoothedRows = _smooth(rowScores, math.max(17, image.height ~/ 120));
+    final rowThreshold = math.max(0.025, _percentile(smoothedRows, 82) * 0.35);
+    final activeRows = <int>[];
+    for (var i = 0; i < smoothedRows.length; i++) {
+      if (smoothedRows[i] >= rowThreshold) activeRows.add(i);
+    }
+    if (activeRows.isEmpty) {
+      throw StateError('INVALID_IMAGE: No reagent-pad row signal.');
+    }
+    final y0 = activeRows.first;
+    final y1 = activeRows.last;
+    final stripHeight = y1 - y0 + 1;
+    if (stripHeight / math.max(1, stripWidth) < 3.0) {
+      throw StateError('INVALID_IMAGE: Partial or wrong strip geometry.');
+    }
+    if (stripWidth / image.width > 0.24) {
+      throw StateError('INVALID_IMAGE: Strip candidate is too wide.');
+    }
+    return _StripRect(
+      left: x0,
+      top: y0,
+      width: stripWidth,
+      height: stripHeight,
+      area: stripWidth * stripHeight,
+      quality: 2.0 + bestScore + stripHeight / image.height,
+    );
+  }
+
+  // Textured floors defeat both absolute saturation and image-edge background
+  // estimates. Compare a narrow bright strip with its immediate surroundings.
+  // This is only attempted after both established detectors fail validation.
+  _StripRect _detectStripBoxLocalContrast(img.Image image) {
+    final offset = math.max(12, (image.width * .055).round());
+    bool brightAgainstBothSides(int x, int y) {
+      final center = _luma(image.getPixel(x, y));
+      return center - _luma(image.getPixel(x - offset, y)) > 20 &&
+          center - _luma(image.getPixel(x + offset, y)) > 20;
+    }
+
+    final scores = List<double>.filled(image.width, 0);
+    final rowStep = math.max(1, image.height ~/ 500);
+    for (var x = offset; x < image.width - offset; x++) {
+      var active = 0;
+      var total = 0;
+      for (var y = 0; y < image.height; y += rowStep) {
+        if (brightAgainstBothSides(x, y)) active++;
+        total++;
+      }
+      scores[x] = active / math.max(1, total);
+    }
+    final smooth = _smooth(scores, math.max(9, image.width ~/ 100));
+    final threshold = math.max(.20, _percentile(smooth, 95) * .55);
+    final runs = _runs(
+      smooth.map((v) => v > threshold).toList(),
+    ).where((r) => r.length >= 14 && r.length <= image.width * .16).toList();
+    if (runs.isEmpty) {
+      throw StateError(
+        'INVALID_IMAGE: No narrow local-contrast strip candidate.',
+      );
+    }
+    runs.sort(
+      (a, b) => _mean(
+        smooth.sublist(b.start, b.end + 1),
+      ).compareTo(_mean(smooth.sublist(a.start, a.end + 1))),
+    );
+    final best = runs.first;
+    final strength = _mean(smooth.sublist(best.start, best.end + 1));
+    if (runs
+        .skip(1)
+        .any(
+          (r) => _mean(smooth.sublist(r.start, r.end + 1)) >= strength * .72,
+        )) {
+      throw StateError(
+        'INVALID_IMAGE: Multiple local-contrast strip candidates.',
+      );
+    }
+    final center = (best.start + best.end) ~/ 2;
+    final activeRows = <int>[
+      for (var y = 0; y < image.height; y++)
+        if (brightAgainstBothSides(center, y)) y,
+    ];
+    if (activeRows.isEmpty) {
+      throw StateError('INVALID_IMAGE: No local-contrast strip extent.');
+    }
+    final padding = (best.length * .18).round();
+    final left = math.max(0, best.start - padding);
+    final right = math.min(image.width - 1, best.end + padding);
+    final top = activeRows.first;
+    final height = activeRows.last - top + 1;
+    final width = right - left + 1;
+    if (height / width < 3 || height < image.height * .35) {
+      throw StateError('INVALID_IMAGE: Partial local-contrast strip geometry.');
+    }
+    return _StripRect(
+      left: left,
+      top: top,
+      width: width,
+      height: height,
+      area: width * height,
+      quality: 2 + strength + height / image.height,
+    );
+  }
+
+  List<double> _detectPadCentersAgainstBacking(
+    img.Image image,
+    _StripRect column,
+    int padSize,
+  ) {
+    final colors = <List<double>>[];
+    final x0 = column.left.clamp(0, image.width - 1);
+    final x1 = (column.left + column.width - 1).clamp(0, image.width - 1);
+    for (var y = 0; y < image.height; y++) {
+      final sums = [0.0, 0.0, 0.0];
+      var count = 0;
+      for (var x = x0; x <= x1; x += math.max(1, padSize ~/ 20)) {
+        final p = image.getPixel(x, y);
+        sums[0] += p.r;
+        sums[1] += p.g;
+        sums[2] += p.b;
+        count++;
+      }
+      colors.add(sums.map((v) => v / math.max(1, count)).toList());
+    }
+    // Compare with nearby bright plastic. Ratios suppress illumination changes;
+    // ten measured color regions are required, with no grid-based pad filling.
+    final radius = math.max(20, (padSize * 2.1).round());
+    final score = List<double>.filled(image.height, 0);
+    for (var y = 0; y < image.height; y++) {
+      final window = colors.sublist(
+        math.max(0, y - radius),
+        math.min(image.height, y + radius + 1),
+      );
+      final brightBlue = _percentile(window.map((c) => c[2]).toList(), 90);
+      final reference = window.where((c) => c[2] >= brightBlue).toList();
+      final r = _mean(reference.map((c) => c[0]).toList());
+      final g = _mean(reference.map((c) => c[1]).toList());
+      final b = math.max(20.0, _mean(reference.map((c) => c[2]).toList()));
+      final pixelBlue = math.max(20.0, colors[y][2]);
+      final dr = colors[y][0] / pixelBlue - r / b;
+      final dg = colors[y][1] / pixelBlue - g / b;
+      score[y] = math.sqrt(dr * dr + dg * dg);
+    }
+    final smoothed = _smooth(score, math.max(9, padSize ~/ 4));
+    var runs = _runs(
+      smoothed.map((v) => v > .020).toList(),
+    ).where((r) => r.length >= math.max(10, (padSize * .35).round())).toList();
+    if (runs.length > 10) runs = _bestConsecutiveRuns(runs, smoothed, 10);
+    if (runs.length != 10 ||
+        runs.first.start < 3 ||
+        runs.last.end > image.height - 4) {
+      throw ScanAnalysisFailure(
+        code: 'PAD_BOUNDARIES_UNCLEAR',
+        guidance:
+            'Ten separate reagent pads could not be confirmed. Keep every pad visible, reduce glare, and tap to focus before retaking.',
+      );
+    }
+    final offset = math.max(padSize + 8, (padSize * 1.5).round());
+    final centerX = (x0 + x1) ~/ 2;
+    double shaftContrast(int start, int end) {
+      final a = start.clamp(0, image.height);
+      final b = end.clamp(0, image.height);
+      if (b - a < padSize ||
+          centerX < offset ||
+          centerX + offset >= image.width) {
+        return 0;
+      }
+      final values = <double>[];
+      for (var y = a; y < b; y++) {
+        final center = colors[y];
+        final left = image.getPixel(centerX - offset, y);
+        final right = image.getPixel(centerX + offset, y);
+        double distance(img.Pixel p) => math.sqrt(
+          math.pow(center[0] - p.r, 2) +
+              math.pow(center[1] - p.g, 2) +
+              math.pow(center[2] - p.b, 2),
+        );
+        values.add(math.min(distance(left), distance(right)));
+      }
+      return _mean(values);
+    }
+
+    final before = shaftContrast(
+      runs.first.start - padSize * 3,
+      runs.first.start - 4,
+    );
+    final after = shaftContrast(runs.last.end + 4, runs.last.end + padSize * 3);
+    if (after < 8 || after <= before * 1.4) {
+      throw ScanAnalysisFailure(
+        code: 'STRIP_DIRECTION_UNCLEAR',
+        guidance:
+            'The strip direction could not be confirmed. Include the plain handle below the last pad and keep all ten pads visible.',
+      );
+    }
+    return runs.map((r) => (r.start + r.end) / 2).toList();
+  }
+
   List<double> _detectPadCenters(
     img.Image image,
     _StripRect strip,
@@ -377,8 +757,10 @@ class LocalScanAnalysisService {
       runs = _bestConsecutiveRuns(runs, smoothed, _analyteOrder.length);
     }
     if (runs.length != _analyteOrder.length) {
-      throw StateError(
-        'INVALID_IMAGE: Ten reliable reagent-pad regions were not found.',
+      throw ScanAnalysisFailure(
+        code: 'PAD_BOUNDARIES_UNCLEAR',
+        guidance:
+            'A strip-like region was found, but ten separate reagent pads could not be confirmed. Lay the strip flat on a plain background, reduce glare, tap to focus, and retake the photo.',
       );
     }
     return runs.map((run) => (run.start + run.end) / 2.0).toList();
@@ -511,7 +893,7 @@ class LocalScanAnalysisService {
   ) {
     runs.sort((a, b) => a.start.compareTo(b.start));
     var bestScore = -double.infinity;
-    var best = runs.take(count).toList();
+    List<_Run>? best;
     for (var start = 0; start <= runs.length - count; start++) {
       final window = runs.sublist(start, start + count);
       final centers = window.map((r) => (r.start + r.end) / 2.0).toList();
@@ -521,6 +903,11 @@ class LocalScanAnalysisService {
       }
       final gapMedian = _median(gaps);
       final gapCv = gapMedian <= 0 ? 999.0 : _stdDev(gaps) / gapMedian;
+      if (gapCv > 0.24 ||
+          gapMedian <= 0 ||
+          gaps.any((gap) => gap < gapMedian * .60 || gap > gapMedian * 1.40)) {
+        continue;
+      }
       final strength = _mean(
         window.map((r) => _mean(score.sublist(r.start, r.end + 1))).toList(),
       );
@@ -533,6 +920,9 @@ class LocalScanAnalysisService {
         bestScore = s;
         best = window;
       }
+    }
+    if (best == null) {
+      throw StateError('INVALID_IMAGE: No regular ten-pad sequence was found.');
     }
     return best;
   }
@@ -572,6 +962,21 @@ class LocalScanAnalysisService {
   void _validateReadableCapture(_FeatureExtraction extraction) {
     if (extraction.featuresByAnalyte.length != _analyteOrder.length) {
       throw StateError('INVALID_IMAGE: The full ten-pad strip was not found.');
+    }
+    final centers = [
+      for (final analyte in _analyteOrder)
+        extraction.padRois[analyte]!.top +
+            extraction.padRois[analyte]!.height / 2.0,
+    ];
+    final gaps = [
+      for (var i = 1; i < centers.length; i++) centers[i] - centers[i - 1],
+    ];
+    final medianGap = _median(gaps);
+    if (medianGap <= 0 ||
+        gaps.any((gap) => gap < medianGap * .60 || gap > medianGap * 1.40)) {
+      throw StateError(
+        'INVALID_IMAGE: A pad is missing or a background region was selected.',
+      );
     }
     if (extraction.padGapCv > 0.24) {
       throw StateError('INVALID_IMAGE: Reagent-pad spacing is inconsistent.');
@@ -654,9 +1059,11 @@ class LocalScanAnalysisService {
 Map<String, dynamic> _analyzeScanInBackground(
   String imagePath,
   String modelText,
+  String policyText,
 ) {
   final service = const LocalScanAnalysisService();
   final model = _ProductionModel.fromText(modelText);
+  final support = TrainingSupportPolicy.fromText(modelText, policyText);
   final imageBytes = File(imagePath).readAsBytesSync();
   final decoded = img.decodeImage(imageBytes);
   if (decoded == null) {
@@ -668,9 +1075,12 @@ Map<String, dynamic> _analyzeScanInBackground(
   final rows = <DipstickResultRow>[];
   final confidenceValues = <double>[];
   final confidenceByAnalyte = <String, double>{};
+  final distancesByAnalyte = <String, double>{};
 
   for (final analyte in _analyteOrder) {
     final prediction = model.predict(analyte, extraction.featuresByAnalyte);
+    support.validate(analyte, prediction.nearestDistance);
+    distancesByAnalyte[analyte] = prediction.nearestDistance;
     final displayLevel = _normalizeDisplayLevel(prediction.level);
     confidenceValues.add(prediction.confidence);
     confidenceByAnalyte[analyte] = prediction.confidence;
@@ -699,6 +1109,8 @@ Map<String, dynamic> _analyzeScanInBackground(
       status: 'complete',
       confidence: averageConfidence,
       analyteConfidences: confidenceByAnalyte,
+      supportCheckPassed: true,
+      nearestTrainingDistances: distancesByAnalyte,
       riskBucket: 'Complete',
       modelVersion: model.version,
       rows: rows,
@@ -706,7 +1118,7 @@ Map<String, dynamic> _analyzeScanInBackground(
       padsUnavailable:
           _analyteOrder.length - extraction.featuresByAnalyte.length,
     ).toJson()
-    ..['pipeline_version'] = 'android_markerless_json_knn_v1'
+    ..['pipeline_version'] = 'android_markerless_json_knn_v4_support_20261010'
     ..['feature_space'] = 'normalized_hsv'
     ..['localization'] = 'markerless_strip_v1'
     ..['orientation'] = extraction.variantName;
@@ -765,8 +1177,11 @@ class _ProductionModel {
     if (lowConfidence.isEmpty) return;
 
     final analyte = lowConfidence.first.key;
-    throw StateError(
-      'LOW_CONFIDENCE: $analyte result is low confidence. Please retake scan under better lighting.',
+    throw ScanAnalysisFailure(
+      code: 'LOW_CONFIDENCE',
+      guidance:
+          'All ten pads were located, but the $analyte pad could not be classified confidently. Retake under even lighting, with the strip in focus.',
+      padsDetected: _analyteOrder.length,
     );
   }
 }
@@ -830,6 +1245,10 @@ class _AnalyteModel {
       return const _Prediction(level: 'Unavailable', confidence: 0.0);
     }
     final transformed = _transform(observed);
+    if (transformed.any((v) => !v.isFinite) ||
+        trainVectors.any((v) => v.length != transformed.length)) {
+      throw StateError('Invalid model feature dimensions or values.');
+    }
     final distances = <_Neighbor>[];
     for (var i = 0; i < trainVectors.length; i++) {
       distances.add(
@@ -853,6 +1272,7 @@ class _AnalyteModel {
     return _Prediction(
       level: ranked.first.key,
       confidence: total <= 0 ? 0.0 : ranked.first.value / total,
+      nearestDistance: distances.first.distance,
     );
   }
 
@@ -967,7 +1387,12 @@ class _Neighbor {
 class _Prediction {
   final String level;
   final double confidence;
-  const _Prediction({required this.level, required this.confidence});
+  final double nearestDistance;
+  const _Prediction({
+    required this.level,
+    required this.confidence,
+    this.nearestDistance = double.infinity,
+  });
 }
 
 class _Run {

@@ -1,0 +1,169 @@
+{
+  "version": "1.5.1+17",
+  "generated_at": "2026-10-10T00:06:18.407000+00:00",
+  "status": "signed_QA_pilot_candidate_pending_native_security_and_device_acceptance",
+  "apk": {
+    "path": "output/device_pilot/2026-10-10/1.5.1+17/Uritect_v1.5.1+17_release.apk",
+    "bytes": 57273515,
+    "sha256": "2997501B02EAF5C1E812165E4B4BA080E9B58BE102D23366446ABCA034CC74CB"
+  },
+  "certificate_sha256": "15D1138DCE077ADA624A140B3A145343D1A48305FD0847E9002869E488F19D39",
+  "source_snapshot_sha256": "A0E3A6276D70A3DBD615B6D355AB9EF482A1A365E9F8B40DAA8DEAACBE7B7850",
+  "source_archive_sha256": "971421C7E72978041F78C45DA3B49038168525CD465BAF3910142510990574E0",
+  "checks": {
+    "flutter_test": {
+      "exit_code": 0,
+      "tests_passed": 122,
+      "evidence": "flutter_test.log",
+      "note": "Removed only an unused test import after the passing run; executable code unchanged."
+    },
+    "flutter_analyze": {
+      "exit_code": 0,
+      "evidence": "flutter_analyze.log"
+    },
+    "native_compile": {
+      "exit_code": 0,
+      "evidence": "native_compile.log"
+    },
+    "release_build": {
+      "exit_code": 0,
+      "evidence": "release_build.log",
+      "signed_APK_candidates_built": 1
+    },
+    "classifier_regression_evidence_reuse": {
+      "exit_code": 0,
+      "runtime_evaluation_rerun": false,
+      "evidence": "CLASSIFIER_REGRESSION_REUSE.json",
+      "note": "Model, classifier, assets, scan gates and runtime tool byte-identical to 1.5.0+16; prior 18-image regression retained with provenance."
+    }
+  },
+  "development_image_regression": {
+    "cases": 18,
+    "previously_accepted": 6,
+    "currently_accepted": 6,
+    "lost": [],
+    "changed_previously_accepted": [],
+    "newly_accepted": [],
+    "scope": "Retrospective development regression, not independent performance validation",
+    "evidence_status": "Retained previous 1.5.0+16 regression; not rerun. Classifier sources/assets/gates unchanged; see CLASSIFIER_REGRESSION_REUSE.json."
+  },
+  "pipeline": "android_markerless_json_knn_v4_support_20261010",
+  "production_model_changed": false,
+  "vote_confidence_threshold_changed": false,
+  "bayesian_values_changed": false,
+  "support_policy_status": "training-only engineering guard, not clinically validated",
+  "native_security_device_tests": "User confirms history unlock on RMX3933 after 1.5.1+17 update; remaining device acceptance matrix pending",
+  "clinical_validation": "Not established",
+  "files": [
+    {
+      "path": "docs/URITECT_SECURITY_AND_INPUT_REVIEW_2026-10-10.md",
+      "bytes": 10849,
+      "sha256": "857AC2B78F65369A0D952C9D8C85B8C42466FF04DF051E4F0ED5D13478304A6A"
+    },
+    {
+      "path": "output/device_pilot/2026-10-10/1.5.1+17/APK_IDENTITY.txt",
+      "bytes": 5975,
+      "sha256": "98245A1CC75D07806B0235E303BBCB4BA922D96055A849B8507CAB3562FD5884"
+    },
+    {
+      "path": "output/device_pilot/2026-10-10/1.5.1+17/APK_PERMISSIONS.txt",
+      "bytes": 532,
+      "sha256": "2DDE9EECBAD5340347D8E684C4E92A9EA23E3D882A9B3F5049C47AD5783E1E60"
+    },
+    {
+      "path": "output/device_pilot/2026-10-10/1.5.1+17/APK_SECURITY_MANIFEST.txt",
+      "bytes": 8163,
+      "sha256": "CE72A2DC5F52F348ADAC2EC8A0EA6AACD8D5B21F304EAFF0F8449DB276DC958D"
+    },
+    {
+      "path": "output/device_pilot/2026-10-10/1.5.1+17/AUTOMATED_CHECKS.json",
+      "bytes": 834,
+      "sha256": "5538E052A41EA56910FD4E023C66F5F7C3D7B47CBA72847103BA111EDA1E77EB"
+    },
+    {
+      "path": "output/device_pilot/2026-10-10/1.5.1+17/flutter_analyze.log",
+      "bytes": 202,
+      "sha256": "F0AAA7687E9B9724301DD50C498B304F2AB3D8A0844760BD56BAAA127F7E29CA"
+    },
+    {
+      "path": "output/device_pilot/2026-10-10/1.5.1+17/flutter_test.log",
+      "bytes": 44674,
+      "sha256": "892E222D53512C5B9F65684959CB70B5EAB64E6B3AF07B1FDCA110F3EC004E32"
+    },
+    {
+      "path": "output/device_pilot/2026-10-10/1.5.1+17/native_compile.log",
+      "bytes": 19822,
+      "sha256": "8B89DA8FFFA1951B95758BF67A772608A772FE5B4AA1C53C9BBE7DE9FFF5BD88"
+    },
+    {
+      "path": "output/device_pilot/2026-10-10/1.5.1+17/release_build.log",
+      "bytes": 8474,
+      "sha256": "0C2CB76C3E60CA65FB54544C31767C5B15F7119914AA2400BAD2BF337FCCE213"
+    },
+    {
+      "path": "output/device_pilot/2026-10-10/1.5.1+17/runtime_comparison.json",
+      "bytes": 246,
+      "sha256": "E18A98D692F384CD8CB6E378AA562EA9E68B24E089E25277AD7519D03FEAF99E"
+    },
+    {
+      "path": "output/device_pilot/2026-10-10/1.5.1+17/runtime_regression.json",
+      "bytes": 13872,
+      "sha256": "A3A5F051B39E46F920AB5E356FDBAF9A02BE3F08F54659056755160AB03E6F27"
+    },
+    {
+      "path": "output/device_pilot/2026-10-10/1.5.1+17/SOURCE_SNAPSHOT.json",
+      "bytes": 22448,
+      "sha256": "A0E3A6276D70A3DBD615B6D355AB9EF482A1A365E9F8B40DAA8DEAACBE7B7850"
+    },
+    {
+      "path": "output/device_pilot/2026-10-10/1.5.1+17/URITECT_SOURCE_SNAPSHOT.zip",
+      "bytes": 6185119,
+      "sha256": "971421C7E72978041F78C45DA3B49038168525CD465BAF3910142510990574E0"
+    },
+    {
+      "path": "pipeline/build_training_support_policy.py",
+      "bytes": 2511,
+      "sha256": "8C4A410441408D2B95E06919825AAEDF90EE8922F33CFE844E0738A109C0707D"
+    },
+    {
+      "path": "pipeline/test_training_support_policy.py",
+      "bytes": 2065,
+      "sha256": "52138A0FAFAEC7074A9AC6F951FE6FDB3C78F29472B3949183710C60E6836A64"
+    },
+    {
+      "path": "pipeline/verify_qa_pilot_build.py",
+      "bytes": 5831,
+      "sha256": "5F13A003D795012B263A28C5BA7C9A2AAC0CDD3B4470801891491B8BB9FCE45B"
+    },
+    {
+      "path": "output/device_pilot/2026-10-10/1.5.1+17/INSTALLATION.json",
+      "bytes": 665,
+      "sha256": "96CD0FA3209CF12DBEC26576E213A86236B1E0DC31EC95E29EA0A23235FBF7C1"
+    },
+    {
+      "path": "output/device_pilot/2026-10-10/1.5.1+17/CLASSIFIER_REGRESSION_REUSE.json",
+      "bytes": 770,
+      "sha256": "8DB910F07D57F5AF6698F2F2B72D2401DB1F5BF53EC842AFA6C1EB8253A42A27"
+    },
+    {
+      "path": "docs/URITECT_HISTORY_UNLOCK_FIX_2026-10-10.md",
+      "bytes": 3783,
+      "sha256": "F047B0698EAA0EA8B76A224595F1495DF699086D491E2D1377454B7DF952CD94"
+    },
+    {
+      "path": "output/device_pilot/2026-10-10/1.5.1+17/USER_REPORTED_UNLOCK.json",
+      "bytes": 267,
+      "sha256": "C6B0BDB03F720E4412D720BAFF6389D6AD687644E2D8C5C79DC12C70BE12C74F"
+    }
+  ],
+  "security_fix": "Prepare key before authentication; API30+ DEVICE_CREDENTIAL prompt; in-memory key authorization probe; clear failed/cancelled Flutter session; readable typed history errors.",
+  "installation": {
+    "device": "RMX3933",
+    "android": "16",
+    "installed_version": "1.5.1+17",
+    "installed_apk_hash_matches": true,
+    "launch_succeeded": true,
+    "history_unlock_and_migration": "History unlock confirmed by user; full migration/security matrix not yet completed",
+    "evidence": "INSTALLATION.json"
+  }
+}

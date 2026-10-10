@@ -1,0 +1,4103 @@
+{
+  "purpose": "retrospective development error review; not untouched test performance",
+  "model_version": "production_semiquant_knn_markerless_roi_topfix_v3_20260908",
+  "identity_status": "filename-inferred; not independently verified",
+  "selection_bias": "Configurations were selected using this split; results are not an independent model evaluation.",
+  "per_analyte": {
+    "Leukocytes": {
+      "n": 163,
+      "accuracy": 0.6809815950920245,
+      "macro_f1_supported_reference_classes": 0.4449638081217029,
+      "unsupported_reference_classes": [],
+      "class_metrics": {
+        "Neg": {
+          "tp": 91,
+          "fn": 8,
+          "fp": 38,
+          "tn": 26,
+          "positive_support": 99,
+          "negative_support": 64,
+          "sensitivity": 0.9191919191919192,
+          "specificity": 0.40625
+        },
+        "Trace 15": {
+          "tp": 16,
+          "fn": 32,
+          "fp": 13,
+          "tn": 102,
+          "positive_support": 48,
+          "negative_support": 115,
+          "sensitivity": 0.3333333333333333,
+          "specificity": 0.8869565217391304
+        },
+        "Small 70": {
+          "tp": 1,
+          "fn": 11,
+          "fp": 0,
+          "tn": 151,
+          "positive_support": 12,
+          "negative_support": 151,
+          "sensitivity": 0.08333333333333333,
+          "specificity": 1.0
+        },
+        "Moderate 125": {
+          "tp": 3,
+          "fn": 0,
+          "fp": 1,
+          "tn": 159,
+          "positive_support": 3,
+          "negative_support": 160,
+          "sensitivity": 1.0,
+          "specificity": 0.99375
+        },
+        "Large 500": {
+          "tp": 0,
+          "fn": 1,
+          "fp": 0,
+          "tn": 162,
+          "positive_support": 1,
+          "negative_support": 162,
+          "sensitivity": 0.0,
+          "specificity": 1.0
+        }
+      },
+      "confusion": {
+        "labels": [
+          "Neg",
+          "Trace 15",
+          "Small 70",
+          "Moderate 125",
+          "Large 500"
+        ],
+        "matrix": [
+          [
+            91,
+            8,
+            0,
+            0,
+            0
+          ],
+          [
+            32,
+            16,
+            0,
+            0,
+            0
+          ],
+          [
+            5,
+            5,
+            1,
+            1,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            3,
+            0
+          ],
+          [
+            1,
+            0,
+            0,
+            0,
+            0
+          ]
+        ]
+      },
+      "reference_label_thresholds": {
+        "female_le_small_or_higher": {
+          "tp": 5,
+          "fn": 11,
+          "fp": 0,
+          "tn": 147,
+          "positive_support": 16,
+          "negative_support": 147,
+          "sensitivity": 0.3125,
+          "specificity": 1.0,
+          "positive_levels": [
+            "Large 500",
+            "Moderate 125",
+            "Small 70"
+          ],
+          "uncertainty": {
+            "sensitivity": {
+              "provisional_support_groups": 10,
+              "ci95": [
+                0.10804093567251462,
+                0.6
+              ],
+              "defined_bootstrap_draws": 500,
+              "total_draws": 500,
+              "limitation": "CI withheld for fewer than two supporting identities or degenerate draws. Small/imbalanced cohorts and unverified identity preclude confirmatory inference.",
+              "method": "exploratory inferred-identity cluster percentile bootstrap"
+            },
+            "specificity": {
+              "provisional_support_groups": 113,
+              "ci95": null,
+              "defined_bootstrap_draws": 500,
+              "total_draws": 500,
+              "limitation": "CI withheld for fewer than two supporting identities or degenerate draws. Small/imbalanced cohorts and unverified identity preclude confirmatory inference.",
+              "method": "exploratory inferred-identity cluster percentile bootstrap"
+            }
+          }
+        },
+        "male_le_trace_or_higher": {
+          "tp": 26,
+          "fn": 38,
+          "fp": 8,
+          "tn": 91,
+          "positive_support": 64,
+          "negative_support": 99,
+          "sensitivity": 0.40625,
+          "specificity": 0.9191919191919192,
+          "positive_levels": [
+            "Large 500",
+            "Moderate 125",
+            "Small 70",
+            "Trace 15"
+          ],
+          "uncertainty": {
+            "sensitivity": {
+              "provisional_support_groups": 36,
+              "ci95": [
+                0.2796448087431694,
+                0.5142928685897435
+              ],
+              "defined_bootstrap_draws": 500,
+              "total_draws": 500,
+              "limitation": "CI withheld for fewer than two supporting identities or degenerate draws. Small/imbalanced cohorts and unverified identity preclude confirmatory inference.",
+              "method": "exploratory inferred-identity cluster percentile bootstrap"
+            },
+            "specificity": {
+              "provisional_support_groups": 87,
+              "ci95": [
+                0.8672654378839946,
+                0.968421052631579
+              ],
+              "defined_bootstrap_draws": 500,
+              "total_draws": 500,
+              "limitation": "CI withheld for fewer than two supporting identities or degenerate draws. Small/imbalanced cohorts and unverified identity preclude confirmatory inference.",
+              "method": "exploratory inferred-identity cluster percentile bootstrap"
+            }
+          }
+        },
+        "analytical_any_nonnegative": {
+          "tp": 26,
+          "fn": 38,
+          "fp": 8,
+          "tn": 91,
+          "positive_support": 64,
+          "negative_support": 99,
+          "sensitivity": 0.40625,
+          "specificity": 0.9191919191919192,
+          "positive_levels": [
+            "Large 500",
+            "Moderate 125",
+            "Small 70",
+            "Trace 15"
+          ],
+          "uncertainty": {
+            "sensitivity": {
+              "provisional_support_groups": 36,
+              "ci95": [
+                0.2796448087431694,
+                0.5142928685897435
+              ],
+              "defined_bootstrap_draws": 500,
+              "total_draws": 500,
+              "limitation": "CI withheld for fewer than two supporting identities or degenerate draws. Small/imbalanced cohorts and unverified identity preclude confirmatory inference.",
+              "method": "exploratory inferred-identity cluster percentile bootstrap"
+            },
+            "specificity": {
+              "provisional_support_groups": 87,
+              "ci95": [
+                0.8672654378839946,
+                0.968421052631579
+              ],
+              "defined_bootstrap_draws": 500,
+              "total_draws": 500,
+              "limitation": "CI withheld for fewer than two supporting identities or degenerate draws. Small/imbalanced cohorts and unverified identity preclude confirmatory inference.",
+              "method": "exploratory inferred-identity cluster percentile bootstrap"
+            }
+          }
+        }
+      },
+      "historical_split_related_identity_overlap": [
+        "LAUAAN_20260730|LAUAAN-P001",
+        "LAUAAN_20260730|LAUAAN-P003",
+        "LAUAAN_20260730|LAUAAN-P005",
+        "LAUAAN_20260730|LAUAAN-P012",
+        "LAUAAN_20260730|LAUAAN-P014",
+        "LAUAAN_20260730|LAUAAN-P015",
+        "LAUAAN_20260730|LAUAAN-P018",
+        "LAUAAN_20260730|LAUAAN-P019",
+        "LAUAAN_20260730|LAUAAN-P021",
+        "LAUAAN_20260730|LAUAAN-P026",
+        "LAUAAN_20260730|LAUAAN-P028",
+        "LAUAAN_20260730|LAUAAN-P029",
+        "LAUAAN_20260730|LAUAAN-P031",
+        "LAUAAN_20260730|LAUAAN-P032",
+        "LAUAAN_20260730|LAUAAN-P033",
+        "LAUAAN_20260730|LAUAAN-P034",
+        "LAUAAN_20260730|LAUAAN-P035",
+        "LAUAAN_20260730|LAUAAN-P037",
+        "LAUAAN_20260730|LAUAAN-P038",
+        "LAUAAN_20260730|LAUAAN-P043",
+        "LAUAAN_20260730|LAUAAN-P052",
+        "LAUAAN_20260730|LAUAAN-P053",
+        "LAUAAN_20260730|LAUAAN-P057",
+        "LAUAAN_20260730|LAUAAN-P058",
+        "LAUAAN_20260730|LAUAAN-P059",
+        "LAUAAN_20260730|LAUAAN-P063",
+        "LAUAAN_20260730|LAUAAN-P065",
+        "LAUAAN_20260730|LAUAAN-P067",
+        "LAUAAN_20260730|LAUAAN-P068",
+        "LAUAAN_20260730|LAUAAN-P070",
+        "LAUAAN_20260730|LAUAAN-P071",
+        "LAUAAN_20260730|LAUAAN-P076",
+        "LAUAAN_20260730|LAUAAN-P078",
+        "LAUAAN_20260730|LAUAAN-P085",
+        "LAUAAN_20260730|LAUAAN-P089",
+        "LAUAAN_20260730|LAUAAN-P091",
+        "LAUAAN_20260730|LAUAAN-P094",
+        "LAUAAN_20260730|LAUAAN-P095",
+        "LAUAAN_20260730|LAUAAN-P096",
+        "LAUAAN_20260730|LAUAAN-P098",
+        "LAUAAN_20260730|LAUAAN-P099",
+        "LAUAAN_20260730|LAUAAN-P103",
+        "LAUAAN_20260730|LAUAAN-P106",
+        "LAUAAN_20260730|LAUAAN-P108",
+        "LAUAAN_20260730|LAUAAN-P109",
+        "LAUAAN_20260730|LAUAAN-P112",
+        "LAUAAN_20260730|LAUAAN-P118",
+        "LAUAAN_20260730|LAUAAN-P123",
+        "LAUAAN_20260730|LAUAAN-P125",
+        "LAUAAN_20260730|LAUAAN-P126",
+        "LAUAAN_20260730|LAUAAN-P127",
+        "LAUAAN_20260730|LAUAAN-P131",
+        "LAUAAN_20260730|LAUAAN-P132",
+        "LAUAAN_20260730|LAUAAN-P133",
+        "LAUAAN_20260730|LAUAAN-P134",
+        "LAUAAN_20260730|LAUAAN-P136",
+        "LAUAAN_20260730|LAUAAN-P138",
+        "LAUAAN_20260730|LAUAAN-P142",
+        "LAUAAN_20260730|LAUAAN-P143",
+        "LAUAAN_20260730|LAUAAN-P145",
+        "LAUAAN_20260730|LAUAAN-P146",
+        "LAUAAN_20260730|LAUAAN-P148",
+        "LAUAAN_20260730|LAUAAN-P150",
+        "LAUAAN_20260730|LAUAAN-P151",
+        "LAUAAN_20260730|LAUAAN-P152",
+        "LAUAAN_20260730|LAUAAN-P154",
+        "LAUAAN_20260730|LAUAAN-P155",
+        "LAUAAN_20260730|LAUAAN-P164",
+        "LAUAAN_20260730|LAUAAN-P172",
+        "LAUAAN_20260730|LAUAAN-P173",
+        "LAUAAN_20260730|LAUAAN-P176",
+        "LAUAAN_20260730|LAUAAN-P183",
+        "LAUAAN_20260730|LAUAAN-P186",
+        "LAUAAN_20260730|LAUAAN-P196",
+        "LAUAAN_20260730|LAUAAN-P198",
+        "LAUAAN_20260730|LAUAAN-P201",
+        "LAUAAN_20260730|LAUAAN-P203",
+        "LAUAAN_20260730|LAUAAN-P207",
+        "LAUAAN_20260730|LAUAAN-P209",
+        "LAUAAN_20260730|LAUAAN-P210",
+        "LAUAAN_20260730|LAUAAN-P214",
+        "LAUAAN_20260730|LAUAAN-P220",
+        "LAUAAN_20260730|LAUAAN-P221",
+        "LAUAAN_20260730|LAUAAN-P222",
+        "LAUAAN_20260730|LAUAAN-P224",
+        "LAUAAN_20260730|LAUAAN-P227",
+        "LAUAAN_20260730|LAUAAN-P230",
+        "LAUAAN_20260730|LAUAAN-P236",
+        "LAUAAN_20260730|LAUAAN-P242",
+        "LAUAAN_20260730|LAUAAN-P244",
+        "LAUAAN_20260730|LAUAAN-P252",
+        "LAUAAN_20260730|LAUAAN-P255",
+        "LAUAAN_20260730|LAUAAN-P257",
+        "LAUAAN_20260730|LAUAAN-P259",
+        "LAUAAN_20260730|LAUAAN-P261"
+      ],
+      "feature_stage_abstention": {
+        "confidence_threshold": 0.45,
+        "accepted": 156,
+        "retakes": 7,
+        "retake_rate": 0.04294478527607362,
+        "accepted_scan_metrics": {
+          "n": 156,
+          "accuracy": 0.6794871794871795,
+          "macro_f1_supported_reference_classes": 0.40519480519480516,
+          "unsupported_reference_classes": [
+            "Moderate 125",
+            "Large 500"
+          ],
+          "class_metrics": {
+            "Neg": {
+              "tp": 90,
+              "fn": 8,
+              "fp": 37,
+              "tn": 21,
+              "positive_support": 98,
+              "negative_support": 58,
+              "sensitivity": 0.9183673469387755,
+              "specificity": 0.3620689655172414
+            },
+            "Trace 15": {
+              "tp": 16,
+              "fn": 32,
+              "fp": 13,
+              "tn": 95,
+              "positive_support": 48,
+              "negative_support": 108,
+              "sensitivity": 0.3333333333333333,
+              "specificity": 0.8796296296296297
+            },
+            "Small 70": {
+              "tp": 0,
+              "fn": 10,
+              "fp": 0,
+              "tn": 146,
+              "positive_support": 10,
+              "negative_support": 146,
+              "sensitivity": 0.0,
+              "specificity": 1.0
+            },
+            "Moderate 125": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 156,
+              "positive_support": 0,
+              "negative_support": 156,
+              "sensitivity": null,
+              "specificity": 1.0
+            },
+            "Large 500": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 156,
+              "positive_support": 0,
+              "negative_support": 156,
+              "sensitivity": null,
+              "specificity": 1.0
+            }
+          },
+          "confusion": {
+            "labels": [
+              "Neg",
+              "Trace 15",
+              "Small 70",
+              "Moderate 125",
+              "Large 500"
+            ],
+            "matrix": [
+              [
+                90,
+                8,
+                0,
+                0,
+                0
+              ],
+              [
+                32,
+                16,
+                0,
+                0,
+                0
+              ],
+              [
+                5,
+                5,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            ]
+          },
+          "reference_label_thresholds": {
+            "female_le_small_or_higher": {
+              "tp": 0,
+              "fn": 10,
+              "fp": 0,
+              "tn": 146,
+              "positive_support": 10,
+              "negative_support": 146,
+              "sensitivity": 0.0,
+              "specificity": 1.0,
+              "positive_levels": [
+                "Large 500",
+                "Moderate 125",
+                "Small 70"
+              ]
+            },
+            "male_le_trace_or_higher": {
+              "tp": 21,
+              "fn": 37,
+              "fp": 8,
+              "tn": 90,
+              "positive_support": 58,
+              "negative_support": 98,
+              "sensitivity": 0.3620689655172414,
+              "specificity": 0.9183673469387755,
+              "positive_levels": [
+                "Large 500",
+                "Moderate 125",
+                "Small 70",
+                "Trace 15"
+              ]
+            },
+            "analytical_any_nonnegative": {
+              "tp": 21,
+              "fn": 37,
+              "fp": 8,
+              "tn": 90,
+              "positive_support": 58,
+              "negative_support": 98,
+              "sensitivity": 0.3620689655172414,
+              "specificity": 0.9183673469387755,
+              "positive_levels": [
+                "Large 500",
+                "Moderate 125",
+                "Small 70",
+                "Trace 15"
+              ]
+            }
+          }
+        },
+        "limitation": "Reconstructed kNN vote confidence on extracted features only. Missing detection/timing/image failures are not represented; not measured app retake rate."
+      }
+    },
+    "Nitrite": {
+      "n": 163,
+      "accuracy": 0.9938650306748467,
+      "macro_f1_supported_reference_classes": 0.8317853457172342,
+      "unsupported_reference_classes": [],
+      "class_metrics": {
+        "Neg": {
+          "tp": 161,
+          "fn": 0,
+          "fp": 1,
+          "tn": 1,
+          "positive_support": 161,
+          "negative_support": 2,
+          "sensitivity": 1.0,
+          "specificity": 0.5
+        },
+        "Positive": {
+          "tp": 1,
+          "fn": 1,
+          "fp": 0,
+          "tn": 161,
+          "positive_support": 2,
+          "negative_support": 161,
+          "sensitivity": 0.5,
+          "specificity": 1.0
+        }
+      },
+      "confusion": {
+        "labels": [
+          "Neg",
+          "Positive"
+        ],
+        "matrix": [
+          [
+            161,
+            0
+          ],
+          [
+            1,
+            1
+          ]
+        ]
+      },
+      "reference_label_thresholds": {
+        "nitrite_positive": {
+          "tp": 1,
+          "fn": 1,
+          "fp": 0,
+          "tn": 161,
+          "positive_support": 2,
+          "negative_support": 161,
+          "sensitivity": 0.5,
+          "specificity": 1.0,
+          "positive_levels": [
+            "Positive"
+          ],
+          "uncertainty": {
+            "sensitivity": {
+              "provisional_support_groups": 2,
+              "ci95": [
+                0.0,
+                1.0
+              ],
+              "defined_bootstrap_draws": 423,
+              "total_draws": 500,
+              "limitation": "CI withheld for fewer than two supporting identities or degenerate draws. Small/imbalanced cohorts and unverified identity preclude confirmatory inference.",
+              "method": "exploratory inferred-identity cluster percentile bootstrap"
+            },
+            "specificity": {
+              "provisional_support_groups": 121,
+              "ci95": null,
+              "defined_bootstrap_draws": 500,
+              "total_draws": 500,
+              "limitation": "CI withheld for fewer than two supporting identities or degenerate draws. Small/imbalanced cohorts and unverified identity preclude confirmatory inference.",
+              "method": "exploratory inferred-identity cluster percentile bootstrap"
+            }
+          }
+        }
+      },
+      "historical_split_related_identity_overlap": [
+        "LAUAAN_20260730|LAUAAN-P001",
+        "LAUAAN_20260730|LAUAAN-P003",
+        "LAUAAN_20260730|LAUAAN-P005",
+        "LAUAAN_20260730|LAUAAN-P012",
+        "LAUAAN_20260730|LAUAAN-P014",
+        "LAUAAN_20260730|LAUAAN-P015",
+        "LAUAAN_20260730|LAUAAN-P018",
+        "LAUAAN_20260730|LAUAAN-P019",
+        "LAUAAN_20260730|LAUAAN-P021",
+        "LAUAAN_20260730|LAUAAN-P026",
+        "LAUAAN_20260730|LAUAAN-P028",
+        "LAUAAN_20260730|LAUAAN-P029",
+        "LAUAAN_20260730|LAUAAN-P031",
+        "LAUAAN_20260730|LAUAAN-P032",
+        "LAUAAN_20260730|LAUAAN-P033",
+        "LAUAAN_20260730|LAUAAN-P034",
+        "LAUAAN_20260730|LAUAAN-P035",
+        "LAUAAN_20260730|LAUAAN-P037",
+        "LAUAAN_20260730|LAUAAN-P038",
+        "LAUAAN_20260730|LAUAAN-P043",
+        "LAUAAN_20260730|LAUAAN-P052",
+        "LAUAAN_20260730|LAUAAN-P053",
+        "LAUAAN_20260730|LAUAAN-P057",
+        "LAUAAN_20260730|LAUAAN-P058",
+        "LAUAAN_20260730|LAUAAN-P059",
+        "LAUAAN_20260730|LAUAAN-P063",
+        "LAUAAN_20260730|LAUAAN-P065",
+        "LAUAAN_20260730|LAUAAN-P067",
+        "LAUAAN_20260730|LAUAAN-P068",
+        "LAUAAN_20260730|LAUAAN-P070",
+        "LAUAAN_20260730|LAUAAN-P071",
+        "LAUAAN_20260730|LAUAAN-P076",
+        "LAUAAN_20260730|LAUAAN-P078",
+        "LAUAAN_20260730|LAUAAN-P085",
+        "LAUAAN_20260730|LAUAAN-P089",
+        "LAUAAN_20260730|LAUAAN-P091",
+        "LAUAAN_20260730|LAUAAN-P094",
+        "LAUAAN_20260730|LAUAAN-P095",
+        "LAUAAN_20260730|LAUAAN-P096",
+        "LAUAAN_20260730|LAUAAN-P098",
+        "LAUAAN_20260730|LAUAAN-P099",
+        "LAUAAN_20260730|LAUAAN-P103",
+        "LAUAAN_20260730|LAUAAN-P106",
+        "LAUAAN_20260730|LAUAAN-P108",
+        "LAUAAN_20260730|LAUAAN-P109",
+        "LAUAAN_20260730|LAUAAN-P112",
+        "LAUAAN_20260730|LAUAAN-P118",
+        "LAUAAN_20260730|LAUAAN-P123",
+        "LAUAAN_20260730|LAUAAN-P125",
+        "LAUAAN_20260730|LAUAAN-P126",
+        "LAUAAN_20260730|LAUAAN-P127",
+        "LAUAAN_20260730|LAUAAN-P131",
+        "LAUAAN_20260730|LAUAAN-P132",
+        "LAUAAN_20260730|LAUAAN-P133",
+        "LAUAAN_20260730|LAUAAN-P134",
+        "LAUAAN_20260730|LAUAAN-P136",
+        "LAUAAN_20260730|LAUAAN-P138",
+        "LAUAAN_20260730|LAUAAN-P142",
+        "LAUAAN_20260730|LAUAAN-P143",
+        "LAUAAN_20260730|LAUAAN-P145",
+        "LAUAAN_20260730|LAUAAN-P146",
+        "LAUAAN_20260730|LAUAAN-P148",
+        "LAUAAN_20260730|LAUAAN-P150",
+        "LAUAAN_20260730|LAUAAN-P151",
+        "LAUAAN_20260730|LAUAAN-P152",
+        "LAUAAN_20260730|LAUAAN-P154",
+        "LAUAAN_20260730|LAUAAN-P155",
+        "LAUAAN_20260730|LAUAAN-P164",
+        "LAUAAN_20260730|LAUAAN-P172",
+        "LAUAAN_20260730|LAUAAN-P173",
+        "LAUAAN_20260730|LAUAAN-P176",
+        "LAUAAN_20260730|LAUAAN-P183",
+        "LAUAAN_20260730|LAUAAN-P186",
+        "LAUAAN_20260730|LAUAAN-P196",
+        "LAUAAN_20260730|LAUAAN-P198",
+        "LAUAAN_20260730|LAUAAN-P201",
+        "LAUAAN_20260730|LAUAAN-P203",
+        "LAUAAN_20260730|LAUAAN-P207",
+        "LAUAAN_20260730|LAUAAN-P209",
+        "LAUAAN_20260730|LAUAAN-P210",
+        "LAUAAN_20260730|LAUAAN-P214",
+        "LAUAAN_20260730|LAUAAN-P220",
+        "LAUAAN_20260730|LAUAAN-P221",
+        "LAUAAN_20260730|LAUAAN-P222",
+        "LAUAAN_20260730|LAUAAN-P224",
+        "LAUAAN_20260730|LAUAAN-P227",
+        "LAUAAN_20260730|LAUAAN-P230",
+        "LAUAAN_20260730|LAUAAN-P236",
+        "LAUAAN_20260730|LAUAAN-P242",
+        "LAUAAN_20260730|LAUAAN-P244",
+        "LAUAAN_20260730|LAUAAN-P252",
+        "LAUAAN_20260730|LAUAAN-P255",
+        "LAUAAN_20260730|LAUAAN-P257",
+        "LAUAAN_20260730|LAUAAN-P259",
+        "LAUAAN_20260730|LAUAAN-P261"
+      ],
+      "feature_stage_abstention": {
+        "confidence_threshold": 0.45,
+        "accepted": 163,
+        "retakes": 0,
+        "retake_rate": 0.0,
+        "accepted_scan_metrics": {
+          "n": 163,
+          "accuracy": 0.9938650306748467,
+          "macro_f1_supported_reference_classes": 0.8317853457172342,
+          "unsupported_reference_classes": [],
+          "class_metrics": {
+            "Neg": {
+              "tp": 161,
+              "fn": 0,
+              "fp": 1,
+              "tn": 1,
+              "positive_support": 161,
+              "negative_support": 2,
+              "sensitivity": 1.0,
+              "specificity": 0.5
+            },
+            "Positive": {
+              "tp": 1,
+              "fn": 1,
+              "fp": 0,
+              "tn": 161,
+              "positive_support": 2,
+              "negative_support": 161,
+              "sensitivity": 0.5,
+              "specificity": 1.0
+            }
+          },
+          "confusion": {
+            "labels": [
+              "Neg",
+              "Positive"
+            ],
+            "matrix": [
+              [
+                161,
+                0
+              ],
+              [
+                1,
+                1
+              ]
+            ]
+          },
+          "reference_label_thresholds": {
+            "nitrite_positive": {
+              "tp": 1,
+              "fn": 1,
+              "fp": 0,
+              "tn": 161,
+              "positive_support": 2,
+              "negative_support": 161,
+              "sensitivity": 0.5,
+              "specificity": 1.0,
+              "positive_levels": [
+                "Positive"
+              ]
+            }
+          }
+        },
+        "limitation": "Reconstructed kNN vote confidence on extracted features only. Missing detection/timing/image failures are not represented; not measured app retake rate."
+      }
+    },
+    "Urobilinogen": {
+      "n": 163,
+      "accuracy": 0.8282208588957055,
+      "macro_f1_supported_reference_classes": 0.6456521739130435,
+      "unsupported_reference_classes": [
+        "32",
+        "64",
+        "128"
+      ],
+      "class_metrics": {
+        "3.2": {
+          "tp": 126,
+          "fn": 5,
+          "fp": 23,
+          "tn": 9,
+          "positive_support": 131,
+          "negative_support": 32,
+          "sensitivity": 0.9618320610687023,
+          "specificity": 0.28125
+        },
+        "16": {
+          "tp": 9,
+          "fn": 23,
+          "fp": 5,
+          "tn": 126,
+          "positive_support": 32,
+          "negative_support": 131,
+          "sensitivity": 0.28125,
+          "specificity": 0.9618320610687023
+        },
+        "32": {
+          "tp": 0,
+          "fn": 0,
+          "fp": 0,
+          "tn": 163,
+          "positive_support": 0,
+          "negative_support": 163,
+          "sensitivity": null,
+          "specificity": 1.0
+        },
+        "64": {
+          "tp": 0,
+          "fn": 0,
+          "fp": 0,
+          "tn": 163,
+          "positive_support": 0,
+          "negative_support": 163,
+          "sensitivity": null,
+          "specificity": 1.0
+        },
+        "128": {
+          "tp": 0,
+          "fn": 0,
+          "fp": 0,
+          "tn": 163,
+          "positive_support": 0,
+          "negative_support": 163,
+          "sensitivity": null,
+          "specificity": 1.0
+        }
+      },
+      "confusion": {
+        "labels": [
+          "3.2",
+          "16",
+          "32",
+          "64",
+          "128"
+        ],
+        "matrix": [
+          [
+            126,
+            5,
+            0,
+            0,
+            0
+          ],
+          [
+            23,
+            9,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ]
+      },
+      "reference_label_thresholds": {
+        "analytical_above_baseline_category": {
+          "tp": 9,
+          "fn": 23,
+          "fp": 5,
+          "tn": 126,
+          "positive_support": 32,
+          "negative_support": 131,
+          "sensitivity": 0.28125,
+          "specificity": 0.9618320610687023,
+          "positive_levels": [
+            "128",
+            "16",
+            "32",
+            "64"
+          ],
+          "uncertainty": {
+            "sensitivity": {
+              "provisional_support_groups": 14,
+              "ci95": [
+                0.12691532258064517,
+                0.4265151515151514
+              ],
+              "defined_bootstrap_draws": 500,
+              "total_draws": 500,
+              "limitation": "CI withheld for fewer than two supporting identities or degenerate draws. Small/imbalanced cohorts and unverified identity preclude confirmatory inference.",
+              "method": "exploratory inferred-identity cluster percentile bootstrap"
+            },
+            "specificity": {
+              "provisional_support_groups": 109,
+              "ci95": [
+                0.9277565217391305,
+                0.9920333333333333
+              ],
+              "defined_bootstrap_draws": 500,
+              "total_draws": 500,
+              "limitation": "CI withheld for fewer than two supporting identities or degenerate draws. Small/imbalanced cohorts and unverified identity preclude confirmatory inference.",
+              "method": "exploratory inferred-identity cluster percentile bootstrap"
+            }
+          }
+        }
+      },
+      "historical_split_related_identity_overlap": [
+        "LAUAAN_20260730|LAUAAN-P001",
+        "LAUAAN_20260730|LAUAAN-P003",
+        "LAUAAN_20260730|LAUAAN-P005",
+        "LAUAAN_20260730|LAUAAN-P012",
+        "LAUAAN_20260730|LAUAAN-P014",
+        "LAUAAN_20260730|LAUAAN-P015",
+        "LAUAAN_20260730|LAUAAN-P018",
+        "LAUAAN_20260730|LAUAAN-P019",
+        "LAUAAN_20260730|LAUAAN-P021",
+        "LAUAAN_20260730|LAUAAN-P026",
+        "LAUAAN_20260730|LAUAAN-P028",
+        "LAUAAN_20260730|LAUAAN-P029",
+        "LAUAAN_20260730|LAUAAN-P031",
+        "LAUAAN_20260730|LAUAAN-P032",
+        "LAUAAN_20260730|LAUAAN-P033",
+        "LAUAAN_20260730|LAUAAN-P034",
+        "LAUAAN_20260730|LAUAAN-P035",
+        "LAUAAN_20260730|LAUAAN-P037",
+        "LAUAAN_20260730|LAUAAN-P038",
+        "LAUAAN_20260730|LAUAAN-P043",
+        "LAUAAN_20260730|LAUAAN-P052",
+        "LAUAAN_20260730|LAUAAN-P053",
+        "LAUAAN_20260730|LAUAAN-P057",
+        "LAUAAN_20260730|LAUAAN-P058",
+        "LAUAAN_20260730|LAUAAN-P059",
+        "LAUAAN_20260730|LAUAAN-P063",
+        "LAUAAN_20260730|LAUAAN-P065",
+        "LAUAAN_20260730|LAUAAN-P067",
+        "LAUAAN_20260730|LAUAAN-P068",
+        "LAUAAN_20260730|LAUAAN-P070",
+        "LAUAAN_20260730|LAUAAN-P071",
+        "LAUAAN_20260730|LAUAAN-P076",
+        "LAUAAN_20260730|LAUAAN-P078",
+        "LAUAAN_20260730|LAUAAN-P085",
+        "LAUAAN_20260730|LAUAAN-P089",
+        "LAUAAN_20260730|LAUAAN-P091",
+        "LAUAAN_20260730|LAUAAN-P094",
+        "LAUAAN_20260730|LAUAAN-P095",
+        "LAUAAN_20260730|LAUAAN-P096",
+        "LAUAAN_20260730|LAUAAN-P098",
+        "LAUAAN_20260730|LAUAAN-P099",
+        "LAUAAN_20260730|LAUAAN-P103",
+        "LAUAAN_20260730|LAUAAN-P106",
+        "LAUAAN_20260730|LAUAAN-P108",
+        "LAUAAN_20260730|LAUAAN-P109",
+        "LAUAAN_20260730|LAUAAN-P112",
+        "LAUAAN_20260730|LAUAAN-P118",
+        "LAUAAN_20260730|LAUAAN-P123",
+        "LAUAAN_20260730|LAUAAN-P125",
+        "LAUAAN_20260730|LAUAAN-P126",
+        "LAUAAN_20260730|LAUAAN-P127",
+        "LAUAAN_20260730|LAUAAN-P131",
+        "LAUAAN_20260730|LAUAAN-P132",
+        "LAUAAN_20260730|LAUAAN-P133",
+        "LAUAAN_20260730|LAUAAN-P134",
+        "LAUAAN_20260730|LAUAAN-P136",
+        "LAUAAN_20260730|LAUAAN-P138",
+        "LAUAAN_20260730|LAUAAN-P142",
+        "LAUAAN_20260730|LAUAAN-P143",
+        "LAUAAN_20260730|LAUAAN-P145",
+        "LAUAAN_20260730|LAUAAN-P146",
+        "LAUAAN_20260730|LAUAAN-P148",
+        "LAUAAN_20260730|LAUAAN-P150",
+        "LAUAAN_20260730|LAUAAN-P151",
+        "LAUAAN_20260730|LAUAAN-P152",
+        "LAUAAN_20260730|LAUAAN-P154",
+        "LAUAAN_20260730|LAUAAN-P155",
+        "LAUAAN_20260730|LAUAAN-P164",
+        "LAUAAN_20260730|LAUAAN-P172",
+        "LAUAAN_20260730|LAUAAN-P173",
+        "LAUAAN_20260730|LAUAAN-P176",
+        "LAUAAN_20260730|LAUAAN-P183",
+        "LAUAAN_20260730|LAUAAN-P186",
+        "LAUAAN_20260730|LAUAAN-P196",
+        "LAUAAN_20260730|LAUAAN-P198",
+        "LAUAAN_20260730|LAUAAN-P201",
+        "LAUAAN_20260730|LAUAAN-P203",
+        "LAUAAN_20260730|LAUAAN-P207",
+        "LAUAAN_20260730|LAUAAN-P209",
+        "LAUAAN_20260730|LAUAAN-P210",
+        "LAUAAN_20260730|LAUAAN-P214",
+        "LAUAAN_20260730|LAUAAN-P220",
+        "LAUAAN_20260730|LAUAAN-P221",
+        "LAUAAN_20260730|LAUAAN-P222",
+        "LAUAAN_20260730|LAUAAN-P224",
+        "LAUAAN_20260730|LAUAAN-P227",
+        "LAUAAN_20260730|LAUAAN-P230",
+        "LAUAAN_20260730|LAUAAN-P236",
+        "LAUAAN_20260730|LAUAAN-P242",
+        "LAUAAN_20260730|LAUAAN-P244",
+        "LAUAAN_20260730|LAUAAN-P252",
+        "LAUAAN_20260730|LAUAAN-P255",
+        "LAUAAN_20260730|LAUAAN-P257",
+        "LAUAAN_20260730|LAUAAN-P259",
+        "LAUAAN_20260730|LAUAAN-P261"
+      ],
+      "feature_stage_abstention": {
+        "confidence_threshold": 0.45,
+        "accepted": 163,
+        "retakes": 0,
+        "retake_rate": 0.0,
+        "accepted_scan_metrics": {
+          "n": 163,
+          "accuracy": 0.8282208588957055,
+          "macro_f1_supported_reference_classes": 0.6456521739130435,
+          "unsupported_reference_classes": [
+            "32",
+            "64",
+            "128"
+          ],
+          "class_metrics": {
+            "3.2": {
+              "tp": 126,
+              "fn": 5,
+              "fp": 23,
+              "tn": 9,
+              "positive_support": 131,
+              "negative_support": 32,
+              "sensitivity": 0.9618320610687023,
+              "specificity": 0.28125
+            },
+            "16": {
+              "tp": 9,
+              "fn": 23,
+              "fp": 5,
+              "tn": 126,
+              "positive_support": 32,
+              "negative_support": 131,
+              "sensitivity": 0.28125,
+              "specificity": 0.9618320610687023
+            },
+            "32": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 163,
+              "positive_support": 0,
+              "negative_support": 163,
+              "sensitivity": null,
+              "specificity": 1.0
+            },
+            "64": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 163,
+              "positive_support": 0,
+              "negative_support": 163,
+              "sensitivity": null,
+              "specificity": 1.0
+            },
+            "128": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 163,
+              "positive_support": 0,
+              "negative_support": 163,
+              "sensitivity": null,
+              "specificity": 1.0
+            }
+          },
+          "confusion": {
+            "labels": [
+              "3.2",
+              "16",
+              "32",
+              "64",
+              "128"
+            ],
+            "matrix": [
+              [
+                126,
+                5,
+                0,
+                0,
+                0
+              ],
+              [
+                23,
+                9,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            ]
+          },
+          "reference_label_thresholds": {
+            "analytical_above_baseline_category": {
+              "tp": 9,
+              "fn": 23,
+              "fp": 5,
+              "tn": 126,
+              "positive_support": 32,
+              "negative_support": 131,
+              "sensitivity": 0.28125,
+              "specificity": 0.9618320610687023,
+              "positive_levels": [
+                "128",
+                "16",
+                "32",
+                "64"
+              ]
+            }
+          }
+        },
+        "limitation": "Reconstructed kNN vote confidence on extracted features only. Missing detection/timing/image failures are not represented; not measured app retake rate."
+      }
+    },
+    "Protein": {
+      "n": 163,
+      "accuracy": 0.8773006134969326,
+      "macro_f1_supported_reference_classes": 0.2593044539353264,
+      "unsupported_reference_classes": [
+        "3.0"
+      ],
+      "class_metrics": {
+        "Neg": {
+          "tp": 139,
+          "fn": 1,
+          "fp": 19,
+          "tn": 4,
+          "positive_support": 140,
+          "negative_support": 23,
+          "sensitivity": 0.9928571428571429,
+          "specificity": 0.17391304347826086
+        },
+        "Trace": {
+          "tp": 4,
+          "fn": 13,
+          "fp": 1,
+          "tn": 145,
+          "positive_support": 17,
+          "negative_support": 146,
+          "sensitivity": 0.23529411764705882,
+          "specificity": 0.9931506849315068
+        },
+        "0.3": {
+          "tp": 0,
+          "fn": 4,
+          "fp": 0,
+          "tn": 159,
+          "positive_support": 4,
+          "negative_support": 159,
+          "sensitivity": 0.0,
+          "specificity": 1.0
+        },
+        "1.0": {
+          "tp": 0,
+          "fn": 1,
+          "fp": 0,
+          "tn": 162,
+          "positive_support": 1,
+          "negative_support": 162,
+          "sensitivity": 0.0,
+          "specificity": 1.0
+        },
+        "3.0": {
+          "tp": 0,
+          "fn": 0,
+          "fp": 0,
+          "tn": 163,
+          "positive_support": 0,
+          "negative_support": 163,
+          "sensitivity": null,
+          "specificity": 1.0
+        },
+        ">=20.0": {
+          "tp": 0,
+          "fn": 1,
+          "fp": 0,
+          "tn": 162,
+          "positive_support": 1,
+          "negative_support": 162,
+          "sensitivity": 0.0,
+          "specificity": 1.0
+        }
+      },
+      "confusion": {
+        "labels": [
+          "Neg",
+          "Trace",
+          "0.3",
+          "1.0",
+          "3.0",
+          ">=20.0"
+        ],
+        "matrix": [
+          [
+            139,
+            1,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            13,
+            4,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ]
+      },
+      "reference_label_thresholds": {
+        "renal_protein_0_3_or_higher": {
+          "tp": 0,
+          "fn": 6,
+          "fp": 0,
+          "tn": 157,
+          "positive_support": 6,
+          "negative_support": 157,
+          "sensitivity": 0.0,
+          "specificity": 1.0,
+          "positive_levels": [
+            "0.3",
+            "1.0",
+            "3.0",
+            ">=20.0"
+          ],
+          "uncertainty": {
+            "sensitivity": {
+              "provisional_support_groups": 4,
+              "ci95": null,
+              "defined_bootstrap_draws": 491,
+              "total_draws": 500,
+              "limitation": "CI withheld for fewer than two supporting identities or degenerate draws. Small/imbalanced cohorts and unverified identity preclude confirmatory inference.",
+              "method": "exploratory inferred-identity cluster percentile bootstrap"
+            },
+            "specificity": {
+              "provisional_support_groups": 119,
+              "ci95": null,
+              "defined_bootstrap_draws": 500,
+              "total_draws": 500,
+              "limitation": "CI withheld for fewer than two supporting identities or degenerate draws. Small/imbalanced cohorts and unverified identity preclude confirmatory inference.",
+              "method": "exploratory inferred-identity cluster percentile bootstrap"
+            }
+          }
+        },
+        "analytical_any_nonnegative": {
+          "tp": 4,
+          "fn": 19,
+          "fp": 1,
+          "tn": 139,
+          "positive_support": 23,
+          "negative_support": 140,
+          "sensitivity": 0.17391304347826086,
+          "specificity": 0.9928571428571429,
+          "positive_levels": [
+            "0.3",
+            "1.0",
+            "3.0",
+            ">=20.0",
+            "Trace"
+          ],
+          "uncertainty": {
+            "sensitivity": {
+              "provisional_support_groups": 16,
+              "ci95": [
+                0.0,
+                0.3901570048309178
+              ],
+              "defined_bootstrap_draws": 500,
+              "total_draws": 500,
+              "limitation": "CI withheld for fewer than two supporting identities or degenerate draws. Small/imbalanced cohorts and unverified identity preclude confirmatory inference.",
+              "method": "exploratory inferred-identity cluster percentile bootstrap"
+            },
+            "specificity": {
+              "provisional_support_groups": 107,
+              "ci95": [
+                0.9770992366412213,
+                1.0
+              ],
+              "defined_bootstrap_draws": 500,
+              "total_draws": 500,
+              "limitation": "CI withheld for fewer than two supporting identities or degenerate draws. Small/imbalanced cohorts and unverified identity preclude confirmatory inference.",
+              "method": "exploratory inferred-identity cluster percentile bootstrap"
+            }
+          }
+        }
+      },
+      "historical_split_related_identity_overlap": [
+        "LAUAAN_20260730|LAUAAN-P001",
+        "LAUAAN_20260730|LAUAAN-P003",
+        "LAUAAN_20260730|LAUAAN-P005",
+        "LAUAAN_20260730|LAUAAN-P012",
+        "LAUAAN_20260730|LAUAAN-P014",
+        "LAUAAN_20260730|LAUAAN-P015",
+        "LAUAAN_20260730|LAUAAN-P018",
+        "LAUAAN_20260730|LAUAAN-P019",
+        "LAUAAN_20260730|LAUAAN-P021",
+        "LAUAAN_20260730|LAUAAN-P026",
+        "LAUAAN_20260730|LAUAAN-P028",
+        "LAUAAN_20260730|LAUAAN-P029",
+        "LAUAAN_20260730|LAUAAN-P031",
+        "LAUAAN_20260730|LAUAAN-P032",
+        "LAUAAN_20260730|LAUAAN-P033",
+        "LAUAAN_20260730|LAUAAN-P034",
+        "LAUAAN_20260730|LAUAAN-P035",
+        "LAUAAN_20260730|LAUAAN-P037",
+        "LAUAAN_20260730|LAUAAN-P038",
+        "LAUAAN_20260730|LAUAAN-P043",
+        "LAUAAN_20260730|LAUAAN-P052",
+        "LAUAAN_20260730|LAUAAN-P053",
+        "LAUAAN_20260730|LAUAAN-P057",
+        "LAUAAN_20260730|LAUAAN-P058",
+        "LAUAAN_20260730|LAUAAN-P059",
+        "LAUAAN_20260730|LAUAAN-P063",
+        "LAUAAN_20260730|LAUAAN-P065",
+        "LAUAAN_20260730|LAUAAN-P067",
+        "LAUAAN_20260730|LAUAAN-P068",
+        "LAUAAN_20260730|LAUAAN-P070",
+        "LAUAAN_20260730|LAUAAN-P071",
+        "LAUAAN_20260730|LAUAAN-P076",
+        "LAUAAN_20260730|LAUAAN-P078",
+        "LAUAAN_20260730|LAUAAN-P085",
+        "LAUAAN_20260730|LAUAAN-P089",
+        "LAUAAN_20260730|LAUAAN-P091",
+        "LAUAAN_20260730|LAUAAN-P094",
+        "LAUAAN_20260730|LAUAAN-P095",
+        "LAUAAN_20260730|LAUAAN-P096",
+        "LAUAAN_20260730|LAUAAN-P098",
+        "LAUAAN_20260730|LAUAAN-P099",
+        "LAUAAN_20260730|LAUAAN-P103",
+        "LAUAAN_20260730|LAUAAN-P106",
+        "LAUAAN_20260730|LAUAAN-P108",
+        "LAUAAN_20260730|LAUAAN-P109",
+        "LAUAAN_20260730|LAUAAN-P112",
+        "LAUAAN_20260730|LAUAAN-P118",
+        "LAUAAN_20260730|LAUAAN-P123",
+        "LAUAAN_20260730|LAUAAN-P125",
+        "LAUAAN_20260730|LAUAAN-P126",
+        "LAUAAN_20260730|LAUAAN-P127",
+        "LAUAAN_20260730|LAUAAN-P131",
+        "LAUAAN_20260730|LAUAAN-P132",
+        "LAUAAN_20260730|LAUAAN-P133",
+        "LAUAAN_20260730|LAUAAN-P134",
+        "LAUAAN_20260730|LAUAAN-P136",
+        "LAUAAN_20260730|LAUAAN-P138",
+        "LAUAAN_20260730|LAUAAN-P142",
+        "LAUAAN_20260730|LAUAAN-P143",
+        "LAUAAN_20260730|LAUAAN-P145",
+        "LAUAAN_20260730|LAUAAN-P146",
+        "LAUAAN_20260730|LAUAAN-P148",
+        "LAUAAN_20260730|LAUAAN-P150",
+        "LAUAAN_20260730|LAUAAN-P151",
+        "LAUAAN_20260730|LAUAAN-P152",
+        "LAUAAN_20260730|LAUAAN-P154",
+        "LAUAAN_20260730|LAUAAN-P155",
+        "LAUAAN_20260730|LAUAAN-P164",
+        "LAUAAN_20260730|LAUAAN-P172",
+        "LAUAAN_20260730|LAUAAN-P173",
+        "LAUAAN_20260730|LAUAAN-P176",
+        "LAUAAN_20260730|LAUAAN-P183",
+        "LAUAAN_20260730|LAUAAN-P186",
+        "LAUAAN_20260730|LAUAAN-P196",
+        "LAUAAN_20260730|LAUAAN-P198",
+        "LAUAAN_20260730|LAUAAN-P201",
+        "LAUAAN_20260730|LAUAAN-P203",
+        "LAUAAN_20260730|LAUAAN-P207",
+        "LAUAAN_20260730|LAUAAN-P209",
+        "LAUAAN_20260730|LAUAAN-P210",
+        "LAUAAN_20260730|LAUAAN-P214",
+        "LAUAAN_20260730|LAUAAN-P220",
+        "LAUAAN_20260730|LAUAAN-P221",
+        "LAUAAN_20260730|LAUAAN-P222",
+        "LAUAAN_20260730|LAUAAN-P224",
+        "LAUAAN_20260730|LAUAAN-P227",
+        "LAUAAN_20260730|LAUAAN-P230",
+        "LAUAAN_20260730|LAUAAN-P236",
+        "LAUAAN_20260730|LAUAAN-P242",
+        "LAUAAN_20260730|LAUAAN-P244",
+        "LAUAAN_20260730|LAUAAN-P252",
+        "LAUAAN_20260730|LAUAAN-P255",
+        "LAUAAN_20260730|LAUAAN-P257",
+        "LAUAAN_20260730|LAUAAN-P259",
+        "LAUAAN_20260730|LAUAAN-P261"
+      ],
+      "feature_stage_abstention": {
+        "confidence_threshold": 0.45,
+        "accepted": 162,
+        "retakes": 1,
+        "retake_rate": 0.006134969325153374,
+        "accepted_scan_metrics": {
+          "n": 162,
+          "accuracy": 0.8827160493827161,
+          "macro_f1_supported_reference_classes": 0.32491582491582494,
+          "unsupported_reference_classes": [
+            "3.0",
+            ">=20.0"
+          ],
+          "class_metrics": {
+            "Neg": {
+              "tp": 139,
+              "fn": 1,
+              "fp": 18,
+              "tn": 4,
+              "positive_support": 140,
+              "negative_support": 22,
+              "sensitivity": 0.9928571428571429,
+              "specificity": 0.18181818181818182
+            },
+            "Trace": {
+              "tp": 4,
+              "fn": 13,
+              "fp": 1,
+              "tn": 144,
+              "positive_support": 17,
+              "negative_support": 145,
+              "sensitivity": 0.23529411764705882,
+              "specificity": 0.993103448275862
+            },
+            "0.3": {
+              "tp": 0,
+              "fn": 4,
+              "fp": 0,
+              "tn": 158,
+              "positive_support": 4,
+              "negative_support": 158,
+              "sensitivity": 0.0,
+              "specificity": 1.0
+            },
+            "1.0": {
+              "tp": 0,
+              "fn": 1,
+              "fp": 0,
+              "tn": 161,
+              "positive_support": 1,
+              "negative_support": 161,
+              "sensitivity": 0.0,
+              "specificity": 1.0
+            },
+            "3.0": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 162,
+              "positive_support": 0,
+              "negative_support": 162,
+              "sensitivity": null,
+              "specificity": 1.0
+            },
+            ">=20.0": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 162,
+              "positive_support": 0,
+              "negative_support": 162,
+              "sensitivity": null,
+              "specificity": 1.0
+            }
+          },
+          "confusion": {
+            "labels": [
+              "Neg",
+              "Trace",
+              "0.3",
+              "1.0",
+              "3.0",
+              ">=20.0"
+            ],
+            "matrix": [
+              [
+                139,
+                1,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                13,
+                4,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                4,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                1,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            ]
+          },
+          "reference_label_thresholds": {
+            "renal_protein_0_3_or_higher": {
+              "tp": 0,
+              "fn": 5,
+              "fp": 0,
+              "tn": 157,
+              "positive_support": 5,
+              "negative_support": 157,
+              "sensitivity": 0.0,
+              "specificity": 1.0,
+              "positive_levels": [
+                "0.3",
+                "1.0",
+                "3.0",
+                ">=20.0"
+              ]
+            },
+            "analytical_any_nonnegative": {
+              "tp": 4,
+              "fn": 18,
+              "fp": 1,
+              "tn": 139,
+              "positive_support": 22,
+              "negative_support": 140,
+              "sensitivity": 0.18181818181818182,
+              "specificity": 0.9928571428571429,
+              "positive_levels": [
+                "0.3",
+                "1.0",
+                "3.0",
+                ">=20.0",
+                "Trace"
+              ]
+            }
+          }
+        },
+        "limitation": "Reconstructed kNN vote confidence on extracted features only. Missing detection/timing/image failures are not represented; not measured app retake rate."
+      }
+    },
+    "pH": {
+      "n": 163,
+      "accuracy": 0.8159509202453987,
+      "macro_f1_supported_reference_classes": 0.5749142179799115,
+      "unsupported_reference_classes": [
+        "8.0"
+      ],
+      "class_metrics": {
+        "5.0": {
+          "tp": 122,
+          "fn": 4,
+          "fp": 26,
+          "tn": 11,
+          "positive_support": 126,
+          "negative_support": 37,
+          "sensitivity": 0.9682539682539683,
+          "specificity": 0.2972972972972973
+        },
+        "6.0": {
+          "tp": 7,
+          "fn": 21,
+          "fp": 4,
+          "tn": 131,
+          "positive_support": 28,
+          "negative_support": 135,
+          "sensitivity": 0.25,
+          "specificity": 0.9703703703703703
+        },
+        "6.5": {
+          "tp": 0,
+          "fn": 1,
+          "fp": 0,
+          "tn": 162,
+          "positive_support": 1,
+          "negative_support": 162,
+          "sensitivity": 0.0,
+          "specificity": 1.0
+        },
+        "7.0": {
+          "tp": 1,
+          "fn": 3,
+          "fp": 0,
+          "tn": 159,
+          "positive_support": 4,
+          "negative_support": 159,
+          "sensitivity": 0.25,
+          "specificity": 1.0
+        },
+        "7.5": {
+          "tp": 2,
+          "fn": 1,
+          "fp": 0,
+          "tn": 160,
+          "positive_support": 3,
+          "negative_support": 160,
+          "sensitivity": 0.6666666666666666,
+          "specificity": 1.0
+        },
+        "8.0": {
+          "tp": 0,
+          "fn": 0,
+          "fp": 0,
+          "tn": 163,
+          "positive_support": 0,
+          "negative_support": 163,
+          "sensitivity": null,
+          "specificity": 1.0
+        },
+        "8.5": {
+          "tp": 1,
+          "fn": 0,
+          "fp": 0,
+          "tn": 162,
+          "positive_support": 1,
+          "negative_support": 162,
+          "sensitivity": 1.0,
+          "specificity": 1.0
+        }
+      },
+      "confusion": {
+        "labels": [
+          "5.0",
+          "6.0",
+          "6.5",
+          "7.0",
+          "7.5",
+          "8.0",
+          "8.5"
+        ],
+        "matrix": [
+          [
+            122,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            21,
+            7,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            3,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            0,
+            0,
+            2,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ]
+        ]
+      },
+      "reference_label_thresholds": {},
+      "historical_split_related_identity_overlap": [
+        "LAUAAN_20260730|LAUAAN-P001",
+        "LAUAAN_20260730|LAUAAN-P003",
+        "LAUAAN_20260730|LAUAAN-P005",
+        "LAUAAN_20260730|LAUAAN-P012",
+        "LAUAAN_20260730|LAUAAN-P014",
+        "LAUAAN_20260730|LAUAAN-P015",
+        "LAUAAN_20260730|LAUAAN-P018",
+        "LAUAAN_20260730|LAUAAN-P019",
+        "LAUAAN_20260730|LAUAAN-P021",
+        "LAUAAN_20260730|LAUAAN-P026",
+        "LAUAAN_20260730|LAUAAN-P028",
+        "LAUAAN_20260730|LAUAAN-P029",
+        "LAUAAN_20260730|LAUAAN-P031",
+        "LAUAAN_20260730|LAUAAN-P032",
+        "LAUAAN_20260730|LAUAAN-P033",
+        "LAUAAN_20260730|LAUAAN-P034",
+        "LAUAAN_20260730|LAUAAN-P035",
+        "LAUAAN_20260730|LAUAAN-P037",
+        "LAUAAN_20260730|LAUAAN-P038",
+        "LAUAAN_20260730|LAUAAN-P043",
+        "LAUAAN_20260730|LAUAAN-P052",
+        "LAUAAN_20260730|LAUAAN-P053",
+        "LAUAAN_20260730|LAUAAN-P057",
+        "LAUAAN_20260730|LAUAAN-P058",
+        "LAUAAN_20260730|LAUAAN-P059",
+        "LAUAAN_20260730|LAUAAN-P063",
+        "LAUAAN_20260730|LAUAAN-P065",
+        "LAUAAN_20260730|LAUAAN-P067",
+        "LAUAAN_20260730|LAUAAN-P068",
+        "LAUAAN_20260730|LAUAAN-P070",
+        "LAUAAN_20260730|LAUAAN-P071",
+        "LAUAAN_20260730|LAUAAN-P076",
+        "LAUAAN_20260730|LAUAAN-P078",
+        "LAUAAN_20260730|LAUAAN-P085",
+        "LAUAAN_20260730|LAUAAN-P089",
+        "LAUAAN_20260730|LAUAAN-P091",
+        "LAUAAN_20260730|LAUAAN-P094",
+        "LAUAAN_20260730|LAUAAN-P095",
+        "LAUAAN_20260730|LAUAAN-P096",
+        "LAUAAN_20260730|LAUAAN-P098",
+        "LAUAAN_20260730|LAUAAN-P099",
+        "LAUAAN_20260730|LAUAAN-P103",
+        "LAUAAN_20260730|LAUAAN-P106",
+        "LAUAAN_20260730|LAUAAN-P108",
+        "LAUAAN_20260730|LAUAAN-P109",
+        "LAUAAN_20260730|LAUAAN-P112",
+        "LAUAAN_20260730|LAUAAN-P118",
+        "LAUAAN_20260730|LAUAAN-P123",
+        "LAUAAN_20260730|LAUAAN-P125",
+        "LAUAAN_20260730|LAUAAN-P126",
+        "LAUAAN_20260730|LAUAAN-P127",
+        "LAUAAN_20260730|LAUAAN-P131",
+        "LAUAAN_20260730|LAUAAN-P132",
+        "LAUAAN_20260730|LAUAAN-P133",
+        "LAUAAN_20260730|LAUAAN-P134",
+        "LAUAAN_20260730|LAUAAN-P136",
+        "LAUAAN_20260730|LAUAAN-P138",
+        "LAUAAN_20260730|LAUAAN-P142",
+        "LAUAAN_20260730|LAUAAN-P143",
+        "LAUAAN_20260730|LAUAAN-P145",
+        "LAUAAN_20260730|LAUAAN-P146",
+        "LAUAAN_20260730|LAUAAN-P148",
+        "LAUAAN_20260730|LAUAAN-P150",
+        "LAUAAN_20260730|LAUAAN-P151",
+        "LAUAAN_20260730|LAUAAN-P152",
+        "LAUAAN_20260730|LAUAAN-P154",
+        "LAUAAN_20260730|LAUAAN-P155",
+        "LAUAAN_20260730|LAUAAN-P164",
+        "LAUAAN_20260730|LAUAAN-P172",
+        "LAUAAN_20260730|LAUAAN-P173",
+        "LAUAAN_20260730|LAUAAN-P176",
+        "LAUAAN_20260730|LAUAAN-P183",
+        "LAUAAN_20260730|LAUAAN-P186",
+        "LAUAAN_20260730|LAUAAN-P196",
+        "LAUAAN_20260730|LAUAAN-P198",
+        "LAUAAN_20260730|LAUAAN-P201",
+        "LAUAAN_20260730|LAUAAN-P203",
+        "LAUAAN_20260730|LAUAAN-P207",
+        "LAUAAN_20260730|LAUAAN-P209",
+        "LAUAAN_20260730|LAUAAN-P210",
+        "LAUAAN_20260730|LAUAAN-P214",
+        "LAUAAN_20260730|LAUAAN-P220",
+        "LAUAAN_20260730|LAUAAN-P221",
+        "LAUAAN_20260730|LAUAAN-P222",
+        "LAUAAN_20260730|LAUAAN-P224",
+        "LAUAAN_20260730|LAUAAN-P227",
+        "LAUAAN_20260730|LAUAAN-P230",
+        "LAUAAN_20260730|LAUAAN-P236",
+        "LAUAAN_20260730|LAUAAN-P242",
+        "LAUAAN_20260730|LAUAAN-P244",
+        "LAUAAN_20260730|LAUAAN-P252",
+        "LAUAAN_20260730|LAUAAN-P255",
+        "LAUAAN_20260730|LAUAAN-P257",
+        "LAUAAN_20260730|LAUAAN-P259",
+        "LAUAAN_20260730|LAUAAN-P261"
+      ],
+      "feature_stage_abstention": {
+        "confidence_threshold": 0.45,
+        "accepted": 157,
+        "retakes": 6,
+        "retake_rate": 0.03680981595092025,
+        "accepted_scan_metrics": {
+          "n": 157,
+          "accuracy": 0.8152866242038217,
+          "macro_f1_supported_reference_classes": 0.42723942723942726,
+          "unsupported_reference_classes": [
+            "8.0",
+            "8.5"
+          ],
+          "class_metrics": {
+            "5.0": {
+              "tp": 122,
+              "fn": 4,
+              "fp": 25,
+              "tn": 6,
+              "positive_support": 126,
+              "negative_support": 31,
+              "sensitivity": 0.9682539682539683,
+              "specificity": 0.1935483870967742
+            },
+            "6.0": {
+              "tp": 4,
+              "fn": 21,
+              "fp": 4,
+              "tn": 128,
+              "positive_support": 25,
+              "negative_support": 132,
+              "sensitivity": 0.16,
+              "specificity": 0.9696969696969697
+            },
+            "6.5": {
+              "tp": 0,
+              "fn": 1,
+              "fp": 0,
+              "tn": 156,
+              "positive_support": 1,
+              "negative_support": 156,
+              "sensitivity": 0.0,
+              "specificity": 1.0
+            },
+            "7.0": {
+              "tp": 0,
+              "fn": 3,
+              "fp": 0,
+              "tn": 154,
+              "positive_support": 3,
+              "negative_support": 154,
+              "sensitivity": 0.0,
+              "specificity": 1.0
+            },
+            "7.5": {
+              "tp": 2,
+              "fn": 0,
+              "fp": 0,
+              "tn": 155,
+              "positive_support": 2,
+              "negative_support": 155,
+              "sensitivity": 1.0,
+              "specificity": 1.0
+            },
+            "8.0": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 157,
+              "positive_support": 0,
+              "negative_support": 157,
+              "sensitivity": null,
+              "specificity": 1.0
+            },
+            "8.5": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 157,
+              "positive_support": 0,
+              "negative_support": 157,
+              "sensitivity": null,
+              "specificity": 1.0
+            }
+          },
+          "confusion": {
+            "labels": [
+              "5.0",
+              "6.0",
+              "6.5",
+              "7.0",
+              "7.5",
+              "8.0",
+              "8.5"
+            ],
+            "matrix": [
+              [
+                122,
+                4,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                21,
+                4,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                3,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                2,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            ]
+          },
+          "reference_label_thresholds": {}
+        },
+        "limitation": "Reconstructed kNN vote confidence on extracted features only. Missing detection/timing/image failures are not represented; not measured app retake rate."
+      }
+    },
+    "Blood": {
+      "n": 163,
+      "accuracy": 0.9325153374233128,
+      "macro_f1_supported_reference_classes": 0.9069493521790342,
+      "unsupported_reference_classes": [
+        "Hemolyzed 10",
+        "Small 25"
+      ],
+      "class_metrics": {
+        "Neg": {
+          "tp": 136,
+          "fn": 3,
+          "fp": 8,
+          "tn": 16,
+          "positive_support": 139,
+          "negative_support": 24,
+          "sensitivity": 0.9784172661870504,
+          "specificity": 0.6666666666666666
+        },
+        "Non-hemolyzed 10": {
+          "tp": 11,
+          "fn": 8,
+          "fp": 3,
+          "tn": 141,
+          "positive_support": 19,
+          "negative_support": 144,
+          "sensitivity": 0.5789473684210527,
+          "specificity": 0.9791666666666666
+        },
+        "Hemolyzed 10": {
+          "tp": 0,
+          "fn": 0,
+          "fp": 0,
+          "tn": 163,
+          "positive_support": 0,
+          "negative_support": 163,
+          "sensitivity": null,
+          "specificity": 1.0
+        },
+        "Small 25": {
+          "tp": 0,
+          "fn": 0,
+          "fp": 0,
+          "tn": 163,
+          "positive_support": 0,
+          "negative_support": 163,
+          "sensitivity": null,
+          "specificity": 1.0
+        },
+        "Moderate 80": {
+          "tp": 2,
+          "fn": 0,
+          "fp": 0,
+          "tn": 161,
+          "positive_support": 2,
+          "negative_support": 161,
+          "sensitivity": 1.0,
+          "specificity": 1.0
+        },
+        "Large 200": {
+          "tp": 3,
+          "fn": 0,
+          "fp": 0,
+          "tn": 160,
+          "positive_support": 3,
+          "negative_support": 160,
+          "sensitivity": 1.0,
+          "specificity": 1.0
+        }
+      },
+      "confusion": {
+        "labels": [
+          "Neg",
+          "Non-hemolyzed 10",
+          "Hemolyzed 10",
+          "Small 25",
+          "Moderate 80",
+          "Large 200"
+        ],
+        "matrix": [
+          [
+            136,
+            3,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            8,
+            11,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            2,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            3
+          ]
+        ]
+      },
+      "reference_label_thresholds": {
+        "female_blood_study_positive": {
+          "tp": 5,
+          "fn": 0,
+          "fp": 0,
+          "tn": 158,
+          "positive_support": 5,
+          "negative_support": 158,
+          "sensitivity": 1.0,
+          "specificity": 1.0,
+          "positive_levels": [
+            "Hemolyzed 10",
+            "Large 200",
+            "Moderate 80",
+            "Small 25"
+          ],
+          "uncertainty": {
+            "sensitivity": {
+              "provisional_support_groups": 4,
+              "ci95": null,
+              "defined_bootstrap_draws": 493,
+              "total_draws": 500,
+              "limitation": "CI withheld for fewer than two supporting identities or degenerate draws. Small/imbalanced cohorts and unverified identity preclude confirmatory inference.",
+              "method": "exploratory inferred-identity cluster percentile bootstrap"
+            },
+            "specificity": {
+              "provisional_support_groups": 119,
+              "ci95": null,
+              "defined_bootstrap_draws": 500,
+              "total_draws": 500,
+              "limitation": "CI withheld for fewer than two supporting identities or degenerate draws. Small/imbalanced cohorts and unverified identity preclude confirmatory inference.",
+              "method": "exploratory inferred-identity cluster percentile bootstrap"
+            }
+          }
+        },
+        "analytical_any_nonnegative": {
+          "tp": 16,
+          "fn": 8,
+          "fp": 3,
+          "tn": 136,
+          "positive_support": 24,
+          "negative_support": 139,
+          "sensitivity": 0.6666666666666666,
+          "specificity": 0.9784172661870504,
+          "positive_levels": [
+            "Hemolyzed 10",
+            "Large 200",
+            "Moderate 80",
+            "Non-hemolyzed 10",
+            "Small 25"
+          ],
+          "uncertainty": {
+            "sensitivity": {
+              "provisional_support_groups": 17,
+              "ci95": [
+                0.463974358974359,
+                0.8432307692307691
+              ],
+              "defined_bootstrap_draws": 500,
+              "total_draws": 500,
+              "limitation": "CI withheld for fewer than two supporting identities or degenerate draws. Small/imbalanced cohorts and unverified identity preclude confirmatory inference.",
+              "method": "exploratory inferred-identity cluster percentile bootstrap"
+            },
+            "specificity": {
+              "provisional_support_groups": 106,
+              "ci95": [
+                0.948905109489051,
+                1.0
+              ],
+              "defined_bootstrap_draws": 500,
+              "total_draws": 500,
+              "limitation": "CI withheld for fewer than two supporting identities or degenerate draws. Small/imbalanced cohorts and unverified identity preclude confirmatory inference.",
+              "method": "exploratory inferred-identity cluster percentile bootstrap"
+            }
+          }
+        }
+      },
+      "historical_split_related_identity_overlap": [
+        "LAUAAN_20260730|LAUAAN-P001",
+        "LAUAAN_20260730|LAUAAN-P003",
+        "LAUAAN_20260730|LAUAAN-P005",
+        "LAUAAN_20260730|LAUAAN-P012",
+        "LAUAAN_20260730|LAUAAN-P014",
+        "LAUAAN_20260730|LAUAAN-P015",
+        "LAUAAN_20260730|LAUAAN-P018",
+        "LAUAAN_20260730|LAUAAN-P019",
+        "LAUAAN_20260730|LAUAAN-P021",
+        "LAUAAN_20260730|LAUAAN-P026",
+        "LAUAAN_20260730|LAUAAN-P028",
+        "LAUAAN_20260730|LAUAAN-P029",
+        "LAUAAN_20260730|LAUAAN-P031",
+        "LAUAAN_20260730|LAUAAN-P032",
+        "LAUAAN_20260730|LAUAAN-P033",
+        "LAUAAN_20260730|LAUAAN-P034",
+        "LAUAAN_20260730|LAUAAN-P035",
+        "LAUAAN_20260730|LAUAAN-P037",
+        "LAUAAN_20260730|LAUAAN-P038",
+        "LAUAAN_20260730|LAUAAN-P043",
+        "LAUAAN_20260730|LAUAAN-P052",
+        "LAUAAN_20260730|LAUAAN-P053",
+        "LAUAAN_20260730|LAUAAN-P057",
+        "LAUAAN_20260730|LAUAAN-P058",
+        "LAUAAN_20260730|LAUAAN-P059",
+        "LAUAAN_20260730|LAUAAN-P063",
+        "LAUAAN_20260730|LAUAAN-P065",
+        "LAUAAN_20260730|LAUAAN-P067",
+        "LAUAAN_20260730|LAUAAN-P068",
+        "LAUAAN_20260730|LAUAAN-P070",
+        "LAUAAN_20260730|LAUAAN-P071",
+        "LAUAAN_20260730|LAUAAN-P076",
+        "LAUAAN_20260730|LAUAAN-P078",
+        "LAUAAN_20260730|LAUAAN-P085",
+        "LAUAAN_20260730|LAUAAN-P089",
+        "LAUAAN_20260730|LAUAAN-P091",
+        "LAUAAN_20260730|LAUAAN-P094",
+        "LAUAAN_20260730|LAUAAN-P095",
+        "LAUAAN_20260730|LAUAAN-P096",
+        "LAUAAN_20260730|LAUAAN-P098",
+        "LAUAAN_20260730|LAUAAN-P099",
+        "LAUAAN_20260730|LAUAAN-P103",
+        "LAUAAN_20260730|LAUAAN-P106",
+        "LAUAAN_20260730|LAUAAN-P108",
+        "LAUAAN_20260730|LAUAAN-P109",
+        "LAUAAN_20260730|LAUAAN-P112",
+        "LAUAAN_20260730|LAUAAN-P118",
+        "LAUAAN_20260730|LAUAAN-P123",
+        "LAUAAN_20260730|LAUAAN-P125",
+        "LAUAAN_20260730|LAUAAN-P126",
+        "LAUAAN_20260730|LAUAAN-P127",
+        "LAUAAN_20260730|LAUAAN-P131",
+        "LAUAAN_20260730|LAUAAN-P132",
+        "LAUAAN_20260730|LAUAAN-P133",
+        "LAUAAN_20260730|LAUAAN-P134",
+        "LAUAAN_20260730|LAUAAN-P136",
+        "LAUAAN_20260730|LAUAAN-P138",
+        "LAUAAN_20260730|LAUAAN-P142",
+        "LAUAAN_20260730|LAUAAN-P143",
+        "LAUAAN_20260730|LAUAAN-P145",
+        "LAUAAN_20260730|LAUAAN-P146",
+        "LAUAAN_20260730|LAUAAN-P148",
+        "LAUAAN_20260730|LAUAAN-P150",
+        "LAUAAN_20260730|LAUAAN-P151",
+        "LAUAAN_20260730|LAUAAN-P152",
+        "LAUAAN_20260730|LAUAAN-P154",
+        "LAUAAN_20260730|LAUAAN-P155",
+        "LAUAAN_20260730|LAUAAN-P164",
+        "LAUAAN_20260730|LAUAAN-P172",
+        "LAUAAN_20260730|LAUAAN-P173",
+        "LAUAAN_20260730|LAUAAN-P176",
+        "LAUAAN_20260730|LAUAAN-P183",
+        "LAUAAN_20260730|LAUAAN-P186",
+        "LAUAAN_20260730|LAUAAN-P196",
+        "LAUAAN_20260730|LAUAAN-P198",
+        "LAUAAN_20260730|LAUAAN-P201",
+        "LAUAAN_20260730|LAUAAN-P203",
+        "LAUAAN_20260730|LAUAAN-P207",
+        "LAUAAN_20260730|LAUAAN-P209",
+        "LAUAAN_20260730|LAUAAN-P210",
+        "LAUAAN_20260730|LAUAAN-P214",
+        "LAUAAN_20260730|LAUAAN-P220",
+        "LAUAAN_20260730|LAUAAN-P221",
+        "LAUAAN_20260730|LAUAAN-P222",
+        "LAUAAN_20260730|LAUAAN-P224",
+        "LAUAAN_20260730|LAUAAN-P227",
+        "LAUAAN_20260730|LAUAAN-P230",
+        "LAUAAN_20260730|LAUAAN-P236",
+        "LAUAAN_20260730|LAUAAN-P242",
+        "LAUAAN_20260730|LAUAAN-P244",
+        "LAUAAN_20260730|LAUAAN-P252",
+        "LAUAAN_20260730|LAUAAN-P255",
+        "LAUAAN_20260730|LAUAAN-P257",
+        "LAUAAN_20260730|LAUAAN-P259",
+        "LAUAAN_20260730|LAUAAN-P261"
+      ],
+      "feature_stage_abstention": {
+        "confidence_threshold": 0.45,
+        "accepted": 162,
+        "retakes": 1,
+        "retake_rate": 0.006134969325153374,
+        "accepted_scan_metrics": {
+          "n": 162,
+          "accuracy": 0.9320987654320988,
+          "macro_f1_supported_reference_classes": 0.9069493521790342,
+          "unsupported_reference_classes": [
+            "Hemolyzed 10",
+            "Small 25"
+          ],
+          "class_metrics": {
+            "Neg": {
+              "tp": 136,
+              "fn": 3,
+              "fp": 8,
+              "tn": 15,
+              "positive_support": 139,
+              "negative_support": 23,
+              "sensitivity": 0.9784172661870504,
+              "specificity": 0.6521739130434783
+            },
+            "Non-hemolyzed 10": {
+              "tp": 11,
+              "fn": 8,
+              "fp": 3,
+              "tn": 140,
+              "positive_support": 19,
+              "negative_support": 143,
+              "sensitivity": 0.5789473684210527,
+              "specificity": 0.9790209790209791
+            },
+            "Hemolyzed 10": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 162,
+              "positive_support": 0,
+              "negative_support": 162,
+              "sensitivity": null,
+              "specificity": 1.0
+            },
+            "Small 25": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 162,
+              "positive_support": 0,
+              "negative_support": 162,
+              "sensitivity": null,
+              "specificity": 1.0
+            },
+            "Moderate 80": {
+              "tp": 1,
+              "fn": 0,
+              "fp": 0,
+              "tn": 161,
+              "positive_support": 1,
+              "negative_support": 161,
+              "sensitivity": 1.0,
+              "specificity": 1.0
+            },
+            "Large 200": {
+              "tp": 3,
+              "fn": 0,
+              "fp": 0,
+              "tn": 159,
+              "positive_support": 3,
+              "negative_support": 159,
+              "sensitivity": 1.0,
+              "specificity": 1.0
+            }
+          },
+          "confusion": {
+            "labels": [
+              "Neg",
+              "Non-hemolyzed 10",
+              "Hemolyzed 10",
+              "Small 25",
+              "Moderate 80",
+              "Large 200"
+            ],
+            "matrix": [
+              [
+                136,
+                3,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                8,
+                11,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                1,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                3
+              ]
+            ]
+          },
+          "reference_label_thresholds": {
+            "female_blood_study_positive": {
+              "tp": 4,
+              "fn": 0,
+              "fp": 0,
+              "tn": 158,
+              "positive_support": 4,
+              "negative_support": 158,
+              "sensitivity": 1.0,
+              "specificity": 1.0,
+              "positive_levels": [
+                "Hemolyzed 10",
+                "Large 200",
+                "Moderate 80",
+                "Small 25"
+              ]
+            },
+            "analytical_any_nonnegative": {
+              "tp": 15,
+              "fn": 8,
+              "fp": 3,
+              "tn": 136,
+              "positive_support": 23,
+              "negative_support": 139,
+              "sensitivity": 0.6521739130434783,
+              "specificity": 0.9784172661870504,
+              "positive_levels": [
+                "Hemolyzed 10",
+                "Large 200",
+                "Moderate 80",
+                "Non-hemolyzed 10",
+                "Small 25"
+              ]
+            }
+          }
+        },
+        "limitation": "Reconstructed kNN vote confidence on extracted features only. Missing detection/timing/image failures are not represented; not measured app retake rate."
+      }
+    },
+    "Specific Gravity": {
+      "n": 163,
+      "accuracy": 0.588957055214724,
+      "macro_f1_supported_reference_classes": 0.5556588199590254,
+      "unsupported_reference_classes": [
+        "1.000"
+      ],
+      "class_metrics": {
+        "1.000": {
+          "tp": 0,
+          "fn": 0,
+          "fp": 0,
+          "tn": 163,
+          "positive_support": 0,
+          "negative_support": 163,
+          "sensitivity": null,
+          "specificity": 1.0
+        },
+        "1.005": {
+          "tp": 5,
+          "fn": 11,
+          "fp": 1,
+          "tn": 146,
+          "positive_support": 16,
+          "negative_support": 147,
+          "sensitivity": 0.3125,
+          "specificity": 0.9931972789115646
+        },
+        "1.010": {
+          "tp": 17,
+          "fn": 4,
+          "fp": 18,
+          "tn": 124,
+          "positive_support": 21,
+          "negative_support": 142,
+          "sensitivity": 0.8095238095238095,
+          "specificity": 0.8732394366197183
+        },
+        "1.015": {
+          "tp": 11,
+          "fn": 16,
+          "fp": 10,
+          "tn": 126,
+          "positive_support": 27,
+          "negative_support": 136,
+          "sensitivity": 0.4074074074074074,
+          "specificity": 0.9264705882352942
+        },
+        "1.020": {
+          "tp": 9,
+          "fn": 14,
+          "fp": 6,
+          "tn": 134,
+          "positive_support": 23,
+          "negative_support": 140,
+          "sensitivity": 0.391304347826087,
+          "specificity": 0.9571428571428572
+        },
+        "1.025": {
+          "tp": 22,
+          "fn": 20,
+          "fp": 19,
+          "tn": 102,
+          "positive_support": 42,
+          "negative_support": 121,
+          "sensitivity": 0.5238095238095238,
+          "specificity": 0.8429752066115702
+        },
+        "1.030": {
+          "tp": 32,
+          "fn": 2,
+          "fp": 13,
+          "tn": 116,
+          "positive_support": 34,
+          "negative_support": 129,
+          "sensitivity": 0.9411764705882353,
+          "specificity": 0.8992248062015504
+        }
+      },
+      "confusion": {
+        "labels": [
+          "1.000",
+          "1.005",
+          "1.010",
+          "1.015",
+          "1.020",
+          "1.025",
+          "1.030"
+        ],
+        "matrix": [
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            5,
+            5,
+            4,
+            0,
+            1,
+            1
+          ],
+          [
+            0,
+            1,
+            17,
+            1,
+            0,
+            1,
+            1
+          ],
+          [
+            0,
+            0,
+            9,
+            11,
+            1,
+            5,
+            1
+          ],
+          [
+            0,
+            0,
+            2,
+            1,
+            9,
+            10,
+            1
+          ],
+          [
+            0,
+            0,
+            2,
+            4,
+            5,
+            22,
+            9
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            2,
+            32
+          ]
+        ]
+      },
+      "reference_label_thresholds": {},
+      "historical_split_related_identity_overlap": [
+        "LAUAAN_20260730|LAUAAN-P001",
+        "LAUAAN_20260730|LAUAAN-P003",
+        "LAUAAN_20260730|LAUAAN-P005",
+        "LAUAAN_20260730|LAUAAN-P012",
+        "LAUAAN_20260730|LAUAAN-P014",
+        "LAUAAN_20260730|LAUAAN-P015",
+        "LAUAAN_20260730|LAUAAN-P018",
+        "LAUAAN_20260730|LAUAAN-P019",
+        "LAUAAN_20260730|LAUAAN-P021",
+        "LAUAAN_20260730|LAUAAN-P026",
+        "LAUAAN_20260730|LAUAAN-P028",
+        "LAUAAN_20260730|LAUAAN-P029",
+        "LAUAAN_20260730|LAUAAN-P031",
+        "LAUAAN_20260730|LAUAAN-P032",
+        "LAUAAN_20260730|LAUAAN-P033",
+        "LAUAAN_20260730|LAUAAN-P034",
+        "LAUAAN_20260730|LAUAAN-P035",
+        "LAUAAN_20260730|LAUAAN-P037",
+        "LAUAAN_20260730|LAUAAN-P038",
+        "LAUAAN_20260730|LAUAAN-P043",
+        "LAUAAN_20260730|LAUAAN-P052",
+        "LAUAAN_20260730|LAUAAN-P053",
+        "LAUAAN_20260730|LAUAAN-P057",
+        "LAUAAN_20260730|LAUAAN-P058",
+        "LAUAAN_20260730|LAUAAN-P059",
+        "LAUAAN_20260730|LAUAAN-P063",
+        "LAUAAN_20260730|LAUAAN-P065",
+        "LAUAAN_20260730|LAUAAN-P067",
+        "LAUAAN_20260730|LAUAAN-P068",
+        "LAUAAN_20260730|LAUAAN-P070",
+        "LAUAAN_20260730|LAUAAN-P071",
+        "LAUAAN_20260730|LAUAAN-P076",
+        "LAUAAN_20260730|LAUAAN-P078",
+        "LAUAAN_20260730|LAUAAN-P085",
+        "LAUAAN_20260730|LAUAAN-P089",
+        "LAUAAN_20260730|LAUAAN-P091",
+        "LAUAAN_20260730|LAUAAN-P094",
+        "LAUAAN_20260730|LAUAAN-P095",
+        "LAUAAN_20260730|LAUAAN-P096",
+        "LAUAAN_20260730|LAUAAN-P098",
+        "LAUAAN_20260730|LAUAAN-P099",
+        "LAUAAN_20260730|LAUAAN-P103",
+        "LAUAAN_20260730|LAUAAN-P106",
+        "LAUAAN_20260730|LAUAAN-P108",
+        "LAUAAN_20260730|LAUAAN-P109",
+        "LAUAAN_20260730|LAUAAN-P112",
+        "LAUAAN_20260730|LAUAAN-P118",
+        "LAUAAN_20260730|LAUAAN-P123",
+        "LAUAAN_20260730|LAUAAN-P125",
+        "LAUAAN_20260730|LAUAAN-P126",
+        "LAUAAN_20260730|LAUAAN-P127",
+        "LAUAAN_20260730|LAUAAN-P131",
+        "LAUAAN_20260730|LAUAAN-P132",
+        "LAUAAN_20260730|LAUAAN-P133",
+        "LAUAAN_20260730|LAUAAN-P134",
+        "LAUAAN_20260730|LAUAAN-P136",
+        "LAUAAN_20260730|LAUAAN-P138",
+        "LAUAAN_20260730|LAUAAN-P142",
+        "LAUAAN_20260730|LAUAAN-P143",
+        "LAUAAN_20260730|LAUAAN-P145",
+        "LAUAAN_20260730|LAUAAN-P146",
+        "LAUAAN_20260730|LAUAAN-P148",
+        "LAUAAN_20260730|LAUAAN-P150",
+        "LAUAAN_20260730|LAUAAN-P151",
+        "LAUAAN_20260730|LAUAAN-P152",
+        "LAUAAN_20260730|LAUAAN-P154",
+        "LAUAAN_20260730|LAUAAN-P155",
+        "LAUAAN_20260730|LAUAAN-P164",
+        "LAUAAN_20260730|LAUAAN-P172",
+        "LAUAAN_20260730|LAUAAN-P173",
+        "LAUAAN_20260730|LAUAAN-P176",
+        "LAUAAN_20260730|LAUAAN-P183",
+        "LAUAAN_20260730|LAUAAN-P186",
+        "LAUAAN_20260730|LAUAAN-P196",
+        "LAUAAN_20260730|LAUAAN-P198",
+        "LAUAAN_20260730|LAUAAN-P201",
+        "LAUAAN_20260730|LAUAAN-P203",
+        "LAUAAN_20260730|LAUAAN-P207",
+        "LAUAAN_20260730|LAUAAN-P209",
+        "LAUAAN_20260730|LAUAAN-P210",
+        "LAUAAN_20260730|LAUAAN-P214",
+        "LAUAAN_20260730|LAUAAN-P220",
+        "LAUAAN_20260730|LAUAAN-P221",
+        "LAUAAN_20260730|LAUAAN-P222",
+        "LAUAAN_20260730|LAUAAN-P224",
+        "LAUAAN_20260730|LAUAAN-P227",
+        "LAUAAN_20260730|LAUAAN-P230",
+        "LAUAAN_20260730|LAUAAN-P236",
+        "LAUAAN_20260730|LAUAAN-P242",
+        "LAUAAN_20260730|LAUAAN-P244",
+        "LAUAAN_20260730|LAUAAN-P252",
+        "LAUAAN_20260730|LAUAAN-P255",
+        "LAUAAN_20260730|LAUAAN-P257",
+        "LAUAAN_20260730|LAUAAN-P259",
+        "LAUAAN_20260730|LAUAAN-P261"
+      ],
+      "feature_stage_abstention": {
+        "confidence_threshold": 0.45,
+        "accepted": 132,
+        "retakes": 31,
+        "retake_rate": 0.1901840490797546,
+        "accepted_scan_metrics": {
+          "n": 132,
+          "accuracy": 0.6287878787878788,
+          "macro_f1_supported_reference_classes": 0.5574522271272709,
+          "unsupported_reference_classes": [
+            "1.000"
+          ],
+          "class_metrics": {
+            "1.000": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 132,
+              "positive_support": 0,
+              "negative_support": 132,
+              "sensitivity": null,
+              "specificity": 1.0
+            },
+            "1.005": {
+              "tp": 5,
+              "fn": 8,
+              "fp": 1,
+              "tn": 118,
+              "positive_support": 13,
+              "negative_support": 119,
+              "sensitivity": 0.38461538461538464,
+              "specificity": 0.9915966386554622
+            },
+            "1.010": {
+              "tp": 15,
+              "fn": 3,
+              "fp": 16,
+              "tn": 98,
+              "positive_support": 18,
+              "negative_support": 114,
+              "sensitivity": 0.8333333333333334,
+              "specificity": 0.8596491228070176
+            },
+            "1.015": {
+              "tp": 11,
+              "fn": 11,
+              "fp": 7,
+              "tn": 103,
+              "positive_support": 22,
+              "negative_support": 110,
+              "sensitivity": 0.5,
+              "specificity": 0.9363636363636364
+            },
+            "1.020": {
+              "tp": 2,
+              "fn": 11,
+              "fp": 3,
+              "tn": 116,
+              "positive_support": 13,
+              "negative_support": 119,
+              "sensitivity": 0.15384615384615385,
+              "specificity": 0.9747899159663865
+            },
+            "1.025": {
+              "tp": 19,
+              "fn": 15,
+              "fp": 12,
+              "tn": 86,
+              "positive_support": 34,
+              "negative_support": 98,
+              "sensitivity": 0.5588235294117647,
+              "specificity": 0.8775510204081632
+            },
+            "1.030": {
+              "tp": 31,
+              "fn": 1,
+              "fp": 10,
+              "tn": 90,
+              "positive_support": 32,
+              "negative_support": 100,
+              "sensitivity": 0.96875,
+              "specificity": 0.9
+            }
+          },
+          "confusion": {
+            "labels": [
+              "1.000",
+              "1.005",
+              "1.010",
+              "1.015",
+              "1.020",
+              "1.025",
+              "1.030"
+            ],
+            "matrix": [
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                5,
+                5,
+                3,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                1,
+                15,
+                1,
+                0,
+                1,
+                0
+              ],
+              [
+                0,
+                0,
+                8,
+                11,
+                1,
+                1,
+                1
+              ],
+              [
+                0,
+                0,
+                2,
+                0,
+                2,
+                9,
+                0
+              ],
+              [
+                0,
+                0,
+                1,
+                3,
+                2,
+                19,
+                9
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                31
+              ]
+            ]
+          },
+          "reference_label_thresholds": {}
+        },
+        "limitation": "Reconstructed kNN vote confidence on extracted features only. Missing detection/timing/image failures are not represented; not measured app retake rate."
+      }
+    },
+    "Ketone": {
+      "n": 163,
+      "accuracy": 0.7300613496932515,
+      "macro_f1_supported_reference_classes": 0.6751811594202899,
+      "unsupported_reference_classes": [
+        "Small 1.5",
+        "Moderate 4.0",
+        "8.0",
+        "Large 16"
+      ],
+      "class_metrics": {
+        "Neg": {
+          "tp": 93,
+          "fn": 10,
+          "fp": 34,
+          "tn": 26,
+          "positive_support": 103,
+          "negative_support": 60,
+          "sensitivity": 0.9029126213592233,
+          "specificity": 0.43333333333333335
+        },
+        "Trace 0.5": {
+          "tp": 26,
+          "fn": 34,
+          "fp": 10,
+          "tn": 93,
+          "positive_support": 60,
+          "negative_support": 103,
+          "sensitivity": 0.43333333333333335,
+          "specificity": 0.9029126213592233
+        },
+        "Small 1.5": {
+          "tp": 0,
+          "fn": 0,
+          "fp": 0,
+          "tn": 163,
+          "positive_support": 0,
+          "negative_support": 163,
+          "sensitivity": null,
+          "specificity": 1.0
+        },
+        "Moderate 4.0": {
+          "tp": 0,
+          "fn": 0,
+          "fp": 0,
+          "tn": 163,
+          "positive_support": 0,
+          "negative_support": 163,
+          "sensitivity": null,
+          "specificity": 1.0
+        },
+        "8.0": {
+          "tp": 0,
+          "fn": 0,
+          "fp": 0,
+          "tn": 163,
+          "positive_support": 0,
+          "negative_support": 163,
+          "sensitivity": null,
+          "specificity": 1.0
+        },
+        "Large 16": {
+          "tp": 0,
+          "fn": 0,
+          "fp": 0,
+          "tn": 163,
+          "positive_support": 0,
+          "negative_support": 163,
+          "sensitivity": null,
+          "specificity": 1.0
+        }
+      },
+      "confusion": {
+        "labels": [
+          "Neg",
+          "Trace 0.5",
+          "Small 1.5",
+          "Moderate 4.0",
+          "8.0",
+          "Large 16"
+        ],
+        "matrix": [
+          [
+            93,
+            10,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            34,
+            26,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ]
+      },
+      "reference_label_thresholds": {
+        "analytical_any_nonnegative": {
+          "tp": 26,
+          "fn": 34,
+          "fp": 10,
+          "tn": 93,
+          "positive_support": 60,
+          "negative_support": 103,
+          "sensitivity": 0.43333333333333335,
+          "specificity": 0.9029126213592233,
+          "positive_levels": [
+            "8.0",
+            "Large 16",
+            "Moderate 4.0",
+            "Small 1.5",
+            "Trace 0.5"
+          ],
+          "uncertainty": {
+            "sensitivity": {
+              "provisional_support_groups": 38,
+              "ci95": [
+                0.3030557834290402,
+                0.5753977272727273
+              ],
+              "defined_bootstrap_draws": 500,
+              "total_draws": 500,
+              "limitation": "CI withheld for fewer than two supporting identities or degenerate draws. Small/imbalanced cohorts and unverified identity preclude confirmatory inference.",
+              "method": "exploratory inferred-identity cluster percentile bootstrap"
+            },
+            "specificity": {
+              "provisional_support_groups": 85,
+              "ci95": [
+                0.839625,
+                0.9576948924731183
+              ],
+              "defined_bootstrap_draws": 500,
+              "total_draws": 500,
+              "limitation": "CI withheld for fewer than two supporting identities or degenerate draws. Small/imbalanced cohorts and unverified identity preclude confirmatory inference.",
+              "method": "exploratory inferred-identity cluster percentile bootstrap"
+            }
+          }
+        }
+      },
+      "historical_split_related_identity_overlap": [
+        "LAUAAN_20260730|LAUAAN-P001",
+        "LAUAAN_20260730|LAUAAN-P003",
+        "LAUAAN_20260730|LAUAAN-P005",
+        "LAUAAN_20260730|LAUAAN-P012",
+        "LAUAAN_20260730|LAUAAN-P014",
+        "LAUAAN_20260730|LAUAAN-P015",
+        "LAUAAN_20260730|LAUAAN-P018",
+        "LAUAAN_20260730|LAUAAN-P019",
+        "LAUAAN_20260730|LAUAAN-P021",
+        "LAUAAN_20260730|LAUAAN-P026",
+        "LAUAAN_20260730|LAUAAN-P028",
+        "LAUAAN_20260730|LAUAAN-P029",
+        "LAUAAN_20260730|LAUAAN-P031",
+        "LAUAAN_20260730|LAUAAN-P032",
+        "LAUAAN_20260730|LAUAAN-P033",
+        "LAUAAN_20260730|LAUAAN-P034",
+        "LAUAAN_20260730|LAUAAN-P035",
+        "LAUAAN_20260730|LAUAAN-P037",
+        "LAUAAN_20260730|LAUAAN-P038",
+        "LAUAAN_20260730|LAUAAN-P043",
+        "LAUAAN_20260730|LAUAAN-P052",
+        "LAUAAN_20260730|LAUAAN-P053",
+        "LAUAAN_20260730|LAUAAN-P057",
+        "LAUAAN_20260730|LAUAAN-P058",
+        "LAUAAN_20260730|LAUAAN-P059",
+        "LAUAAN_20260730|LAUAAN-P063",
+        "LAUAAN_20260730|LAUAAN-P065",
+        "LAUAAN_20260730|LAUAAN-P067",
+        "LAUAAN_20260730|LAUAAN-P068",
+        "LAUAAN_20260730|LAUAAN-P070",
+        "LAUAAN_20260730|LAUAAN-P071",
+        "LAUAAN_20260730|LAUAAN-P076",
+        "LAUAAN_20260730|LAUAAN-P078",
+        "LAUAAN_20260730|LAUAAN-P085",
+        "LAUAAN_20260730|LAUAAN-P089",
+        "LAUAAN_20260730|LAUAAN-P091",
+        "LAUAAN_20260730|LAUAAN-P094",
+        "LAUAAN_20260730|LAUAAN-P095",
+        "LAUAAN_20260730|LAUAAN-P096",
+        "LAUAAN_20260730|LAUAAN-P098",
+        "LAUAAN_20260730|LAUAAN-P099",
+        "LAUAAN_20260730|LAUAAN-P103",
+        "LAUAAN_20260730|LAUAAN-P106",
+        "LAUAAN_20260730|LAUAAN-P108",
+        "LAUAAN_20260730|LAUAAN-P109",
+        "LAUAAN_20260730|LAUAAN-P112",
+        "LAUAAN_20260730|LAUAAN-P118",
+        "LAUAAN_20260730|LAUAAN-P123",
+        "LAUAAN_20260730|LAUAAN-P125",
+        "LAUAAN_20260730|LAUAAN-P126",
+        "LAUAAN_20260730|LAUAAN-P127",
+        "LAUAAN_20260730|LAUAAN-P131",
+        "LAUAAN_20260730|LAUAAN-P132",
+        "LAUAAN_20260730|LAUAAN-P133",
+        "LAUAAN_20260730|LAUAAN-P134",
+        "LAUAAN_20260730|LAUAAN-P136",
+        "LAUAAN_20260730|LAUAAN-P138",
+        "LAUAAN_20260730|LAUAAN-P142",
+        "LAUAAN_20260730|LAUAAN-P143",
+        "LAUAAN_20260730|LAUAAN-P145",
+        "LAUAAN_20260730|LAUAAN-P146",
+        "LAUAAN_20260730|LAUAAN-P148",
+        "LAUAAN_20260730|LAUAAN-P150",
+        "LAUAAN_20260730|LAUAAN-P151",
+        "LAUAAN_20260730|LAUAAN-P152",
+        "LAUAAN_20260730|LAUAAN-P154",
+        "LAUAAN_20260730|LAUAAN-P155",
+        "LAUAAN_20260730|LAUAAN-P164",
+        "LAUAAN_20260730|LAUAAN-P172",
+        "LAUAAN_20260730|LAUAAN-P173",
+        "LAUAAN_20260730|LAUAAN-P176",
+        "LAUAAN_20260730|LAUAAN-P183",
+        "LAUAAN_20260730|LAUAAN-P186",
+        "LAUAAN_20260730|LAUAAN-P196",
+        "LAUAAN_20260730|LAUAAN-P198",
+        "LAUAAN_20260730|LAUAAN-P201",
+        "LAUAAN_20260730|LAUAAN-P203",
+        "LAUAAN_20260730|LAUAAN-P207",
+        "LAUAAN_20260730|LAUAAN-P209",
+        "LAUAAN_20260730|LAUAAN-P210",
+        "LAUAAN_20260730|LAUAAN-P214",
+        "LAUAAN_20260730|LAUAAN-P220",
+        "LAUAAN_20260730|LAUAAN-P221",
+        "LAUAAN_20260730|LAUAAN-P222",
+        "LAUAAN_20260730|LAUAAN-P224",
+        "LAUAAN_20260730|LAUAAN-P227",
+        "LAUAAN_20260730|LAUAAN-P230",
+        "LAUAAN_20260730|LAUAAN-P236",
+        "LAUAAN_20260730|LAUAAN-P242",
+        "LAUAAN_20260730|LAUAAN-P244",
+        "LAUAAN_20260730|LAUAAN-P252",
+        "LAUAAN_20260730|LAUAAN-P255",
+        "LAUAAN_20260730|LAUAAN-P257",
+        "LAUAAN_20260730|LAUAAN-P259",
+        "LAUAAN_20260730|LAUAAN-P261"
+      ],
+      "feature_stage_abstention": {
+        "confidence_threshold": 0.45,
+        "accepted": 163,
+        "retakes": 0,
+        "retake_rate": 0.0,
+        "accepted_scan_metrics": {
+          "n": 163,
+          "accuracy": 0.7300613496932515,
+          "macro_f1_supported_reference_classes": 0.6751811594202899,
+          "unsupported_reference_classes": [
+            "Small 1.5",
+            "Moderate 4.0",
+            "8.0",
+            "Large 16"
+          ],
+          "class_metrics": {
+            "Neg": {
+              "tp": 93,
+              "fn": 10,
+              "fp": 34,
+              "tn": 26,
+              "positive_support": 103,
+              "negative_support": 60,
+              "sensitivity": 0.9029126213592233,
+              "specificity": 0.43333333333333335
+            },
+            "Trace 0.5": {
+              "tp": 26,
+              "fn": 34,
+              "fp": 10,
+              "tn": 93,
+              "positive_support": 60,
+              "negative_support": 103,
+              "sensitivity": 0.43333333333333335,
+              "specificity": 0.9029126213592233
+            },
+            "Small 1.5": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 163,
+              "positive_support": 0,
+              "negative_support": 163,
+              "sensitivity": null,
+              "specificity": 1.0
+            },
+            "Moderate 4.0": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 163,
+              "positive_support": 0,
+              "negative_support": 163,
+              "sensitivity": null,
+              "specificity": 1.0
+            },
+            "8.0": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 163,
+              "positive_support": 0,
+              "negative_support": 163,
+              "sensitivity": null,
+              "specificity": 1.0
+            },
+            "Large 16": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 163,
+              "positive_support": 0,
+              "negative_support": 163,
+              "sensitivity": null,
+              "specificity": 1.0
+            }
+          },
+          "confusion": {
+            "labels": [
+              "Neg",
+              "Trace 0.5",
+              "Small 1.5",
+              "Moderate 4.0",
+              "8.0",
+              "Large 16"
+            ],
+            "matrix": [
+              [
+                93,
+                10,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                34,
+                26,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            ]
+          },
+          "reference_label_thresholds": {
+            "analytical_any_nonnegative": {
+              "tp": 26,
+              "fn": 34,
+              "fp": 10,
+              "tn": 93,
+              "positive_support": 60,
+              "negative_support": 103,
+              "sensitivity": 0.43333333333333335,
+              "specificity": 0.9029126213592233,
+              "positive_levels": [
+                "8.0",
+                "Large 16",
+                "Moderate 4.0",
+                "Small 1.5",
+                "Trace 0.5"
+              ]
+            }
+          }
+        },
+        "limitation": "Reconstructed kNN vote confidence on extracted features only. Missing detection/timing/image failures are not represented; not measured app retake rate."
+      }
+    },
+    "Bilirubin": {
+      "n": 163,
+      "accuracy": 0.8711656441717791,
+      "macro_f1_supported_reference_classes": 0.8539239533990526,
+      "unsupported_reference_classes": [
+        "Moderate 50",
+        "Large 100"
+      ],
+      "class_metrics": {
+        "Neg": {
+          "tp": 99,
+          "fn": 8,
+          "fp": 13,
+          "tn": 43,
+          "positive_support": 107,
+          "negative_support": 56,
+          "sensitivity": 0.9252336448598131,
+          "specificity": 0.7678571428571429
+        },
+        "Small 17": {
+          "tp": 43,
+          "fn": 13,
+          "fp": 8,
+          "tn": 99,
+          "positive_support": 56,
+          "negative_support": 107,
+          "sensitivity": 0.7678571428571429,
+          "specificity": 0.9252336448598131
+        },
+        "Moderate 50": {
+          "tp": 0,
+          "fn": 0,
+          "fp": 0,
+          "tn": 163,
+          "positive_support": 0,
+          "negative_support": 163,
+          "sensitivity": null,
+          "specificity": 1.0
+        },
+        "Large 100": {
+          "tp": 0,
+          "fn": 0,
+          "fp": 0,
+          "tn": 163,
+          "positive_support": 0,
+          "negative_support": 163,
+          "sensitivity": null,
+          "specificity": 1.0
+        }
+      },
+      "confusion": {
+        "labels": [
+          "Neg",
+          "Small 17",
+          "Moderate 50",
+          "Large 100"
+        ],
+        "matrix": [
+          [
+            99,
+            8,
+            0,
+            0
+          ],
+          [
+            13,
+            43,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0
+          ]
+        ]
+      },
+      "reference_label_thresholds": {
+        "analytical_any_nonnegative": {
+          "tp": 43,
+          "fn": 13,
+          "fp": 8,
+          "tn": 99,
+          "positive_support": 56,
+          "negative_support": 107,
+          "sensitivity": 0.7678571428571429,
+          "specificity": 0.9252336448598131,
+          "positive_levels": [
+            "Large 100",
+            "Moderate 50",
+            "Small 17"
+          ],
+          "uncertainty": {
+            "sensitivity": {
+              "provisional_support_groups": 40,
+              "ci95": [
+                0.6404635258358663,
+                0.8923076923076924
+              ],
+              "defined_bootstrap_draws": 500,
+              "total_draws": 500,
+              "limitation": "CI withheld for fewer than two supporting identities or degenerate draws. Small/imbalanced cohorts and unverified identity preclude confirmatory inference.",
+              "method": "exploratory inferred-identity cluster percentile bootstrap"
+            },
+            "specificity": {
+              "provisional_support_groups": 83,
+              "ci95": [
+                0.8724257425742574,
+                0.9742643805309734
+              ],
+              "defined_bootstrap_draws": 500,
+              "total_draws": 500,
+              "limitation": "CI withheld for fewer than two supporting identities or degenerate draws. Small/imbalanced cohorts and unverified identity preclude confirmatory inference.",
+              "method": "exploratory inferred-identity cluster percentile bootstrap"
+            }
+          }
+        }
+      },
+      "historical_split_related_identity_overlap": [
+        "LAUAAN_20260730|LAUAAN-P001",
+        "LAUAAN_20260730|LAUAAN-P003",
+        "LAUAAN_20260730|LAUAAN-P005",
+        "LAUAAN_20260730|LAUAAN-P012",
+        "LAUAAN_20260730|LAUAAN-P014",
+        "LAUAAN_20260730|LAUAAN-P015",
+        "LAUAAN_20260730|LAUAAN-P018",
+        "LAUAAN_20260730|LAUAAN-P019",
+        "LAUAAN_20260730|LAUAAN-P021",
+        "LAUAAN_20260730|LAUAAN-P026",
+        "LAUAAN_20260730|LAUAAN-P028",
+        "LAUAAN_20260730|LAUAAN-P029",
+        "LAUAAN_20260730|LAUAAN-P031",
+        "LAUAAN_20260730|LAUAAN-P032",
+        "LAUAAN_20260730|LAUAAN-P033",
+        "LAUAAN_20260730|LAUAAN-P034",
+        "LAUAAN_20260730|LAUAAN-P035",
+        "LAUAAN_20260730|LAUAAN-P037",
+        "LAUAAN_20260730|LAUAAN-P038",
+        "LAUAAN_20260730|LAUAAN-P043",
+        "LAUAAN_20260730|LAUAAN-P052",
+        "LAUAAN_20260730|LAUAAN-P053",
+        "LAUAAN_20260730|LAUAAN-P057",
+        "LAUAAN_20260730|LAUAAN-P058",
+        "LAUAAN_20260730|LAUAAN-P059",
+        "LAUAAN_20260730|LAUAAN-P063",
+        "LAUAAN_20260730|LAUAAN-P065",
+        "LAUAAN_20260730|LAUAAN-P067",
+        "LAUAAN_20260730|LAUAAN-P068",
+        "LAUAAN_20260730|LAUAAN-P070",
+        "LAUAAN_20260730|LAUAAN-P071",
+        "LAUAAN_20260730|LAUAAN-P076",
+        "LAUAAN_20260730|LAUAAN-P078",
+        "LAUAAN_20260730|LAUAAN-P085",
+        "LAUAAN_20260730|LAUAAN-P089",
+        "LAUAAN_20260730|LAUAAN-P091",
+        "LAUAAN_20260730|LAUAAN-P094",
+        "LAUAAN_20260730|LAUAAN-P095",
+        "LAUAAN_20260730|LAUAAN-P096",
+        "LAUAAN_20260730|LAUAAN-P098",
+        "LAUAAN_20260730|LAUAAN-P099",
+        "LAUAAN_20260730|LAUAAN-P103",
+        "LAUAAN_20260730|LAUAAN-P106",
+        "LAUAAN_20260730|LAUAAN-P108",
+        "LAUAAN_20260730|LAUAAN-P109",
+        "LAUAAN_20260730|LAUAAN-P112",
+        "LAUAAN_20260730|LAUAAN-P118",
+        "LAUAAN_20260730|LAUAAN-P123",
+        "LAUAAN_20260730|LAUAAN-P125",
+        "LAUAAN_20260730|LAUAAN-P126",
+        "LAUAAN_20260730|LAUAAN-P127",
+        "LAUAAN_20260730|LAUAAN-P131",
+        "LAUAAN_20260730|LAUAAN-P132",
+        "LAUAAN_20260730|LAUAAN-P133",
+        "LAUAAN_20260730|LAUAAN-P134",
+        "LAUAAN_20260730|LAUAAN-P136",
+        "LAUAAN_20260730|LAUAAN-P138",
+        "LAUAAN_20260730|LAUAAN-P142",
+        "LAUAAN_20260730|LAUAAN-P143",
+        "LAUAAN_20260730|LAUAAN-P145",
+        "LAUAAN_20260730|LAUAAN-P146",
+        "LAUAAN_20260730|LAUAAN-P148",
+        "LAUAAN_20260730|LAUAAN-P150",
+        "LAUAAN_20260730|LAUAAN-P151",
+        "LAUAAN_20260730|LAUAAN-P152",
+        "LAUAAN_20260730|LAUAAN-P154",
+        "LAUAAN_20260730|LAUAAN-P155",
+        "LAUAAN_20260730|LAUAAN-P164",
+        "LAUAAN_20260730|LAUAAN-P172",
+        "LAUAAN_20260730|LAUAAN-P173",
+        "LAUAAN_20260730|LAUAAN-P176",
+        "LAUAAN_20260730|LAUAAN-P183",
+        "LAUAAN_20260730|LAUAAN-P186",
+        "LAUAAN_20260730|LAUAAN-P196",
+        "LAUAAN_20260730|LAUAAN-P198",
+        "LAUAAN_20260730|LAUAAN-P201",
+        "LAUAAN_20260730|LAUAAN-P203",
+        "LAUAAN_20260730|LAUAAN-P207",
+        "LAUAAN_20260730|LAUAAN-P209",
+        "LAUAAN_20260730|LAUAAN-P210",
+        "LAUAAN_20260730|LAUAAN-P214",
+        "LAUAAN_20260730|LAUAAN-P220",
+        "LAUAAN_20260730|LAUAAN-P221",
+        "LAUAAN_20260730|LAUAAN-P222",
+        "LAUAAN_20260730|LAUAAN-P224",
+        "LAUAAN_20260730|LAUAAN-P227",
+        "LAUAAN_20260730|LAUAAN-P230",
+        "LAUAAN_20260730|LAUAAN-P236",
+        "LAUAAN_20260730|LAUAAN-P242",
+        "LAUAAN_20260730|LAUAAN-P244",
+        "LAUAAN_20260730|LAUAAN-P252",
+        "LAUAAN_20260730|LAUAAN-P255",
+        "LAUAAN_20260730|LAUAAN-P257",
+        "LAUAAN_20260730|LAUAAN-P259",
+        "LAUAAN_20260730|LAUAAN-P261"
+      ],
+      "feature_stage_abstention": {
+        "confidence_threshold": 0.45,
+        "accepted": 163,
+        "retakes": 0,
+        "retake_rate": 0.0,
+        "accepted_scan_metrics": {
+          "n": 163,
+          "accuracy": 0.8711656441717791,
+          "macro_f1_supported_reference_classes": 0.8539239533990526,
+          "unsupported_reference_classes": [
+            "Moderate 50",
+            "Large 100"
+          ],
+          "class_metrics": {
+            "Neg": {
+              "tp": 99,
+              "fn": 8,
+              "fp": 13,
+              "tn": 43,
+              "positive_support": 107,
+              "negative_support": 56,
+              "sensitivity": 0.9252336448598131,
+              "specificity": 0.7678571428571429
+            },
+            "Small 17": {
+              "tp": 43,
+              "fn": 13,
+              "fp": 8,
+              "tn": 99,
+              "positive_support": 56,
+              "negative_support": 107,
+              "sensitivity": 0.7678571428571429,
+              "specificity": 0.9252336448598131
+            },
+            "Moderate 50": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 163,
+              "positive_support": 0,
+              "negative_support": 163,
+              "sensitivity": null,
+              "specificity": 1.0
+            },
+            "Large 100": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 163,
+              "positive_support": 0,
+              "negative_support": 163,
+              "sensitivity": null,
+              "specificity": 1.0
+            }
+          },
+          "confusion": {
+            "labels": [
+              "Neg",
+              "Small 17",
+              "Moderate 50",
+              "Large 100"
+            ],
+            "matrix": [
+              [
+                99,
+                8,
+                0,
+                0
+              ],
+              [
+                13,
+                43,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0
+              ]
+            ]
+          },
+          "reference_label_thresholds": {
+            "analytical_any_nonnegative": {
+              "tp": 43,
+              "fn": 13,
+              "fp": 8,
+              "tn": 99,
+              "positive_support": 56,
+              "negative_support": 107,
+              "sensitivity": 0.7678571428571429,
+              "specificity": 0.9252336448598131,
+              "positive_levels": [
+                "Large 100",
+                "Moderate 50",
+                "Small 17"
+              ]
+            }
+          }
+        },
+        "limitation": "Reconstructed kNN vote confidence on extracted features only. Missing detection/timing/image failures are not represented; not measured app retake rate."
+      }
+    },
+    "Glucose": {
+      "n": 163,
+      "accuracy": 0.9325153374233128,
+      "macro_f1_supported_reference_classes": 0.37409836065573765,
+      "unsupported_reference_classes": [
+        "15 +"
+      ],
+      "class_metrics": {
+        "Neg": {
+          "tp": 148,
+          "fn": 0,
+          "fp": 9,
+          "tn": 6,
+          "positive_support": 148,
+          "negative_support": 15,
+          "sensitivity": 1.0,
+          "specificity": 0.4
+        },
+        "Trace 5": {
+          "tp": 2,
+          "fn": 4,
+          "fp": 0,
+          "tn": 157,
+          "positive_support": 6,
+          "negative_support": 157,
+          "sensitivity": 0.3333333333333333,
+          "specificity": 1.0
+        },
+        "15 +": {
+          "tp": 0,
+          "fn": 0,
+          "fp": 0,
+          "tn": 163,
+          "positive_support": 0,
+          "negative_support": 163,
+          "sensitivity": null,
+          "specificity": 1.0
+        },
+        "30 ++": {
+          "tp": 0,
+          "fn": 1,
+          "fp": 0,
+          "tn": 162,
+          "positive_support": 1,
+          "negative_support": 162,
+          "sensitivity": 0.0,
+          "specificity": 1.0
+        },
+        "60 +++": {
+          "tp": 0,
+          "fn": 1,
+          "fp": 1,
+          "tn": 161,
+          "positive_support": 1,
+          "negative_support": 162,
+          "sensitivity": 0.0,
+          "specificity": 0.9938271604938271
+        },
+        "110 ++++": {
+          "tp": 2,
+          "fn": 5,
+          "fp": 1,
+          "tn": 155,
+          "positive_support": 7,
+          "negative_support": 156,
+          "sensitivity": 0.2857142857142857,
+          "specificity": 0.9935897435897436
+        }
+      },
+      "confusion": {
+        "labels": [
+          "Neg",
+          "Trace 5",
+          "15 +",
+          "30 ++",
+          "60 +++",
+          "110 ++++"
+        ],
+        "matrix": [
+          [
+            148,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            4,
+            2,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            4,
+            0,
+            0,
+            0,
+            1,
+            2
+          ]
+        ]
+      },
+      "reference_label_thresholds": {
+        "analytical_any_nonnegative": {
+          "tp": 6,
+          "fn": 9,
+          "fp": 0,
+          "tn": 148,
+          "positive_support": 15,
+          "negative_support": 148,
+          "sensitivity": 0.4,
+          "specificity": 1.0,
+          "positive_levels": [
+            "110 ++++",
+            "15 +",
+            "30 ++",
+            "60 +++",
+            "Trace 5"
+          ],
+          "uncertainty": {
+            "sensitivity": {
+              "provisional_support_groups": 12,
+              "ci95": [
+                0.12113970588235295,
+                0.6666666666666666
+              ],
+              "defined_bootstrap_draws": 500,
+              "total_draws": 500,
+              "limitation": "CI withheld for fewer than two supporting identities or degenerate draws. Small/imbalanced cohorts and unverified identity preclude confirmatory inference.",
+              "method": "exploratory inferred-identity cluster percentile bootstrap"
+            },
+            "specificity": {
+              "provisional_support_groups": 111,
+              "ci95": null,
+              "defined_bootstrap_draws": 500,
+              "total_draws": 500,
+              "limitation": "CI withheld for fewer than two supporting identities or degenerate draws. Small/imbalanced cohorts and unverified identity preclude confirmatory inference.",
+              "method": "exploratory inferred-identity cluster percentile bootstrap"
+            }
+          }
+        }
+      },
+      "historical_split_related_identity_overlap": [
+        "LAUAAN_20260730|LAUAAN-P001",
+        "LAUAAN_20260730|LAUAAN-P003",
+        "LAUAAN_20260730|LAUAAN-P005",
+        "LAUAAN_20260730|LAUAAN-P012",
+        "LAUAAN_20260730|LAUAAN-P014",
+        "LAUAAN_20260730|LAUAAN-P015",
+        "LAUAAN_20260730|LAUAAN-P018",
+        "LAUAAN_20260730|LAUAAN-P019",
+        "LAUAAN_20260730|LAUAAN-P021",
+        "LAUAAN_20260730|LAUAAN-P026",
+        "LAUAAN_20260730|LAUAAN-P028",
+        "LAUAAN_20260730|LAUAAN-P029",
+        "LAUAAN_20260730|LAUAAN-P031",
+        "LAUAAN_20260730|LAUAAN-P032",
+        "LAUAAN_20260730|LAUAAN-P033",
+        "LAUAAN_20260730|LAUAAN-P034",
+        "LAUAAN_20260730|LAUAAN-P035",
+        "LAUAAN_20260730|LAUAAN-P037",
+        "LAUAAN_20260730|LAUAAN-P038",
+        "LAUAAN_20260730|LAUAAN-P043",
+        "LAUAAN_20260730|LAUAAN-P052",
+        "LAUAAN_20260730|LAUAAN-P053",
+        "LAUAAN_20260730|LAUAAN-P057",
+        "LAUAAN_20260730|LAUAAN-P058",
+        "LAUAAN_20260730|LAUAAN-P059",
+        "LAUAAN_20260730|LAUAAN-P063",
+        "LAUAAN_20260730|LAUAAN-P065",
+        "LAUAAN_20260730|LAUAAN-P067",
+        "LAUAAN_20260730|LAUAAN-P068",
+        "LAUAAN_20260730|LAUAAN-P070",
+        "LAUAAN_20260730|LAUAAN-P071",
+        "LAUAAN_20260730|LAUAAN-P076",
+        "LAUAAN_20260730|LAUAAN-P078",
+        "LAUAAN_20260730|LAUAAN-P085",
+        "LAUAAN_20260730|LAUAAN-P089",
+        "LAUAAN_20260730|LAUAAN-P091",
+        "LAUAAN_20260730|LAUAAN-P094",
+        "LAUAAN_20260730|LAUAAN-P095",
+        "LAUAAN_20260730|LAUAAN-P096",
+        "LAUAAN_20260730|LAUAAN-P098",
+        "LAUAAN_20260730|LAUAAN-P099",
+        "LAUAAN_20260730|LAUAAN-P103",
+        "LAUAAN_20260730|LAUAAN-P106",
+        "LAUAAN_20260730|LAUAAN-P108",
+        "LAUAAN_20260730|LAUAAN-P109",
+        "LAUAAN_20260730|LAUAAN-P112",
+        "LAUAAN_20260730|LAUAAN-P118",
+        "LAUAAN_20260730|LAUAAN-P123",
+        "LAUAAN_20260730|LAUAAN-P125",
+        "LAUAAN_20260730|LAUAAN-P126",
+        "LAUAAN_20260730|LAUAAN-P127",
+        "LAUAAN_20260730|LAUAAN-P131",
+        "LAUAAN_20260730|LAUAAN-P132",
+        "LAUAAN_20260730|LAUAAN-P133",
+        "LAUAAN_20260730|LAUAAN-P134",
+        "LAUAAN_20260730|LAUAAN-P136",
+        "LAUAAN_20260730|LAUAAN-P138",
+        "LAUAAN_20260730|LAUAAN-P142",
+        "LAUAAN_20260730|LAUAAN-P143",
+        "LAUAAN_20260730|LAUAAN-P145",
+        "LAUAAN_20260730|LAUAAN-P146",
+        "LAUAAN_20260730|LAUAAN-P148",
+        "LAUAAN_20260730|LAUAAN-P150",
+        "LAUAAN_20260730|LAUAAN-P151",
+        "LAUAAN_20260730|LAUAAN-P152",
+        "LAUAAN_20260730|LAUAAN-P154",
+        "LAUAAN_20260730|LAUAAN-P155",
+        "LAUAAN_20260730|LAUAAN-P164",
+        "LAUAAN_20260730|LAUAAN-P172",
+        "LAUAAN_20260730|LAUAAN-P173",
+        "LAUAAN_20260730|LAUAAN-P176",
+        "LAUAAN_20260730|LAUAAN-P183",
+        "LAUAAN_20260730|LAUAAN-P186",
+        "LAUAAN_20260730|LAUAAN-P196",
+        "LAUAAN_20260730|LAUAAN-P198",
+        "LAUAAN_20260730|LAUAAN-P201",
+        "LAUAAN_20260730|LAUAAN-P203",
+        "LAUAAN_20260730|LAUAAN-P207",
+        "LAUAAN_20260730|LAUAAN-P209",
+        "LAUAAN_20260730|LAUAAN-P210",
+        "LAUAAN_20260730|LAUAAN-P214",
+        "LAUAAN_20260730|LAUAAN-P220",
+        "LAUAAN_20260730|LAUAAN-P221",
+        "LAUAAN_20260730|LAUAAN-P222",
+        "LAUAAN_20260730|LAUAAN-P224",
+        "LAUAAN_20260730|LAUAAN-P227",
+        "LAUAAN_20260730|LAUAAN-P230",
+        "LAUAAN_20260730|LAUAAN-P236",
+        "LAUAAN_20260730|LAUAAN-P242",
+        "LAUAAN_20260730|LAUAAN-P244",
+        "LAUAAN_20260730|LAUAAN-P252",
+        "LAUAAN_20260730|LAUAAN-P255",
+        "LAUAAN_20260730|LAUAAN-P257",
+        "LAUAAN_20260730|LAUAAN-P259",
+        "LAUAAN_20260730|LAUAAN-P261"
+      ],
+      "feature_stage_abstention": {
+        "confidence_threshold": 0.45,
+        "accepted": 163,
+        "retakes": 0,
+        "retake_rate": 0.0,
+        "accepted_scan_metrics": {
+          "n": 163,
+          "accuracy": 0.9325153374233128,
+          "macro_f1_supported_reference_classes": 0.37409836065573765,
+          "unsupported_reference_classes": [
+            "15 +"
+          ],
+          "class_metrics": {
+            "Neg": {
+              "tp": 148,
+              "fn": 0,
+              "fp": 9,
+              "tn": 6,
+              "positive_support": 148,
+              "negative_support": 15,
+              "sensitivity": 1.0,
+              "specificity": 0.4
+            },
+            "Trace 5": {
+              "tp": 2,
+              "fn": 4,
+              "fp": 0,
+              "tn": 157,
+              "positive_support": 6,
+              "negative_support": 157,
+              "sensitivity": 0.3333333333333333,
+              "specificity": 1.0
+            },
+            "15 +": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 163,
+              "positive_support": 0,
+              "negative_support": 163,
+              "sensitivity": null,
+              "specificity": 1.0
+            },
+            "30 ++": {
+              "tp": 0,
+              "fn": 1,
+              "fp": 0,
+              "tn": 162,
+              "positive_support": 1,
+              "negative_support": 162,
+              "sensitivity": 0.0,
+              "specificity": 1.0
+            },
+            "60 +++": {
+              "tp": 0,
+              "fn": 1,
+              "fp": 1,
+              "tn": 161,
+              "positive_support": 1,
+              "negative_support": 162,
+              "sensitivity": 0.0,
+              "specificity": 0.9938271604938271
+            },
+            "110 ++++": {
+              "tp": 2,
+              "fn": 5,
+              "fp": 1,
+              "tn": 155,
+              "positive_support": 7,
+              "negative_support": 156,
+              "sensitivity": 0.2857142857142857,
+              "specificity": 0.9935897435897436
+            }
+          },
+          "confusion": {
+            "labels": [
+              "Neg",
+              "Trace 5",
+              "15 +",
+              "30 ++",
+              "60 +++",
+              "110 ++++"
+            ],
+            "matrix": [
+              [
+                148,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                4,
+                2,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                1
+              ],
+              [
+                1,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                4,
+                0,
+                0,
+                0,
+                1,
+                2
+              ]
+            ]
+          },
+          "reference_label_thresholds": {
+            "analytical_any_nonnegative": {
+              "tp": 6,
+              "fn": 9,
+              "fp": 0,
+              "tn": 148,
+              "positive_support": 15,
+              "negative_support": 148,
+              "sensitivity": 0.4,
+              "specificity": 1.0,
+              "positive_levels": [
+                "110 ++++",
+                "15 +",
+                "30 ++",
+                "60 +++",
+                "Trace 5"
+              ]
+            }
+          }
+        },
+        "limitation": "Reconstructed kNN vote confidence on extracted features only. Missing detection/timing/image failures are not represented; not measured app retake rate."
+      }
+    }
+  },
+  "summary": {
+    "individual_correct": 1345,
+    "individual_total": 1630,
+    "complete_events": 163,
+    "all_10_correct": 28,
+    "feature_stage_accepted_events": 120,
+    "feature_stage_retake_events": 43,
+    "accepted_all_10_correct": 23,
+    "unrepresented_input_failures": "unknown; capture logs and failed images required"
+  },
+  "features_sha256": "f90816e6dc49db30a356792b62e2ae11b04c8ae0de0b2e5083e66c5fc2760f7e"
+}

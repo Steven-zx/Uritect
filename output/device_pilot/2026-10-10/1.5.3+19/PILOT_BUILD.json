@@ -1,0 +1,141 @@
+{
+  "version": "1.5.3+19",
+  "generated_at": "2026-10-10T02:35:25.165738+00:00",
+  "status": "signed_QA_pilot_candidate_ready_device_installation_pending_connection",
+  "apk": {
+    "path": "output/device_pilot/2026-10-10/1.5.3+19/Uritect_v1.5.3+19_release.apk",
+    "bytes": 57388415,
+    "sha256": "C735A340D087C641309E7EA2396DFF1C1B09426A7F715BA17A368191A312926C"
+  },
+  "certificate_sha256": "15D1138DCE077ADA624A140B3A145343D1A48305FD0847E9002869E488F19D39",
+  "source_snapshot_sha256": "B13E474932EC92CB4A50343B6B187D125A59BEDEF21276913E804D9D997213DF",
+  "source_archive_sha256": "4C6419169DAB48442FB88887C197C08520F423C086DE76DD3AE2514A466C1A71",
+  "checks": {
+    "flutter_test": {
+      "exit_code": 0,
+      "tests_passed": 126
+    },
+    "flutter_analyze": {
+      "exit_code": 0
+    },
+    "classifier_regression_reuse": {
+      "exit_code": 0,
+      "status": "analysis sources and assets identical; prior development image evidence retained"
+    },
+    "release_build": {
+      "exit_code": 0,
+      "native_compile": "included in successful signed release assembly"
+    }
+  },
+  "development_image_regression": {
+    "cases": 18,
+    "previously_accepted": 6,
+    "currently_accepted": 6,
+    "lost": [],
+    "changed_previously_accepted": [],
+    "newly_accepted": [],
+    "scope": "Retrospective development regression, not independent performance validation"
+  },
+  "pipeline": "android_markerless_json_knn_v4_support_20261010",
+  "production_model_changed": false,
+  "vote_confidence_threshold_changed": false,
+  "bayesian_values_changed": false,
+  "support_policy_status": "training-only engineering guard, not clinically validated",
+  "native_security_device_tests": "History unlock was user-confirmed in 1.5.1+17; security code unchanged. Full security acceptance remains pending.",
+  "clinical_validation": "Not established",
+  "files": [
+    {
+      "path": "docs/URITECT_SECURITY_AND_INPUT_REVIEW_2026-10-10.md",
+      "bytes": 10849,
+      "sha256": "857AC2B78F65369A0D952C9D8C85B8C42466FF04DF051E4F0ED5D13478304A6A"
+    },
+    {
+      "path": "output/device_pilot/2026-10-10/1.5.3+19/APK_IDENTITY.txt",
+      "bytes": 5975,
+      "sha256": "19457BB1D889FF6CA244D2F02C447924947BAB912319D6BB98EF684E184E203D"
+    },
+    {
+      "path": "output/device_pilot/2026-10-10/1.5.3+19/APK_PERMISSIONS.txt",
+      "bytes": 532,
+      "sha256": "2DDE9EECBAD5340347D8E684C4E92A9EA23E3D882A9B3F5049C47AD5783E1E60"
+    },
+    {
+      "path": "output/device_pilot/2026-10-10/1.5.3+19/APK_SECURITY_MANIFEST.txt",
+      "bytes": 8163,
+      "sha256": "248FA9125F9D8AA0F1186931374197F0B85DE1FDD082AE5DF8124D3416E0D2BC"
+    },
+    {
+      "path": "output/device_pilot/2026-10-10/1.5.3+19/AUTOMATED_CHECKS.json",
+      "bytes": 410,
+      "sha256": "88015CD5847ABBDC8BF568287D92BACF34935D5A0474ED1052A6B43509A9DEBB"
+    },
+    {
+      "path": "output/device_pilot/2026-10-10/1.5.3+19/flutter_analyze.log",
+      "bytes": 200,
+      "sha256": "56F968E30A18C6D8557C576B6E0703C14BAF3F6D075B85E0E44C7F5E862556BA"
+    },
+    {
+      "path": "output/device_pilot/2026-10-10/1.5.3+19/flutter_test.log",
+      "bytes": 41514,
+      "sha256": "856940A600C3EFC575241E8028F070052C92BBF7E331F10B05A81C83DF01814E"
+    },
+    {
+      "path": "output/device_pilot/2026-10-10/1.5.3+19/release_build.log",
+      "bytes": 8474,
+      "sha256": "5E959C0291DEAA1C08A811526094F53F69506830B0C88583431801F62EE3B81D"
+    },
+    {
+      "path": "output/device_pilot/2026-10-10/1.5.3+19/runtime_comparison.json",
+      "bytes": 246,
+      "sha256": "E18A98D692F384CD8CB6E378AA562EA9E68B24E089E25277AD7519D03FEAF99E"
+    },
+    {
+      "path": "output/device_pilot/2026-10-10/1.5.3+19/runtime_regression.json",
+      "bytes": 13872,
+      "sha256": "A3A5F051B39E46F920AB5E356FDBAF9A02BE3F08F54659056755160AB03E6F27"
+    },
+    {
+      "path": "output/device_pilot/2026-10-10/1.5.3+19/SOURCE_SNAPSHOT.json",
+      "bytes": 22642,
+      "sha256": "B13E474932EC92CB4A50343B6B187D125A59BEDEF21276913E804D9D997213DF"
+    },
+    {
+      "path": "output/device_pilot/2026-10-10/1.5.3+19/URITECT_SOURCE_SNAPSHOT.zip",
+      "bytes": 6189286,
+      "sha256": "4C6419169DAB48442FB88887C197C08520F423C086DE76DD3AE2514A466C1A71"
+    },
+    {
+      "path": "pipeline/build_training_support_policy.py",
+      "bytes": 2511,
+      "sha256": "8C4A410441408D2B95E06919825AAEDF90EE8922F33CFE844E0738A109C0707D"
+    },
+    {
+      "path": "pipeline/test_training_support_policy.py",
+      "bytes": 2065,
+      "sha256": "52138A0FAFAEC7074A9AC6F951FE6FDB3C78F29472B3949183710C60E6836A64"
+    },
+    {
+      "path": "pipeline/verify_qa_pilot_build.py",
+      "bytes": 5831,
+      "sha256": "5F13A003D795012B263A28C5BA7C9A2AAC0CDD3B4470801891491B8BB9FCE45B"
+    },
+    {
+      "path": "output/device_pilot/2026-10-10/1.5.3+19/CLASSIFIER_REGRESSION_REUSE.json",
+      "bytes": 631,
+      "sha256": "6D02F9E2073710F7DBC373B5D61DD7CCBFD945E75E0EF5770410FC202593245E"
+    },
+    {
+      "path": "docs/URITECT_TEN_PAD_CAMERA_GUIDE_2026-10-10.md",
+      "bytes": 2397,
+      "sha256": "E9EC53DE08AAF42BF264FCCBF22704B823A203AFC0F08F20AAF46BC92412B3F7"
+    }
+  ],
+  "features": [
+    "optional ten-pad live preview guide",
+    "guide toggle at camera header",
+    "tap-through focus; hidden during photo review; restored on retake"
+  ],
+  "guide_device_acceptance": "Pending user walkthrough",
+  "development_image_regression_reused": true,
+  "installation_status": "Initial wireless install attempts failed when device went offline; APK is verified and ready."
+}

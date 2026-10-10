@@ -1,0 +1,736 @@
+{
+  "schema_version": 1,
+  "release": "URITECT 1.4.1+14",
+  "status": "pending_actual_evaluation",
+  "clinical_calibration_status": "not_established",
+  "devices": [
+    {
+      "device_id": "phone_1",
+      "model": "RMX3933",
+      "android_version": null,
+      "test_date": null,
+      "tester": null,
+      "apk_sha256": "BBCEC805C3F032C1DB9C8FF12B778FA4D8CC87DC45C4FCE97D214253099219EA",
+      "connection_status": "deferred_by_user",
+      "cases": [
+        {
+          "id": "STARTUP",
+          "expected": "Splash opens dashboard automatically; reduced motion and readable small-screen UI.",
+          "actual": null,
+          "status": "PENDING",
+          "input_sha256": [],
+          "evidence": [],
+          "issue_id": null
+        },
+        {
+          "id": "OFFLINE_CAMERA",
+          "expected": "Airplane mode with Wi-Fi/mobile data disabled: camera analysis completes locally.",
+          "actual": null,
+          "status": "PENDING",
+          "input_sha256": [],
+          "evidence": [],
+          "issue_id": null
+        },
+        {
+          "id": "OFFLINE_GALLERY",
+          "expected": "Airplane mode: selecting a locally stored photo completes analysis locally.",
+          "actual": null,
+          "status": "PENDING",
+          "input_sha256": [],
+          "evidence": [],
+          "issue_id": null
+        },
+        {
+          "id": "CAMERA_DENIAL",
+          "expected": "Deny camera permission: explanation/recovery UI; no crash or stale image.",
+          "actual": null,
+          "status": "PENDING",
+          "input_sha256": [],
+          "evidence": [],
+          "issue_id": null
+        },
+        {
+          "id": "CAMERA_RECOVERY",
+          "expected": "Grant camera in Android settings and resume: usable live preview.",
+          "actual": null,
+          "status": "PENDING",
+          "input_sha256": [],
+          "evidence": [],
+          "issue_id": null
+        },
+        {
+          "id": "GALLERY_CANCEL_DENIAL",
+          "expected": "Cancel picker or deny access if offered: return safely; explain modern picker N/A.",
+          "actual": null,
+          "status": "PENDING",
+          "input_sha256": [],
+          "evidence": [],
+          "issue_id": null
+        },
+        {
+          "id": "GALLERY_RECOVERY",
+          "expected": "Reopen picker and select local photo; previous cancellation does not block analysis.",
+          "actual": null,
+          "status": "PENDING",
+          "input_sha256": [],
+          "evidence": [],
+          "issue_id": null
+        },
+        {
+          "id": "VALID_COOL_CAMERA",
+          "expected": "Properly timed supported strip under cool light: ten correct pad boxes or explicit retake.",
+          "actual": null,
+          "status": "PENDING",
+          "input_sha256": [],
+          "evidence": [],
+          "issue_id": null
+        },
+        {
+          "id": "VALID_COOL_GALLERY",
+          "expected": "Cool-light local photo: assess pad overlay/classes against medtech reference.",
+          "actual": null,
+          "status": "PENDING",
+          "input_sha256": [],
+          "evidence": [],
+          "issue_id": null
+        },
+        {
+          "id": "VALID_WARM_CAMERA",
+          "expected": "Properly timed supported strip under warm light: assess boxes/classes and retake.",
+          "actual": null,
+          "status": "PENDING",
+          "input_sha256": [],
+          "evidence": [],
+          "issue_id": null
+        },
+        {
+          "id": "VALID_WARM_GALLERY",
+          "expected": "Warm-light local photo: assess boxes/classes and retake.",
+          "actual": null,
+          "status": "PENDING",
+          "input_sha256": [],
+          "evidence": [],
+          "issue_id": null
+        },
+        {
+          "id": "VALID_DAYLIGHT_CAMERA",
+          "expected": "Properly timed supported strip in daylight: assess boxes/classes and retake.",
+          "actual": null,
+          "status": "PENDING",
+          "input_sha256": [],
+          "evidence": [],
+          "issue_id": null
+        },
+        {
+          "id": "VALID_DAYLIGHT_GALLERY",
+          "expected": "Daylight local photo: assess boxes/classes and retake.",
+          "actual": null,
+          "status": "PENDING",
+          "input_sha256": [],
+          "evidence": [],
+          "issue_id": null
+        },
+        {
+          "id": "CAMERA_GALLERY_COMPARISON",
+          "expected": "Controlled same-strip/light/angle camera and gallery comparison: record distinct file hashes, IFU times, overlays, categories and retake reasons.",
+          "actual": null,
+          "status": "PENDING",
+          "input_sha256": [],
+          "evidence": [],
+          "issue_id": null
+        },
+        {
+          "id": "BLANK",
+          "expected": "No strip: explicit retake; no analyte or ordinary Bayesian result.",
+          "actual": null,
+          "status": "PENDING",
+          "input_sha256": [],
+          "evidence": [],
+          "issue_id": null
+        },
+        {
+          "id": "BLURRY",
+          "expected": "Unresolvable pads: explicit retake; no reassuring result.",
+          "actual": null,
+          "status": "PENDING",
+          "input_sha256": [],
+          "evidence": [],
+          "issue_id": null
+        },
+        {
+          "id": "DARK",
+          "expected": "Unreadable dark image: explicit retake.",
+          "actual": null,
+          "status": "PENDING",
+          "input_sha256": [],
+          "evidence": [],
+          "issue_id": null
+        },
+        {
+          "id": "OVEREXPOSED",
+          "expected": "Unreadable clipped image: explicit retake.",
+          "actual": null,
+          "status": "PENDING",
+          "input_sha256": [],
+          "evidence": [],
+          "issue_id": null
+        },
+        {
+          "id": "PARTIAL",
+          "expected": "Incomplete strip/pad stack: explicit retake.",
+          "actual": null,
+          "status": "PENDING",
+          "input_sha256": [],
+          "evidence": [],
+          "issue_id": null
+        },
+        {
+          "id": "WRONG_STRIP",
+          "expected": "Unsupported product: quality checklist blocks interpretation; test automatic detector limitations.",
+          "actual": null,
+          "status": "PENDING",
+          "input_sha256": [],
+          "evidence": [],
+          "issue_id": null
+        },
+        {
+          "id": "MULTIPLE_STRIPS",
+          "expected": "Multiple visible strips: explicit retake.",
+          "actual": null,
+          "status": "PENDING",
+          "input_sha256": [],
+          "evidence": [],
+          "issue_id": null
+        },
+        {
+          "id": "LOW_CONFIDENCE",
+          "expected": "Any pad below 0.45: retake; no ordinary estimate; safety advice still available.",
+          "actual": null,
+          "status": "PENDING",
+          "input_sha256": [],
+          "evidence": [],
+          "issue_id": null
+        },
+        {
+          "id": "RETAKE",
+          "expected": "New scan clears old photo/result and opens live camera; repeated retakes remain responsive.",
+          "actual": null,
+          "status": "PENDING",
+          "input_sha256": [],
+          "evidence": [],
+          "issue_id": null
+        },
+        {
+          "id": "CAMERA_LIFECYCLE",
+          "expected": "Background/resume and gallery-return restore camera; rapid taps do not double-submit.",
+          "actual": null,
+          "status": "PENDING",
+          "input_sha256": [],
+          "evidence": [],
+          "issue_id": null
+        },
+        {
+          "id": "FEMALE_ELIGIBILITY",
+          "expected": "Eligible symptomatic nonpregnant adult: separate female estimate with prior/factors/disclosure.",
+          "actual": null,
+          "status": "PENDING",
+          "input_sha256": [],
+          "evidence": [],
+          "issue_id": null
+        },
+        {
+          "id": "MALE_ELIGIBILITY",
+          "expected": "Eligible symptomatic adult male: separate male estimate; no female factors.",
+          "actual": null,
+          "status": "PENDING",
+          "input_sha256": [],
+          "evidence": [],
+          "issue_id": null
+        },
+        {
+          "id": "UTI_EXCLUSIONS",
+          "expected": "Age, pregnancy, catheter, abnormality, immunocompromise, male diabetes/STI: each blocks estimate.",
+          "actual": null,
+          "status": "PENDING",
+          "input_sha256": [],
+          "evidence": [],
+          "issue_id": null
+        },
+        {
+          "id": "UTI_UNKNOWN",
+          "expected": "Unknown/unanswered quality/safety or unmatched/unreliable evidence: no ordinary estimate.",
+          "actual": null,
+          "status": "PENDING",
+          "input_sha256": [],
+          "evidence": [],
+          "issue_id": null
+        },
+        {
+          "id": "SAFETY",
+          "expected": "Fever/flank, hydration failure, serious illness and renal safety override: consultation advice.",
+          "actual": null,
+          "status": "PENDING",
+          "input_sha256": [],
+          "evidence": [],
+          "issue_id": null
+        },
+        {
+          "id": "RENAL",
+          "expected": "Exercise OBSERVE, REPEAT_CONFIRM, CONSULT, RETAKE and PROMPT_CONSULT using reviewed scenarios.",
+          "actual": null,
+          "status": "PENDING",
+          "input_sha256": [],
+          "evidence": [],
+          "issue_id": null
+        },
+        {
+          "id": "HISTORY_SAVE_RESTART",
+          "expected": "Save and restart offline: image/results, original posterior and versions preserved.",
+          "actual": null,
+          "status": "PENDING",
+          "input_sha256": [],
+          "evidence": [],
+          "issue_id": null
+        },
+        {
+          "id": "HISTORY_DELETE",
+          "expected": "Delete a designated test record: record/image removed; other records retained.",
+          "actual": null,
+          "status": "PENDING",
+          "input_sha256": [],
+          "evidence": [],
+          "issue_id": null
+        },
+        {
+          "id": "LATENCY_CRASH",
+          "expected": "Record at least five measured scan durations, failures, crash/hang count and OS behavior.",
+          "actual": null,
+          "status": "PENDING",
+          "input_sha256": [],
+          "evidence": [],
+          "issue_id": null
+        },
+        {
+          "id": "ACCESSIBILITY",
+          "expected": "Large text, back navigation and reduced motion usable without clipped controls.",
+          "actual": null,
+          "status": "PENDING",
+          "input_sha256": [],
+          "evidence": [],
+          "issue_id": null
+        }
+      ],
+      "scan_latency_seconds": [],
+      "crashes": null,
+      "hangs": null
+    },
+    {
+      "device_id": "phone_2",
+      "model": null,
+      "android_version": null,
+      "test_date": null,
+      "tester": null,
+      "apk_sha256": "BBCEC805C3F032C1DB9C8FF12B778FA4D8CC87DC45C4FCE97D214253099219EA",
+      "connection_status": "deferred_by_user",
+      "cases": [
+        {
+          "id": "STARTUP",
+          "expected": "Splash opens dashboard automatically; reduced motion and readable small-screen UI.",
+          "actual": null,
+          "status": "PENDING",
+          "input_sha256": [],
+          "evidence": [],
+          "issue_id": null
+        },
+        {
+          "id": "OFFLINE_CAMERA",
+          "expected": "Airplane mode with Wi-Fi/mobile data disabled: camera analysis completes locally.",
+          "actual": null,
+          "status": "PENDING",
+          "input_sha256": [],
+          "evidence": [],
+          "issue_id": null
+        },
+        {
+          "id": "OFFLINE_GALLERY",
+          "expected": "Airplane mode: selecting a locally stored photo completes analysis locally.",
+          "actual": null,
+          "status": "PENDING",
+          "input_sha256": [],
+          "evidence": [],
+          "issue_id": null
+        },
+        {
+          "id": "CAMERA_DENIAL",
+          "expected": "Deny camera permission: explanation/recovery UI; no crash or stale image.",
+          "actual": null,
+          "status": "PENDING",
+          "input_sha256": [],
+          "evidence": [],
+          "issue_id": null
+        },
+        {
+          "id": "CAMERA_RECOVERY",
+          "expected": "Grant camera in Android settings and resume: usable live preview.",
+          "actual": null,
+          "status": "PENDING",
+          "input_sha256": [],
+          "evidence": [],
+          "issue_id": null
+        },
+        {
+          "id": "GALLERY_CANCEL_DENIAL",
+          "expected": "Cancel picker or deny access if offered: return safely; explain modern picker N/A.",
+          "actual": null,
+          "status": "PENDING",
+          "input_sha256": [],
+          "evidence": [],
+          "issue_id": null
+        },
+        {
+          "id": "GALLERY_RECOVERY",
+          "expected": "Reopen picker and select local photo; previous cancellation does not block analysis.",
+          "actual": null,
+          "status": "PENDING",
+          "input_sha256": [],
+          "evidence": [],
+          "issue_id": null
+        },
+        {
+          "id": "VALID_COOL_CAMERA",
+          "expected": "Properly timed supported strip under cool light: ten correct pad boxes or explicit retake.",
+          "actual": null,
+          "status": "PENDING",
+          "input_sha256": [],
+          "evidence": [],
+          "issue_id": null
+        },
+        {
+          "id": "VALID_COOL_GALLERY",
+          "expected": "Cool-light local photo: assess pad overlay/classes against medtech reference.",
+          "actual": null,
+          "status": "PENDING",
+          "input_sha256": [],
+          "evidence": [],
+          "issue_id": null
+        },
+        {
+          "id": "VALID_WARM_CAMERA",
+          "expected": "Properly timed supported strip under warm light: assess boxes/classes and retake.",
+          "actual": null,
+          "status": "PENDING",
+          "input_sha256": [],
+          "evidence": [],
+          "issue_id": null
+        },
+        {
+          "id": "VALID_WARM_GALLERY",
+          "expected": "Warm-light local photo: assess boxes/classes and retake.",
+          "actual": null,
+          "status": "PENDING",
+          "input_sha256": [],
+          "evidence": [],
+          "issue_id": null
+        },
+        {
+          "id": "VALID_DAYLIGHT_CAMERA",
+          "expected": "Properly timed supported strip in daylight: assess boxes/classes and retake.",
+          "actual": null,
+          "status": "PENDING",
+          "input_sha256": [],
+          "evidence": [],
+          "issue_id": null
+        },
+        {
+          "id": "VALID_DAYLIGHT_GALLERY",
+          "expected": "Daylight local photo: assess boxes/classes and retake.",
+          "actual": null,
+          "status": "PENDING",
+          "input_sha256": [],
+          "evidence": [],
+          "issue_id": null
+        },
+        {
+          "id": "CAMERA_GALLERY_COMPARISON",
+          "expected": "Controlled same-strip/light/angle camera and gallery comparison: record distinct file hashes, IFU times, overlays, categories and retake reasons.",
+          "actual": null,
+          "status": "PENDING",
+          "input_sha256": [],
+          "evidence": [],
+          "issue_id": null
+        },
+        {
+          "id": "BLANK",
+          "expected": "No strip: explicit retake; no analyte or ordinary Bayesian result.",
+          "actual": null,
+          "status": "PENDING",
+          "input_sha256": [],
+          "evidence": [],
+          "issue_id": null
+        },
+        {
+          "id": "BLURRY",
+          "expected": "Unresolvable pads: explicit retake; no reassuring result.",
+          "actual": null,
+          "status": "PENDING",
+          "input_sha256": [],
+          "evidence": [],
+          "issue_id": null
+        },
+        {
+          "id": "DARK",
+          "expected": "Unreadable dark image: explicit retake.",
+          "actual": null,
+          "status": "PENDING",
+          "input_sha256": [],
+          "evidence": [],
+          "issue_id": null
+        },
+        {
+          "id": "OVEREXPOSED",
+          "expected": "Unreadable clipped image: explicit retake.",
+          "actual": null,
+          "status": "PENDING",
+          "input_sha256": [],
+          "evidence": [],
+          "issue_id": null
+        },
+        {
+          "id": "PARTIAL",
+          "expected": "Incomplete strip/pad stack: explicit retake.",
+          "actual": null,
+          "status": "PENDING",
+          "input_sha256": [],
+          "evidence": [],
+          "issue_id": null
+        },
+        {
+          "id": "WRONG_STRIP",
+          "expected": "Unsupported product: quality checklist blocks interpretation; test automatic detector limitations.",
+          "actual": null,
+          "status": "PENDING",
+          "input_sha256": [],
+          "evidence": [],
+          "issue_id": null
+        },
+        {
+          "id": "MULTIPLE_STRIPS",
+          "expected": "Multiple visible strips: explicit retake.",
+          "actual": null,
+          "status": "PENDING",
+          "input_sha256": [],
+          "evidence": [],
+          "issue_id": null
+        },
+        {
+          "id": "LOW_CONFIDENCE",
+          "expected": "Any pad below 0.45: retake; no ordinary estimate; safety advice still available.",
+          "actual": null,
+          "status": "PENDING",
+          "input_sha256": [],
+          "evidence": [],
+          "issue_id": null
+        },
+        {
+          "id": "RETAKE",
+          "expected": "New scan clears old photo/result and opens live camera; repeated retakes remain responsive.",
+          "actual": null,
+          "status": "PENDING",
+          "input_sha256": [],
+          "evidence": [],
+          "issue_id": null
+        },
+        {
+          "id": "CAMERA_LIFECYCLE",
+          "expected": "Background/resume and gallery-return restore camera; rapid taps do not double-submit.",
+          "actual": null,
+          "status": "PENDING",
+          "input_sha256": [],
+          "evidence": [],
+          "issue_id": null
+        },
+        {
+          "id": "FEMALE_ELIGIBILITY",
+          "expected": "Eligible symptomatic nonpregnant adult: separate female estimate with prior/factors/disclosure.",
+          "actual": null,
+          "status": "PENDING",
+          "input_sha256": [],
+          "evidence": [],
+          "issue_id": null
+        },
+        {
+          "id": "MALE_ELIGIBILITY",
+          "expected": "Eligible symptomatic adult male: separate male estimate; no female factors.",
+          "actual": null,
+          "status": "PENDING",
+          "input_sha256": [],
+          "evidence": [],
+          "issue_id": null
+        },
+        {
+          "id": "UTI_EXCLUSIONS",
+          "expected": "Age, pregnancy, catheter, abnormality, immunocompromise, male diabetes/STI: each blocks estimate.",
+          "actual": null,
+          "status": "PENDING",
+          "input_sha256": [],
+          "evidence": [],
+          "issue_id": null
+        },
+        {
+          "id": "UTI_UNKNOWN",
+          "expected": "Unknown/unanswered quality/safety or unmatched/unreliable evidence: no ordinary estimate.",
+          "actual": null,
+          "status": "PENDING",
+          "input_sha256": [],
+          "evidence": [],
+          "issue_id": null
+        },
+        {
+          "id": "SAFETY",
+          "expected": "Fever/flank, hydration failure, serious illness and renal safety override: consultation advice.",
+          "actual": null,
+          "status": "PENDING",
+          "input_sha256": [],
+          "evidence": [],
+          "issue_id": null
+        },
+        {
+          "id": "RENAL",
+          "expected": "Exercise OBSERVE, REPEAT_CONFIRM, CONSULT, RETAKE and PROMPT_CONSULT using reviewed scenarios.",
+          "actual": null,
+          "status": "PENDING",
+          "input_sha256": [],
+          "evidence": [],
+          "issue_id": null
+        },
+        {
+          "id": "HISTORY_SAVE_RESTART",
+          "expected": "Save and restart offline: image/results, original posterior and versions preserved.",
+          "actual": null,
+          "status": "PENDING",
+          "input_sha256": [],
+          "evidence": [],
+          "issue_id": null
+        },
+        {
+          "id": "HISTORY_DELETE",
+          "expected": "Delete a designated test record: record/image removed; other records retained.",
+          "actual": null,
+          "status": "PENDING",
+          "input_sha256": [],
+          "evidence": [],
+          "issue_id": null
+        },
+        {
+          "id": "LATENCY_CRASH",
+          "expected": "Record at least five measured scan durations, failures, crash/hang count and OS behavior.",
+          "actual": null,
+          "status": "PENDING",
+          "input_sha256": [],
+          "evidence": [],
+          "issue_id": null
+        },
+        {
+          "id": "ACCESSIBILITY",
+          "expected": "Large text, back navigation and reduced motion usable without clipped controls.",
+          "actual": null,
+          "status": "PENDING",
+          "input_sha256": [],
+          "evidence": [],
+          "issue_id": null
+        }
+      ],
+      "scan_latency_seconds": [],
+      "crashes": null,
+      "hangs": null
+    }
+  ],
+  "physical_strip": {
+    "status": "pending_user_and_medtech_confirmation",
+    "manufacturer": null,
+    "product": null,
+    "catalogue_number": null,
+    "lot": null,
+    "expiry": null,
+    "opening_date": null,
+    "storage_conditions": null,
+    "ifu_revision": null,
+    "ifu_evidence": [],
+    "pad_order": [],
+    "categories": {
+      "Leukocytes": null,
+      "Nitrite": null,
+      "Urobilinogen": null,
+      "Protein": null,
+      "pH": null,
+      "Blood": null,
+      "Specific Gravity": null,
+      "Ketone": null,
+      "Bilirubin": null,
+      "Glucose": null
+    },
+    "reading_times_seconds": {
+      "Leukocytes": null,
+      "Nitrite": null,
+      "Urobilinogen": null,
+      "Protein": null,
+      "pH": null,
+      "Blood": null,
+      "Specific Gravity": null,
+      "Ketone": null,
+      "Bilirubin": null,
+      "Glucose": null
+    },
+    "timing_strategy_matches_app": null,
+    "reviewers": [],
+    "note": "Ask user again next session, as requested 2026-10-06. App assumes protein/blood 60 seconds; all pad times require IFU reconciliation."
+  },
+  "reviews": {
+    "medtech_1": {
+      "status": "pending",
+      "reviewer": null,
+      "credentials": null,
+      "date": null,
+      "apk_sha256": "BBCEC805C3F032C1DB9C8FF12B778FA4D8CC87DC45C4FCE97D214253099219EA",
+      "decisions": [],
+      "evidence": []
+    },
+    "medtech_2": {
+      "status": "pending",
+      "reviewer": null,
+      "credentials": null,
+      "date": null,
+      "apk_sha256": "BBCEC805C3F032C1DB9C8FF12B778FA4D8CC87DC45C4FCE97D214253099219EA",
+      "decisions": [],
+      "evidence": []
+    },
+    "physician": {
+      "status": "pending",
+      "reviewer": null,
+      "credentials": null,
+      "date": null,
+      "apk_sha256": "BBCEC805C3F032C1DB9C8FF12B778FA4D8CC87DC45C4FCE97D214253099219EA",
+      "decisions": [],
+      "evidence": []
+    },
+    "statistician": {
+      "status": "pending",
+      "reviewer": null,
+      "credentials": null,
+      "date": null,
+      "apk_sha256": "BBCEC805C3F032C1DB9C8FF12B778FA4D8CC87DC45C4FCE97D214253099219EA",
+      "decisions": [],
+      "evidence": []
+    },
+    "usability_evaluation": {
+      "status": "pending",
+      "reviewer": null,
+      "credentials": null,
+      "date": null,
+      "apk_sha256": "BBCEC805C3F032C1DB9C8FF12B778FA4D8CC87DC45C4FCE97D214253099219EA",
+      "decisions": [],
+      "evidence": []
+    }
+  },
+  "clinical_validation_note": "Content review/usability is separate from culture-confirmed calibration and external performance validation."
+}

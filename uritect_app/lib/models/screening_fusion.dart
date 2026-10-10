@@ -109,7 +109,7 @@ class ScreeningFusionResult {
 
 class ScreeningFusionEngine {
   static const String interpretationPolicyVersion =
-      'interpretation_gates_v1_20261003';
+      'interpretation_gates_v2_20261005';
   static const String femaleModelVersion = 'uti_bayesian_female_v1_1_20260926';
   static const String maleModelVersion = 'uti_bayesian_male_v0_1_20261001';
   static const String bayesianModelVersion = femaleModelVersion;
@@ -306,15 +306,29 @@ class ScreeningFusionEngine {
       'read_outside_60_seconds',
       'unsupported_strip',
     ].any((id) => flags[id] == true);
-    if ((scanResult != null && !scanResult.isReliableForInterpretation) ||
-        testQualityFailed) {
+    if ((scanResult != null && !scanResult.isUsableForCurrentInterpretation) ||
+        testQualityFailed ||
+        checklist.hasIncompleteSafetyReview ||
+        checklist.hasUnconfirmedTestQuality ||
+        (checklist.questionnaireVersion != null &&
+            ['dysuria', 'frequency', 'urgency', 'suprapubic'].any(
+              (id) =>
+                  checklist.answers[id] != 'yes' &&
+                  checklist.answers[id] != 'no',
+            )) ||
+        (checklist.questionnaireVersion != null &&
+            female &&
+            [
+              'vaginal_discharge',
+              'vaginal_irritation',
+            ].any((id) => checklist.answers[id] != 'no'))) {
       return BayesianUtiEstimate(
         modelVersion: male ? maleModelVersion : femaleModelVersion,
         priorProbability: male ? malePriorProbability : femalePriorProbability,
         posteriorProbability: 0,
         calculationStatus: 'insufficient',
         statusReason:
-            'The scan or test quality is unreliable. Retake the scan; symptom-based safety guidance remains available.',
+            'The scan, test quality, or clinical confirmations are incomplete or unreliable. Review the checklist and retake an unreliable scan; symptom-based safety guidance remains available.',
         factors: const [],
       );
     }

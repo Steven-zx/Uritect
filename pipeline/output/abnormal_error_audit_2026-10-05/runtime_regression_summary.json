@@ -1,0 +1,2905 @@
+{
+  "scope": "retrospective development image regression; not independent final validation",
+  "attempted_images": 18,
+  "stages": {
+    "before": {
+      "accepted": 4,
+      "retaken": 14,
+      "all_ten_exact_correct": 1,
+      "per_analyte_accepted_reference_comparisons": {
+        "Leukocytes": {
+          "n": 4,
+          "accuracy": 0.25,
+          "macro_f1_supported_reference_classes": 0.4,
+          "unsupported_reference_classes": [
+            "Neg",
+            "Small 70",
+            "Moderate 125",
+            "Large 500"
+          ],
+          "class_metrics": {
+            "Neg": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 3,
+              "tn": 1,
+              "positive_support": 0,
+              "negative_support": 4,
+              "sensitivity": null,
+              "specificity": 0.25
+            },
+            "Trace 15": {
+              "tp": 1,
+              "fn": 3,
+              "fp": 0,
+              "tn": 0,
+              "positive_support": 4,
+              "negative_support": 0,
+              "sensitivity": 0.25,
+              "specificity": null
+            },
+            "Small 70": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 4,
+              "positive_support": 0,
+              "negative_support": 4,
+              "sensitivity": null,
+              "specificity": 1.0
+            },
+            "Moderate 125": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 4,
+              "positive_support": 0,
+              "negative_support": 4,
+              "sensitivity": null,
+              "specificity": 1.0
+            },
+            "Large 500": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 4,
+              "positive_support": 0,
+              "negative_support": 4,
+              "sensitivity": null,
+              "specificity": 1.0
+            }
+          },
+          "confusion": {
+            "labels": [
+              "Neg",
+              "Trace 15",
+              "Small 70",
+              "Moderate 125",
+              "Large 500"
+            ],
+            "matrix": [
+              [
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                3,
+                1,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            ]
+          },
+          "reference_label_thresholds": {
+            "female_le_small_or_higher": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 4,
+              "positive_support": 0,
+              "negative_support": 4,
+              "sensitivity": null,
+              "specificity": 1.0,
+              "positive_levels": [
+                "Large 500",
+                "Moderate 125",
+                "Small 70"
+              ]
+            },
+            "male_le_trace_or_higher": {
+              "tp": 1,
+              "fn": 3,
+              "fp": 0,
+              "tn": 0,
+              "positive_support": 4,
+              "negative_support": 0,
+              "sensitivity": 0.25,
+              "specificity": null,
+              "positive_levels": [
+                "Large 500",
+                "Moderate 125",
+                "Small 70",
+                "Trace 15"
+              ]
+            },
+            "analytical_any_nonnegative": {
+              "tp": 1,
+              "fn": 3,
+              "fp": 0,
+              "tn": 0,
+              "positive_support": 4,
+              "negative_support": 0,
+              "sensitivity": 0.25,
+              "specificity": null,
+              "positive_levels": [
+                "Large 500",
+                "Moderate 125",
+                "Small 70",
+                "Trace 15"
+              ]
+            }
+          },
+          "retaken_reference_positive_captures": {
+            "female_le_small_or_higher": 3,
+            "male_le_trace_or_higher": 14,
+            "analytical_any_nonnegative": 14
+          }
+        },
+        "Nitrite": {
+          "n": 4,
+          "accuracy": 1.0,
+          "macro_f1_supported_reference_classes": 1.0,
+          "unsupported_reference_classes": [
+            "Positive"
+          ],
+          "class_metrics": {
+            "Neg": {
+              "tp": 4,
+              "fn": 0,
+              "fp": 0,
+              "tn": 0,
+              "positive_support": 4,
+              "negative_support": 0,
+              "sensitivity": 1.0,
+              "specificity": null
+            },
+            "Positive": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 4,
+              "positive_support": 0,
+              "negative_support": 4,
+              "sensitivity": null,
+              "specificity": 1.0
+            }
+          },
+          "confusion": {
+            "labels": [
+              "Neg",
+              "Positive"
+            ],
+            "matrix": [
+              [
+                4,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          },
+          "reference_label_thresholds": {
+            "nitrite_positive": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 4,
+              "positive_support": 0,
+              "negative_support": 4,
+              "sensitivity": null,
+              "specificity": 1.0,
+              "positive_levels": [
+                "Positive"
+              ]
+            }
+          },
+          "retaken_reference_positive_captures": {
+            "nitrite_positive": 1
+          }
+        },
+        "Urobilinogen": {
+          "n": 4,
+          "accuracy": 1.0,
+          "macro_f1_supported_reference_classes": 1.0,
+          "unsupported_reference_classes": [
+            "32",
+            "64",
+            "128"
+          ],
+          "class_metrics": {
+            "3.2": {
+              "tp": 3,
+              "fn": 0,
+              "fp": 0,
+              "tn": 1,
+              "positive_support": 3,
+              "negative_support": 1,
+              "sensitivity": 1.0,
+              "specificity": 1.0
+            },
+            "16": {
+              "tp": 1,
+              "fn": 0,
+              "fp": 0,
+              "tn": 3,
+              "positive_support": 1,
+              "negative_support": 3,
+              "sensitivity": 1.0,
+              "specificity": 1.0
+            },
+            "32": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 4,
+              "positive_support": 0,
+              "negative_support": 4,
+              "sensitivity": null,
+              "specificity": 1.0
+            },
+            "64": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 4,
+              "positive_support": 0,
+              "negative_support": 4,
+              "sensitivity": null,
+              "specificity": 1.0
+            },
+            "128": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 4,
+              "positive_support": 0,
+              "negative_support": 4,
+              "sensitivity": null,
+              "specificity": 1.0
+            }
+          },
+          "confusion": {
+            "labels": [
+              "3.2",
+              "16",
+              "32",
+              "64",
+              "128"
+            ],
+            "matrix": [
+              [
+                3,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                1,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            ]
+          },
+          "reference_label_thresholds": {
+            "analytical_above_baseline_category": {
+              "tp": 1,
+              "fn": 0,
+              "fp": 0,
+              "tn": 3,
+              "positive_support": 1,
+              "negative_support": 3,
+              "sensitivity": 1.0,
+              "specificity": 1.0,
+              "positive_levels": [
+                "128",
+                "16",
+                "32",
+                "64"
+              ]
+            }
+          },
+          "retaken_reference_positive_captures": {
+            "analytical_above_baseline_category": 5
+          }
+        },
+        "Protein": {
+          "n": 4,
+          "accuracy": 0.75,
+          "macro_f1_supported_reference_classes": 0.42857142857142855,
+          "unsupported_reference_classes": [
+            "Trace",
+            "1.0",
+            "3.0",
+            ">=20.0"
+          ],
+          "class_metrics": {
+            "Neg": {
+              "tp": 3,
+              "fn": 0,
+              "fp": 1,
+              "tn": 0,
+              "positive_support": 3,
+              "negative_support": 1,
+              "sensitivity": 1.0,
+              "specificity": 0.0
+            },
+            "Trace": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 4,
+              "positive_support": 0,
+              "negative_support": 4,
+              "sensitivity": null,
+              "specificity": 1.0
+            },
+            "0.3": {
+              "tp": 0,
+              "fn": 1,
+              "fp": 0,
+              "tn": 3,
+              "positive_support": 1,
+              "negative_support": 3,
+              "sensitivity": 0.0,
+              "specificity": 1.0
+            },
+            "1.0": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 4,
+              "positive_support": 0,
+              "negative_support": 4,
+              "sensitivity": null,
+              "specificity": 1.0
+            },
+            "3.0": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 4,
+              "positive_support": 0,
+              "negative_support": 4,
+              "sensitivity": null,
+              "specificity": 1.0
+            },
+            ">=20.0": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 4,
+              "positive_support": 0,
+              "negative_support": 4,
+              "sensitivity": null,
+              "specificity": 1.0
+            }
+          },
+          "confusion": {
+            "labels": [
+              "Neg",
+              "Trace",
+              "0.3",
+              "1.0",
+              "3.0",
+              ">=20.0"
+            ],
+            "matrix": [
+              [
+                3,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                1,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            ]
+          },
+          "reference_label_thresholds": {
+            "renal_protein_0_3_or_higher": {
+              "tp": 0,
+              "fn": 1,
+              "fp": 0,
+              "tn": 3,
+              "positive_support": 1,
+              "negative_support": 3,
+              "sensitivity": 0.0,
+              "specificity": 1.0,
+              "positive_levels": [
+                "0.3",
+                "1.0",
+                "3.0",
+                ">=20.0"
+              ]
+            },
+            "analytical_any_nonnegative": {
+              "tp": 0,
+              "fn": 1,
+              "fp": 0,
+              "tn": 3,
+              "positive_support": 1,
+              "negative_support": 3,
+              "sensitivity": 0.0,
+              "specificity": 1.0,
+              "positive_levels": [
+                "0.3",
+                "1.0",
+                "3.0",
+                ">=20.0",
+                "Trace"
+              ]
+            }
+          },
+          "retaken_reference_positive_captures": {
+            "renal_protein_0_3_or_higher": 0,
+            "analytical_any_nonnegative": 1
+          }
+        },
+        "pH": {
+          "n": 4,
+          "accuracy": 1.0,
+          "macro_f1_supported_reference_classes": 1.0,
+          "unsupported_reference_classes": [
+            "6.0",
+            "6.5",
+            "7.0",
+            "7.5",
+            "8.0",
+            "8.5"
+          ],
+          "class_metrics": {
+            "5.0": {
+              "tp": 4,
+              "fn": 0,
+              "fp": 0,
+              "tn": 0,
+              "positive_support": 4,
+              "negative_support": 0,
+              "sensitivity": 1.0,
+              "specificity": null
+            },
+            "6.0": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 4,
+              "positive_support": 0,
+              "negative_support": 4,
+              "sensitivity": null,
+              "specificity": 1.0
+            },
+            "6.5": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 4,
+              "positive_support": 0,
+              "negative_support": 4,
+              "sensitivity": null,
+              "specificity": 1.0
+            },
+            "7.0": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 4,
+              "positive_support": 0,
+              "negative_support": 4,
+              "sensitivity": null,
+              "specificity": 1.0
+            },
+            "7.5": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 4,
+              "positive_support": 0,
+              "negative_support": 4,
+              "sensitivity": null,
+              "specificity": 1.0
+            },
+            "8.0": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 4,
+              "positive_support": 0,
+              "negative_support": 4,
+              "sensitivity": null,
+              "specificity": 1.0
+            },
+            "8.5": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 4,
+              "positive_support": 0,
+              "negative_support": 4,
+              "sensitivity": null,
+              "specificity": 1.0
+            }
+          },
+          "confusion": {
+            "labels": [
+              "5.0",
+              "6.0",
+              "6.5",
+              "7.0",
+              "7.5",
+              "8.0",
+              "8.5"
+            ],
+            "matrix": [
+              [
+                4,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            ]
+          },
+          "reference_label_thresholds": {},
+          "retaken_reference_positive_captures": {}
+        },
+        "Blood": {
+          "n": 4,
+          "accuracy": 0.75,
+          "macro_f1_supported_reference_classes": 0.42857142857142855,
+          "unsupported_reference_classes": [
+            "Hemolyzed 10",
+            "Small 25",
+            "Moderate 80",
+            "Large 200"
+          ],
+          "class_metrics": {
+            "Neg": {
+              "tp": 3,
+              "fn": 0,
+              "fp": 1,
+              "tn": 0,
+              "positive_support": 3,
+              "negative_support": 1,
+              "sensitivity": 1.0,
+              "specificity": 0.0
+            },
+            "Non-hemolyzed 10": {
+              "tp": 0,
+              "fn": 1,
+              "fp": 0,
+              "tn": 3,
+              "positive_support": 1,
+              "negative_support": 3,
+              "sensitivity": 0.0,
+              "specificity": 1.0
+            },
+            "Hemolyzed 10": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 4,
+              "positive_support": 0,
+              "negative_support": 4,
+              "sensitivity": null,
+              "specificity": 1.0
+            },
+            "Small 25": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 4,
+              "positive_support": 0,
+              "negative_support": 4,
+              "sensitivity": null,
+              "specificity": 1.0
+            },
+            "Moderate 80": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 4,
+              "positive_support": 0,
+              "negative_support": 4,
+              "sensitivity": null,
+              "specificity": 1.0
+            },
+            "Large 200": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 4,
+              "positive_support": 0,
+              "negative_support": 4,
+              "sensitivity": null,
+              "specificity": 1.0
+            }
+          },
+          "confusion": {
+            "labels": [
+              "Neg",
+              "Non-hemolyzed 10",
+              "Hemolyzed 10",
+              "Small 25",
+              "Moderate 80",
+              "Large 200"
+            ],
+            "matrix": [
+              [
+                3,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                1,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            ]
+          },
+          "reference_label_thresholds": {
+            "female_blood_study_positive": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 4,
+              "positive_support": 0,
+              "negative_support": 4,
+              "sensitivity": null,
+              "specificity": 1.0,
+              "positive_levels": [
+                "Hemolyzed 10",
+                "Large 200",
+                "Moderate 80",
+                "Small 25"
+              ]
+            },
+            "analytical_any_nonnegative": {
+              "tp": 0,
+              "fn": 1,
+              "fp": 0,
+              "tn": 3,
+              "positive_support": 1,
+              "negative_support": 3,
+              "sensitivity": 0.0,
+              "specificity": 1.0,
+              "positive_levels": [
+                "Hemolyzed 10",
+                "Large 200",
+                "Moderate 80",
+                "Non-hemolyzed 10",
+                "Small 25"
+              ]
+            }
+          },
+          "retaken_reference_positive_captures": {
+            "female_blood_study_positive": 0,
+            "analytical_any_nonnegative": 0
+          }
+        },
+        "Specific Gravity": {
+          "n": 4,
+          "accuracy": 0.5,
+          "macro_f1_supported_reference_classes": 0.26666666666666666,
+          "unsupported_reference_classes": [
+            "1.000",
+            "1.010",
+            "1.020",
+            "1.030"
+          ],
+          "class_metrics": {
+            "1.000": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 4,
+              "positive_support": 0,
+              "negative_support": 4,
+              "sensitivity": null,
+              "specificity": 1.0
+            },
+            "1.005": {
+              "tp": 0,
+              "fn": 1,
+              "fp": 0,
+              "tn": 3,
+              "positive_support": 1,
+              "negative_support": 3,
+              "sensitivity": 0.0,
+              "specificity": 1.0
+            },
+            "1.010": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 4,
+              "positive_support": 0,
+              "negative_support": 4,
+              "sensitivity": null,
+              "specificity": 1.0
+            },
+            "1.015": {
+              "tp": 2,
+              "fn": 0,
+              "fp": 1,
+              "tn": 1,
+              "positive_support": 2,
+              "negative_support": 2,
+              "sensitivity": 1.0,
+              "specificity": 0.5
+            },
+            "1.020": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 4,
+              "positive_support": 0,
+              "negative_support": 4,
+              "sensitivity": null,
+              "specificity": 1.0
+            },
+            "1.025": {
+              "tp": 0,
+              "fn": 1,
+              "fp": 0,
+              "tn": 3,
+              "positive_support": 1,
+              "negative_support": 3,
+              "sensitivity": 0.0,
+              "specificity": 1.0
+            },
+            "1.030": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 1,
+              "tn": 3,
+              "positive_support": 0,
+              "negative_support": 4,
+              "sensitivity": null,
+              "specificity": 0.75
+            }
+          },
+          "confusion": {
+            "labels": [
+              "1.000",
+              "1.005",
+              "1.010",
+              "1.015",
+              "1.020",
+              "1.025",
+              "1.030"
+            ],
+            "matrix": [
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                2,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            ]
+          },
+          "reference_label_thresholds": {},
+          "retaken_reference_positive_captures": {}
+        },
+        "Ketone": {
+          "n": 4,
+          "accuracy": 0.75,
+          "macro_f1_supported_reference_classes": 0.7333333333333334,
+          "unsupported_reference_classes": [
+            "Small 1.5",
+            "Moderate 4.0",
+            "8.0",
+            "Large 16"
+          ],
+          "class_metrics": {
+            "Neg": {
+              "tp": 2,
+              "fn": 0,
+              "fp": 1,
+              "tn": 1,
+              "positive_support": 2,
+              "negative_support": 2,
+              "sensitivity": 1.0,
+              "specificity": 0.5
+            },
+            "Trace 0.5": {
+              "tp": 1,
+              "fn": 1,
+              "fp": 0,
+              "tn": 2,
+              "positive_support": 2,
+              "negative_support": 2,
+              "sensitivity": 0.5,
+              "specificity": 1.0
+            },
+            "Small 1.5": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 4,
+              "positive_support": 0,
+              "negative_support": 4,
+              "sensitivity": null,
+              "specificity": 1.0
+            },
+            "Moderate 4.0": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 4,
+              "positive_support": 0,
+              "negative_support": 4,
+              "sensitivity": null,
+              "specificity": 1.0
+            },
+            "8.0": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 4,
+              "positive_support": 0,
+              "negative_support": 4,
+              "sensitivity": null,
+              "specificity": 1.0
+            },
+            "Large 16": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 4,
+              "positive_support": 0,
+              "negative_support": 4,
+              "sensitivity": null,
+              "specificity": 1.0
+            }
+          },
+          "confusion": {
+            "labels": [
+              "Neg",
+              "Trace 0.5",
+              "Small 1.5",
+              "Moderate 4.0",
+              "8.0",
+              "Large 16"
+            ],
+            "matrix": [
+              [
+                2,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                1,
+                1,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            ]
+          },
+          "reference_label_thresholds": {
+            "analytical_any_nonnegative": {
+              "tp": 1,
+              "fn": 1,
+              "fp": 0,
+              "tn": 2,
+              "positive_support": 2,
+              "negative_support": 2,
+              "sensitivity": 0.5,
+              "specificity": 1.0,
+              "positive_levels": [
+                "8.0",
+                "Large 16",
+                "Moderate 4.0",
+                "Small 1.5",
+                "Trace 0.5"
+              ]
+            }
+          },
+          "retaken_reference_positive_captures": {
+            "analytical_any_nonnegative": 8
+          }
+        },
+        "Bilirubin": {
+          "n": 4,
+          "accuracy": 1.0,
+          "macro_f1_supported_reference_classes": 1.0,
+          "unsupported_reference_classes": [
+            "Moderate 50",
+            "Large 100"
+          ],
+          "class_metrics": {
+            "Neg": {
+              "tp": 3,
+              "fn": 0,
+              "fp": 0,
+              "tn": 1,
+              "positive_support": 3,
+              "negative_support": 1,
+              "sensitivity": 1.0,
+              "specificity": 1.0
+            },
+            "Small 17": {
+              "tp": 1,
+              "fn": 0,
+              "fp": 0,
+              "tn": 3,
+              "positive_support": 1,
+              "negative_support": 3,
+              "sensitivity": 1.0,
+              "specificity": 1.0
+            },
+            "Moderate 50": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 4,
+              "positive_support": 0,
+              "negative_support": 4,
+              "sensitivity": null,
+              "specificity": 1.0
+            },
+            "Large 100": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 4,
+              "positive_support": 0,
+              "negative_support": 4,
+              "sensitivity": null,
+              "specificity": 1.0
+            }
+          },
+          "confusion": {
+            "labels": [
+              "Neg",
+              "Small 17",
+              "Moderate 50",
+              "Large 100"
+            ],
+            "matrix": [
+              [
+                3,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                1,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0
+              ]
+            ]
+          },
+          "reference_label_thresholds": {
+            "analytical_any_nonnegative": {
+              "tp": 1,
+              "fn": 0,
+              "fp": 0,
+              "tn": 3,
+              "positive_support": 1,
+              "negative_support": 3,
+              "sensitivity": 1.0,
+              "specificity": 1.0,
+              "positive_levels": [
+                "Large 100",
+                "Moderate 50",
+                "Small 17"
+              ]
+            }
+          },
+          "retaken_reference_positive_captures": {
+            "analytical_any_nonnegative": 5
+          }
+        },
+        "Glucose": {
+          "n": 4,
+          "accuracy": 1.0,
+          "macro_f1_supported_reference_classes": 1.0,
+          "unsupported_reference_classes": [
+            "Trace 5",
+            "15 +",
+            "30 ++",
+            "60 +++",
+            "110 ++++"
+          ],
+          "class_metrics": {
+            "Neg": {
+              "tp": 4,
+              "fn": 0,
+              "fp": 0,
+              "tn": 0,
+              "positive_support": 4,
+              "negative_support": 0,
+              "sensitivity": 1.0,
+              "specificity": null
+            },
+            "Trace 5": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 4,
+              "positive_support": 0,
+              "negative_support": 4,
+              "sensitivity": null,
+              "specificity": 1.0
+            },
+            "15 +": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 4,
+              "positive_support": 0,
+              "negative_support": 4,
+              "sensitivity": null,
+              "specificity": 1.0
+            },
+            "30 ++": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 4,
+              "positive_support": 0,
+              "negative_support": 4,
+              "sensitivity": null,
+              "specificity": 1.0
+            },
+            "60 +++": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 4,
+              "positive_support": 0,
+              "negative_support": 4,
+              "sensitivity": null,
+              "specificity": 1.0
+            },
+            "110 ++++": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 4,
+              "positive_support": 0,
+              "negative_support": 4,
+              "sensitivity": null,
+              "specificity": 1.0
+            }
+          },
+          "confusion": {
+            "labels": [
+              "Neg",
+              "Trace 5",
+              "15 +",
+              "30 ++",
+              "60 +++",
+              "110 ++++"
+            ],
+            "matrix": [
+              [
+                4,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            ]
+          },
+          "reference_label_thresholds": {
+            "analytical_any_nonnegative": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 4,
+              "positive_support": 0,
+              "negative_support": 4,
+              "sensitivity": null,
+              "specificity": 1.0,
+              "positive_levels": [
+                "110 ++++",
+                "15 +",
+                "30 ++",
+                "60 +++",
+                "Trace 5"
+              ]
+            }
+          },
+          "retaken_reference_positive_captures": {
+            "analytical_any_nonnegative": 1
+          }
+        }
+      }
+    },
+    "after": {
+      "accepted": 6,
+      "retaken": 12,
+      "all_ten_exact_correct": 1,
+      "per_analyte_accepted_reference_comparisons": {
+        "Leukocytes": {
+          "n": 6,
+          "accuracy": 0.16666666666666666,
+          "macro_f1_supported_reference_classes": 0.16666666666666666,
+          "unsupported_reference_classes": [
+            "Neg",
+            "Moderate 125",
+            "Large 500"
+          ],
+          "class_metrics": {
+            "Neg": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 5,
+              "tn": 1,
+              "positive_support": 0,
+              "negative_support": 6,
+              "sensitivity": null,
+              "specificity": 0.16666666666666666
+            },
+            "Trace 15": {
+              "tp": 1,
+              "fn": 4,
+              "fp": 0,
+              "tn": 1,
+              "positive_support": 5,
+              "negative_support": 1,
+              "sensitivity": 0.2,
+              "specificity": 1.0
+            },
+            "Small 70": {
+              "tp": 0,
+              "fn": 1,
+              "fp": 0,
+              "tn": 5,
+              "positive_support": 1,
+              "negative_support": 5,
+              "sensitivity": 0.0,
+              "specificity": 1.0
+            },
+            "Moderate 125": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 6,
+              "positive_support": 0,
+              "negative_support": 6,
+              "sensitivity": null,
+              "specificity": 1.0
+            },
+            "Large 500": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 6,
+              "positive_support": 0,
+              "negative_support": 6,
+              "sensitivity": null,
+              "specificity": 1.0
+            }
+          },
+          "confusion": {
+            "labels": [
+              "Neg",
+              "Trace 15",
+              "Small 70",
+              "Moderate 125",
+              "Large 500"
+            ],
+            "matrix": [
+              [
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                4,
+                1,
+                0,
+                0,
+                0
+              ],
+              [
+                1,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            ]
+          },
+          "reference_label_thresholds": {
+            "female_le_small_or_higher": {
+              "tp": 0,
+              "fn": 1,
+              "fp": 0,
+              "tn": 5,
+              "positive_support": 1,
+              "negative_support": 5,
+              "sensitivity": 0.0,
+              "specificity": 1.0,
+              "positive_levels": [
+                "Large 500",
+                "Moderate 125",
+                "Small 70"
+              ]
+            },
+            "male_le_trace_or_higher": {
+              "tp": 1,
+              "fn": 5,
+              "fp": 0,
+              "tn": 0,
+              "positive_support": 6,
+              "negative_support": 0,
+              "sensitivity": 0.16666666666666666,
+              "specificity": null,
+              "positive_levels": [
+                "Large 500",
+                "Moderate 125",
+                "Small 70",
+                "Trace 15"
+              ]
+            },
+            "analytical_any_nonnegative": {
+              "tp": 1,
+              "fn": 5,
+              "fp": 0,
+              "tn": 0,
+              "positive_support": 6,
+              "negative_support": 0,
+              "sensitivity": 0.16666666666666666,
+              "specificity": null,
+              "positive_levels": [
+                "Large 500",
+                "Moderate 125",
+                "Small 70",
+                "Trace 15"
+              ]
+            }
+          },
+          "retaken_reference_positive_captures": {
+            "female_le_small_or_higher": 2,
+            "male_le_trace_or_higher": 12,
+            "analytical_any_nonnegative": 12
+          }
+        },
+        "Nitrite": {
+          "n": 6,
+          "accuracy": 1.0,
+          "macro_f1_supported_reference_classes": 1.0,
+          "unsupported_reference_classes": [
+            "Positive"
+          ],
+          "class_metrics": {
+            "Neg": {
+              "tp": 6,
+              "fn": 0,
+              "fp": 0,
+              "tn": 0,
+              "positive_support": 6,
+              "negative_support": 0,
+              "sensitivity": 1.0,
+              "specificity": null
+            },
+            "Positive": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 6,
+              "positive_support": 0,
+              "negative_support": 6,
+              "sensitivity": null,
+              "specificity": 1.0
+            }
+          },
+          "confusion": {
+            "labels": [
+              "Neg",
+              "Positive"
+            ],
+            "matrix": [
+              [
+                6,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          },
+          "reference_label_thresholds": {
+            "nitrite_positive": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 6,
+              "positive_support": 0,
+              "negative_support": 6,
+              "sensitivity": null,
+              "specificity": 1.0,
+              "positive_levels": [
+                "Positive"
+              ]
+            }
+          },
+          "retaken_reference_positive_captures": {
+            "nitrite_positive": 1
+          }
+        },
+        "Urobilinogen": {
+          "n": 6,
+          "accuracy": 0.6666666666666666,
+          "macro_f1_supported_reference_classes": 0.625,
+          "unsupported_reference_classes": [
+            "32",
+            "64",
+            "128"
+          ],
+          "class_metrics": {
+            "3.2": {
+              "tp": 3,
+              "fn": 0,
+              "fp": 2,
+              "tn": 1,
+              "positive_support": 3,
+              "negative_support": 3,
+              "sensitivity": 1.0,
+              "specificity": 0.3333333333333333
+            },
+            "16": {
+              "tp": 1,
+              "fn": 2,
+              "fp": 0,
+              "tn": 3,
+              "positive_support": 3,
+              "negative_support": 3,
+              "sensitivity": 0.3333333333333333,
+              "specificity": 1.0
+            },
+            "32": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 6,
+              "positive_support": 0,
+              "negative_support": 6,
+              "sensitivity": null,
+              "specificity": 1.0
+            },
+            "64": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 6,
+              "positive_support": 0,
+              "negative_support": 6,
+              "sensitivity": null,
+              "specificity": 1.0
+            },
+            "128": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 6,
+              "positive_support": 0,
+              "negative_support": 6,
+              "sensitivity": null,
+              "specificity": 1.0
+            }
+          },
+          "confusion": {
+            "labels": [
+              "3.2",
+              "16",
+              "32",
+              "64",
+              "128"
+            ],
+            "matrix": [
+              [
+                3,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                2,
+                1,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            ]
+          },
+          "reference_label_thresholds": {
+            "analytical_above_baseline_category": {
+              "tp": 1,
+              "fn": 2,
+              "fp": 0,
+              "tn": 3,
+              "positive_support": 3,
+              "negative_support": 3,
+              "sensitivity": 0.3333333333333333,
+              "specificity": 1.0,
+              "positive_levels": [
+                "128",
+                "16",
+                "32",
+                "64"
+              ]
+            }
+          },
+          "retaken_reference_positive_captures": {
+            "analytical_above_baseline_category": 3
+          }
+        },
+        "Protein": {
+          "n": 6,
+          "accuracy": 0.8333333333333334,
+          "macro_f1_supported_reference_classes": 0.45454545454545453,
+          "unsupported_reference_classes": [
+            "Trace",
+            "1.0",
+            "3.0",
+            ">=20.0"
+          ],
+          "class_metrics": {
+            "Neg": {
+              "tp": 5,
+              "fn": 0,
+              "fp": 1,
+              "tn": 0,
+              "positive_support": 5,
+              "negative_support": 1,
+              "sensitivity": 1.0,
+              "specificity": 0.0
+            },
+            "Trace": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 6,
+              "positive_support": 0,
+              "negative_support": 6,
+              "sensitivity": null,
+              "specificity": 1.0
+            },
+            "0.3": {
+              "tp": 0,
+              "fn": 1,
+              "fp": 0,
+              "tn": 5,
+              "positive_support": 1,
+              "negative_support": 5,
+              "sensitivity": 0.0,
+              "specificity": 1.0
+            },
+            "1.0": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 6,
+              "positive_support": 0,
+              "negative_support": 6,
+              "sensitivity": null,
+              "specificity": 1.0
+            },
+            "3.0": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 6,
+              "positive_support": 0,
+              "negative_support": 6,
+              "sensitivity": null,
+              "specificity": 1.0
+            },
+            ">=20.0": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 6,
+              "positive_support": 0,
+              "negative_support": 6,
+              "sensitivity": null,
+              "specificity": 1.0
+            }
+          },
+          "confusion": {
+            "labels": [
+              "Neg",
+              "Trace",
+              "0.3",
+              "1.0",
+              "3.0",
+              ">=20.0"
+            ],
+            "matrix": [
+              [
+                5,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                1,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            ]
+          },
+          "reference_label_thresholds": {
+            "renal_protein_0_3_or_higher": {
+              "tp": 0,
+              "fn": 1,
+              "fp": 0,
+              "tn": 5,
+              "positive_support": 1,
+              "negative_support": 5,
+              "sensitivity": 0.0,
+              "specificity": 1.0,
+              "positive_levels": [
+                "0.3",
+                "1.0",
+                "3.0",
+                ">=20.0"
+              ]
+            },
+            "analytical_any_nonnegative": {
+              "tp": 0,
+              "fn": 1,
+              "fp": 0,
+              "tn": 5,
+              "positive_support": 1,
+              "negative_support": 5,
+              "sensitivity": 0.0,
+              "specificity": 1.0,
+              "positive_levels": [
+                "0.3",
+                "1.0",
+                "3.0",
+                ">=20.0",
+                "Trace"
+              ]
+            }
+          },
+          "retaken_reference_positive_captures": {
+            "renal_protein_0_3_or_higher": 0,
+            "analytical_any_nonnegative": 1
+          }
+        },
+        "pH": {
+          "n": 6,
+          "accuracy": 0.8333333333333334,
+          "macro_f1_supported_reference_classes": 0.45454545454545453,
+          "unsupported_reference_classes": [
+            "6.0",
+            "6.5",
+            "7.0",
+            "8.0",
+            "8.5"
+          ],
+          "class_metrics": {
+            "5.0": {
+              "tp": 5,
+              "fn": 0,
+              "fp": 1,
+              "tn": 0,
+              "positive_support": 5,
+              "negative_support": 1,
+              "sensitivity": 1.0,
+              "specificity": 0.0
+            },
+            "6.0": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 6,
+              "positive_support": 0,
+              "negative_support": 6,
+              "sensitivity": null,
+              "specificity": 1.0
+            },
+            "6.5": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 6,
+              "positive_support": 0,
+              "negative_support": 6,
+              "sensitivity": null,
+              "specificity": 1.0
+            },
+            "7.0": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 6,
+              "positive_support": 0,
+              "negative_support": 6,
+              "sensitivity": null,
+              "specificity": 1.0
+            },
+            "7.5": {
+              "tp": 0,
+              "fn": 1,
+              "fp": 0,
+              "tn": 5,
+              "positive_support": 1,
+              "negative_support": 5,
+              "sensitivity": 0.0,
+              "specificity": 1.0
+            },
+            "8.0": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 6,
+              "positive_support": 0,
+              "negative_support": 6,
+              "sensitivity": null,
+              "specificity": 1.0
+            },
+            "8.5": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 6,
+              "positive_support": 0,
+              "negative_support": 6,
+              "sensitivity": null,
+              "specificity": 1.0
+            }
+          },
+          "confusion": {
+            "labels": [
+              "5.0",
+              "6.0",
+              "6.5",
+              "7.0",
+              "7.5",
+              "8.0",
+              "8.5"
+            ],
+            "matrix": [
+              [
+                5,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            ]
+          },
+          "reference_label_thresholds": {},
+          "retaken_reference_positive_captures": {}
+        },
+        "Blood": {
+          "n": 6,
+          "accuracy": 0.6666666666666666,
+          "macro_f1_supported_reference_classes": 0.4,
+          "unsupported_reference_classes": [
+            "Hemolyzed 10",
+            "Small 25",
+            "Moderate 80",
+            "Large 200"
+          ],
+          "class_metrics": {
+            "Neg": {
+              "tp": 4,
+              "fn": 1,
+              "fp": 1,
+              "tn": 0,
+              "positive_support": 5,
+              "negative_support": 1,
+              "sensitivity": 0.8,
+              "specificity": 0.0
+            },
+            "Non-hemolyzed 10": {
+              "tp": 0,
+              "fn": 1,
+              "fp": 1,
+              "tn": 4,
+              "positive_support": 1,
+              "negative_support": 5,
+              "sensitivity": 0.0,
+              "specificity": 0.8
+            },
+            "Hemolyzed 10": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 6,
+              "positive_support": 0,
+              "negative_support": 6,
+              "sensitivity": null,
+              "specificity": 1.0
+            },
+            "Small 25": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 6,
+              "positive_support": 0,
+              "negative_support": 6,
+              "sensitivity": null,
+              "specificity": 1.0
+            },
+            "Moderate 80": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 6,
+              "positive_support": 0,
+              "negative_support": 6,
+              "sensitivity": null,
+              "specificity": 1.0
+            },
+            "Large 200": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 6,
+              "positive_support": 0,
+              "negative_support": 6,
+              "sensitivity": null,
+              "specificity": 1.0
+            }
+          },
+          "confusion": {
+            "labels": [
+              "Neg",
+              "Non-hemolyzed 10",
+              "Hemolyzed 10",
+              "Small 25",
+              "Moderate 80",
+              "Large 200"
+            ],
+            "matrix": [
+              [
+                4,
+                1,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                1,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            ]
+          },
+          "reference_label_thresholds": {
+            "female_blood_study_positive": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 6,
+              "positive_support": 0,
+              "negative_support": 6,
+              "sensitivity": null,
+              "specificity": 1.0,
+              "positive_levels": [
+                "Hemolyzed 10",
+                "Large 200",
+                "Moderate 80",
+                "Small 25"
+              ]
+            },
+            "analytical_any_nonnegative": {
+              "tp": 0,
+              "fn": 1,
+              "fp": 1,
+              "tn": 4,
+              "positive_support": 1,
+              "negative_support": 5,
+              "sensitivity": 0.0,
+              "specificity": 0.8,
+              "positive_levels": [
+                "Hemolyzed 10",
+                "Large 200",
+                "Moderate 80",
+                "Non-hemolyzed 10",
+                "Small 25"
+              ]
+            }
+          },
+          "retaken_reference_positive_captures": {
+            "female_blood_study_positive": 0,
+            "analytical_any_nonnegative": 0
+          }
+        },
+        "Specific Gravity": {
+          "n": 6,
+          "accuracy": 0.6666666666666666,
+          "macro_f1_supported_reference_classes": 0.2962962962962963,
+          "unsupported_reference_classes": [
+            "1.000",
+            "1.010",
+            "1.020",
+            "1.030"
+          ],
+          "class_metrics": {
+            "1.000": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 6,
+              "positive_support": 0,
+              "negative_support": 6,
+              "sensitivity": null,
+              "specificity": 1.0
+            },
+            "1.005": {
+              "tp": 0,
+              "fn": 1,
+              "fp": 0,
+              "tn": 5,
+              "positive_support": 1,
+              "negative_support": 5,
+              "sensitivity": 0.0,
+              "specificity": 1.0
+            },
+            "1.010": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 6,
+              "positive_support": 0,
+              "negative_support": 6,
+              "sensitivity": null,
+              "specificity": 1.0
+            },
+            "1.015": {
+              "tp": 4,
+              "fn": 0,
+              "fp": 1,
+              "tn": 1,
+              "positive_support": 4,
+              "negative_support": 2,
+              "sensitivity": 1.0,
+              "specificity": 0.5
+            },
+            "1.020": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 6,
+              "positive_support": 0,
+              "negative_support": 6,
+              "sensitivity": null,
+              "specificity": 1.0
+            },
+            "1.025": {
+              "tp": 0,
+              "fn": 1,
+              "fp": 0,
+              "tn": 5,
+              "positive_support": 1,
+              "negative_support": 5,
+              "sensitivity": 0.0,
+              "specificity": 1.0
+            },
+            "1.030": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 1,
+              "tn": 5,
+              "positive_support": 0,
+              "negative_support": 6,
+              "sensitivity": null,
+              "specificity": 0.8333333333333334
+            }
+          },
+          "confusion": {
+            "labels": [
+              "1.000",
+              "1.005",
+              "1.010",
+              "1.015",
+              "1.020",
+              "1.025",
+              "1.030"
+            ],
+            "matrix": [
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                4,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            ]
+          },
+          "reference_label_thresholds": {},
+          "retaken_reference_positive_captures": {}
+        },
+        "Ketone": {
+          "n": 6,
+          "accuracy": 0.6666666666666666,
+          "macro_f1_supported_reference_classes": 0.625,
+          "unsupported_reference_classes": [
+            "Small 1.5",
+            "Moderate 4.0",
+            "8.0",
+            "Large 16"
+          ],
+          "class_metrics": {
+            "Neg": {
+              "tp": 3,
+              "fn": 0,
+              "fp": 2,
+              "tn": 1,
+              "positive_support": 3,
+              "negative_support": 3,
+              "sensitivity": 1.0,
+              "specificity": 0.3333333333333333
+            },
+            "Trace 0.5": {
+              "tp": 1,
+              "fn": 2,
+              "fp": 0,
+              "tn": 3,
+              "positive_support": 3,
+              "negative_support": 3,
+              "sensitivity": 0.3333333333333333,
+              "specificity": 1.0
+            },
+            "Small 1.5": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 6,
+              "positive_support": 0,
+              "negative_support": 6,
+              "sensitivity": null,
+              "specificity": 1.0
+            },
+            "Moderate 4.0": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 6,
+              "positive_support": 0,
+              "negative_support": 6,
+              "sensitivity": null,
+              "specificity": 1.0
+            },
+            "8.0": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 6,
+              "positive_support": 0,
+              "negative_support": 6,
+              "sensitivity": null,
+              "specificity": 1.0
+            },
+            "Large 16": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 6,
+              "positive_support": 0,
+              "negative_support": 6,
+              "sensitivity": null,
+              "specificity": 1.0
+            }
+          },
+          "confusion": {
+            "labels": [
+              "Neg",
+              "Trace 0.5",
+              "Small 1.5",
+              "Moderate 4.0",
+              "8.0",
+              "Large 16"
+            ],
+            "matrix": [
+              [
+                3,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                2,
+                1,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            ]
+          },
+          "reference_label_thresholds": {
+            "analytical_any_nonnegative": {
+              "tp": 1,
+              "fn": 2,
+              "fp": 0,
+              "tn": 3,
+              "positive_support": 3,
+              "negative_support": 3,
+              "sensitivity": 0.3333333333333333,
+              "specificity": 1.0,
+              "positive_levels": [
+                "8.0",
+                "Large 16",
+                "Moderate 4.0",
+                "Small 1.5",
+                "Trace 0.5"
+              ]
+            }
+          },
+          "retaken_reference_positive_captures": {
+            "analytical_any_nonnegative": 7
+          }
+        },
+        "Bilirubin": {
+          "n": 6,
+          "accuracy": 1.0,
+          "macro_f1_supported_reference_classes": 1.0,
+          "unsupported_reference_classes": [
+            "Moderate 50",
+            "Large 100"
+          ],
+          "class_metrics": {
+            "Neg": {
+              "tp": 5,
+              "fn": 0,
+              "fp": 0,
+              "tn": 1,
+              "positive_support": 5,
+              "negative_support": 1,
+              "sensitivity": 1.0,
+              "specificity": 1.0
+            },
+            "Small 17": {
+              "tp": 1,
+              "fn": 0,
+              "fp": 0,
+              "tn": 5,
+              "positive_support": 1,
+              "negative_support": 5,
+              "sensitivity": 1.0,
+              "specificity": 1.0
+            },
+            "Moderate 50": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 6,
+              "positive_support": 0,
+              "negative_support": 6,
+              "sensitivity": null,
+              "specificity": 1.0
+            },
+            "Large 100": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 6,
+              "positive_support": 0,
+              "negative_support": 6,
+              "sensitivity": null,
+              "specificity": 1.0
+            }
+          },
+          "confusion": {
+            "labels": [
+              "Neg",
+              "Small 17",
+              "Moderate 50",
+              "Large 100"
+            ],
+            "matrix": [
+              [
+                5,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                1,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0
+              ]
+            ]
+          },
+          "reference_label_thresholds": {
+            "analytical_any_nonnegative": {
+              "tp": 1,
+              "fn": 0,
+              "fp": 0,
+              "tn": 5,
+              "positive_support": 1,
+              "negative_support": 5,
+              "sensitivity": 1.0,
+              "specificity": 1.0,
+              "positive_levels": [
+                "Large 100",
+                "Moderate 50",
+                "Small 17"
+              ]
+            }
+          },
+          "retaken_reference_positive_captures": {
+            "analytical_any_nonnegative": 5
+          }
+        },
+        "Glucose": {
+          "n": 6,
+          "accuracy": 1.0,
+          "macro_f1_supported_reference_classes": 1.0,
+          "unsupported_reference_classes": [
+            "Trace 5",
+            "15 +",
+            "30 ++",
+            "60 +++",
+            "110 ++++"
+          ],
+          "class_metrics": {
+            "Neg": {
+              "tp": 6,
+              "fn": 0,
+              "fp": 0,
+              "tn": 0,
+              "positive_support": 6,
+              "negative_support": 0,
+              "sensitivity": 1.0,
+              "specificity": null
+            },
+            "Trace 5": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 6,
+              "positive_support": 0,
+              "negative_support": 6,
+              "sensitivity": null,
+              "specificity": 1.0
+            },
+            "15 +": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 6,
+              "positive_support": 0,
+              "negative_support": 6,
+              "sensitivity": null,
+              "specificity": 1.0
+            },
+            "30 ++": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 6,
+              "positive_support": 0,
+              "negative_support": 6,
+              "sensitivity": null,
+              "specificity": 1.0
+            },
+            "60 +++": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 6,
+              "positive_support": 0,
+              "negative_support": 6,
+              "sensitivity": null,
+              "specificity": 1.0
+            },
+            "110 ++++": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 6,
+              "positive_support": 0,
+              "negative_support": 6,
+              "sensitivity": null,
+              "specificity": 1.0
+            }
+          },
+          "confusion": {
+            "labels": [
+              "Neg",
+              "Trace 5",
+              "15 +",
+              "30 ++",
+              "60 +++",
+              "110 ++++"
+            ],
+            "matrix": [
+              [
+                6,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            ]
+          },
+          "reference_label_thresholds": {
+            "analytical_any_nonnegative": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0,
+              "tn": 6,
+              "positive_support": 0,
+              "negative_support": 6,
+              "sensitivity": null,
+              "specificity": 1.0,
+              "positive_levels": [
+                "110 ++++",
+                "15 +",
+                "30 ++",
+                "60 +++",
+                "Trace 5"
+              ]
+            }
+          },
+          "retaken_reference_positive_captures": {
+            "analytical_any_nonnegative": 1
+          }
+        }
+      }
+    }
+  },
+  "recovered_capture_ids": [
+    "uritect_2026-7-15_Cabatuan_011_Daylight",
+    "uritect_2026-7-17_Cabatuan_028_Daylight"
+  ],
+  "regressed_capture_ids": [],
+  "shared_accepted_prediction_changes": [],
+  "limitations": "18 purposively selected development photos, correlated captures, inspected labels, unverified clinical references. No final-test or classifier-improvement claim. Retakes are not counted as negative predictions."
+}

@@ -7,17 +7,26 @@ import '../models/screening_fusion.dart';
 import '../models/renal_followup.dart';
 import '../widgets/dipstick_results_table.dart';
 import 'renal_results_page.dart';
+import 'protected_history_page.dart';
+import '../widgets/scan_context_notice.dart';
+import '../services/scan_history_service.dart';
 
 class OverallResultsPage extends StatelessWidget {
   final ScanResult scanResult;
   final ClinicalChecklistResult clinicalChecklistResult;
   final BayesianUtiEstimate? savedUtiEstimate;
+  final ScanHistoryService? historyService;
+  final String? patientName;
+  final VoidCallback? onEditPatientName;
 
   const OverallResultsPage({
     super.key,
     required this.scanResult,
     required this.clinicalChecklistResult,
     this.savedUtiEstimate,
+    this.historyService,
+    this.patientName,
+    this.onEditPatientName,
   });
 
   @override
@@ -98,6 +107,33 @@ class OverallResultsPage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 14),
+              if (onEditPatientName != null)
+                ListTile(
+                  leading: const Icon(Icons.person_outline),
+                  title: Text(
+                    patientName ?? 'Unnamed patient',
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  subtitle: const Text('Saved record name'),
+                  trailing: IconButton(
+                    tooltip: patientName == null
+                        ? 'Add patient name'
+                        : 'Edit patient name',
+                    icon: const Icon(Icons.edit_outlined),
+                    onPressed: onEditPatientName,
+                  ),
+                ),
+              ScanContextNotice(scan: scanResult),
+              if (clinicalChecklistResult.hasIncompleteSafetyReview)
+                const Padding(
+                  padding: EdgeInsets.only(bottom: 12),
+                  child: Text(
+                    'Safety answers are incomplete or uncertain. Available follow-up rules cannot exclude unreported warning symptoms. Review the checklist before relying on these results.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontWeight: FontWeight.w600),
+                  ),
+                ),
               _bayesianEstimateCard(
                 context,
                 savedUtiEstimate ?? fusionResult.utiEstimate,
@@ -376,8 +412,8 @@ class OverallResultsPage extends StatelessWidget {
           const SizedBox(height: 10),
           Text(
             estimate.modelVersion == ScreeningFusionEngine.maleModelVersion
-                ? 'Provisional ordered-threshold research approximation. It is not locally calibrated, is not a diagnosis, and does not recommend treatment.'
-                : 'Provisional literature-derived research estimate; not locally calibrated. Not a diagnosis or treatment recommendation.',
+                ? 'Provisional literature-derived screening estimate. The ordered-threshold branches and transfer of the study prior and LRs remain assumptions. No local culture-confirmed calibration has been performed. This is not a diagnosis or treatment recommendation.'
+                : 'Provisional literature-derived screening estimate. Combining symptom and dipstick LRs remains an assumption. No local culture-confirmed calibration has been performed. This is not a diagnosis or treatment recommendation.',
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
               color: const Color(0xFF4E5962),
               fontWeight: FontWeight.w600,
@@ -447,10 +483,17 @@ class OverallResultsPage extends StatelessWidget {
             onPressed: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (_) => RenalResultsPage(
-                    scanResult: scanResult,
-                    checklistResult: clinicalChecklistResult,
-                  ),
+                  builder: (_) => savedUtiEstimate != null
+                      ? ProtectedHistoryPage(
+                          recordId: scanResult.id,
+                          renalOnly: true,
+                          historyService:
+                              historyService ?? const ScanHistoryService(),
+                        )
+                      : RenalResultsPage(
+                          scanResult: scanResult,
+                          checklistResult: clinicalChecklistResult,
+                        ),
                 ),
               );
             },
@@ -776,7 +819,11 @@ class OverallResultsPage extends StatelessWidget {
                   ),
                   const SizedBox(width: 8),
                   Text(
-                    clinicalChecklistResult.selectedSymptoms[symptom.id] == true
+                    clinicalChecklistResult.questionnaireVersion != null
+                        ? clinicalChecklistResult.responseLabel(symptom.id)
+                        : clinicalChecklistResult.selectedSymptoms[symptom
+                                  .id] ==
+                              true
                         ? 'Selected'
                         : symptom.category == 'uti_eligibility'
                         ? 'Not confirmed'

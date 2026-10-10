@@ -5,6 +5,7 @@ import '../models/scan_analysis_exit_reason.dart';
 import '../widgets/dipstick_results_table.dart';
 import 'symptom_checklist_page.dart';
 import '../models/scan_model.dart';
+import '../widgets/scan_context_notice.dart';
 
 class ResultsPage extends StatelessWidget {
   final ScanResult scanResult;
@@ -59,6 +60,7 @@ class ResultsPage extends StatelessWidget {
                 padding: const EdgeInsets.fromLTRB(8, 0, 8, 16),
                 child: Column(
                   children: [
+                    ScanContextNotice(scan: scanResult),
                     if (scanResult.padsUnavailable != null &&
                         scanResult.padsUnavailable! > 0)
                       Container(
@@ -83,7 +85,11 @@ class ResultsPage extends StatelessWidget {
                             const SizedBox(width: 8),
                             Expanded(
                               child: Text(
-                                'Detected: ${scanResult.padsDetected ?? 0}/${(scanResult.padsDetected ?? 0) + (scanResult.padsUnavailable ?? 0)} pads',
+                                scanResult.status == 'invalid'
+                                    ? (scanResult.padsDetected == 10
+                                          ? 'Located: 10/10 pads; results unavailable'
+                                          : 'Ten-pad detection not confirmed')
+                                    : 'Detected: ${scanResult.padsDetected ?? 0}/${(scanResult.padsDetected ?? 0) + (scanResult.padsUnavailable ?? 0)} pads',
                                 style: Theme.of(context).textTheme.bodySmall
                                     ?.copyWith(
                                       color: const Color(0xFF856404),
@@ -123,6 +129,19 @@ class ResultsPage extends StatelessWidget {
                                   ),
                             ),
                             const SizedBox(height: 6),
+                            if (scanResult.rejectionReason != null) ...[
+                              Text(
+                                scanResult.rejectionReason!,
+                                textAlign: TextAlign.center,
+                                style: Theme.of(context).textTheme.bodyMedium,
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                'Scan check: ${scanResult.rejectionCode}',
+                                style: Theme.of(context).textTheme.bodySmall,
+                              ),
+                              const SizedBox(height: 8),
+                            ],
                             Text(
                               'You may still complete the safety checklist. Serious symptoms require attention even when a scan fails.',
                               textAlign: TextAlign.center,

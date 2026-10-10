@@ -5,17 +5,21 @@ import 'package:flutter/material.dart';
 import '../config/theme.dart';
 import '../models/scan_model.dart';
 import '../models/scan_analysis_exit_reason.dart';
+import '../models/scan_analysis_failure.dart';
+import '../models/scan_provenance.dart';
 import '../services/scan_analysis_service.dart';
 import 'results_page.dart';
 
 class AnalyzingPage extends StatefulWidget {
   final String imagePath;
   final ScanAnalysisService analysisService;
+  final ScanProvenance? provenance;
 
   const AnalyzingPage({
     super.key,
     required this.imagePath,
     this.analysisService = const ScanAnalysisService(),
+    this.provenance,
   });
 
   @override
@@ -58,6 +62,8 @@ class _AnalyzingPageState extends State<AnalyzingPage> {
         .catchError((error) async {
           if (!mounted) return;
           if (_isInvalidScanError(error)) {
+            debugPrint('URITECT scan rejected: $error');
+            final failure = ScanAnalysisFailure.fromError(error);
             final invalidResult =
                 ScanResult.empty(
                   imagePath: widget.imagePath,
@@ -67,8 +73,10 @@ class _AnalyzingPageState extends State<AnalyzingPage> {
                   riskBucket: 'Unavailable',
                   modelVersion:
                       'production_semiquant_knn_markerless_roi_topfix_v3_20260908',
-                  padsDetected: 0,
+                  padsDetected: failure.padsDetected,
                   padsUnavailable: 10,
+                  rejectionCode: failure.code,
+                  rejectionReason: failure.guidance,
                 );
             await _showResults(invalidResult);
             return;
@@ -85,7 +93,11 @@ class _AnalyzingPageState extends State<AnalyzingPage> {
   Future<void> _showResults(ScanResult result) async {
     _progressTimer?.cancel();
     final exitReason = await Navigator.of(context).push<ScanAnalysisExitReason>(
-      MaterialPageRoute(builder: (_) => ResultsPage(scanResult: result)),
+      MaterialPageRoute(
+        builder: (_) => ResultsPage(
+          scanResult: result.copyWith(provenance: widget.provenance),
+        ),
+      ),
     );
     if (!mounted) return;
     Navigator.of(context).pop(exitReason);
@@ -146,6 +158,7 @@ class _AnalyzingPageState extends State<AnalyzingPage> {
   }
 
   bool _isInvalidScanError(Object error) {
+    if (error is ScanAnalysisFailure) return true;
     final message = error.toString().toLowerCase();
     return message.contains('no_dipstick_found') ||
         message.contains('could not localize enough dipstick pads') ||

@@ -1,3 +1,5 @@
+> Historical development plan, superseded on 2026-10-05 by [the abnormal detection recovery audit](URITECT_ABNORMAL_DETECTION_RECOVERY_2026-10-05.md). Its inspected holdout, image-count targets and projected accuracy gains do not establish independent final performance or safety. Do not use its numerical targets as approved clinical acceptance criteria.
+
 # Uritect Performance Recovery Plan (Student-Friendly)
 
 ## 1) What your current metrics mean

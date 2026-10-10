@@ -1,153 +1,216 @@
 {
-  "release": "URITECT 1.4.0 - sex-specific Bayesian UTI - Renal rules v1.1",
-  "generated_at": "2026-10-01T08:14:12.836583+00:00",
+  "schema_version": 2,
+  "release": "URITECT 1.4.1+14",
+  "status": "signed_release_candidate_pending_device_and_human_evaluation",
+  "generated_at": "2026-10-05T18:36:13.302525+00:00",
   "android_application_id": "ph.edu.wvsu.uritect",
   "android_version": {
-    "name": "1.4.0",
-    "code": 5
+    "name": "1.4.1",
+    "code": 14
+  },
+  "apk": {
+    "path": "output/release/1.4.1+14/Uritect_v1.4.1+14_release.apk",
+    "bytes": 54368200,
+    "sha256": "BBCEC805C3F032C1DB9C8FF12B778FA4D8CC87DC45C4FCE97D214253099219EA"
   },
   "release_signing_certificate_sha256": "15D1138DCE077ADA624A140B3A145343D1A48305FD0847E9002869E488F19D39",
+  "source_snapshot": {
+    "path": "output/release/1.4.1+14/SOURCE_SNAPSHOT.json",
+    "bytes": 17613,
+    "sha256": "F224044428B234055FE1DC089FC67DFDB1A1881AB96EA19D86CADD36E7683755"
+  },
+  "toolchain": {
+    "flutter": {
+      "frameworkVersion": "3.41.9",
+      "channel": "stable",
+      "repositoryUrl": "https://github.com/flutter/flutter.git",
+      "frameworkRevision": "00b0c91f06209d9e4a41f71b7a512d6eb3b9c694",
+      "frameworkCommitDate": "2026-04-29 10:03:19 -0700",
+      "engineRevision": "42d3d75a56efe1a2e9902f52dc8006099c45d937",
+      "engineCommitDate": "2026-04-28 17:31:55.000Z",
+      "engineContentHash": "9161402dc0e134b3fb5adee5046b6e84b1a5e1c1",
+      "engineBuildDate": "2026-04-29 03:37:18.442",
+      "dartSdkVersion": "3.11.5",
+      "devToolsVersion": "2.54.2",
+      "flutterVersion": "3.41.9"
+    },
+    "java": "openjdk version \"21.0.6\" 2025-01-21\nOpenJDK Runtime Environment (build 21.0.6+-13391695-b895.109)\nOpenJDK 64-Bit Server VM (build 21.0.6+-13391695-b895.109, mixed mode)\n",
+    "gradle": "8.14.3",
+    "agp": "8.11.1",
+    "kotlin": "2.1.0",
+    "android_api": 36,
+    "build_command": "flutter build apk --release --no-pub"
+  },
   "production_model_version": "production_semiquant_knn_markerless_roi_topfix_v3_20260908",
+  "pipeline_version": "android_markerless_json_knn_v2_background_20261005",
   "bayesian_model_versions": {
     "female": "uti_bayesian_female_v1_1_20260926",
     "male": "uti_bayesian_male_v0_1_20261001"
   },
   "renal_rule_version": "renal_followup_rules_v1.1_20260919",
+  "clinical_validation": "Not performed; no local culture-confirmed calibration",
+  "evaluation_record": "output/release/RELEASE_ACCEPTANCE_RECORD.json",
+  "reproducibility_note": "Pinned source/toolchain, not a claim of byte-for-byte identical rebuilds.",
   "files": [
     {
-      "path": "output/apk/Uritect_v1.4.0_sex_specific_bayesian_renal_v1.1_release.apk",
-      "bytes": 52476397,
-      "sha256": "A244432523DE2ED8E33BC5D0F371EDD76450E1984AA1B76A3217038B5C1CF9A2"
-    },
-    {
-      "path": "uritect_app/assets/production_semiquant_model.json",
-      "bytes": 388131,
-      "sha256": "348EA1A6CF2C59E3FF6834E4FD042ABA09A2A26CC041559096F13966FBD8FE80"
-    },
-    {
-      "path": "pipeline/output/semiquant_models/semiquant_models_metadata.json",
-      "bytes": 4557,
-      "sha256": "5D9F101549B701D9CC95F8E08419C70ECD9E94BABDF1FD7DE572738AE5EBB3A3"
-    },
-    {
-      "path": "pipeline/output/production_grouped_evaluation.json",
-      "bytes": 3997,
-      "sha256": "937D11E8D6F20DBEA7C0A7C6ECB18D0CFF2342A5614DDE4398FEEC04C49E60DD"
-    },
-    {
-      "path": "pipeline/output/production_grouped_metrics_complete.json",
-      "bytes": 20326,
-      "sha256": "8EFE086CAAB7A70FFC7CA554CDEBE210C26CF80440C702BD6F7588FFB15F745D"
-    },
-    {
-      "path": "pipeline/output/whole_scan_optimization_final_knn_grouped.json",
-      "bytes": 16702,
-      "sha256": "C65A372EB9033531A282861153BAF0152BB2831B1330BC13CA2AD0AF9BDD1F3F"
-    },
-    {
-      "path": "docs/URITECT_Bayesian_UTI_Scoring_System_v1.1.md",
-      "bytes": 14844,
-      "sha256": "2B526FB651D42B2C2736E47E3960A2828F4E849F284AAE088AB010911AC50A90"
-    },
-    {
-      "path": "docs/URITECT_Sex_Specific_Bayesian_UTI_Specification_v1.2.md",
-      "bytes": 7822,
-      "sha256": "6CFCB7D88D1004E8D6B55BCE6F0236C5C326686B367E8F0D1CCB1024F2351F0D"
-    },
-    {
-      "path": "docs/URITECT_Renal_Rule_Specification_v1.1.md",
-      "bytes": 16748,
-      "sha256": "8B462633B3B47E0C3877A4133A8A7600892B18B464100CF36C9BC765809E173A"
-    },
-    {
-      "path": "docs/URITECT_Release_1.4.0_Clinical_Signoff_Addendum.md",
-      "bytes": 1364,
-      "sha256": "E4C810FAD11F256FDF0B9D32D820406A5BE0B03E9F0BCDEAD910701F5AAB32A0"
-    },
-    {
       "path": "docs/ANDROID_RELEASE_SIGNING.md",
-      "bytes": 1082,
-      "sha256": "B5CE8840C7403062DE7BD10CAA1E0815F280E888916B3027A1A8803D24CD9680"
-    },
-    {
-      "path": "uritect_app/lib/models/screening_fusion.dart",
-      "bytes": 24925,
-      "sha256": "3F00E206EC84C6C2613A520A2FBD3ECC562BE430C88D92599AA0DC89B9098CA8"
-    },
-    {
-      "path": "uritect_app/lib/models/renal_followup.dart",
-      "bytes": 16274,
-      "sha256": "11260233ABCDDD9886733F86DFD03A1C0484DE8ED849F5A245846A55EEE072CE"
-    },
-    {
-      "path": "uritect_app/lib/models/saved_scan_record.dart",
-      "bytes": 5039,
-      "sha256": "7C3830A392ED270A535BF02E34EBD8B80F0029BF0D666AADD8526ECACA6F5C1B"
-    },
-    {
-      "path": "uritect_app/lib/pages/symptom_checklist_page.dart",
-      "bytes": 20408,
-      "sha256": "AA53A6B00B31023F0456BEADA19CCFC634A59124B98AFB60CCF00156822A7DE4"
-    },
-    {
-      "path": "uritect_app/lib/pages/overall_results_page.dart",
-      "bytes": 29702,
-      "sha256": "6A4EA33FA483FC7E954DB62DA2C53A662805C04C83C06523295A3783B23C06FF"
-    },
-    {
-      "path": "uritect_app/pubspec.yaml",
-      "bytes": 1730,
-      "sha256": "EF6BA89E4388736C59B1A369D19971C923E64E1B55589344220070BF59A3B228"
-    },
-    {
-      "path": "uritect_app/android/app/build.gradle.kts",
-      "bytes": 2217,
-      "sha256": "EC305CDCA0318BFBC4A9D19F9050A655ED2059F938C315A5727CDD74ADE6EEE0"
-    },
-    {
-      "path": "uritect_app/android/app/src/main/AndroidManifest.xml",
-      "bytes": 2737,
-      "sha256": "007C27D834261C6FBF9B5F010961A6C93FF4D73C10337E1A4E4288BABBB60B73"
-    },
-    {
-      "path": "output/pdf/URITECT_Sex_Specific_Bayesian_UTI_Specification_v1.2.pdf",
-      "bytes": 10270,
-      "sha256": "CB8876373694D851CE66F4518BD4AAB2E99B8E4B214AFEC009D0A9B7747F3ED4"
-    },
-    {
-      "path": "output/pdf/URITECT_Bayesian_Parameter_Validation_Form_v1.3.pdf",
-      "bytes": 9589,
-      "sha256": "1A31440530BD43F60D5A83B2E2CA6BA10A1B77301C0B5E25133C81CADBF083CE"
-    },
-    {
-      "path": "output/pdf/URITECT_Bayesian_Review_Cover_Letter_v1.3.pdf",
-      "bytes": 3625,
-      "sha256": "D7D2E6CD9FE6CAED985CA523CA209BD169EAEC51A15BE7584F8692DCC11CF771"
+      "bytes": 1599,
+      "sha256": "F9600D743D0A7A1DBC27653A8A5BDDFCBE2DB545BAEABC5C674DAB1C68D4A475"
     },
     {
       "path": "docs/FINAL_PROJECT_HANDOFF.md",
-      "bytes": 6117,
-      "sha256": "1F5B60726A44FF5695327A1E172CEC0EF620E40B1637A6C796FF8E52816BD057"
+      "bytes": 7229,
+      "sha256": "963B73EB5A7714BCFA006F1679709D03293BBC084FCB4E3E26241CE87007B3E2"
     },
     {
-      "path": "docs/URITECT_ISO25010_MedTech_App_Evaluation_v1.0.md",
-      "bytes": 6613,
-      "sha256": "CC11148F1CDBF610507110F2557449FC0B5E89FA9F765FA374BD6FBAE1D31DC9"
+      "path": "docs/MANUSCRIPT_FINAL_REVISION_GUIDE.md",
+      "bytes": 10743,
+      "sha256": "D113AD24A7B09D09417F225A7C1902C32E2A9AD44E9917E3C0F4802402CD1678"
     },
     {
-      "path": "output/forms/URITECT_ISO25010_MedTech_App_Evaluation_Data_Template.csv",
-      "bytes": 895,
-      "sha256": "118E91E9A57A30E73489F815B1F4B5EA113FEF81AA6F4E6E7CB4C6B4A69D8B10"
+      "path": "docs/URITECT_PHYSICAL_STRIP_PROTOCOL.md",
+      "bytes": 3161,
+      "sha256": "935272F002A5660EB07721C5BFB0F426B9639A3A7FD91CA11CD65BA66AF32552"
     },
     {
-      "path": "pipeline/analyze_medtech_app_evaluation.py",
-      "bytes": 6450,
-      "sha256": "CF26361AE657472C1FA4ED4D9FFF035827F6C6BAFB1224317802C9A2A1C1F6C0"
+      "path": "docs/URITECT_RELEASE_ACCEPTANCE_2026-10-06.md",
+      "bytes": 10091,
+      "sha256": "EE8433043D3CBE111132DC8E0017AA6C3C7201C86E66E63FAD32871C1207CCD7"
+    },
+    {
+      "path": "docs/URITECT_STATISTICAL_AND_EXPERT_REVIEW_PACKET.md",
+      "bytes": 7183,
+      "sha256": "88ADDC7F242863AC91CED6A3991BF8B626363CC69CD0BAC4AFAE1269C57DC118"
+    },
+    {
+      "path": "output/release/1.4.1+14/APK_IDENTITY.txt",
+      "bytes": 2690,
+      "sha256": "F20DBB1D258C9F6F3EA7A5F263B721E8508E615C1D489341A8F944F8A676436E"
+    },
+    {
+      "path": "output/release/1.4.1+14/APK_PERMISSIONS.txt",
+      "bytes": 474,
+      "sha256": "78FFC5ACA0B6D0505FBA038C21B2C4EADD0C444906FD57A140DBE3636F198FB8"
+    },
+    {
+      "path": "output/release/1.4.1+14/APP_STRIP_MAPPING.json",
+      "bytes": 1632,
+      "sha256": "5D92AD260A4A77CF7637ECA843E71A169AE3014664F71F437C6C94958B8642A7"
+    },
+    {
+      "path": "output/release/1.4.1+14/AUTOMATED_CHECKS.json",
+      "bytes": 538,
+      "sha256": "A822BBF78EA301C471C364A0B520A221D2A449C69E11BA60D7A2B5F7E1ADA12C"
+    },
+    {
+      "path": "output/release/1.4.1+14/dependency_resolution.log",
+      "bytes": 144,
+      "sha256": "C9505A44654A252A4C49D8032C2FE7B7E07B67C58EA772B0B3F20B3152FD9864"
+    },
+    {
+      "path": "output/release/1.4.1+14/flutter_analysis.log",
+      "bytes": 202,
+      "sha256": "D06E05C90B81BF9556D54DF6B6BDA32C55E47C272DD1DADB0DAA5B61E5B33CF9"
+    },
+    {
+      "path": "output/release/1.4.1+14/flutter_tests.log",
+      "bytes": 29152,
+      "sha256": "94AA22172D0B15F2BE4B924AA7B86061583DD26FA812B4614429EF58A214CBE5"
+    },
+    {
+      "path": "output/release/1.4.1+14/IDE_SETTINGS.json",
+      "bytes": 246,
+      "sha256": "62580C253DD7E9ACC1581281099C3D3762D450DA0E7409EC1573B9F0BA94AE28"
+    },
+    {
+      "path": "output/release/1.4.1+14/model_export_parity.log",
+      "bytes": 86,
+      "sha256": "A3D1BF862864527979196C5A82F489FB568C45B2417889F636F3A9864FFAA601"
+    },
+    {
+      "path": "output/release/1.4.1+14/PYTHON_CHECKS.json",
+      "bytes": 441,
+      "sha256": "E3D4824CAD6F4490EB0C3109596D745FE3C3C1BA4ACBDDA36E5B604E7DED0E19"
+    },
+    {
+      "path": "output/release/1.4.1+14/python_tests.log",
+      "bytes": 10528,
+      "sha256": "27AE717CACC10822EB2A9655331629AAA6CFE69F4D6495B145C41B6CEA9F5082"
+    },
+    {
+      "path": "output/release/1.4.1+14/README.md",
+      "bytes": 3198,
+      "sha256": "71054477AC7C0EC42C723E938EF17C16D2FF94EA438693F0DBB395593754FCF8"
+    },
+    {
+      "path": "output/release/1.4.1+14/release_build.log",
+      "bytes": 8474,
+      "sha256": "4C92390DC0EEF836F56026C30F4859835B83AF7BCF14FA79EF58E41533C83BFD"
+    },
+    {
+      "path": "output/release/1.4.1+14/release_build_attempt_1_cache_failure.log",
+      "bytes": 16188,
+      "sha256": "9F1E0A6B33FF3FB20E1669D3EEBF8D0CAC27E0AA291AA539A1C789023E856966"
+    },
+    {
+      "path": "output/release/1.4.1+14/SOURCE_SNAPSHOT.json",
+      "bytes": 17613,
+      "sha256": "F224044428B234055FE1DC089FC67DFDB1A1881AB96EA19D86CADD36E7683755"
+    },
+    {
+      "path": "output/release/1.4.1+14/URITECT_SOURCE_SNAPSHOT.zip",
+      "bytes": 4774863,
+      "sha256": "3827BE9C89BB235A50F3D7F66598057FB6AE4CC736649033026D07D0667F5DF3"
+    },
+    {
+      "path": "output/release/1.4.1+14/Uritect_v1.4.1+14_release.apk",
+      "bytes": 54368200,
+      "sha256": "BBCEC805C3F032C1DB9C8FF12B778FA4D8CC87DC45C4FCE97D214253099219EA"
+    },
+    {
+      "path": "pipeline/build_final_release_manifest.py",
+      "bytes": 9436,
+      "sha256": "026F622E650B746DE1566FB4B5D9704204DEB05031BF61D1A3D2EDE5BDBBB378"
+    },
+    {
+      "path": "pipeline/bundle_offline_fonts.py",
+      "bytes": 2276,
+      "sha256": "A08691C9BD529C52F13162D895B15A9E8E083DEC7D236111F82C4C2043719B06"
+    },
+    {
+      "path": "pipeline/output/abnormal_error_audit_2026-10-05/runtime_before_after_regression.json",
+      "bytes": 25606,
+      "sha256": "3CE27383D8576DD8950DF1BE7EEFCE19AC21BE6B2631FA720E4D58614691F5A0"
+    },
+    {
+      "path": "pipeline/output/abnormal_error_audit_2026-10-05/runtime_regression_summary.json",
+      "bytes": 74091,
+      "sha256": "D008A69CD188020FCBDEBF857EBB37F4A833500FF55CFCF783C943607B2D5D31"
+    },
+    {
+      "path": "pipeline/output/abnormal_error_audit_2026-10-05/technical_review_summary.json",
+      "bytes": 429,
+      "sha256": "0BB082063720106ABFADCFB1F1B08E7C85196367028FB07B68B7EADB576E49B7"
+    },
+    {
+      "path": "pipeline/prepare_release_acceptance_record.py",
+      "bytes": 2630,
+      "sha256": "7025501EDDD7CEAB93A6321BB6021DD10FFB9C6A9A5DFA3D6837706138FD531E"
+    },
+    {
+      "path": "pipeline/test_release_integrity.py",
+      "bytes": 7146,
+      "sha256": "D4CDB8292E61751A5F3DF3CC394B050B4F561A170AC7F2405590B3B87875734E"
     },
     {
       "path": "pipeline/verify_final_release_manifest.py",
-      "bytes": 1501,
-      "sha256": "D3ACB0B9350E4FD56F08A5480650E4B0DACBC2486728E58A5856764485524794"
+      "bytes": 2128,
+      "sha256": "DA615715D166EA31CD4D19E1FF7BDF199D793F732E1E964D7C482B87DF6EC265"
+    },
+    {
+      "path": "pipeline/verify_release_acceptance.py",
+      "bytes": 11380,
+      "sha256": "E8C0C678B0697B8F095289D4D8AD82E23F70A8C2469E4C52C3A06E1266B5E37A"
     }
   ]
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../config/theme.dart';
 import '../models/clinical_symptoms.dart';
+import '../models/checklist_draft.dart';
 import '../models/renal_followup.dart';
 import '../models/scan_model.dart';
 import '../models/screening_fusion.dart';
@@ -18,19 +19,12 @@ class SymptomChecklistPage extends StatefulWidget {
 }
 
 class _SymptomChecklistPageState extends State<SymptomChecklistPage> {
-  late Map<String, bool> selectedSymptoms;
+  final ChecklistDraft _draft = ChecklistDraft();
+  Map<String, bool> get selectedSymptoms => _draft.result().selectedSymptoms;
   final ScanHistoryService _historyService = const ScanHistoryService();
   final ScrollController _scrollController = ScrollController();
   int _currentStep = 0;
   bool _isSaving = false;
-
-  @override
-  void initState() {
-    super.initState();
-    selectedSymptoms = {
-      for (final symptom in clinicalSymptoms) symptom.id: false,
-    };
-  }
 
   @override
   void dispose() {
@@ -38,29 +32,61 @@ class _SymptomChecklistPageState extends State<SymptomChecklistPage> {
     super.dispose();
   }
 
-  void _toggleSymptom(String id) {
+  void _answer(String id, String value) {
     if (_isSaving) return;
-    setState(() {
-      selectedSymptoms[id] = !(selectedSymptoms[id] ?? false);
-    });
+    setState(() => _draft.answer(id, value));
   }
 
-  void _selectSex(String id) {
-    if (_isSaving) return;
-    setState(() {
-      selectedSymptoms['uti_eligible_female'] = id == 'uti_eligible_female';
-      selectedSymptoms['uti_eligible_male'] = id == 'uti_eligible_male';
-      if (id == 'uti_eligible_male') {
-        selectedSymptoms['uti_eligible_nonpregnant'] = false;
-        selectedSymptoms['vaginal_discharge'] = false;
-        selectedSymptoms['vaginal_irritation'] = false;
-        selectedSymptoms['menstruation_or_vaginal_bleeding'] = false;
-      } else {
-        selectedSymptoms['uti_male_no_diabetes'] = false;
-        selectedSymptoms['uti_male_no_suspected_sti'] = false;
-      }
-    });
+  void _advance() {
+    final missing = _requiredIds().any((id) => !_draft.answers.containsKey(id));
+    if (missing) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Answer each question, or choose Not sure, before continuing.',
+          ),
+        ),
+      );
+      return;
+    }
+    if (_currentStep < 4) {
+      _setStep(_currentStep + 1);
+    } else {
+      _continueToOverallResults();
+    }
   }
+
+  List<String> _requiredIds() => switch (_currentStep) {
+    0 => ['age_band', 'uti_eligible_female'],
+    1 => [
+      if (_draft.female) ...[
+        'uti_eligible_nonpregnant',
+        'menstruation_or_vaginal_bleeding',
+        'vaginal_discharge',
+        'vaginal_irritation',
+      ],
+      'dysuria',
+      'frequency',
+      'urgency',
+      'suprapubic',
+      if (_draft.answers['uti_eligible_age_18_64'] == 'yes') ...[
+        'uti_eligible_no_catheter',
+        'uti_eligible_no_urologic_abnormality',
+        'uti_eligible_not_immunocompromised',
+        if (_draft.male) ...[
+          'uti_male_no_diabetes',
+          'uti_male_no_suspected_sti',
+        ],
+      ],
+    ],
+    2 => [
+      'safety_review',
+      if (_draft.answers['safety_review'] != 'no') ...checklistSafetyIds,
+      if (_draft.answers['edema'] == 'yes') 'persistent_edema',
+    ],
+    3 => ['renal_history'],
+    _ => ['quality_review'],
+  };
 
   void _setStep(int step) {
     if (_isSaving) return;
@@ -74,9 +100,7 @@ class _SymptomChecklistPageState extends State<SymptomChecklistPage> {
     if (_isSaving) return;
     setState(() => _isSaving = true);
 
-    final checklistResult = ClinicalChecklistResult(
-      selectedSymptoms: Map<String, bool>.from(selectedSymptoms),
-    );
+    final checklistResult = _draft.result();
     final screeningAnalytes = ScreeningFusionEngine.buildAnalytesFromRows(
       widget.scanResult.rows,
     );
@@ -109,16 +133,22 @@ class _SymptomChecklistPageState extends State<SymptomChecklistPage> {
     } catch (error) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Could not save scan history: $error')),
+        SnackBar(
+          content: Text('Results are available but were not saved: $error'),
+        ),
+      );
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (_) => OverallResultsPage(
+            scanResult: widget.scanResult,
+            clinicalChecklistResult: checklistResult,
+          ),
+        ),
       );
     } finally {
       if (mounted) setState(() => _isSaving = false);
     }
   }
-
-  List<ClinicalSymptom> _items(String category) => clinicalSymptoms
-      .where((symptom) => symptom.category == category)
-      .toList();
 
   @override
   Widget build(BuildContext context) {
@@ -172,7 +202,7 @@ class _SymptomChecklistPageState extends State<SymptomChecklistPage> {
                   ),
                 ),
                 Text(
-                  'Step ${_currentStep + 1} of 3',
+                  'Step ${_currentStep + 1} of 5',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     color: AppColors.textSecondary,
                   ),
@@ -186,39 +216,85 @@ class _SymptomChecklistPageState extends State<SymptomChecklistPage> {
     );
   }
 
-  Widget _buildStepSelector(BuildContext context) {
+  Widget _buildStepSelector(BuildContext context) => Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+    child: Column(
+      children: [
+        LinearProgressIndicator(value: (_currentStep + 1) / 5),
+        const SizedBox(height: 8),
+        Text(
+          const [
+            'Basic information',
+            'Your pathway',
+            'Safety',
+            'Follow-up context',
+            'Test quality',
+          ][_currentStep],
+        ),
+      ],
+    ),
+  );
+
+  bool _padNeedsContext(String code) {
+    if (!widget.scanResult.isReliableForInterpretation) return true;
+    final rows = widget.scanResult.rows.where((r) => r.code == code);
+    if (rows.isEmpty) return true;
+    return ![
+      'neg',
+      'negative',
+    ].contains(rows.first.result.trim().toLowerCase());
+  }
+
+  Widget _question(String id, {String? label, bool inverted = false}) {
+    final text =
+        label ??
+        clinicalSymptoms
+            .firstWhere((s) => s.id == id)
+            .label
+            .replaceAll('\n', ' ');
+    String? value = _draft.answers[id];
+    if (inverted && value != null && value != 'unsure') {
+      value = value == 'yes' ? 'no' : 'yes';
+    }
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
-      child: SizedBox(
-        width: double.infinity,
-        child: SegmentedButton<int>(
-          segments: const [
-            ButtonSegment(
-              value: 0,
-              icon: Icon(Icons.fact_check_outlined, size: 18),
-              label: Text('UTI'),
-            ),
-            ButtonSegment(
-              value: 1,
-              icon: Icon(Icons.health_and_safety_outlined, size: 18),
-              label: Text('Safety'),
-            ),
-            ButtonSegment(
-              value: 2,
-              icon: Icon(Icons.science_outlined, size: 18),
-              label: Text('Context'),
-            ),
-          ],
-          selected: {_currentStep},
-          showSelectedIcon: false,
-          onSelectionChanged: (selection) => _setStep(selection.first),
-          style: ButtonStyle(
-            visualDensity: VisualDensity.compact,
-            textStyle: WidgetStatePropertyAll(
-              Theme.of(
-                context,
-              ).textTheme.labelMedium?.copyWith(fontWeight: FontWeight.w700),
-            ),
+      key: ValueKey('question_$id'),
+      padding: const EdgeInsets.only(top: 14),
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(text, style: const TextStyle(fontWeight: FontWeight.w600)),
+              const SizedBox(height: 8),
+              Wrap(
+                spacing: 8,
+                children: [
+                  for (final answer in ['yes', 'no', 'unsure'])
+                    ChoiceChip(
+                      key: ValueKey('$id:$answer'),
+                      label: Text(
+                        answer == 'yes'
+                            ? 'Yes'
+                            : answer == 'no'
+                            ? 'No'
+                            : 'Not sure',
+                      ),
+                      selected: value == answer,
+                      onSelected: _isSaving
+                          ? null
+                          : (_) => _answer(
+                              id,
+                              inverted && answer != 'unsure'
+                                  ? answer == 'yes'
+                                        ? 'no'
+                                        : 'yes'
+                                  : answer,
+                            ),
+                    ),
+                ],
+              ),
+            ],
           ),
         ),
       ),
@@ -226,130 +302,243 @@ class _SymptomChecklistPageState extends State<SymptomChecklistPage> {
   }
 
   Widget _buildCurrentStep(BuildContext context) {
-    return switch (_currentStep) {
-      0 => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
+    final proteinContext = _padNeedsContext('PRO');
+    final bloodContext =
+        _padNeedsContext('BLD') || selectedSymptoms['hematuria'] == true;
+    final history = _draft.answers['renal_history'];
+    final renalContext =
+        proteinContext ||
+        bloodContext ||
+        history == 'yes' ||
+        history == 'unsure' ||
+        selectedSymptoms['edema'] == true;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (_currentStep == 0) ...[
           _buildIntro(
             context,
-            icon: Icons.calculate_outlined,
-            title: 'Bayesian UTI screening inputs',
+            icon: Icons.person_outline,
+            title: 'Basic information',
             message:
-                'Confirm eligibility, then select only symptoms that are actually reported. Unchecked eligibility items remain unknown and stop the ordinary estimate.',
+                'Age and sex determine the research pathway. Safety guidance remains available outside the intended population.',
           ),
-          _buildSection(
-            context,
-            title: 'Sex',
-            helper:
-                'Select one. URITECT applies a separately sourced model for each sex.',
-            items: _items('uti_sex'),
-            singleSelection: true,
-          ),
-          _buildSection(
-            context,
-            title: 'Eligibility confirmations',
-            helper: 'Confirm every item that is known to be true.',
-            items: _items('uti_eligibility').where((item) {
-              if (item.id == 'uti_eligible_nonpregnant') {
-                return selectedSymptoms['uti_eligible_female'] == true;
-              }
-              return true;
-            }).toList(),
-          ),
-          if (selectedSymptoms['uti_eligible_male'] == true)
-            _buildSection(
-              context,
-              title: 'Male-model confirmations',
-              helper:
-                  'These exclusions match the culture-referenced male study population.',
-              items: _items('uti_male_eligibility'),
+          const SizedBox(height: 18),
+          DropdownButtonFormField<String>(
+            key: const Key('age_band'),
+            initialValue: _draft.answers['age_band'],
+            decoration: const InputDecoration(
+              labelText: 'Age range',
+              border: OutlineInputBorder(),
             ),
-          _buildSection(
-            context,
-            title: 'Acute urinary symptoms',
-            helper: selectedSymptoms['uti_eligible_male'] == true
-                ? 'Select reported symptoms. Dysuria, frequency or urgency is required for the male estimate; other symptoms inform separate follow-up.'
-                : 'Select every symptom currently reported.',
-            items: _items('uti'),
+            items: const [
+              DropdownMenuItem(value: 'under18', child: Text('Under 18')),
+              DropdownMenuItem(value: '18_64', child: Text('18–64')),
+              DropdownMenuItem(value: '65plus', child: Text('65 or older')),
+              DropdownMenuItem(value: 'unsure', child: Text('Not sure')),
+            ],
+            onChanged: _isSaving
+                ? null
+                : (v) {
+                    if (v == null) return;
+                    setState(() {
+                      _draft.answers['age_band'] = v;
+                      _draft.answer(
+                        'uti_eligible_age_18_64',
+                        v == '18_64'
+                            ? 'yes'
+                            : v == 'unsure'
+                            ? 'unsure'
+                            : 'no',
+                      );
+                    });
+                  },
           ),
-          _buildSection(
-            context,
-            title: 'Symptoms suggesting another cause',
-            helper:
-                'Either finding routes to consultation instead of an ordinary lower-UTI estimate.',
-            items: selectedSymptoms['uti_eligible_male'] == true
-                ? const []
-                : _items('differential'),
+          const SizedBox(height: 18),
+          const Text('Sex'),
+          Wrap(
+            spacing: 8,
+            children: [
+              for (final sex in ['female', 'male'])
+                ChoiceChip(
+                  key: ValueKey('sex_$sex'),
+                  label: Text(sex == 'female' ? 'Female' : 'Male'),
+                  selected: sex == 'female' ? _draft.female : _draft.male,
+                  onSelected: _isSaving
+                      ? null
+                      : (_) => setState(() => _draft.sex(sex)),
+                ),
+            ],
           ),
+          if (_draft.answers.containsKey('age_band') &&
+              _draft.answers['uti_eligible_age_18_64'] != 'yes')
+            const Padding(
+              padding: EdgeInsets.only(top: 16),
+              child: Text(
+                'A numerical UTI research estimate is unavailable for this age range. Continue for safety and follow-up guidance.',
+              ),
+            ),
         ],
-      ),
-      1 => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
+        if (_currentStep == 1) ...[
+          _buildIntro(
+            context,
+            icon: Icons.fact_check_outlined,
+            title: _draft.female ? 'Female pathway' : 'Male pathway',
+            message: 'Answer what is known. Not sure is kept separate from No.',
+          ),
+          if (_draft.female) ...[
+            _question(
+              'uti_eligible_nonpregnant',
+              label: 'Are you currently pregnant?',
+              inverted: true,
+            ),
+            _question(
+              'menstruation_or_vaginal_bleeding',
+              label: 'Are you menstruating or experiencing vaginal bleeding?',
+            ),
+          ],
+          _question('dysuria', label: 'Pain or burning when urinating?'),
+          _question(
+            'frequency',
+            label: 'Urinating more frequently than usual?',
+          ),
+          _question('urgency', label: 'An urgent need to urinate?'),
+          _question(
+            'suprapubic',
+            label: 'Lower abdominal or suprapubic discomfort?',
+          ),
+          if (_draft.female) ...[
+            _question('vaginal_discharge'),
+            _question('vaginal_irritation'),
+          ],
+          if (_draft.answers['uti_eligible_age_18_64'] == 'yes') ...[
+            const Padding(
+              padding: EdgeInsets.only(top: 20),
+              child: Text(
+                'Research population checks',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
+            _question(
+              'uti_eligible_no_catheter',
+              label: 'Do you have a urinary catheter?',
+              inverted: true,
+            ),
+            _question(
+              'uti_eligible_no_urologic_abnormality',
+              label: 'Any known urinary tract abnormality?',
+              inverted: true,
+            ),
+            _question(
+              'uti_eligible_not_immunocompromised',
+              label: 'Are you immunocompromised?',
+              inverted: true,
+            ),
+            if (_draft.male) ...[
+              _question(
+                'uti_male_no_diabetes',
+                label: 'Do you have diabetes?',
+                inverted: true,
+              ),
+              _question(
+                'uti_male_no_suspected_sti',
+                label: 'Any suspected sexually transmitted infection?',
+                inverted: true,
+              ),
+            ],
+          ],
+        ],
+        if (_currentStep == 2) ...[
           _buildIntro(
             context,
             icon: Icons.health_and_safety_outlined,
-            title: 'Safety and renal follow-up',
+            title: 'Safety screening',
             message:
-                'These answers are evaluated separately from the Bayesian UTI estimate. Serious combinations can trigger prompt consultation even when the scan is invalid.',
+                'Fever/chills, back or flank pain, nausea/vomiting, visible blood or clots, difficulty or reduced urination, swelling, breathing trouble, confusion/fainting/severe weakness, severe pain, or inability to keep fluids down.',
           ),
-          _buildSection(
-            context,
-            title: 'Systemic warning symptoms',
-            helper: 'These findings are outside uncomplicated lower UTI.',
-            items: _items('systemic'),
+          _question(
+            'safety_review',
+            label: 'Are any of these symptoms or problems present?',
           ),
-          _buildSection(
-            context,
-            title: 'Renal follow-up symptoms',
-            helper: 'Used by the separate renal rule engine.',
-            items: _items('renal'),
-          ),
-          _buildSection(
-            context,
-            title: 'Urgent safety questions',
-            helper: 'Select every serious symptom or condition that applies.',
-            items: _items('renal_safety'),
+          if (_draft.answers['safety_review'] != null &&
+              _draft.answers['safety_review'] != 'no') ...[
+            for (final id in checklistSafetyIds) _question(id),
+            if (_draft.answers['edema'] == 'yes' ||
+                _draft.answers['edema'] == 'unsure')
+              _question('persistent_edema'),
+          ],
+          const Padding(
+            padding: EdgeInsets.only(top: 16),
+            child: Text(
+              'Safety advice is evaluated independently, even when the scan fails.',
+            ),
           ),
         ],
-      ),
-      _ => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
+        if (_currentStep == 3) ...[
           _buildIntro(
             context,
             icon: Icons.biotech_outlined,
-            title: 'Test context and reliability',
+            title: 'Follow-up context',
             message:
-                'Record possible interferences, repeat-test history, and strip-quality problems before calculating the final outputs.',
+                'Additional questions appear for protein/blood findings, related symptoms, or a previous abnormal result.',
           ),
-          _buildSection(
-            context,
-            title: 'Possible interferences',
-            helper: 'Temporary causes may change the renal follow-up action.',
-            items: _items('interference').where((item) {
-              if (item.id == 'menstruation_or_vaginal_bleeding') {
-                return selectedSymptoms['uti_eligible_male'] != true;
-              }
-              return true;
-            }).toList(),
+          _question(
+            'renal_history',
+            label:
+                'Any previous abnormal protein or blood result, or a repeat test being followed up?',
           ),
-          _buildSection(
-            context,
-            title: 'Repeat-test history',
-            helper: 'Only select results that were actually confirmed.',
-            items: _items('repeat_history'),
-          ),
-          _buildSection(
-            context,
-            title: 'Strip and timing checks',
-            helper:
-                'A quality problem causes a retake rather than a strip-based conclusion.',
-            items: _items('test_quality'),
-          ),
+          if (renalContext) ...[
+            for (final item in clinicalSymptoms.where(
+              (s) =>
+                  s.category == 'interference' &&
+                  s.id != 'menstruation_or_vaginal_bleeding',
+            ))
+              _question(item.id),
+            if (proteinContext || history == 'yes' || history == 'unsure') ...[
+              _question('repeat_protein_present'),
+              _question('repeat_abnormal_resolved'),
+            ],
+            if (bloodContext || history == 'yes' || history == 'unsure') ...[
+              _question('repeat_blood_present'),
+              _question('blood_microscopy_confirmed'),
+            ],
+          ] else if (history == 'no')
+            const Padding(
+              padding: EdgeInsets.only(top: 16),
+              child: Text(
+                'No additional protein/blood context questions are needed for the reported findings.',
+              ),
+            ),
         ],
-      ),
-    };
+        if (_currentStep == 4) ...[
+          _buildIntro(
+            context,
+            icon: Icons.science_outlined,
+            title: 'Test quality',
+            message:
+                'Confirm expiry, pad condition, supported URS-10T profile, and the specified reading time. The app cannot verify these automatically.',
+          ),
+          _question(
+            'quality_review',
+            label:
+                'Was there any strip, timing, collection, or procedure problem?',
+          ),
+          if (_draft.answers['quality_review'] != null &&
+              _draft.answers['quality_review'] != 'no') ...[
+            for (final item in clinicalSymptoms.where(
+              (s) => s.category == 'test_quality',
+            ))
+              _question(item.id),
+            const Padding(
+              padding: EdgeInsets.only(top: 16),
+              child: Text(
+                'A reported or uncertain test problem prevents strip-based interpretation. Retake using a verified procedure.',
+              ),
+            ),
+          ],
+        ],
+      ],
+    );
   }
 
   Widget _buildIntro(
@@ -397,137 +586,7 @@ class _SymptomChecklistPageState extends State<SymptomChecklistPage> {
     );
   }
 
-  Widget _buildSection(
-    BuildContext context, {
-    required String title,
-    required String helper,
-    required List<ClinicalSymptom> items,
-    bool singleSelection = false,
-  }) {
-    if (items.isEmpty) return const SizedBox.shrink();
-    final selectedCount = items
-        .where((item) => selectedSymptoms[item.id] == true)
-        .length;
-    return Padding(
-      padding: const EdgeInsets.only(top: 24),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  title,
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    color: AppColors.textPrimary,
-                    fontSize: 15,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
-              Text(
-                '$selectedCount/${items.length}',
-                style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                  color: AppColors.primaryMain,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 3),
-          Text(
-            helper,
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: AppColors.textSecondary,
-              height: 1.3,
-            ),
-          ),
-          const SizedBox(height: 10),
-          for (final item in items)
-            _buildChecklistTile(
-              context,
-              item,
-              singleSelection: singleSelection,
-            ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildChecklistTile(
-    BuildContext context,
-    ClinicalSymptom symptom, {
-    bool singleSelection = false,
-  }) {
-    final selected = selectedSymptoms[symptom.id] ?? false;
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Material(
-        color: AppColors.bgCard,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-          side: BorderSide(
-            color: selected ? AppColors.primaryMain : AppColors.border,
-            width: selected ? 1.5 : 1,
-          ),
-        ),
-        child: InkWell(
-          borderRadius: BorderRadius.circular(8),
-          onTap: () => singleSelection
-              ? _selectSex(symptom.id)
-              : _toggleSymptom(symptom.id),
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(12, 9, 8, 9),
-            child: Row(
-              children: [
-                Icon(
-                  _iconFor(symptom.iconCode),
-                  color: selected
-                      ? AppColors.primaryMain
-                      : AppColors.textSecondary,
-                  size: 22,
-                ),
-                const SizedBox(width: 11),
-                Expanded(
-                  child: Text(
-                    symptom.label.replaceAll('\n', ' '),
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: AppColors.textPrimary,
-                      fontSize: 13,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
-                if (singleSelection)
-                  Icon(
-                    selected
-                        ? Icons.radio_button_checked_rounded
-                        : Icons.radio_button_unchecked_rounded,
-                    color: selected
-                        ? AppColors.primaryMain
-                        : AppColors.textSecondary,
-                  )
-                else
-                  Checkbox(
-                    value: selected,
-                    onChanged: (_) => _toggleSymptom(symptom.id),
-                    activeColor: AppColors.primaryMain,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                  ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
   Widget _buildNavigation(BuildContext context) {
-    final selectedCount = selectedSymptoms.values
-        .where((value) => value)
-        .length;
     return Container(
       padding: const EdgeInsets.fromLTRB(16, 10, 16, 16),
       decoration: const BoxDecoration(
@@ -550,11 +609,11 @@ class _SymptomChecklistPageState extends State<SymptomChecklistPage> {
               child: ElevatedButton.icon(
                 onPressed: _isSaving
                     ? null
-                    : _currentStep < 2
-                    ? () => _setStep(_currentStep + 1)
-                    : _continueToOverallResults,
+                    : _currentStep < 4
+                    ? _advance
+                    : _advance,
                 icon: Icon(
-                  _currentStep < 2
+                  _currentStep < 4
                       ? Icons.arrow_forward_rounded
                       : Icons.calculate_rounded,
                   size: 20,
@@ -562,9 +621,9 @@ class _SymptomChecklistPageState extends State<SymptomChecklistPage> {
                 label: Text(
                   _isSaving
                       ? 'SAVING...'
-                      : _currentStep < 2
+                      : _currentStep < 4
                       ? 'NEXT'
-                      : 'CALCULATE RESULTS ($selectedCount)',
+                      : 'VIEW RESULTS',
                   style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w700,
@@ -584,37 +643,5 @@ class _SymptomChecklistPageState extends State<SymptomChecklistPage> {
         ],
       ),
     );
-  }
-
-  IconData _iconFor(String code) {
-    return switch (code) {
-      'dysuria' => Icons.local_fire_department_rounded,
-      'frequency' => Icons.schedule_rounded,
-      'suprapubic' => Icons.person_outline_rounded,
-      'hematuria' => Icons.water_drop_rounded,
-      'discharge' => Icons.info_outline_rounded,
-      'irritation' => Icons.report_problem_outlined,
-      'flank' => Icons.accessibility_new_rounded,
-      'fever' => Icons.thermostat_rounded,
-      'nausea' => Icons.sick_outlined,
-      'blood_clots' => Icons.bloodtype_rounded,
-      'urinary_obstruction' => Icons.block_rounded,
-      'reduced_output' => Icons.water_drop_outlined,
-      'edema' => Icons.accessibility_new_rounded,
-      'breathing' => Icons.air_rounded,
-      'hydration' => Icons.local_drink_outlined,
-      'serious_illness' => Icons.emergency_rounded,
-      'severe_pain' => Icons.warning_amber_rounded,
-      'interference' => Icons.science_outlined,
-      'exercise' => Icons.fitness_center_rounded,
-      'acute_illness' => Icons.medical_services_outlined,
-      'uti_context' => Icons.medical_information_outlined,
-      'repeat_test' => Icons.replay_rounded,
-      'microscopy' => Icons.biotech_outlined,
-      'strip_quality' => Icons.fact_check_outlined,
-      'timer' => Icons.timer_outlined,
-      'eligibility' => Icons.verified_user_outlined,
-      _ => Icons.help_outline_rounded,
-    };
   }
 }

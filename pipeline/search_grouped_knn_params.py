@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""Search KNN hyperparameters using the production specimen-grouped split."""
+"""Historical accuracy-first search, retained for reproducibility only.
+
+Use audit_abnormal_detection.py --benchmark for development comparisons.
+The old split has grouping leakage and must not become final-test evidence.
+"""
 from __future__ import annotations
 
 import argparse
@@ -39,7 +43,13 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--output", type=pathlib.Path, default=DEFAULT_OUTPUT)
     parser.add_argument("--test-size", type=float, default=0.20)
     parser.add_argument("--random-state", type=int, default=42)
-    return parser.parse_args()
+    parser.add_argument("--acknowledge-historical-development-only", action="store_true")
+    args = parser.parse_args()
+    if not args.acknowledge_historical_development_only:
+        parser.error("Historical search has grouping leakage and accuracy-first selection. Use audit_abnormal_detection.py --benchmark; reproduction requires --acknowledge-historical-development-only.")
+    if args.output.resolve() == DEFAULT_OUTPUT.resolve():
+        parser.error("Specify a separate --output; do not overwrite frozen production configuration.")
+    return args
 
 
 def _specimen_group(row: dict[str, str]) -> str:

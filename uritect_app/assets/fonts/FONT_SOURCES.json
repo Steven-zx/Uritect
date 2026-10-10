@@ -1,0 +1,54 @@
+{
+  "package": "google_fonts 7.1.0",
+  "license": "SIL Open Font License 1.1; full notices included",
+  "fonts": [
+    {
+      "path": "assets/fonts/Inter-Regular.ttf",
+      "source": "https://fonts.gstatic.com/s/a/15b294b67f2f8bbc04d990023ef4aec66502b87dc9040d84abe5f896ccb693de.ttf",
+      "bytes": 324796,
+      "sha256": "15B294B67F2F8BBC04D990023EF4AEC66502B87DC9040D84ABE5F896CCB693DE"
+    },
+    {
+      "path": "assets/fonts/Inter-Medium.ttf",
+      "source": "https://fonts.gstatic.com/s/a/36a36ff7ac46dc2aeceac3a80a87a67e7b844b8fc936699259aac8fba9bcf734.ttf",
+      "bytes": 325280,
+      "sha256": "36A36FF7AC46DC2AECEAC3A80A87A67E7B844B8FC936699259AAC8FBA9BCF734"
+    },
+    {
+      "path": "assets/fonts/Inter-SemiBold.ttf",
+      "source": "https://fonts.gstatic.com/s/a/334bb2c51aeba5f566abac8d03a7e75ab3234d6926b52e92a85dc704129258b5.ttf",
+      "bytes": 326024,
+      "sha256": "334BB2C51AEBA5F566ABAC8D03A7E75AB3234D6926B52E92A85DC704129258B5"
+    },
+    {
+      "path": "assets/fonts/Poppins-Medium.ttf",
+      "source": "https://fonts.gstatic.com/s/a/c0ba5609d6562c76ab7db73fa9c9b283d210598cb318a45d4085f540e4753d60.ttf",
+      "bytes": 152860,
+      "sha256": "C0BA5609D6562C76AB7DB73FA9C9B283D210598CB318A45D4085F540E4753D60"
+    },
+    {
+      "path": "assets/fonts/Poppins-SemiBold.ttf",
+      "source": "https://fonts.gstatic.com/s/a/ec23e010878cf0841f910ef94f62294e40c7d77ce99be250dba2911d0a1a61cd.ttf",
+      "bytes": 151516,
+      "sha256": "EC23E010878CF0841F910EF94F62294E40C7D77CE99BE250DBA2911D0A1A61CD"
+    },
+    {
+      "path": "assets/fonts/Poppins-Bold.ttf",
+      "source": "https://fonts.gstatic.com/s/a/ed709f2ba2be295030614990104cb4c9c62bc2a2445c25ccb19a1500158a5a8b.ttf",
+      "bytes": 150292,
+      "sha256": "ED709F2BA2BE295030614990104CB4C9C62BC2A2445C25CCB19A1500158A5A8B"
+    }
+  ],
+  "license_sources": [
+    {
+      "family": "inter",
+      "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/inter/OFL.txt",
+      "sha256": "5B9321A4298CFEB6B34354164A1C3AFC3DB114569984C502B9B35D988FD58C57"
+    },
+    {
+      "family": "poppins",
+      "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/poppins/OFL.txt",
+      "sha256": "6BE04893D770899A015649C7AA3B582F871B272F8747A92B78B17C3E5C8B2573"
+    }
+  ]
+}

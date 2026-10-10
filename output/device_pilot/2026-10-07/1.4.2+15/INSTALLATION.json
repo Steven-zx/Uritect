@@ -1,0 +1,15 @@
+{
+  "installed_at_utc": "2026-10-07T02:04:44.302226+00:00",
+  "device_model": "RMX3933",
+  "android_version": "16",
+  "connection": "192.168.68.76:40703",
+  "version_name": "1.4.2",
+  "version_code": 15,
+  "installed_apk_sha256": "F4591848F5FA8F5B3A0332FDE2814FF6309095B857562C8DFD1653DB12AA3809",
+  "expected_apk_sha256": "F4591848F5FA8F5B3A0332FDE2814FF6309095B857562C8DFD1653DB12AA3809",
+  "hash_matches": true,
+  "install_result": "Success",
+  "launch_result": "Starting: Intent { cmp=ph.edu.wvsu.uritect/.MainActivity }\nStatus: ok\nLaunchState: COLD\nActivity: ph.edu.wvsu.uritect/.MainActivity\nTotalTime: 573\nWaitTime: 579\nComplete\n",
+  "scan_confirmation": "Pending user retry of IMG_20261007_093746.jpg",
+  "app_data_cleared": false
+}

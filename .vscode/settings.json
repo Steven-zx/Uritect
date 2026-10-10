@@ -1,4 +1,8 @@
 {
   "java.import.gradle.enabled": false,
-  "java.gradle.buildServer.enabled": "off"
+  "java.gradle.buildServer.enabled": "off",
+  "java.autobuild.enabled": false,
+  "java.configuration.updateBuildConfiguration": "disabled",
+  "gradle.autoDetect": "off",
+  "gradle.nestedProjects": false
 }

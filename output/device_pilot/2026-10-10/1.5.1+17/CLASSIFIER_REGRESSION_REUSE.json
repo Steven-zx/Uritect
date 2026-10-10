@@ -1,0 +1,14 @@
+{
+  "reason": "Only authentication, history error messages, normal platform permission, version and authentication tests changed. Classifier, assets, scan gates and image regression tool are byte-identical to 1.5.0+16.",
+  "previous_evidence_directory": "output\\device_pilot\\2026-10-10\\1.5.0+16",
+  "runtime_evaluation_rerun": false,
+  "source_changes": [
+    "uritect_app/android/app/src/main/AndroidManifest.xml",
+    "uritect_app/android/app/src/main/kotlin/com/example/uritect_app/HistorySecurity.kt",
+    "uritect_app/lib/pages/home_page.dart",
+    "uritect_app/lib/pages/protected_history_page.dart",
+    "uritect_app/lib/services/history_cipher.dart",
+    "uritect_app/pubspec.yaml",
+    "uritect_app/test/history_authentication_test.dart"
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "release": "URITECT 1.4.0+11 progressive checklist pilot",
+  "date": "2026-10-05",
+  "application_id": "ph.edu.wvsu.uritect",
+  "apk": {
+    "path": "output/device_pilot/2026-10-05/Uritect_v1.4.0+11_progressive_checklist_pilot.apk",
+    "bytes": 53671109,
+    "sha256": "93ECB1B4DE8C35AC4C657BABD10C16EBBFDD98A7F975A631F4820BB0FE5373E6"
+  },
+  "source_files": [
+    {
+      "path": "uritect_app/lib/models/clinical_symptoms.dart",
+      "sha256": "D6E6B6B206843FED3F36B3E3BE6DC2FCF3EDCEC0A042B0A26723B3727CA24A69"
+    },
+    {
+      "path": "uritect_app/lib/models/checklist_draft.dart",
+      "sha256": "FEC90F863C83601AC9E3223DA7DFE6DD985E17EE972E449721E045E3A2BD1026"
+    },
+    {
+      "path": "uritect_app/lib/models/screening_fusion.dart",
+      "sha256": "F26F06F929C8EAF9691CA4F6E866326D16ACB6EC76E47CA1011355F3B6296C20"
+    },
+    {
+      "path": "uritect_app/lib/models/renal_followup.dart",
+      "sha256": "056464E9F560304762E3481738F06147359144BD5C7F5AEC9A62E9F921034C65"
+    },
+    {
+      "path": "uritect_app/lib/pages/symptom_checklist_page.dart",
+      "sha256": "213A392201E81FB3140C7E903C1E86EB501AC1D3BBCF02D1D2F1305474F9646C"
+    },
+    {
+      "path": "uritect_app/lib/pages/overall_results_page.dart",
+      "sha256": "770C009C6E0A91537D951B5CD81E8D7C9EE1BF74FDA629FC7D26FA727D00D3CF"
+    },
+    {
+      "path": "uritect_app/assets/production_semiquant_model.json",
+      "sha256": "348EA1A6CF2C59E3FF6834E4FD042ABA09A2A26CC041559096F13966FBD8FE80"
+    }
+  ],
+  "questionnaire_version": "progressive_checklist_v1_20261005",
+  "interpretation_policy": "interpretation_gates_v2_20261005",
+  "verification": {
+    "tests_passed": 81,
+    "analysis": "No issues found",
+    "build": "Success",
+    "installation": "Deferred at user request",
+    "physical_walkthrough": "Pending",
+    "apk_metadata": "aapt verified ph.edu.wvsu.uritect; versionName 1.4.0; versionCode 11; minSdk 24; targetSdk 36"
+  },
+  "clinical_parameters": "Current priors/LRs/model IDs unchanged; proposed simplified Bayesian models deferred",
+  "note": "Includes preceding camera and startup changes. Original release manifest preserved."
+}

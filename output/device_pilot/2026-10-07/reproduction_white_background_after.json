@@ -1,0 +1,102 @@
+{
+  "image_path": "C:/Users/acer/Downloads/Github/Uritect/output/device_pilot/2026-10-07/IMG_20261007_093746.jpg",
+  "scan": {
+    "id": "scan_1791337378790",
+    "date": "2026-10-07T09:42:58.790059",
+    "imagePath": "C:/Users/acer/Downloads/Github/Uritect/output/device_pilot/2026-10-07/IMG_20261007_093746.jpg",
+    "status": "complete",
+    "confidence": 0.7343612414902184,
+    "analyteConfidences": {
+      "Leukocytes": 0.6650085438462056,
+      "Nitrite": 1.0,
+      "Urobilinogen": 1.0,
+      "Protein": 0.862566278686908,
+      "pH": 0.5362319493993276,
+      "Blood": 0.7380402892926893,
+      "Specific Gravity": 0.5371819496261759,
+      "Ketone": 0.5339890839515753,
+      "Bilirubin": 0.9368374662402801,
+      "Glucose": 0.5337568538590219
+    },
+    "riskBucket": "Complete",
+    "modelVersion": "production_semiquant_knn_markerless_roi_topfix_v3_20260908",
+    "pipeline_version": "android_markerless_json_knn_v3_local_contrast_20261007",
+    "rows": [
+      {
+        "code": "LEU",
+        "name": "Leukocytes",
+        "result": "Negative",
+        "referenceRange": "Negative",
+        "status": "negative"
+      },
+      {
+        "code": "NIT",
+        "name": "Nitrite",
+        "result": "Negative",
+        "referenceRange": "Negative",
+        "status": "negative"
+      },
+      {
+        "code": "URO",
+        "name": "Urobilinogen",
+        "result": "3.2",
+        "referenceRange": "3.2 - 128",
+        "status": "moderate"
+      },
+      {
+        "code": "PRO",
+        "name": "Protein",
+        "result": "Negative",
+        "referenceRange": "Negative",
+        "status": "negative"
+      },
+      {
+        "code": "pH",
+        "name": "pH",
+        "result": "6.0",
+        "referenceRange": "5.0 - 8.5",
+        "status": "moderate"
+      },
+      {
+        "code": "BLD",
+        "name": "Blood",
+        "result": "Negative",
+        "referenceRange": "Negative",
+        "status": "negative"
+      },
+      {
+        "code": "SG",
+        "name": "Specific Gravity",
+        "result": "1.025",
+        "referenceRange": "1.000 - 1.030",
+        "status": "moderate"
+      },
+      {
+        "code": "KET",
+        "name": "Ketone",
+        "result": "Trace 0.5",
+        "referenceRange": "Negative",
+        "status": "moderate"
+      },
+      {
+        "code": "BIL",
+        "name": "Bilirubin",
+        "result": "Negative",
+        "referenceRange": "Negative",
+        "status": "negative"
+      },
+      {
+        "code": "GLU",
+        "name": "Glucose",
+        "result": "Negative",
+        "referenceRange": "Negative",
+        "status": "negative"
+      }
+    ],
+    "padsDetected": 10,
+    "padsUnavailable": 0,
+    "rejectionCode": null,
+    "rejectionReason": null
+  },
+  "accepted": true
+}

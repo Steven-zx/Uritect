@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:async';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +7,11 @@ import 'package:image_picker/image_picker.dart';
 
 import '../config/theme.dart';
 import '../models/scan_analysis_exit_reason.dart';
+import '../services/scan_provenance_service.dart';
+import '../services/scan_history_service.dart';
+import '../models/scan_provenance.dart';
+import '../widgets/scan_provenance_dialog.dart';
+import '../widgets/scan_camera_preview.dart';
 import 'analyzing_page.dart';
 
 class CaptureDipstickPage extends StatefulWidget {
@@ -15,22 +21,38 @@ class CaptureDipstickPage extends StatefulWidget {
   State<CaptureDipstickPage> createState() => _CaptureDipstickPageState();
 }
 
-class _CaptureDipstickPageState extends State<CaptureDipstickPage> {
+class _CaptureDipstickPageState extends State<CaptureDipstickPage>
+    with WidgetsBindingObserver {
   CameraController? _cameraController;
   late Future<void> _initializeCameraFuture;
   bool _isCameraReady = false;
   bool _isFlashlightOn = false;
+  bool _showPadGuide = false;
+  bool _isCapturing = false;
+  bool _isPicking = false;
+  bool _isSubmitting = false;
+  bool _appActive = true;
+  int _cameraEpoch = 0;
   String? _pendingImagePath;
+  String _pendingSource = 'unknown';
+  DateTime? _pendingAcquiredAt;
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    _appActive =
+        WidgetsBinding.instance.lifecycleState == null ||
+        WidgetsBinding.instance.lifecycleState == AppLifecycleState.resumed;
     _initializeCameraFuture = _initializeCamera();
   }
 
   Future<void> _initializeCamera() async {
+    if (!mounted || !_appActive) return;
+    final epoch = ++_cameraEpoch;
     try {
       final cameras = await availableCameras();
+      if (!mounted || !_appActive || epoch != _cameraEpoch) return;
       if (cameras.isEmpty) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -40,15 +62,24 @@ class _CaptureDipstickPageState extends State<CaptureDipstickPage> {
         return;
       }
 
-      final firstCamera = cameras.first;
-      _cameraController = CameraController(
+      final firstCamera = cameras.firstWhere(
+        (camera) => camera.lensDirection == CameraLensDirection.back,
+        orElse: () => cameras.first,
+      );
+      final controller = CameraController(
         firstCamera,
-        ResolutionPreset.high,
+        ResolutionPreset.max,
         enableAudio: false,
       );
 
-      await _cameraController?.initialize();
-      if (mounted) {
+      _cameraController = controller;
+      await controller.initialize();
+      if (!mounted || !_appActive || epoch != _cameraEpoch) {
+        await controller.dispose();
+        return;
+      }
+      await _setAutomaticMetering(const Offset(0.5, 0.5));
+      if (mounted && _appActive && epoch == _cameraEpoch) {
         setState(() {
           _isCameraReady = true;
         });
@@ -62,16 +93,45 @@ class _CaptureDipstickPageState extends State<CaptureDipstickPage> {
     }
   }
 
+  bool get _busy => _isCapturing || _isPicking || _isSubmitting;
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    final active = state == AppLifecycleState.resumed;
+    if (active == _appActive) return;
+    _appActive = active;
+    ++_cameraEpoch;
+    if (!active) {
+      setState(() {
+        _isCameraReady = false;
+        _isFlashlightOn = false;
+      });
+    }
+    // Serialize release/reinitialization so gallery and lock-screen transitions
+    // cannot leave a stale controller or open two cameras at once.
+    _initializeCameraFuture = _initializeCameraFuture.then((_) async {
+      final controller = _cameraController;
+      _cameraController = null;
+      await controller?.dispose();
+      if (mounted && _appActive) await _initializeCamera();
+    });
+    setState(() {});
+  }
+
   Future<void> _capturePhoto() async {
+    if (_busy || !_appActive) return;
     try {
       if (_cameraController == null ||
           !_cameraController!.value.isInitialized) {
         return;
       }
+      setState(() => _isCapturing = true);
       final image = await _cameraController!.takePicture();
       if (mounted) {
         setState(() {
           _pendingImagePath = image.path;
+          _pendingSource = 'camera';
+          _pendingAcquiredAt = DateTime.now();
         });
       }
     } catch (e) {
@@ -80,16 +140,41 @@ class _CaptureDipstickPageState extends State<CaptureDipstickPage> {
           context,
         ).showSnackBar(SnackBar(content: Text('Error capturing photo: $e')));
       }
+    } finally {
+      if (mounted) setState(() => _isCapturing = false);
+    }
+  }
+
+  Future<void> _setAutomaticMetering(Offset point) async {
+    final controller = _cameraController;
+    if (controller == null || !controller.value.isInitialized) return;
+    // Some devices support only a subset of these controls. Keep each optional
+    // so unsupported metering never disables capture or the other controls.
+    for (final configure in <Future<void> Function()>[
+      () => controller.setFocusMode(FocusMode.auto),
+      () => controller.setExposureMode(ExposureMode.auto),
+      () => controller.setFocusPoint(point),
+      () => controller.setExposurePoint(point),
+    ]) {
+      try {
+        await configure();
+      } on CameraException {
+        // Retain the device's default for this unsupported setting.
+      }
     }
   }
 
   Future<void> _pickFromGallery() async {
+    if (_busy) return;
+    setState(() => _isPicking = true);
     try {
       final picker = ImagePicker();
       final pickedFile = await picker.pickImage(source: ImageSource.gallery);
       if (pickedFile != null && mounted) {
         setState(() {
           _pendingImagePath = pickedFile.path;
+          _pendingSource = 'import';
+          _pendingAcquiredAt = null;
         });
       }
     } catch (e) {
@@ -98,24 +183,73 @@ class _CaptureDipstickPageState extends State<CaptureDipstickPage> {
           context,
         ).showSnackBar(SnackBar(content: Text('Error picking image: $e')));
       }
+    } finally {
+      if (mounted) setState(() => _isPicking = false);
     }
   }
 
   void _clearPendingImage() {
+    if (_isSubmitting || _isCapturing || _isPicking) return;
+    final previous = _pendingImagePath;
+    if (previous != null) {
+      unawaited(const ScanHistoryService().discardTemporaryImage(previous));
+    }
     setState(() {
       _pendingImagePath = null;
+      _pendingSource = 'unknown';
+      _pendingAcquiredAt = null;
     });
   }
 
   Future<void> _submitSelectedImage() async {
     final imagePath = _pendingImagePath;
-    if (imagePath == null) {
+    if (_busy || imagePath == null) {
       return;
     }
 
-    final exitReason = await Navigator.of(context).push<ScanAnalysisExitReason>(
-      MaterialPageRoute(builder: (_) => AnalyzingPage(imagePath: imagePath)),
-    );
+    setState(() => _isSubmitting = true);
+    ScanAnalysisExitReason? exitReason;
+    try {
+      final identity = await const ScanProvenanceService().inspect(imagePath);
+      ImageMatch? match;
+      bool duplicateCheckCompleted = true;
+      try {
+        match = await const ScanHistoryService().findDuplicate(
+          contentSha256: identity.contentHash,
+          pixelSha256: identity.pixelHash,
+          fingerprint: identity.fingerprint,
+        );
+      } catch (_) {
+        duplicateCheckCompleted = false;
+      }
+      if (!mounted) return;
+      final provenance = await showDialog<ScanProvenance>(
+        context: context,
+        builder: (_) => ScanProvenanceDialog(
+          identity: identity,
+          source: _pendingSource,
+          acquiredAt: _pendingAcquiredAt,
+          duplicateOf: match?.exact == true ? match?.recordId : null,
+          similarImageOf: match?.exact == false ? match?.recordId : null,
+          duplicateCheckCompleted: duplicateCheckCompleted,
+        ),
+      );
+      if (!mounted || provenance == null) return;
+      exitReason = await Navigator.of(context).push<ScanAnalysisExitReason>(
+        MaterialPageRoute(
+          builder: (_) =>
+              AnalyzingPage(imagePath: imagePath, provenance: provenance),
+        ),
+      );
+    } catch (error) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('The image could not be prepared: $error')),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _isSubmitting = false);
+    }
     if (!mounted) return;
     if (exitReason == ScanAnalysisExitReason.noDipstickFound) {
       await _showNoDipstickDialog();
@@ -204,20 +338,18 @@ class _CaptureDipstickPageState extends State<CaptureDipstickPage> {
   }
 
   Future<void> _toggleFlashlight() async {
+    if (_busy || !_appActive) return;
+    final controller = _cameraController;
+    if (controller == null || !controller.value.isInitialized) return;
+    final epoch = _cameraEpoch;
+    final turnOn = !_isFlashlightOn;
     try {
-      if (_cameraController == null ||
-          !_cameraController!.value.isInitialized) {
-        return;
-      }
-      if (_isFlashlightOn) {
-        await _cameraController!.setFlashMode(FlashMode.off);
-        setState(() => _isFlashlightOn = false);
-      } else {
-        await _cameraController!.setFlashMode(FlashMode.torch);
-        setState(() => _isFlashlightOn = true);
+      await controller.setFlashMode(turnOn ? FlashMode.torch : FlashMode.off);
+      if (mounted && _appActive && epoch == _cameraEpoch) {
+        setState(() => _isFlashlightOn = turnOn);
       }
     } catch (e) {
-      if (mounted) {
+      if (mounted && _appActive && epoch == _cameraEpoch) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Error toggling flashlight: $e')),
         );
@@ -226,23 +358,23 @@ class _CaptureDipstickPageState extends State<CaptureDipstickPage> {
   }
 
   Widget _buildCameraFrame() {
-    final previewSize = _cameraController?.value.previewSize;
-    if (previewSize == null) {
-      return CameraPreview(_cameraController!);
-    }
-
-    return FittedBox(
-      fit: BoxFit.cover,
-      child: SizedBox(
-        width: previewSize.height,
-        height: previewSize.width,
-        child: CameraPreview(_cameraController!),
-      ),
+    // CameraPreview handles the active capture orientation and aspect ratio.
+    // Show the full view: a cover fit hides background that analysis still sees.
+    return ScanCameraPreview(
+      controller: _cameraController!,
+      onFocus: _setAutomaticMetering,
+      showAlignmentGuide: _showPadGuide,
     );
   }
 
   @override
   void dispose() {
+    final previous = _pendingImagePath;
+    if (previous != null) {
+      unawaited(const ScanHistoryService().discardTemporaryImage(previous));
+    }
+    WidgetsBinding.instance.removeObserver(this);
+    ++_cameraEpoch;
     _cameraController?.dispose();
     super.dispose();
   }
@@ -275,27 +407,48 @@ class _CaptureDipstickPageState extends State<CaptureDipstickPage> {
                       ),
                     ),
                   ),
-                  Column(
-                    children: [
-                      Text(
-                        'Capture Dipstick',
-                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          color: AppColors.primaryMain,
-                          fontWeight: FontWeight.w700,
-                          fontSize: 20,
+                  Expanded(
+                    child: Column(
+                      children: [
+                        Text(
+                          'Capture Dipstick',
+                          style: Theme.of(context).textTheme.titleLarge
+                              ?.copyWith(
+                                color: AppColors.primaryMain,
+                                fontWeight: FontWeight.w700,
+                                fontSize: 20,
+                              ),
                         ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        'Place the full dipstick strip within the frame',
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          fontSize: 12,
-                          color: AppColors.textSecondary,
+                        const SizedBox(height: 4),
+                        Text(
+                          'Show the full strip. Tap the pads to focus.',
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context).textTheme.bodyMedium
+                              ?.copyWith(
+                                fontSize: 12,
+                                color: AppColors.textSecondary,
+                              ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                  const SizedBox(width: 64),
+                  SizedBox(
+                    width: 64,
+                    child: IconButton(
+                      tooltip: _showPadGuide
+                          ? 'Hide 10-pad guide'
+                          : 'Show 10-pad guide',
+                      isSelected: _showPadGuide,
+                      color: AppColors.primaryMain,
+                      icon: const Icon(Icons.grid_on_rounded),
+                      selectedIcon: const Icon(Icons.grid_off_rounded),
+                      onPressed:
+                          _busy || !_isCameraReady || _pendingImagePath != null
+                          ? null
+                          : () =>
+                                setState(() => _showPadGuide = !_showPadGuide),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -306,10 +459,10 @@ class _CaptureDipstickPageState extends State<CaptureDipstickPage> {
                 builder: (context, snapshot) {
                   if (_pendingImagePath != null) {
                     return _ScanPreviewFrame(
-                      onClose: _clearPendingImage,
+                      onClose: _busy ? null : _clearPendingImage,
                       child: Image.file(
                         File(_pendingImagePath!),
-                        fit: BoxFit.cover,
+                        fit: BoxFit.contain,
                       ),
                     );
                   }
@@ -343,7 +496,7 @@ class _CaptureDipstickPageState extends State<CaptureDipstickPage> {
                   width: double.infinity,
                   height: 52,
                   child: ElevatedButton(
-                    onPressed: _submitSelectedImage,
+                    onPressed: _busy ? null : _submitSelectedImage,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.primaryMain,
                       foregroundColor: Colors.white,
@@ -371,10 +524,13 @@ class _CaptureDipstickPageState extends State<CaptureDipstickPage> {
                 children: [
                   _CaptureToolButton(
                     icon: Icons.photo_outlined,
-                    onTap: _pickFromGallery,
+                    onTap: _busy ? null : _pickFromGallery,
                   ),
                   _CaptureButton(
-                    onTap: _pendingImagePath == null
+                    key: const Key('capture_shutter'),
+                    onTap: _busy
+                        ? null
+                        : _pendingImagePath == null
                         ? _capturePhoto
                         : _clearPendingImage,
                   ),
@@ -382,7 +538,7 @@ class _CaptureDipstickPageState extends State<CaptureDipstickPage> {
                     icon: _isFlashlightOn
                         ? Icons.lightbulb_rounded
                         : Icons.lightbulb_outline_rounded,
-                    onTap: _toggleFlashlight,
+                    onTap: _busy ? null : _toggleFlashlight,
                     isActive: _isFlashlightOn,
                   ),
                 ],
@@ -427,9 +583,12 @@ class _ScanPreviewFrame extends StatelessWidget {
                 Positioned.fill(
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(_cornerRadius),
-                    child: DecoratedBox(
+                    child: Container(
                       decoration: BoxDecoration(
                         color: const Color(0xFFD9D9D9),
+                        borderRadius: BorderRadius.circular(_cornerRadius),
+                      ),
+                      foregroundDecoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(_cornerRadius),
                         border: Border.all(
                           color: const Color(0xFF0B88FF),
@@ -468,9 +627,9 @@ class _ScanPreviewFrame extends StatelessWidget {
 }
 
 class _CaptureButton extends StatelessWidget {
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
-  const _CaptureButton({required this.onTap});
+  const _CaptureButton({super.key, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -498,7 +657,7 @@ class _CaptureButton extends StatelessWidget {
 
 class _CaptureToolButton extends StatelessWidget {
   final IconData icon;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
   final bool isActive;
 
   const _CaptureToolButton({

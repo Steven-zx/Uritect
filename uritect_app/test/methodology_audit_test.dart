@@ -1,3 +1,4 @@
+import 'verified_scan_fixture.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:uritect_app/models/clinical_symptoms.dart';
 import 'package:uritect_app/models/dipstick_results_data.dart';
@@ -48,27 +49,29 @@ List<ScreeningAnalyteResult> evidence({
     isReliable: reliable,
   ),
 ];
-ScanResult scan() => ScanResult(
-  id: 'audit',
-  date: DateTime(2026, 10, 3),
-  imagePath: '',
-  status: 'complete',
-  confidence: 0.9,
-  riskBucket: 'Complete',
-  modelVersion: 'production_semiquant_knn_markerless_roi_topfix_v3_20260908',
-  padsDetected: 10,
-  padsUnavailable: 0,
-  rows: sampleDipstickRows
-      .map(
-        (row) => DipstickResultRow(
-          code: row.code,
-          name: row.name,
-          result: row.code == 'NIT' ? 'Positive' : 'Neg',
-          referenceRange: '',
-          status: DipstickResultStatus.negative,
-        ),
-      )
-      .toList(),
+ScanResult scan() => verifiedFixture(
+  ScanResult(
+    id: 'audit',
+    date: DateTime(2026, 10, 3),
+    imagePath: '',
+    status: 'complete',
+    confidence: 0.9,
+    riskBucket: 'Complete',
+    modelVersion: 'production_semiquant_knn_markerless_roi_topfix_v3_20260908',
+    padsDetected: 10,
+    padsUnavailable: 0,
+    rows: sampleDipstickRows
+        .map(
+          (row) => DipstickResultRow(
+            code: row.code,
+            name: ScanResult.expectedAnalytes[row.code]!,
+            result: row.code == 'NIT' ? 'Positive' : 'Neg',
+            referenceRange: '',
+            status: DipstickResultStatus.negative,
+          ),
+        )
+        .toList(),
+  ),
 );
 void main() {
   const engine = ScreeningFusionEngine();

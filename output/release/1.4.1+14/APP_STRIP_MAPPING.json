@@ -1,0 +1,89 @@
+{
+  "status": "pending_physical_IFU_confirmation",
+  "model_version": "production_semiquant_knn_markerless_roi_topfix_v3_20260908",
+  "pad_stack_order": [
+    "Leukocytes",
+    "Nitrite",
+    "Urobilinogen",
+    "Protein",
+    "pH",
+    "Blood",
+    "Specific Gravity",
+    "Ketone",
+    "Bilirubin",
+    "Glucose"
+  ],
+  "observed_training_labels": {
+    "Leukocytes": [
+      "Neg",
+      "Trace 15",
+      "Moderate 125",
+      "Small 70",
+      "Large 500"
+    ],
+    "Nitrite": [
+      "Neg",
+      "Positive"
+    ],
+    "Urobilinogen": [
+      "3.2",
+      "16"
+    ],
+    "Protein": [
+      "Neg",
+      "Trace",
+      "1.0",
+      "0.3",
+      ">=20.0",
+      "3.0"
+    ],
+    "pH": [
+      "5.0",
+      "6.0",
+      "7.5",
+      "7.0",
+      "8.5",
+      "6.5"
+    ],
+    "Blood": [
+      "Neg",
+      "Non-hemolyzed 10",
+      "Hemolyzed 10",
+      "Moderate 80",
+      "Large 200",
+      "Small 25"
+    ],
+    "Specific Gravity": [
+      "1.010",
+      "1.025",
+      "1.020",
+      "1.015",
+      "1.005",
+      "1.030"
+    ],
+    "Ketone": [
+      "Trace 0.5",
+      "Neg",
+      "Small 1.5"
+    ],
+    "Bilirubin": [
+      "Neg",
+      "Small 17",
+      "Moderate 50"
+    ],
+    "Glucose": [
+      "110 ++++",
+      "Neg",
+      "Trace 5",
+      "30 ++",
+      "60 +++"
+    ]
+  },
+  "note": "Observed model labels are not a complete manufacturer IFU chart. Verify full chart, units, pad direction and all ten reading times before acceptance.",
+  "app_timing_checks": {
+    "Protein": 60,
+    "Blood": 60
+  },
+  "automatic_reaction_time_verification": false,
+  "automatic_manufacturer_lot_expiry_verification": false
+}

@@ -1,3 +1,4 @@
+import 'verified_scan_fixture.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:uritect_app/models/clinical_symptoms.dart';
 import 'package:uritect_app/models/dipstick_results_data.dart';
@@ -34,28 +35,30 @@ void main() {
     String blood = 'Neg',
     bool valid = true,
   }) {
-    return ScanResult(
-      id: 'test_scan',
-      date: DateTime(2026, 9, 19),
-      imagePath: 'test.jpg',
-      status: valid ? 'normal' : 'invalid',
-      confidence: valid ? 0.9 : 0,
-      riskBucket: 'Unavailable',
-      modelVersion: 'test_model',
-      rows: [
-        row('LEU', 'Leukocytes', 'Neg'),
-        row('NIT', 'Nitrite', 'Neg'),
-        row('URO', 'Urobilinogen', 'Normal'),
-        row('PRO', 'Protein', protein),
-        row('pH', 'pH', '6.0'),
-        row('BLD', 'Blood', blood),
-        row('SG', 'Specific Gravity', '1.015'),
-        row('KET', 'Ketone', 'Neg'),
-        row('BIL', 'Bilirubin', 'Neg'),
-        row('GLU', 'Glucose', 'Neg'),
-      ],
-      padsDetected: valid ? 10 : 0,
-      padsUnavailable: valid ? 0 : 10,
+    return verifiedFixture(
+      ScanResult(
+        id: 'test_scan',
+        date: DateTime(2026, 9, 19),
+        imagePath: 'test.jpg',
+        status: valid ? 'normal' : 'invalid',
+        confidence: valid ? 0.9 : 0,
+        riskBucket: 'Unavailable',
+        modelVersion: 'test_model',
+        rows: [
+          row('LEU', 'Leukocytes', 'Neg'),
+          row('NIT', 'Nitrite', 'Neg'),
+          row('URO', 'Urobilinogen', 'Normal'),
+          row('PRO', 'Protein', protein),
+          row('pH', 'pH', '6.0'),
+          row('BLD', 'Blood', blood),
+          row('SG', 'Specific Gravity', '1.015'),
+          row('KET', 'Ketone', 'Neg'),
+          row('BIL', 'Bilirubin', 'Neg'),
+          row('GLU', 'Glucose', 'Neg'),
+        ],
+        padsDetected: valid ? 10 : 0,
+        padsUnavailable: valid ? 0 : 10,
+      ),
     );
   }
 

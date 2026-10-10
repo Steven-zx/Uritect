@@ -194,14 +194,15 @@ class RenalFollowupEngine {
 
     final protein = _findResult(scanResult.rows, 'PRO', 'Protein');
     final blood = _findResult(scanResult.rows, 'BLD', 'Blood');
-    final scanValid = scanResult.isReliableForInterpretation;
+    final scanValid = scanResult.isUsableForCurrentInterpretation;
     final proteinValue = _normalize(protein?.result);
     final bloodValue = _normalize(blood?.result);
     final testQualityFailed =
         flag('strip_expired') ||
         flag('strip_damaged') ||
         flag('read_outside_60_seconds') ||
-        flag('unsupported_strip');
+        flag('unsupported_strip') ||
+        checklist.hasUnconfirmedTestQuality;
     final proteinReliable =
         scanValid && !testQualityFailed && _isKnownProtein(proteinValue);
     final bloodReliable =
@@ -246,7 +247,8 @@ class RenalFollowupEngine {
     if (flag('strip_expired') ||
         flag('strip_damaged') ||
         flag('read_outside_60_seconds') ||
-        flag('unsupported_strip')) {
+        flag('unsupported_strip') ||
+        checklist.hasUnconfirmedTestQuality) {
       trigger(
         'TECH-02',
         RenalAction.retake,

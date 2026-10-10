@@ -1,0 +1,30 @@
+{
+  "version": "1.4.2+15",
+  "generated_at": "2026-10-07T02:02:15.616951+00:00",
+  "status": "signed_pilot_fix_pending_device_scan_confirmation_and_evaluation",
+  "apk": {
+    "path": "output/device_pilot/2026-10-07/1.4.2+15/Uritect_v1.4.2+15_release.apk",
+    "bytes": 54400968,
+    "sha256": "F4591848F5FA8F5B3A0332FDE2814FF6309095B857562C8DFD1653DB12AA3809"
+  },
+  "certificate_sha256": "15D1138DCE077ADA624A140B3A145343D1A48305FD0847E9002869E488F19D39",
+  "source_snapshot_sha256": "A2B27ACED0B87B3C03DCDD56070C189FDF531C74BEBA6AF40A28D8BD58AB104F",
+  "source_archive_sha256": "AA5FDBE0AA45D9D1BC747EDEEB394CB6D6DD39ED2E6222348E40E84D3DF1E113",
+  "checks": {
+    "flutter_tests": 101,
+    "static_analysis": "clean",
+    "previous_image_predictions_preserved": {
+      "cases": 18,
+      "previous_accepted": 6,
+      "new_accepted": 6,
+      "lost": [],
+      "changed_previously_accepted": [],
+      "newly_accepted": []
+    }
+  },
+  "pipeline": "android_markerless_json_knn_v3_local_contrast_20261007",
+  "model_changed": false,
+  "confidence_threshold_changed": false,
+  "bayesian_values_changed": false,
+  "clinical_validation": "Not established"
+}

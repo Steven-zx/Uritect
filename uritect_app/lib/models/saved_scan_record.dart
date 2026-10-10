@@ -6,6 +6,7 @@ import 'screening_fusion.dart';
 class SavedScanRecord {
   final String id;
   final DateTime savedAt;
+  final String? patientName;
   final ScanResult scanResult;
   final ClinicalChecklistResult checklistResult;
   final String clinicalAction;
@@ -23,6 +24,7 @@ class SavedScanRecord {
   const SavedScanRecord({
     required this.id,
     required this.savedAt,
+    this.patientName,
     required this.scanResult,
     required this.checklistResult,
     required this.clinicalAction,
@@ -39,6 +41,36 @@ class SavedScanRecord {
   });
 
   String get riskBucket => clinicalAction;
+
+  static String? normalizePatientName(String? value) {
+    final name = value?.trim();
+    if (name == null || name.isEmpty) return null;
+    if (name.runes.length > 100 || RegExp(r'[\x00-\x1F\x7F]').hasMatch(name)) {
+      throw ArgumentError(
+        'Use a single-line patient name of at most 100 characters.',
+      );
+    }
+    return name;
+  }
+
+  SavedScanRecord withPatientName(String? value) => SavedScanRecord(
+    id: id,
+    savedAt: savedAt,
+    patientName: normalizePatientName(value),
+    scanResult: scanResult,
+    checklistResult: checklistResult,
+    clinicalAction: clinicalAction,
+    utiPosteriorProbability: utiPosteriorProbability,
+    utiPriorProbability: utiPriorProbability,
+    utiEvidenceFactors: utiEvidenceFactors,
+    bayesianModelVersion: bayesianModelVersion,
+    utiCalculationStatus: utiCalculationStatus,
+    interpretationPolicyVersion: interpretationPolicyVersion,
+    hasEvidenceConflict: hasEvidenceConflict,
+    conflictTitle: conflictTitle,
+    conflictMessage: conflictMessage,
+    renalFollowupResult: renalFollowupResult,
+  );
 
   BayesianUtiEstimate get recordedUtiEstimate => BayesianUtiEstimate(
     modelVersion: bayesianModelVersion ?? 'historical_model_unknown',
@@ -58,10 +90,12 @@ class SavedScanRecord {
     required ClinicalChecklistResult checklistResult,
     required ScreeningFusionResult fusionResult,
     required RenalFollowupResult renalFollowupResult,
+    String? patientName,
   }) {
     return SavedScanRecord(
       id: scanResult.id,
       savedAt: DateTime.now(),
+      patientName: normalizePatientName(patientName),
       scanResult: scanResult,
       checklistResult: checklistResult,
       clinicalAction: fusionResult.clinicalAction,
@@ -85,6 +119,7 @@ class SavedScanRecord {
     return {
       'id': id,
       'savedAt': savedAt.toIso8601String(),
+      'patientName': patientName,
       'scanResult': scanResult.toJson(),
       'checklistResult': checklistResult.toJson(),
       'clinicalAction': clinicalAction,
@@ -108,6 +143,7 @@ class SavedScanRecord {
   factory SavedScanRecord.fromJson(Map<String, dynamic> json) {
     return SavedScanRecord(
       id: json['id'] as String? ?? 'scan_missing',
+      patientName: normalizePatientName(json['patientName'] as String?),
       savedAt:
           DateTime.tryParse(json['savedAt'] as String? ?? '') ?? DateTime.now(),
       scanResult: ScanResult.fromJson(
