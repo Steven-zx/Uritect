@@ -1,0 +1,24 @@
+{
+  "before": {
+    "fixture": "test/fixtures/urs10t_handle_reference.jpg",
+    "runs_ms": [
+      2529,
+      2275,
+      2386
+    ],
+    "scope": "Host Flutter test runtime, warm runs, same fixture; not Android device latency",
+    "median_ms": 2386
+  },
+  "after": {
+    "fixture": "test/fixtures/urs10t_handle_reference.jpg",
+    "runs_ms": [
+      2383,
+      2141,
+      2128
+    ],
+    "scope": "Host Flutter test runtime, warm runs, same fixture; not Android device latency",
+    "median_ms": 2141
+  },
+  "median_reduction_percent": 10.27,
+  "limits": "One fixed deidentified photo, three warm host runs each, non-isolated host load; not device latency or clinical accuracy."
+}

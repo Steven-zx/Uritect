@@ -1,0 +1,13 @@
+{
+  "app_version": "1.5.12+29",
+  "flutter_tests": {
+    "passed": 144,
+    "command": "flutter test --no-pub"
+  },
+  "static_analysis": {
+    "result": "No issues found",
+    "exit_code": 0
+  },
+  "scope": "Restored opening screen; full app regressions passed. Prior Python audit unchanged.",
+  "phone_acceptance": "pending; no connected device"
+}

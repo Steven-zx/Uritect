@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "version": "1.5.16+34",
+  "status": "signed_research_candidate_pending_device_and_external_evidence",
+  "apk": {
+    "path": "output/device_pilot/2026-10-13/1.5.16+34/Uritect_v1.5.16+34_release.apk",
+    "bytes": 56779235,
+    "sha256": "44F4ED4CC41D0FE555D1B543F03016737353A054694B7EC90126F02E7A7CD77F"
+  },
+  "build_receipt": {
+    "path": "output/device_pilot/2026-10-13/1.5.16+34/EVALUATION_BUILD.json",
+    "bytes": 2126,
+    "sha256": "4E47A3DC4AC496058CEBAC46FFEC24373BF8788255ABCF98EA3A143FBF0439A0"
+  },
+  "source_snapshot": {
+    "path": "output/device_pilot/2026-10-13/1.5.16+34/SOURCE_SNAPSHOT.json",
+    "bytes": 27573,
+    "sha256": "AFED87132907E850A5D7306116C44FD72E9A08ADC2377ACAA56CF6606132AAA2"
+  },
+  "source_archive": {
+    "path": "output/device_pilot/2026-10-13/1.5.16+34/URITECT_SOURCE_SNAPSHOT.zip",
+    "bytes": 6647554,
+    "sha256": "FEAAE251F963AAAB32014FA393B9961F61347BEBFB13B67BA4197BE6E8FA3E9A"
+  },
+  "model": {
+    "path": "uritect_app/assets/production_semiquant_model.json",
+    "bytes": 282214,
+    "sha256": "1380D9E04D044413B42BD045E3C7370BF3D06A720695D2654598657234742279"
+  },
+  "model_version": "direction_verified_experimental_v1_20261011",
+  "clinical_validation_established": false,
+  "strip_record": {
+    "path": "docs/URITECT_PHYSICAL_STRIP_RECORD.json",
+    "bytes": 2149,
+    "sha256": "CFE1A42AD3264D074056EB606FB9E2559F8D55ACFCB147E5709DA5CFB6DEFB9F"
+  },
+  "acceptance_record": "docs/URITECT_CURRENT_ACCEPTANCE_RECORD.json",
+  "gap_response": "docs/URITECT_EVIDENCE_GAP_REMEDIATION_2026-10-12.md",
+  "historical_manifest": "output/release/URITECT_FINAL_RELEASE_MANIFEST.json",
+  "historical_manifest_is_current": false,
+  "note": "Byte/hash identity is verified, not byte-for-byte reproducible rebuilds or clinical validity."
+}

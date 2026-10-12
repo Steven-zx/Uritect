@@ -37,6 +37,12 @@
       "source": "https://fonts.gstatic.com/s/a/ed709f2ba2be295030614990104cb4c9c62bc2a2445c25ccb19a1500158a5a8b.ttf",
       "bytes": 150292,
       "sha256": "ED709F2BA2BE295030614990104CB4C9C62BC2A2445C25CCB19A1500158A5A8B"
+    },
+    {
+      "path": "assets/fonts/Poppins-Regular.ttf",
+      "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/poppins/Poppins-Regular.ttf",
+      "bytes": 160316,
+      "sha256": "7E65201E9B79159E2300267CC885E16C8DCEF2424CDFA09A29BFB0980A94A7BA"
     }
   ],
   "license_sources": [
@@ -50,5 +56,6 @@
       "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/poppins/OFL.txt",
       "sha256": "6BE04893D770899A015649C7AA3B582F871B272F8747A92B78B17C3E5C8B2573"
     }
-  ]
+  ],
+  "runtime_theme": "Bundled native Poppins: regular 400 body; semibold 600 sections/buttons; bold 700 headings; medium 500 available for existing emphasis."
 }

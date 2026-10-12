@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'support/load_app_fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -83,6 +84,41 @@ void main() {
     final icons = FontLoader('MaterialIcons')
       ..addFont(rootBundle.load('fonts/MaterialIcons-Regular.otf'));
     await icons.load();
+    await loadAppFonts();
+  });
+  testWidgets('progress reports real milestones without going backwards', (
+    tester,
+  ) async {
+    final service = PendingAnalysis();
+    await tester.pumpWidget(
+      MaterialApp(
+        home: AnalyzingPage(
+          imagePath: 'synthetic.jpg',
+          analysisService: service,
+        ),
+      ),
+    );
+    service.progress!(25, 'checking_image_quality');
+    await tester.pump();
+    expect(find.text('Checking your photo'), findsOneWidget);
+    expect(
+      tester
+          .widget<LinearProgressIndicator>(find.byType(LinearProgressIndicator))
+          .value,
+      .25,
+    );
+    service.progress!(18, 'decoding_image');
+    await tester.pump();
+    expect(
+      tester
+          .widget<LinearProgressIndicator>(find.byType(LinearProgressIndicator))
+          .value,
+      .25,
+    );
+    expect(tester.takeException(), isNull);
+    await tester.pumpWidget(const SizedBox.shrink());
+    service.result.complete(ScanResult.empty(imagePath: ''));
+    await tester.pump();
   });
   test('photo containment maps exact coordinates without cropping', () {
     expect(
@@ -130,7 +166,7 @@ void main() {
       expect(find.byKey(const ValueKey('actual-pad-overlay')), findsOneWidget);
       expect(find.text('1 sampling region located'), findsOneWidget);
       for (var count = 2; count <= 10; count++) {
-        await tester.pump(const Duration(milliseconds: 180));
+        await tester.pump(const Duration(milliseconds: 90));
         expect(find.text('$count sampling regions located'), findsOneWidget);
         final overlay =
             tester
@@ -215,7 +251,7 @@ void main() {
       await tester.pump();
       expect(find.byType(ResultsPage), findsNothing);
       for (var i = 0; i < 10; i++) {
-        await tester.pump(const Duration(milliseconds: 180));
+        await tester.pump(const Duration(milliseconds: 90));
       }
       await tester.pumpAndSettle();
       expect(find.byType(ResultsPage), findsOneWidget);

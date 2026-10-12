@@ -30,6 +30,7 @@ class AnalyzingPage extends StatefulWidget {
 class _AnalyzingPageState extends State<AnalyzingPage> {
   ScanLocalization? _localization;
   String _currentStage = 'starting';
+  double _progress = 0;
   late Future<ScanResult> _scanResultFuture;
   ScanLocalization? _pendingLocalization;
   Timer? _revealTimer;
@@ -76,7 +77,7 @@ class _AnalyzingPageState extends State<AnalyzingPage> {
           regions: List.unmodifiable(pending.regions.take(count + 1)),
         ),
       );
-      _revealTimer = Timer(const Duration(milliseconds: 180), _revealNextPad);
+      _revealTimer = Timer(const Duration(milliseconds: 90), _revealNextPad);
     } else {
       _revealTimer = null;
       if (_previewDone?.isCompleted == false) _previewDone!.complete();
@@ -99,6 +100,7 @@ class _AnalyzingPageState extends State<AnalyzingPage> {
       onProgress: (progress, stage) {
         if (!mounted) return;
         setState(() {
+          _progress = progress.clamp(_progress, 100).toDouble();
           _currentStage =
               _revealTimer != null &&
                   (stage == 'complete' || stage == 'finalizing_results')
@@ -146,7 +148,10 @@ class _AnalyzingPageState extends State<AnalyzingPage> {
   Future<void> _showResults(ScanResult result) async {
     await _previewDone?.future;
     if (!mounted || ModalRoute.of(context)?.isCurrent != true) return;
-    setState(() => _currentStage = 'complete');
+    setState(() {
+      _currentStage = 'complete';
+      _progress = 100;
+    });
     final exitReason = await Navigator.of(context).push<ScanAnalysisExitReason>(
       MaterialPageRoute(
         builder: (_) => ResultsPage(
@@ -192,7 +197,9 @@ class _AnalyzingPageState extends State<AnalyzingPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'Analyzing your strip',
+                      _currentStage == 'checking_image_quality'
+                          ? 'Checking your photo'
+                          : 'Analyzing your strip',
                       textAlign: TextAlign.center,
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
                         color: AppColors.primaryDark,
@@ -218,13 +225,22 @@ class _AnalyzingPageState extends State<AnalyzingPage> {
                       SizedBox(
                         width: 160,
                         child: LinearProgressIndicator(
-                          value: _currentStage == 'complete' ? 1 : null,
+                          value: _currentStage == 'complete'
+                              ? 1
+                              : _progress / 100,
                           minHeight: 3,
                           borderRadius: BorderRadius.circular(3),
-                          semanticsLabel: 'Analysis in progress',
+                          semanticsLabel: 'Scan processing milestones',
+                          semanticsValue: '${_progress.round()}',
                         ),
                       ),
                     const SizedBox(height: 14),
+                    Text(
+                      '${_progress.round()}% · ${_phaseText(_currentStage)}',
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.labelMedium,
+                    ),
+                    const SizedBox(height: 8),
                     Text(
                       _stageText(_currentStage),
                       textAlign: TextAlign.center,
@@ -253,6 +269,8 @@ class _AnalyzingPageState extends State<AnalyzingPage> {
   }
 
   String _stageText(String stage) => switch (stage) {
+    'checking_image_quality' =>
+      'Checking lighting and focus before locating the pads...',
     'loading_production_model' ||
     'loading_reference_map' => 'Loading offline references...',
     'preparing_image' || 'decoding_image' => 'Preparing your photo...',
@@ -265,5 +283,17 @@ class _AnalyzingPageState extends State<AnalyzingPage> {
     'finalizing_results' => 'Checking the scan results...',
     'complete' => 'Opening your results...',
     _ => 'Preparing the scan...',
+  };
+
+  String _phaseText(String stage) => switch (stage) {
+    'checking_image_quality' ||
+    'preparing_image' ||
+    'decoding_image' ||
+    'starting' ||
+    'loading_production_model' => 'Step 1 of 4 · Photo quality',
+    'locating_strip' ||
+    'locating_markerless_strip' => 'Step 2 of 4 · Locate pads',
+    'classifying_pads' || 'reading_pad_regions' => 'Step 3 of 4 · Read colors',
+    _ => 'Step 4 of 4 · Check results',
   };
 }

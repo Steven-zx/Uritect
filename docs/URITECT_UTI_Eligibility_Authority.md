@@ -20,8 +20,10 @@ Unchecked eligibility means unconfirmed/unknown and blocks calculation. Symptoms
 
 Vaginal discharge/irritation routes away from the ordinary estimate. The male UI clears/hides those female pathway inputs when male is selected; malformed imported checklist flags remain conservatively blocking. Fever/chills, flank/back pain, nausea/vomiting, inability to hydrate/medicate, or confusion/fainting/severe weakness stop the ordinary estimate. Existing renal PROMPT_CONSULT safety triggers also stop it in the full scan workflow without combining renal findings into posterior arithmetic.
 
-Invalid/partial/low-confidence scans and declared strip-quality failures block numerical estimates, including symptom-only estimates. Symptom-based safety and follow-up guidance remain available. Renal actions keep the frozen priority PROMPT_CONSULT > RETAKE > CONSULT > REPEAT_CONFIRM > OBSERVE.
+Invalid/partial/unsupported scans and declared strip-quality failures block numerical estimates, including symptom-only estimates. Since the numerical-results restoration, confidence is checked on the actual required analytes: female LEU/NIT/BLD, male LEU/NIT and renal PRO/BLD. A low-confidence pH/SG result alone does not block independent adequate UTI evidence. Supported numerical rows can carry review notices; a notice does not make them reliable. Symptom-based safety and follow-up guidance remain available. Renal actions keep the frozen priority PROMPT_CONSULT > RETAKE > CONSULT > REPEAT_CONFIRM > OBSERVE.
 
 The model-specific starting prior and factors remain provisional. Issues of source-population transportability, conditioning and cross-group multiplication require statistician review; eligibility gates do not validate the model.
 
 For clinical review: the physical strip IFU/timing identity remains unconfirmed. The app's 60-second protein/blood timing is a frozen software profile, not a verified manufacturer identity. Do not change timing, thresholds or eligibility from assumption alone.
+
+Current lot timing gate: required LEU/NIT/BLD evidence must also report 60 seconds after dipping, matching the owner-transcribed URS-10T schedule. Unknown or mismatched times do not support an ordinary estimate. This self-report is not authenticated reaction timing; see [the physical-strip record](URITECT_PHYSICAL_STRIP_RECORD.json).

@@ -125,8 +125,18 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(home: ResultsPage(scanResult: weak('pH'))),
     );
-    expect(find.text('6.5'), findsOneWidget);
-    expect(find.text('Vote confidence: 20% ? provisional'), findsOneWidget);
+    expect(find.text('6.5'), findsNothing);
+    expect(find.text('Uncertain'), findsWidgets);
+    await tester.ensureVisible(find.text('pH'));
+    await tester.tap(find.text('pH'));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('could not be confirmed'), findsOneWidget);
+    expect(find.textContaining('Vote confidence'), findsNothing);
+    await tester.ensureVisible(find.text('Research Details'));
+    await tester.tap(find.text('Research Details'));
+    await tester.pumpAndSettle();
+    expect(find.text('pH: 6.5'), findsOneWidget);
+    expect(find.text('Vote confidence: 20%'), findsOneWidget);
     expect(find.text('CONTINUE TO CHECKLIST'), findsOneWidget);
   });
 }

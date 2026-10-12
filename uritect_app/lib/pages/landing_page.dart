@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import 'root_page.dart';
 
@@ -59,9 +58,9 @@ class LandingPage extends StatelessWidget {
                         ),
                         child: Text(
                           'ENTER',
-                          style: GoogleFonts.poppins(
+                          style: TextStyle(
                             fontSize: 27,
-                            fontWeight: FontWeight.w500,
+                            fontWeight: FontWeight.w600,
                             letterSpacing: 0.4,
                             height: 1.0,
                           ),

@@ -2,7 +2,7 @@
 
 Offline Android research prototype for ten-pad urine dipstick interpretation, a provisional literature-derived Bayesian UTI screening estimate, and rule-based renal follow-up.
 
-Start with [the developer evaluation handoff](docs/URITECT_DEVELOPER_EVALUATION_HANDOFF.md). The frozen evaluation candidate is **1.5.11+28**. Clinical validation is not established; experimental classifier metrics are separate from disease-detection performance.
+Start with [the developer evaluation handoff](docs/URITECT_DEVELOPER_EVALUATION_HANDOFF.md). The frozen evaluation candidate is **1.5.16+34**. Clinical validation is not established; experimental classifier metrics are separate from disease-detection performance.
 
 ## Project map
 
@@ -26,3 +26,5 @@ flutter test
 Release signing requires the owner's private signing configuration, which is deliberately excluded from Git. Developers can use `flutter build apk --debug` for local evaluation. Use the frozen signed APK for the planned pilot so all evaluators test the same version.
 
 Python evaluation uses the existing local research dataset, which is excluded from Git. Dataset-dependent results are documented rather than silently regenerated from absent inputs. See the handoff for environment, commands, evidence and remaining manual checks.
+
+Current build identity: [release index](docs/CURRENT_EVALUATION_RELEASE.json). See [the PDF gap response](docs/URITECT_EVIDENCE_GAP_REMEDIATION_2026-10-12.md) for engineering changes and external evidence still pending.

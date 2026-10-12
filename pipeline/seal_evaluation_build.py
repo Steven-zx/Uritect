@@ -17,6 +17,7 @@ ROOT = Path(__file__).resolve().parents[1]
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--evidence-dir', required=True, type=Path)
+    parser.add_argument('--verification', type=Path)
     args = parser.parse_args()
     folder = args.evidence_dir.resolve()
     assert folder.is_relative_to(ROOT / 'output'), 'Evidence must stay in project output'
@@ -53,7 +54,7 @@ def main():
     (folder / 'APK_IDENTITY.txt').write_text(identity + '\n' + signing, encoding='utf-8')
     (folder / 'APK_PERMISSIONS.txt').write_text(permissions, encoding='utf-8')
     (folder / 'SHA256SUMS.txt').write_text(f'{checksum}  {target.name}\n', encoding='utf-8')
-    verification = json.loads((ROOT / 'pipeline/output/ph_sg_error_audit_2026-10-11/VERIFICATION.json').read_text())
+    verification = json.loads((args.verification or ROOT / 'pipeline/output/ph_sg_error_audit_2026-10-11/VERIFICATION.json').read_text())
     receipt = {
         'version': version, 'apk': target.relative_to(ROOT).as_posix(),
         'bytes': target.stat().st_size, 'sha256': checksum,

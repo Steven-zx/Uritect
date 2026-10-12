@@ -65,7 +65,8 @@ void main() {
         findsOneWidget,
       );
       expect(find.text('Scan check: LOW_CONFIDENCE'), findsNothing);
-      await tester.tap(find.text('Scan details'));
+      await tester.ensureVisible(find.text('Research Details'));
+      await tester.tap(find.text('Research Details'));
       await tester.pumpAndSettle();
       expect(find.text('Scan check: LOW_CONFIDENCE'), findsOneWidget);
       expect(find.text('Detected: 0/10 pads'), findsNothing);

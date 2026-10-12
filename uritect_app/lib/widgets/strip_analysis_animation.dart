@@ -101,7 +101,7 @@ class _StripAnalysisAnimationState extends State<StripAnalysisAnimation>
               located ? 'Your pad sampling regions' : 'Your strip photo',
               style: Theme.of(
                 context,
-              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
+              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 12),
             Semantics(

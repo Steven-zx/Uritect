@@ -2,16 +2,11 @@ import 'package:flutter/material.dart';
 
 import 'home_page.dart';
 
-class RootPage extends StatefulWidget {
+class RootPage extends StatelessWidget {
   const RootPage({super.key});
 
   @override
-  State<RootPage> createState() => _RootPageState();
-}
-
-class _RootPageState extends State<RootPage> {
-  @override
   Widget build(BuildContext context) {
-    return const Scaffold(body: HomePage());
+    return const HomePage();
   }
 }

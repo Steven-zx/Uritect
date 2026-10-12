@@ -4,6 +4,7 @@ import '../config/theme.dart';
 import '../models/clinical_symptoms.dart';
 import '../models/renal_followup.dart';
 import '../models/scan_model.dart';
+import '../widgets/research_details.dart';
 
 class RenalResultsPage extends StatelessWidget {
   final ScanResult scanResult;
@@ -21,7 +22,6 @@ class RenalResultsPage extends StatelessWidget {
       scanResult: scanResult,
       checklist: checklistResult,
     );
-    final action = result.finalAction;
 
     return Scaffold(
       backgroundColor: AppColors.bgMain,
@@ -30,7 +30,7 @@ class RenalResultsPage extends StatelessWidget {
         elevation: 0,
         foregroundColor: AppColors.primaryMain,
         title: const Text(
-          'Renal Follow-up',
+          'Kidney Follow-up',
           style: TextStyle(fontWeight: FontWeight.w700, fontSize: 19),
         ),
       ),
@@ -43,24 +43,13 @@ class RenalResultsPage extends StatelessWidget {
             children: [
               _actionPanel(context, result),
               const SizedBox(height: 14),
-              _sectionTitle(context, 'Evidence used'),
+              _sectionTitle(context, 'Results Considered'),
               const SizedBox(height: 8),
               _evidencePanel(context, result),
               const SizedBox(height: 14),
-              _sectionTitle(context, 'Triggered rules'),
-              const SizedBox(height: 8),
-              for (final rule in result.triggeredRules)
-                _ruleTile(context, rule, rule.action == action),
-              const SizedBox(height: 14),
               _limitationsPanel(context),
               const SizedBox(height: 14),
-              Text(
-                '${result.version} | ${result.stripProfile}',
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: AppColors.textSecondary,
-                  fontSize: 10,
-                ),
-              ),
+              ResearchDetails(scan: scanResult, renal: result),
             ],
           ),
         ),
@@ -90,16 +79,30 @@ class RenalResultsPage extends StatelessWidget {
                   result.finalAction.heading,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     color: color,
-                    fontWeight: FontWeight.w700,
+                    fontWeight: FontWeight.w600,
                     fontSize: 17,
                   ),
                 ),
               ),
             ],
           ),
+          if (result.finalAction == RenalAction.retake &&
+              result.triggeredRules.any(
+                (r) =>
+                    r.action == RenalAction.consult ||
+                    r.action == RenalAction.promptConsult,
+              ))
+            const Padding(
+              padding: EdgeInsets.only(top: 8),
+              child: Text(
+                'A reported symptom or finding also needs professional review. Retaking a photo does not replace medical advice.',
+              ),
+            ),
           const SizedBox(height: 9),
           Text(
-            result.finalAction.message,
+            result.finalAction == RenalAction.retake
+                ? 'Unable to interpret the kidney-related readings reliably. Please repeat the scan. Seek medical advice for concerning symptoms.'
+                : result.finalAction.message,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
               color: AppColors.textPrimary,
               fontSize: 12,
@@ -124,24 +127,20 @@ class RenalResultsPage extends StatelessWidget {
         children: [
           _evidenceRow(
             context,
-            'Scan validity',
-            result.scanValid ? 'Valid' : 'Invalid',
+            'Photo quality',
+            result.scanValid ? 'Checked for these readings' : 'Needs review',
           ),
           _evidenceRow(
             context,
             'Protein',
-            '${result.proteinCategory}${result.proteinReliable ? '' : ' (unreliable)'}',
+            result.proteinReliable
+                ? result.proteinCategory
+                : 'Unable to confirm',
           ),
           _evidenceRow(
             context,
             'Blood',
-            '${result.bloodCategory}${result.bloodReliable ? '' : ' (unreliable)'}',
-          ),
-          _evidenceRow(
-            context,
-            'Supported profile',
-            'URS-10T protein/blood at 60 seconds',
-            last: true,
+            result.bloodReliable ? result.bloodCategory : 'Unable to confirm',
           ),
         ],
       ),
@@ -189,72 +188,6 @@ class RenalResultsPage extends StatelessWidget {
     );
   }
 
-  Widget _ruleTile(
-    BuildContext context,
-    TriggeredRenalRule rule,
-    bool contributesFinalAction,
-  ) {
-    return Container(
-      width: double.infinity,
-      margin: const EdgeInsets.only(bottom: 8),
-      padding: const EdgeInsets.all(11),
-      decoration: BoxDecoration(
-        color: contributesFinalAction
-            ? const Color(0xFFEAF7F9)
-            : AppColors.bgCard,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: AppColors.border),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            width: 70,
-            padding: const EdgeInsets.symmetric(vertical: 3),
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: _actionColor(rule.action).withValues(alpha: 0.12),
-              borderRadius: BorderRadius.circular(4),
-            ),
-            child: Text(
-              rule.id,
-              style: TextStyle(
-                color: _actionColor(rule.action),
-                fontSize: 11,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-          ),
-          const SizedBox(width: 9),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  rule.action.heading,
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: AppColors.textPrimary,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  rule.explanation,
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: AppColors.textSecondary,
-                    fontSize: 11,
-                    height: 1.25,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _limitationsPanel(BuildContext context) {
     return Container(
       width: double.infinity,
@@ -265,7 +198,7 @@ class RenalResultsPage extends StatelessWidget {
         border: Border.all(color: const Color(0xFFF2C36B)),
       ),
       child: Text(
-        'This output recommends follow-up action only. It does not diagnose kidney disease, calculate renal probability, stage CKD, or confirm hematuria. Quantitative urine ACR/PCR, microscopy, and professional assessment may be needed.',
+        'This screening cannot diagnose kidney disease. A healthcare professional may recommend a laboratory urine test.',
         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
           color: const Color(0xFF704600),
           fontSize: 11.5,
@@ -280,7 +213,7 @@ class RenalResultsPage extends StatelessWidget {
       text,
       style: Theme.of(context).textTheme.titleMedium?.copyWith(
         color: AppColors.primaryMain,
-        fontWeight: FontWeight.w700,
+        fontWeight: FontWeight.w600,
         fontSize: 15,
       ),
     );

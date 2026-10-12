@@ -1,7 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:drawable="@color/uritect_launch_teal" />
-    <item android:width="128dp" android:height="128dp" android:gravity="center">
-        <bitmap android:gravity="fill" android:src="@mipmap/ic_launcher" />
-    </item>
 </layer-list>

@@ -13,6 +13,7 @@ import '../models/scan_localization.dart';
 import '../models/scan_analysis_failure.dart';
 import 'training_support_policy.dart';
 import 'runtime_pad_features.dart';
+import 'photo_quality_check.dart';
 
 const List<String> _analyteOrder = [
   'Leukocytes',
@@ -61,14 +62,22 @@ class LocalScanAnalysisService {
       throw StateError('Captured image was not found on this device.');
     }
 
-    onProgress?.call(32, 'locating_markerless_strip');
     final events = ReceivePort();
-    final sendPort = onLocalization == null ? null : events.sendPort;
+    final sendPort = onLocalization == null && onProgress == null
+        ? null
+        : events.sendPort;
     final eventsDone = Completer<void>();
     Map<Object?, Object?>? previewMessage;
     final subscription = events.listen((message) {
       if ((message as Map)['done'] == true) {
         eventsDone.complete();
+        return;
+      }
+      if (message.containsKey('progress')) {
+        onProgress?.call(
+          (message['progress'] as num).toDouble(),
+          message['stage'] as String,
+        );
         return;
       }
       if (message.containsKey('preview')) previewMessage = Map.of(message);
@@ -189,7 +198,6 @@ class LocalScanAnalysisService {
     bool localContrast = false,
     bool backingContrast = false,
   }) {
-    _rejectBlankOrBlurred(image);
     var strip = localContrast
         ? _detectStripBoxLocalContrast(image)
         : relativeBackground
@@ -305,48 +313,6 @@ class LocalScanAnalysisService {
       saturationStd: satStd,
       valueStd: valStd,
     );
-  }
-
-  void _rejectBlankOrBlurred(img.Image image) {
-    final step = math.max(2, math.max(image.width, image.height) ~/ 180);
-    final lumas = <double>[];
-    final sats = <double>[];
-    var lapSum = 0.0;
-    var lapCount = 0;
-    for (var y = step; y < image.height - step; y += step) {
-      for (var x = step; x < image.width - step; x += step) {
-        final p = image.getPixel(x, y);
-        final l = _luma(p);
-        lumas.add(l);
-        sats.add(_rgbToHsv(p.r.toDouble(), p.g.toDouble(), p.b.toDouble())[1]);
-        final c = l * 4.0;
-        final n = _luma(image.getPixel(x, y - step));
-        final s = _luma(image.getPixel(x, y + step));
-        final e = _luma(image.getPixel(x + step, y));
-        final w = _luma(image.getPixel(x - step, y));
-        lapSum += (c - n - s - e - w).abs();
-        lapCount++;
-      }
-    }
-    if (lumas.isEmpty) throw StateError('INVALID_IMAGE: Image is unreadable.');
-    final lumaStd = _stdDev(lumas);
-    final lumaMean = _mean(lumas);
-    final satMean = _mean(sats);
-    final blurScore = lapCount == 0 ? 0.0 : lapSum / lapCount;
-    if (lumaMean < 28.0) {
-      throw StateError('INVALID_IMAGE: Image is too dark for pad reading.');
-    }
-    if (lumaMean > 242.0 && lumaStd < 18.0) {
-      throw StateError('INVALID_IMAGE: Image is overexposed for pad reading.');
-    }
-    if (lumaStd < 6.0 && satMean < 0.035) {
-      throw StateError(
-        'INVALID_IMAGE: Blank image or no visible strip signal.',
-      );
-    }
-    if (blurScore < 2.8) {
-      throw StateError('INVALID_IMAGE: Image is too blurred for pad reading.');
-    }
   }
 
   // Compare with the background on the same row, interpolating the side
@@ -1127,8 +1093,7 @@ Map<String, dynamic> _analyzeScanInBackground(
   SendPort? localizationPort,
 ) {
   final service = const LocalScanAnalysisService();
-  final model = _ProductionModel.fromText(modelText);
-  final support = TrainingSupportPolicy.fromText(modelText, policyText);
+  localizationPort?.send({'progress': 18, 'stage': 'decoding_image'});
   final imageBytes = File(imagePath).readAsBytesSync();
   final decoded = img.decodeImage(imageBytes);
   if (decoded == null) {
@@ -1136,6 +1101,11 @@ Map<String, dynamic> _analyzeScanInBackground(
   }
 
   final baseImage = service._imageForAnalysis(img.bakeOrientation(decoded));
+  localizationPort?.send({'progress': 25, 'stage': 'checking_image_quality'});
+  PhotoQualityCheck.validate(baseImage);
+  final model = _ProductionModel.fromText(modelText);
+  final support = TrainingSupportPolicy.fromText(modelText, policyText);
+  localizationPort?.send({'progress': 32, 'stage': 'locating_strip'});
   localizationPort?.send({
     'preview': img.encodeJpg(baseImage, quality: 85),
     'width': baseImage.width,

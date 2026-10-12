@@ -138,6 +138,9 @@ void main() {
             child: Scaffold(
               body: SingleChildScrollView(
                 child: DipstickResultsTable(
+                  scanVerified: true,
+                  analyteConfidences: {'Leukocytes': .91},
+                  secondsAfterDipping: 60,
                   rows: [
                     DipstickResultRow(
                       code: 'LEU',
@@ -157,9 +160,10 @@ void main() {
       expect(text.maxLines, isNull);
       expect(text.overflow, isNot(TextOverflow.ellipsis));
       expect(find.text('Negative'), findsNothing);
-      await tester.tap(find.text('Reference ranges'));
+      await tester.tap(find.text('Leukocytes'));
       await tester.pumpAndSettle();
-      expect(find.text('Negative'), findsOneWidget);
+      expect(find.text('Result: $value'), findsOneWidget);
+      expect(find.text('Reference: Negative'), findsNothing);
       expect(tester.takeException(), isNull);
     },
   );

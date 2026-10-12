@@ -1,0 +1,711 @@
+{
+  "frozen_at": "2026-10-12T04:12:38.282627+00:00",
+  "scope": "App sources/assets/tests/tooling and locked build configuration; signing secrets excluded",
+  "files": [
+    {
+      "path": "uritect_app/analysis_options.yaml",
+      "bytes": 1448,
+      "sha256": "B63207CF529949EC4727B68C23DBB38CE255B6F6F4AE1EFFCB5C1DCF2852D238"
+    },
+    {
+      "path": "uritect_app/android/app/build.gradle.kts",
+      "bytes": 2217,
+      "sha256": "EC305CDCA0318BFBC4A9D19F9050A655ED2059F938C315A5727CDD74ADE6EEE0"
+    },
+    {
+      "path": "uritect_app/android/app/src/debug/AndroidManifest.xml",
+      "bytes": 385,
+      "sha256": "B01A4541A8144C15BC617BAB7EB267C99FA1476368FBBDA5A12CDBF4E316A34C"
+    },
+    {
+      "path": "uritect_app/android/app/src/main/AndroidManifest.xml",
+      "bytes": 2975,
+      "sha256": "5A411FE22BEF82ED96D83845B33B0771E1C17A7476DCE595FEF7833A5E00FB9E"
+    },
+    {
+      "path": "uritect_app/android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java",
+      "bytes": 1605,
+      "sha256": "F2C9A892219309B5E5372044F164B4240DBC4B9C4DFC4249A9F8FE465E87B17D"
+    },
+    {
+      "path": "uritect_app/android/app/src/main/kotlin/com/example/uritect_app/HistorySecurity.kt",
+      "bytes": 11233,
+      "sha256": "529900175AE75E848C556DC8FD5E5E62F336FB5FF44F6002833A36F46EB1E334"
+    },
+    {
+      "path": "uritect_app/android/app/src/main/kotlin/com/example/uritect_app/MainActivity.kt",
+      "bytes": 958,
+      "sha256": "1B08C6C7A9D65AD3643E3B00D4C10BE64C7B318368C54597591421959ECBB6F7"
+    },
+    {
+      "path": "uritect_app/android/app/src/main/res/drawable/launch_background.xml",
+      "bytes": 188,
+      "sha256": "C8A49EE74CBAD3627C5B3B843AEB76C0E8A1D327AE977814F68D684303D2D514"
+    },
+    {
+      "path": "uritect_app/android/app/src/main/res/drawable/launch_empty_icon.xml",
+      "bytes": 294,
+      "sha256": "6741ABE4C260CB821122BDE7FB17FB794C0EB06383CA8EF85CDF0AC897158D7B"
+    },
+    {
+      "path": "uritect_app/android/app/src/main/res/drawable-v21/launch_background.xml",
+      "bytes": 188,
+      "sha256": "C8A49EE74CBAD3627C5B3B843AEB76C0E8A1D327AE977814F68D684303D2D514"
+    },
+    {
+      "path": "uritect_app/android/app/src/main/res/mipmap-hdpi/ic_launcher.png",
+      "bytes": 6106,
+      "sha256": "CE3255D512CE71A10A1771F04EFCFC809CC913E773E12879F5F87D0AD3A8DC37"
+    },
+    {
+      "path": "uritect_app/android/app/src/main/res/mipmap-mdpi/ic_launcher.png",
+      "bytes": 3694,
+      "sha256": "B111BBCF5B2B4745DB67F5E08B77593AFEFADAC9CE6ED4E3AC7C3ECF64EEFAB8"
+    },
+    {
+      "path": "uritect_app/android/app/src/main/res/mipmap-xhdpi/ic_launcher.png",
+      "bytes": 8785,
+      "sha256": "59B19CBC191508A4B9E75FBF4A8A4AFD5B0F74ACC83112FED5B797E9B8D67A36"
+    },
+    {
+      "path": "uritect_app/android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png",
+      "bytes": 14578,
+      "sha256": "7352D0177DC8C7E261E75C3B3D82117245390A05E1767DC333EDC51E942313E7"
+    },
+    {
+      "path": "uritect_app/android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png",
+      "bytes": 21980,
+      "sha256": "BBBF631E08733088697638A8CEAB7DAA7B25EB9BAA942159AEED92DC6AD73F45"
+    },
+    {
+      "path": "uritect_app/android/app/src/main/res/values/colors.xml",
+      "bytes": 121,
+      "sha256": "780F8334FDB14BF65BB5605C36EA366E3C15C6348AF6C75080713C1017588AEB"
+    },
+    {
+      "path": "uritect_app/android/app/src/main/res/values/styles.xml",
+      "bytes": 1158,
+      "sha256": "6558100AB82D7C9D0381279B0AF4EC7DA75BDD68370A5B3D38BA3FB8D732CC69"
+    },
+    {
+      "path": "uritect_app/android/app/src/main/res/values-night/styles.xml",
+      "bytes": 1157,
+      "sha256": "E7E697826768CACB426444B94A45382945171733079D91C305187A21EDD00F81"
+    },
+    {
+      "path": "uritect_app/android/app/src/main/res/values-night-v31/styles.xml",
+      "bytes": 565,
+      "sha256": "1D0A5A00E9EBCA10E4EE173973D43F4F6659639C821EEAA0A29781703B7A1173"
+    },
+    {
+      "path": "uritect_app/android/app/src/main/res/values-v31/styles.xml",
+      "bytes": 563,
+      "sha256": "E5014AE8883E9727AC0372FD5C4644B48AB7F7CB4B4335D7FE95E7D70693640B"
+    },
+    {
+      "path": "uritect_app/android/app/src/main/res/xml/history_backup_rules.xml",
+      "bytes": 288,
+      "sha256": "309E2B66B930067047D9FA4D567DB8A5E9BBE2293D73B3674D8228D6F1EDE83A"
+    },
+    {
+      "path": "uritect_app/android/app/src/main/res/xml/history_extraction_rules.xml",
+      "bytes": 520,
+      "sha256": "11E4AE73A114606DEA6F218F32D5228CEF7D71B0CAEEA4E15383508021F91458"
+    },
+    {
+      "path": "uritect_app/android/app/src/profile/AndroidManifest.xml",
+      "bytes": 385,
+      "sha256": "B01A4541A8144C15BC617BAB7EB267C99FA1476368FBBDA5A12CDBF4E316A34C"
+    },
+    {
+      "path": "uritect_app/android/build.gradle.kts",
+      "bytes": 561,
+      "sha256": "218F400E3FFF31C9C986A2535DFB974560E1B4D33CC27B7C1FEE96A2B7E44454"
+    },
+    {
+      "path": "uritect_app/android/gradle/wrapper/gradle-wrapper.jar",
+      "bytes": 53636,
+      "sha256": "16CAEAF66D57A0D1D2087FEF6A97EFA62DE8DA69AFA5B908F40DB35AFC4342DA"
+    },
+    {
+      "path": "uritect_app/android/gradle/wrapper/gradle-wrapper.properties",
+      "bytes": 296,
+      "sha256": "2BFB5011AAC7B03653E037F351B8CCAE72426EEE446A000269A2C1DCE64D9699"
+    },
+    {
+      "path": "uritect_app/android/gradle.properties",
+      "bytes": 317,
+      "sha256": "876C4182D3B49088B3DB0DDAC6302BFD15C05233E9B95DAC05A460BC4282B9C9"
+    },
+    {
+      "path": "uritect_app/android/gradlew",
+      "bytes": 4971,
+      "sha256": "EC56C02543666D92D9AC5AE7FCC48F88CE4DE0DEB8B7F9B39928CA46F68C1B2B"
+    },
+    {
+      "path": "uritect_app/android/gradlew.bat",
+      "bytes": 2561,
+      "sha256": "60A5C2B6593FDED374CF68117447FD56B79751D8716117B1B0EDEA53BB1857F2"
+    },
+    {
+      "path": "uritect_app/android/settings.gradle.kts",
+      "bytes": 797,
+      "sha256": "8BFE351763FB1239B6004EE4AD2F943B32F58D394ED70D58ADE85D182B8A618C"
+    },
+    {
+      "path": "uritect_app/assets/calibration/capture_manifest_template.json",
+      "bytes": 302,
+      "sha256": "206D3BB5A0385310B75FE6BEBA181E59DB3A8D5C180A231AC6D627A11A3518F8"
+    },
+    {
+      "path": "uritect_app/assets/calibration/capture_metadata_template.csv",
+      "bytes": 293,
+      "sha256": "6203E3F803CCB76A622FA88817C2E82BF9ECA779509F18956AE78631E99DE352"
+    },
+    {
+      "path": "uritect_app/assets/calibration/phase0_white_card_metadata_template.csv",
+      "bytes": 282,
+      "sha256": "F19065EB33999A5FCAC8B6D8AD4D6A181CE10F9AA37B1D5E4C57A1D90E202DC3"
+    },
+    {
+      "path": "uritect_app/assets/fonts/FONT_SOURCES.json",
+      "bytes": 2775,
+      "sha256": "01850980673B96AE31A76E996813BC085746BF1AF78CF49544434E8DA1EF08E3"
+    },
+    {
+      "path": "uritect_app/assets/fonts/Inter-Medium.ttf",
+      "bytes": 325280,
+      "sha256": "36A36FF7AC46DC2AECEAC3A80A87A67E7B844B8FC936699259AAC8FBA9BCF734"
+    },
+    {
+      "path": "uritect_app/assets/fonts/Inter-Regular.ttf",
+      "bytes": 324796,
+      "sha256": "15B294B67F2F8BBC04D990023EF4AEC66502B87DC9040D84ABE5F896CCB693DE"
+    },
+    {
+      "path": "uritect_app/assets/fonts/Inter-SemiBold.ttf",
+      "bytes": 326024,
+      "sha256": "334BB2C51AEBA5F566ABAC8D03A7E75AB3234D6926B52E92A85DC704129258B5"
+    },
+    {
+      "path": "uritect_app/assets/fonts/INTER_OFL.txt",
+      "bytes": 4377,
+      "sha256": "5B9321A4298CFEB6B34354164A1C3AFC3DB114569984C502B9B35D988FD58C57"
+    },
+    {
+      "path": "uritect_app/assets/fonts/Poppins-Bold.ttf",
+      "bytes": 150292,
+      "sha256": "ED709F2BA2BE295030614990104CB4C9C62BC2A2445C25CCB19A1500158A5A8B"
+    },
+    {
+      "path": "uritect_app/assets/fonts/Poppins-Medium.ttf",
+      "bytes": 152860,
+      "sha256": "C0BA5609D6562C76AB7DB73FA9C9B283D210598CB318A45D4085F540E4753D60"
+    },
+    {
+      "path": "uritect_app/assets/fonts/Poppins-Regular.ttf",
+      "bytes": 160316,
+      "sha256": "7E65201E9B79159E2300267CC885E16C8DCEF2424CDFA09A29BFB0980A94A7BA"
+    },
+    {
+      "path": "uritect_app/assets/fonts/Poppins-SemiBold.ttf",
+      "bytes": 151516,
+      "sha256": "EC23E010878CF0841F910EF94F62294E40C7D77CE99BE250DBA2911D0A1A61CD"
+    },
+    {
+      "path": "uritect_app/assets/fonts/POPPINS_OFL.txt",
+      "bytes": 4385,
+      "sha256": "6BE04893D770899A015649C7AA3B582F871B272F8747A92B78B17C3E5C8B2573"
+    },
+    {
+      "path": "uritect_app/assets/knn_reference_map.json",
+      "bytes": 978626,
+      "sha256": "01482BA9817A379E7C1CE0261A7E7B69BA89B1838F0588C2DF49C6BAC395376E"
+    },
+    {
+      "path": "uritect_app/assets/photos/dipstick icon.png",
+      "bytes": 1084102,
+      "sha256": "3249C7D3FCB07D10F67123A02E334C3869EB096CD82CE011064F24B5E7EE36AA"
+    },
+    {
+      "path": "uritect_app/assets/photos/high risk.png",
+      "bytes": 1347,
+      "sha256": "21A3A517B0A0FBB294C768C577ADACF37D7879CD60743642A3BD21CEE1EC31B9"
+    },
+    {
+      "path": "uritect_app/assets/photos/logo.png",
+      "bytes": 160323,
+      "sha256": "A74C89366CF4D31ADA3315165ED55C1BD66B86D81BE4C92A843B99EFA04C5796"
+    },
+    {
+      "path": "uritect_app/assets/photos/low risk.png",
+      "bytes": 967,
+      "sha256": "84E5692F93203766A5B845C25620981F723D60EAB5B96BB7BC25C8854D70620B"
+    },
+    {
+      "path": "uritect_app/assets/photos/minUriLogo.png",
+      "bytes": 218875,
+      "sha256": "2F26788CC34AD02B7DBD0269725365FFE2A94032728692F8404C827A71D7B55D"
+    },
+    {
+      "path": "uritect_app/assets/photos/moderate risk.png",
+      "bytes": 1229,
+      "sha256": "45E86D3DDA14D587DB981657E7A89441DC23AEC0FE88FBFAA4F21B41491DB6FC"
+    },
+    {
+      "path": "uritect_app/assets/production_semiquant_model.json",
+      "bytes": 282214,
+      "sha256": "1380D9E04D044413B42BD045E3C7370BF3D06A720695D2654598657234742279"
+    },
+    {
+      "path": "uritect_app/assets/training_support_policy.json",
+      "bytes": 2140,
+      "sha256": "D0BBC47975EF7E4BA461A3F7D492A6281E2B70DC930BCE424F398D98EC53090B"
+    },
+    {
+      "path": "uritect_app/lib/config/theme.dart",
+      "bytes": 2802,
+      "sha256": "37852D3860A48BB804E93AE4D37527D30548EC4C31A736C33E92A2C98E3DB3CF"
+    },
+    {
+      "path": "uritect_app/lib/main.dart",
+      "bytes": 666,
+      "sha256": "8B8B553D760CF9F766C174E4BC70116BA1DF7B2AAB9B094E8D9EEA5E076B88A2"
+    },
+    {
+      "path": "uritect_app/lib/models/checklist_draft.dart",
+      "bytes": 1988,
+      "sha256": "FEC90F863C83601AC9E3223DA7DFE6DD985E17EE972E449721E045E3A2BD1026"
+    },
+    {
+      "path": "uritect_app/lib/models/clinical_symptoms.dart",
+      "bytes": 9500,
+      "sha256": "D6E6B6B206843FED3F36B3E3BE6DC2FCF3EDCEC0A042B0A26723B3727CA24A69"
+    },
+    {
+      "path": "uritect_app/lib/models/dipstick_results_data.dart",
+      "bytes": 3578,
+      "sha256": "64CA31CC3155DB46B075FA60F019700388A249F0E4213F1D5D15F261C777FE12"
+    },
+    {
+      "path": "uritect_app/lib/models/renal_followup.dart",
+      "bytes": 17111,
+      "sha256": "1E2A0CB2D9BF3AD670B089AA53C5A2266B1AAD66D944EC54877D1E89CD869403"
+    },
+    {
+      "path": "uritect_app/lib/models/saved_scan_record.dart",
+      "bytes": 7282,
+      "sha256": "F2F1EDEF0DB4C7EE591A31D82E923C48831327B02DA6A5BB472C0CE0275D29B7"
+    },
+    {
+      "path": "uritect_app/lib/models/scan_analysis_exit_reason.dart",
+      "bytes": 59,
+      "sha256": "D9CE2EB5DD0E87A3495D8969FA1123AF90EDC1C1D1165E8C7CDB67113640C185"
+    },
+    {
+      "path": "uritect_app/lib/models/scan_analysis_failure.dart",
+      "bytes": 1694,
+      "sha256": "F5B4F12DD5585DCBBD89DC4F001DF04530529AF09EF16A0DD0870893C28A3ACB"
+    },
+    {
+      "path": "uritect_app/lib/models/scan_localization.dart",
+      "bytes": 2124,
+      "sha256": "E36A6EC245F469A640CEAA7E4F034B6AE1529461D1CAAE7EE2DBCBF27D7D0AD3"
+    },
+    {
+      "path": "uritect_app/lib/models/scan_model.dart",
+      "bytes": 10459,
+      "sha256": "63787C06C96C19A66EFD0E0A6D3A03801805AF8DEF27CE192FAB2B4D80259566"
+    },
+    {
+      "path": "uritect_app/lib/models/scan_provenance.dart",
+      "bytes": 3410,
+      "sha256": "657ADC6EB848432A0F6CE0DF94AFF22333B0FFB8A4810499E0C78F3CFC7E55DC"
+    },
+    {
+      "path": "uritect_app/lib/models/screening_fusion.dart",
+      "bytes": 28323,
+      "sha256": "F14B25209A4217C663238BE95E6AF4BDA858478A79B8372FD8815B153580B64B"
+    },
+    {
+      "path": "uritect_app/lib/models/strip_reading_schedule.dart",
+      "bytes": 986,
+      "sha256": "7A6E451CAF11ABE8745084EB8A88F5CD5CBA7FE51A32BDD1D8E24570EA4A44D6"
+    },
+    {
+      "path": "uritect_app/lib/pages/analyzing_page.dart",
+      "bytes": 11184,
+      "sha256": "8397F1EC8095996A2605873DE6B1AD84BECB8CE0B97B2E076682D0527E2D793C"
+    },
+    {
+      "path": "uritect_app/lib/pages/app_splash_page.dart",
+      "bytes": 5722,
+      "sha256": "8BEBDD8CF92648854BB86174304189BCB763260AAA247505B00F44784252FEA0"
+    },
+    {
+      "path": "uritect_app/lib/pages/capture_dipstick_page.dart",
+      "bytes": 23139,
+      "sha256": "593FAA083A92105E1A6947A3C6C58A1C3B0661389D8ADD5B162405FF0789B8CA"
+    },
+    {
+      "path": "uritect_app/lib/pages/dashboard_navigation.dart",
+      "bytes": 326,
+      "sha256": "F20D8597016CC3730A0834B33B8F8B46893B1EED3A0EB872D60B361361CD5042"
+    },
+    {
+      "path": "uritect_app/lib/pages/home_page.dart",
+      "bytes": 21127,
+      "sha256": "872C3610F810EDA5EF3B778B8F7AE7B24F9417E78B4A8D5ADB2EF2D8E54885D2"
+    },
+    {
+      "path": "uritect_app/lib/pages/landing_page.dart",
+      "bytes": 3531,
+      "sha256": "4CDBCA5A640E07D1B170A7EE774DC194BB5497A986ECD45B0020B2FB20288F9C"
+    },
+    {
+      "path": "uritect_app/lib/pages/overall_results_page.dart",
+      "bytes": 28690,
+      "sha256": "798D04C67C99603720CCE59A88CA7C565C8FEBEEA904F984340F87F27AD973E0"
+    },
+    {
+      "path": "uritect_app/lib/pages/performance_notes_page.dart",
+      "bytes": 3168,
+      "sha256": "C77960B65EDD064514242CD1DF48F03029F3436748D1E9D595F6F7B0909F156F"
+    },
+    {
+      "path": "uritect_app/lib/pages/protected_history_page.dart",
+      "bytes": 7936,
+      "sha256": "EDBD52DE37ABF7F25EA3A255BE0FAFA4CF49E5B0A20EC5990EDEAB2FB4A2E7A7"
+    },
+    {
+      "path": "uritect_app/lib/pages/renal_results_page.dart",
+      "bytes": 9748,
+      "sha256": "06B29B9ECBB98FC421FDCE0737EFFFA1C40B86EC33269DDBD74623FC9E36C50C"
+    },
+    {
+      "path": "uritect_app/lib/pages/results_page.dart",
+      "bytes": 7857,
+      "sha256": "DFD5AD453E327C879F069254AABA1D4E7D40EE990DC55F79019CBCC4015BFDEE"
+    },
+    {
+      "path": "uritect_app/lib/pages/root_page.dart",
+      "bytes": 238,
+      "sha256": "7A845DB2F165AA16230028A0DD19F35DB974FD2F261BEF63CEB95CC24E97B442"
+    },
+    {
+      "path": "uritect_app/lib/pages/symptom_checklist_page.dart",
+      "bytes": 22227,
+      "sha256": "D9834BB95553583830C515B4FA6C72C8DCE74DC854EC9ED657AC790CEB92EBB0"
+    },
+    {
+      "path": "uritect_app/lib/services/history_cipher.dart",
+      "bytes": 3715,
+      "sha256": "4117A5074E8F9968737A51353E754E3CFC0733C910D584E757FDB1E6BA4C9BF5"
+    },
+    {
+      "path": "uritect_app/lib/services/local_scan_analysis_service.dart",
+      "bytes": 58807,
+      "sha256": "9735BBD77A7E10985B82F9ECBD8F159CA8FA9B181012949F627BEE1010E6B52C"
+    },
+    {
+      "path": "uritect_app/lib/services/photo_quality_check.dart",
+      "bytes": 2422,
+      "sha256": "FB1912674B78C8846A4758B7B4F9B89827F489E276346183F432A66634F91199"
+    },
+    {
+      "path": "uritect_app/lib/services/runtime_pad_features.dart",
+      "bytes": 3034,
+      "sha256": "F399E36C9A81255D5EC85CFB3F80D86891BE8E75A4C57D5EA7F2F9D28D194308"
+    },
+    {
+      "path": "uritect_app/lib/services/scan_analysis_service.dart",
+      "bytes": 638,
+      "sha256": "D7619ADC78B456C1544DE9BA157C68D2C63A3F4E90EDD0DB35A1C824368E0CE1"
+    },
+    {
+      "path": "uritect_app/lib/services/scan_history_service.dart",
+      "bytes": 18601,
+      "sha256": "20E3A5E5FE36829CC9D88BD8E1337D26E7E114CEA4331B733566C510FB6EFAF9"
+    },
+    {
+      "path": "uritect_app/lib/services/scan_provenance_service.dart",
+      "bytes": 2317,
+      "sha256": "3B5EA5881D7B26E605F32B53925CA386EDD55B9059EF8E391D7C9107FBBB5780"
+    },
+    {
+      "path": "uritect_app/lib/services/training_support_policy.dart",
+      "bytes": 2569,
+      "sha256": "0577EE4584E365632A346CB598920837DAD3115FF61BA1B137A778CCBDF19F53"
+    },
+    {
+      "path": "uritect_app/lib/widgets/bottom_nav_bar.dart",
+      "bytes": 2326,
+      "sha256": "7DEF33CA997B8963732587895722ADAB859B57097346587D3499BAA26C06C5F9"
+    },
+    {
+      "path": "uritect_app/lib/widgets/common_widgets.dart",
+      "bytes": 3770,
+      "sha256": "02392C84CEA39F6F9E91676F2F9713E57F34AA76329AF78AC569904126F09D96"
+    },
+    {
+      "path": "uritect_app/lib/widgets/dipstick_results_table.dart",
+      "bytes": 4671,
+      "sha256": "E79B579D68E21B15F3998C46874F995682C482C47B5CC73F3FB165B9D28853C6"
+    },
+    {
+      "path": "uritect_app/lib/widgets/scan_camera_preview.dart",
+      "bytes": 1404,
+      "sha256": "11FF558DDDFA937D60C0FA2714EE1C2AEE8F423DCDD4454665AB71EEFF0140FF"
+    },
+    {
+      "path": "uritect_app/lib/widgets/scan_context_notice.dart",
+      "bytes": 4116,
+      "sha256": "BC73846A90D43955C483264E9BDA6A03C369052F2654182707BC28EB87EF4268"
+    },
+    {
+      "path": "uritect_app/lib/widgets/scan_provenance_dialog.dart",
+      "bytes": 4848,
+      "sha256": "C15FFD83904974B4402099DD67261E18033C8433C44E9CAB3BF5BE69DE2E5D71"
+    },
+    {
+      "path": "uritect_app/lib/widgets/strip_analysis_animation.dart",
+      "bytes": 11487,
+      "sha256": "6BA092DDF741FDAD3CA4BD119A65EEF2D5594FD82836679841ED060643F8D707"
+    },
+    {
+      "path": "uritect_app/lib/widgets/ten_pad_alignment_guide.dart",
+      "bytes": 3256,
+      "sha256": "87D2CDD98BEBDB7474E901A16B2B669D88CCAFB36C04914BC4718415EF956935"
+    },
+    {
+      "path": "uritect_app/pubspec.lock",
+      "bytes": 16901,
+      "sha256": "66759DB299107594143CB220677D41C779B5361E73FB0A3E6C7E0924E77A054F"
+    },
+    {
+      "path": "uritect_app/pubspec.yaml",
+      "bytes": 2183,
+      "sha256": "A5DD6CB9EE975BE9C18F066A4DC9166CB5843A61411136BD4D2D21FC5ADE1322"
+    },
+    {
+      "path": "uritect_app/test/bayesian_workflow_ui_test.dart",
+      "bytes": 8636,
+      "sha256": "5D08FBCE47246C49406B581AB154EFD742083381B6987C09C48548E5A0AD1E17"
+    },
+    {
+      "path": "uritect_app/test/capture_lifecycle_test.dart",
+      "bytes": 8817,
+      "sha256": "B515B4CD8F421F0A3CBF4F33322573355746FA5852F432AFB3A5AE0EF17F1531"
+    },
+    {
+      "path": "uritect_app/test/dashboard_return_navigation_test.dart",
+      "bytes": 6290,
+      "sha256": "4A675EC8C9E95E24157B8C29D06F40F3DADD80BCEFC782AC552E57095F3CD5E0"
+    },
+    {
+      "path": "uritect_app/test/dashboard_ui_test.dart",
+      "bytes": 2249,
+      "sha256": "22B4B66E9642F4C4169524532DADBEF4CF790FDF1079B9CCADEC86019BF9F166"
+    },
+    {
+      "path": "uritect_app/test/fixtures/cabatuan_028_cool.jpg",
+      "bytes": 2203191,
+      "sha256": "7C7FC90FDEAF480CCA7DDDA0A31C0DBEA8E572FF69DEEDDFEA2C13636F223F93"
+    },
+    {
+      "path": "uritect_app/test/fixtures/rmx3933_white_background_20261007.jpg",
+      "bytes": 1381613,
+      "sha256": "BA9CDF58DCAFA270A51CFA9E9A6E681C073DAB2400D9EB660916EB901EC493C0"
+    },
+    {
+      "path": "uritect_app/test/fixtures/runtime_pad_color_parity.json",
+      "bytes": 169877,
+      "sha256": "431C69A4CD1ACCEBC1C1C511DB4822AD81BEC3E445FEB15E40DFECE3F0C206DC"
+    },
+    {
+      "path": "uritect_app/test/fixtures/urs10t_handle_reference.jpg",
+      "bytes": 29058,
+      "sha256": "65D5C90E18A22E35EF13E84A741ACF9AD06D7E145188E51D17CEA0725AD9A3B4"
+    },
+    {
+      "path": "uritect_app/test/goldens/bayesian_results_phone.png",
+      "bytes": 55447,
+      "sha256": "5C579DE4E46160463021A2F90667B78433447ED5ACB1FCB9F5EE195E15F50D61"
+    },
+    {
+      "path": "uritect_app/test/goldens/dashboard_phone.png",
+      "bytes": 69129,
+      "sha256": "CAFEB6A31C772F2DFD836DC52A7B6B904CF50BF09E1134F58832F0D2875CB201"
+    },
+    {
+      "path": "uritect_app/test/goldens/dipstick_readings_phone.png",
+      "bytes": 48080,
+      "sha256": "3B42297A969A340E1EB9226D07472DF002FDCEF85312C5DE52E5555080A8F492"
+    },
+    {
+      "path": "uritect_app/test/goldens/strip_analysis_phone.png",
+      "bytes": 67029,
+      "sha256": "0269235DDC532871CDEABD975CDCAB3946AD70F67087FFD9B8E1C81DC792E0C7"
+    },
+    {
+      "path": "uritect_app/test/goldens/strip_analysis_photo_overlay.png",
+      "bytes": 34086,
+      "sha256": "5A5BF3CFB4A524F588591667BDD132BED0098ED50073E2AC157BAB612CEE683F"
+    },
+    {
+      "path": "uritect_app/test/history_authentication_test.dart",
+      "bytes": 2504,
+      "sha256": "22AE38EC1A8FB8776390F0987236F56E953606534907117782F514E039DCE926"
+    },
+    {
+      "path": "uritect_app/test/local_analysis_image_test.dart",
+      "bytes": 6551,
+      "sha256": "0D4797A20E64955BBDFC3B3FEC5F6D7C4C6F40C83B573A7E310A82BC8810A8B7"
+    },
+    {
+      "path": "uritect_app/test/methodology_audit_test.dart",
+      "bytes": 12415,
+      "sha256": "C5BFDA346100474C0B00BBC26B43FE46B689B3BFD5E023472094556EFE0A871B"
+    },
+    {
+      "path": "uritect_app/test/offline_fonts_test.dart",
+      "bytes": 1170,
+      "sha256": "2E5BB483CDCEF088FB01D6D186629F37E53F512FB508643096621223ECB07DBB"
+    },
+    {
+      "path": "uritect_app/test/pale_pad_phone_regression_test.dart",
+      "bytes": 3682,
+      "sha256": "F48767A94B537A13521AEC55786D62C3C14AFA839EE93409029A3F1C8E8B1022"
+    },
+    {
+      "path": "uritect_app/test/photo_quality_check_test.dart",
+      "bytes": 2197,
+      "sha256": "F16EA86E3B22DC1ED3C48F43665B37463276CF909EF32329CE762A98BDA60A17"
+    },
+    {
+      "path": "uritect_app/test/progressive_checklist_test.dart",
+      "bytes": 8380,
+      "sha256": "4F6E928DBD80E3CDAFA87AB83DF8A55A6258B1E49645906AE809EC6FE2866D0D"
+    },
+    {
+      "path": "uritect_app/test/protected_history_storage_test.dart",
+      "bytes": 13707,
+      "sha256": "5A0394B50732C64F6B15E058383C9DB57039F668C5B5D8FB0089284438DE1406"
+    },
+    {
+      "path": "uritect_app/test/provenance_and_history_ui_test.dart",
+      "bytes": 10067,
+      "sha256": "BA06C46E325099799DFF9001F9833D916ECDDA6FF770363029A8CBE275B76684"
+    },
+    {
+      "path": "uritect_app/test/provisional_readings_test.dart",
+      "bytes": 4638,
+      "sha256": "E76EC2E41356D0B3B4C10A6FA1475936D74FE5C14DAC1354CC3C0AEF4C8C3969"
+    },
+    {
+      "path": "uritect_app/test/renal_followup_test.dart",
+      "bytes": 10657,
+      "sha256": "7B46109EA8369F126FD7506FEAACB952B9428700D4D3C2D8BF39595A71A2B952"
+    },
+    {
+      "path": "uritect_app/test/runtime_pad_features_test.dart",
+      "bytes": 2546,
+      "sha256": "05A2B3B0DDF80C9501F6A26FB52198FE7A2EC90501D78AB1A267C63B5C2BE3C0"
+    },
+    {
+      "path": "uritect_app/test/scan_camera_preview_test.dart",
+      "bytes": 2944,
+      "sha256": "BEAC24B3DEDD0A1C1D9ADA65AF29B7760CB7D8F52ED00FA6B5B9EADBBE2F455E"
+    },
+    {
+      "path": "uritect_app/test/scan_rejection_reporting_test.dart",
+      "bytes": 3541,
+      "sha256": "3D3F7353A014F532C5E5FE8B4A510D1638F4F0706D7117E53F0EFC46CF8C79B8"
+    },
+    {
+      "path": "uritect_app/test/scan_retake_navigation_test.dart",
+      "bytes": 2835,
+      "sha256": "4A6AC79045CAFA0FD52AD874497313B5C73FF50D7A66CF40AD4DAC2FACA463D8"
+    },
+    {
+      "path": "uritect_app/test/screening_fusion_test.dart",
+      "bytes": 11300,
+      "sha256": "6FE8D309141694C467999E4652850E47C542849DFCF07762314312DF610BF721"
+    },
+    {
+      "path": "uritect_app/test/strict_scan_reliability_test.dart",
+      "bytes": 4608,
+      "sha256": "E8FA418D3B0DB198515B32270D3ECB0DAC480364257E32167DDE003FD9EA2703"
+    },
+    {
+      "path": "uritect_app/test/strip_analysis_animation_test.dart",
+      "bytes": 10581,
+      "sha256": "CF166A4C96B90164B93403DE3EFDA0CF6E4039345AF78A48C307041F068151D0"
+    },
+    {
+      "path": "uritect_app/test/strip_reading_schedule_test.dart",
+      "bytes": 2180,
+      "sha256": "DC4367FADF10FAB62D89219E9148C3B075639A7B3110FDF23DD06A8B0A03775A"
+    },
+    {
+      "path": "uritect_app/test/support/load_app_fonts.dart",
+      "bytes": 360,
+      "sha256": "BFF0F9DA12D7E41C39F90D8DE2E0F86FEE32EC00B56BA219153D9C3F247CF53D"
+    },
+    {
+      "path": "uritect_app/test/textured_background_scan_test.dart",
+      "bytes": 3286,
+      "sha256": "0154314A174E5675E70E46ED4580EE44042B911148E70E5D81F79A38D98E75FC"
+    },
+    {
+      "path": "uritect_app/test/training_support_policy_test.dart",
+      "bytes": 1611,
+      "sha256": "E7D4D839C4CC24A59630984B17E2DBC64994CA76EA82AF2F875D4ED5B8EF02A6"
+    },
+    {
+      "path": "uritect_app/test/verified_scan_fixture.dart",
+      "bytes": 1073,
+      "sha256": "D6EB516FCE69B40D2115248D2BF841259A8977DD4756C92FDFB7779D43A90901"
+    },
+    {
+      "path": "uritect_app/test/widget_test.dart",
+      "bytes": 1278,
+      "sha256": "48CE3DA81951D934B523CDD433F6D73FD2765414F8B01A4C03737D7D612C2433"
+    },
+    {
+      "path": "uritect_app/tool/_baseline_local_scan_analysis_service.dart",
+      "bytes": 37559,
+      "sha256": "B871F333C91B55B8B7A55C360FC554381D5F91769DD9DA03718932F1FB8C5C41"
+    },
+    {
+      "path": "uritect_app/tool/offline_scan_regression_test.dart",
+      "bytes": 2693,
+      "sha256": "46E22825736EB4214B24A32A70C5A0B80F66A6B24422CF050BE9112D174B8D16"
+    },
+    {
+      "path": "uritect_app/tool/phone_scan_reproduction_test.dart",
+      "bytes": 1821,
+      "sha256": "4630759E362A02934EB300E26AFD10F53AC3EBA743AE13D607959587142E9182"
+    },
+    {
+      "path": "uritect_app/tool/photo_overlay_geometry_test.dart",
+      "bytes": 5117,
+      "sha256": "26CCAA2FC3CB66896433EC620688A9CD1AE51E4626D8A67A63F3B8B8D6C67BEC"
+    },
+    {
+      "path": "uritect_app/tool/scan_latency_benchmark_test.dart",
+      "bytes": 1280,
+      "sha256": "D3A8184C1D94A548723B1D64CB3C3F311D45C5921153CAA46103BB8538EF17DD"
+    },
+    {
+      "path": "uritect_app/tool/support_scan_regression_test.dart",
+      "bytes": 3778,
+      "sha256": "561C0D80B2DC09861E622BB9674B616D0B151F3441AC8EE11A58ED676CD3340F"
+    }
+  ],
+  "archive": {
+    "path": "output/device_pilot/2026-10-12/1.5.15+32/URITECT_SOURCE_SNAPSHOT.zip",
+    "bytes": 6609545,
+    "sha256": "EC2D36E0CF2CEFB5B108C3AA10FD4B3442D0B00A13330D1F4DE4EA9C8439B7F1"
+  }
+}

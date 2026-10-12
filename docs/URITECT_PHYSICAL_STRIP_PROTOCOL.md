@@ -1,7 +1,34 @@
 # Physical URS-10T strip protocol — pending IFU confirmation
 
-Status: **not finalized**. User deferred these details on 2026-10-06 and asked to be asked
-again next session. No manufacturer, lot, expiry or reading times have been guessed.
+Status: **partially recorded; IFU confirmation pending**. On 2026-10-12 the owner supplied
+URS-10T, lot `2026051201`, dates `5-12-2026` and `5-11-2028`, and the label claim
+`anti-vc interference ability`. See [the structured strip record](URITECT_PHYSICAL_STRIP_RECORD.json).
+The owner confirmed manufacture **2026-05-12** and expiry **2028-05-11** (M-D-YYYY).
+The owner reports no manufacturer printed on the bottle. Product/lot/dates and the
+following transcribed time schedule are recorded; manufacturer/chart/IFU evidence and
+signed reconciliation remain unverified.
+
+| Pads | Owner-reported reading time |
+|---|---:|
+| Bilirubin, Glucose | 30 seconds |
+| Ketone | 40 seconds |
+| Specific Gravity | 45 seconds |
+| Leukocytes, Nitrite, Urobilinogen, Protein, pH, Blood | 60 seconds |
+
+The app's restricted reporting now compares the recorded time with each pad's target.
+No tolerance was supplied, so none is invented. A time match is self-reported schedule
+consistency, not measured reaction validity or independent IFU verification. At 60 seconds,
+the four earlier pads remain numerical image-review values and cannot be treated as
+correctly timed current results. To obtain photographs at all scheduled points, use
+separate 30/40/45/60-second captures with the same specimen code; the app does not merge
+them into a verified ten-pad composite. Practice alignment before dipping. Whether a
+sequential capture protocol is acceptable still requires qualified physical-strip review.
+
+An anti-vitamin-C label claim does not establish unrestricted immunity to interference.
+Its affected pads and tested ascorbate concentrations require the exact manufacturer's IFU.
+Evidence from other products must not be substituted for this lot's limits. General dipstick
+interference is documented in [a multicenter clinical study](https://pmc.ncbi.nlm.nih.gov/articles/PMC6816989/),
+which used a different strip and does not validate this URS-10T product.
 
 This protocol reconciles the frozen app with the actual physical product. "URS-10T" alone
 does not identify a manufacturer-specific category chart or IFU.
@@ -29,7 +56,8 @@ or ambiguous classes and verify blood hemolyzed/non-hemolyzed distinctions.
 
 The app currently treats protein/blood as 60-second checks through Urs10TProfile and the
 `read_outside_60_seconds` quality question. That is an implementation assumption awaiting IFU.
-Other pads do not have verified per-pad reading-time enforcement or independent timers.
+All ten pads now have checks against the owner's reported schedule. No independent
+reaction timer or manufacturer-verified tolerance is implemented.
 The app does not automatically recognize manufacturer/lot/expiry or verify reaction time.
 
 Record **all ten** manufacturer reading times and tolerances in seconds. If pads require

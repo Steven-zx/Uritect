@@ -405,7 +405,7 @@ class _SymptomChecklistPageState extends State<SymptomChecklistPage> {
           _question('urgency', label: 'An urgent need to urinate?'),
           _question(
             'suprapubic',
-            label: 'Lower abdominal or suprapubic discomfort?',
+            label: 'Pain or discomfort in your lower abdomen?',
           ),
           if (_draft.female) ...[
             _question('vaginal_discharge'),
@@ -415,7 +415,7 @@ class _SymptomChecklistPageState extends State<SymptomChecklistPage> {
             const Padding(
               padding: EdgeInsets.only(top: 20),
               child: Text(
-                'Research population checks',
+                'Your health background',
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
             ),
@@ -431,7 +431,7 @@ class _SymptomChecklistPageState extends State<SymptomChecklistPage> {
             ),
             _question(
               'uti_eligible_not_immunocompromised',
-              label: 'Are you immunocompromised?',
+              label: 'Do you have a weakened immune system?',
               inverted: true,
             ),
             if (_draft.male) ...[
@@ -532,7 +532,7 @@ class _SymptomChecklistPageState extends State<SymptomChecklistPage> {
             const Padding(
               padding: EdgeInsets.only(top: 16),
               child: Text(
-                'A reported or uncertain test problem prevents strip-based interpretation. Retake using a verified procedure.',
+                'A test problem may prevent reliable readings. Review the procedure before repeating the scan.',
               ),
             ),
           ],
@@ -567,7 +567,7 @@ class _SymptomChecklistPageState extends State<SymptomChecklistPage> {
                   title,
                   style: Theme.of(context).textTheme.titleSmall?.copyWith(
                     color: AppColors.primaryDark,
-                    fontWeight: FontWeight.w700,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
                 const SizedBox(height: 3),

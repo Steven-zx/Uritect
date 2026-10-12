@@ -1,0 +1,18 @@
+{
+  "app_version": "1.5.14+31",
+  "flutter_tests": {
+    "passed": 148,
+    "command": "flutter test --no-pub"
+  },
+  "static_analysis": {
+    "result": "No issues found",
+    "exit_code": 0
+  },
+  "python_tests": {
+    "scope": "Unchanged classifier/feature tests; last full run 52 passed for 1.5.13+30; not repeated for typography"
+  },
+  "ui_review": "Actual bundled Poppins faces loaded for phone goldens; result, Bayesian and photo overlay images inspected; small-screen/reduced-motion checks passed",
+  "typography": "Poppins Bold 700 headings, SemiBold 600 sections, Regular 400 body; offline native font registration",
+  "phone_acceptance": "pending; this APK not installed",
+  "independent_clinical_validation": "not established"
+}

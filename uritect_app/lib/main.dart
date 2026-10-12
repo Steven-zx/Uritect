@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'config/theme.dart';
-import 'pages/root_page.dart';
+import 'pages/app_splash_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,8 +19,7 @@ class MyApp extends StatelessWidget {
       title: 'Uritect',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
-      // Android owns the single launch screen; draw the dashboard immediately.
-      home: const RootPage(),
+      home: const AppSplashPage(),
     );
   }
 }

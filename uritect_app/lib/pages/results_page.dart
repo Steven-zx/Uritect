@@ -6,7 +6,7 @@ import '../models/scan_model.dart';
 import '../models/scan_localization.dart';
 import '../widgets/strip_analysis_animation.dart';
 import '../widgets/dipstick_results_table.dart';
-import '../widgets/scan_context_notice.dart';
+import '../widgets/research_details.dart';
 import 'dashboard_navigation.dart';
 import 'symptom_checklist_page.dart';
 
@@ -21,6 +21,11 @@ class ResultsPage extends StatelessWidget {
         scanResult.rejectionCode == 'MODEL_ORIENTATION_REVIEW_REQUIRED';
     final hasReadings = scanResult.rows.isNotEmpty;
     final reliable = scanResult.isReliableForInterpretation;
+    final currentContext =
+        scanResult.provenance?.canSupportCurrentContext == true;
+    final timingUnconfirmed = scanResult.rows.any(
+      (r) => !scanResult.hasMatchingReportedReadingTime(r.code),
+    );
     return Scaffold(
       backgroundColor: AppColors.bgMain,
       appBar: AppBar(
@@ -99,12 +104,16 @@ class ResultsPage extends StatelessWidget {
                     modelPaused
                         ? 'Classifier under review'
                         : reliable
-                        ? 'Strip readings available'
+                        ? (!currentContext
+                              ? 'For research review only'
+                              : timingUnconfirmed
+                              ? 'Some results need review'
+                              : 'Strip readings available')
                         : hasReadings
                         ? 'Readings need review'
                         : 'Please retake the photo',
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w700,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                   const SizedBox(height: 6),
@@ -112,14 +121,18 @@ class ResultsPage extends StatelessWidget {
                     modelPaused
                         ? 'Pad locations can be inspected below. Analyte readings are temporarily withheld while the model is reviewed.'
                         : reliable
-                        ? 'These are strip readings, not a diagnosis. Continue to the checklist for screening and safety guidance.'
+                        ? (!currentContext
+                              ? 'Photo or timing details are unconfirmed. These readings cannot support current-specimen screening.'
+                              : timingUnconfirmed
+                              ? 'Some readings need review. Check the reading time or retake the photo.'
+                              : 'Review your readings, then complete the safety checklist. This is not a diagnosis.')
                         : hasReadings
-                        ? 'Provisional readings are marked below. Continue to the checklist; each screening calculation requires adequate confidence in its own input pads. Retake to improve uncertain readings.'
-                        : 'No analyte results were produced. You can retake the photo or complete the safety checklist.',
+                        ? 'Some readings are uncertain. Retake the photo for more reliable results.'
+                        : 'Unable to read the dipstick reliably. Please retake the photo.',
                   ),
-                  if (scanResult.rejectionReason != null) ...[
+                  if (!hasReadings && _retakeHelp != null) ...[
                     const SizedBox(height: 8),
-                    Text(scanResult.rejectionReason!),
+                    Text(_retakeHelp!),
                   ],
                   if (!reliable) ...[
                     const SizedBox(height: 8),
@@ -127,11 +140,16 @@ class ResultsPage extends StatelessWidget {
                       'Serious symptoms still require attention when a scan fails.',
                     ),
                   ],
+                  const SizedBox(height: 6),
+                  const Text(
+                    'Research prototype · Not a diagnosis',
+                    style: TextStyle(fontSize: 12),
+                  ),
                 ],
               ),
             ),
             const SizedBox(height: 12),
-            ScanContextNotice(scan: scanResult, compact: true),
+
             if (localization?.regions.isNotEmpty == true)
               ExpansionTile(
                 title: const Text('View sampled pad regions'),
@@ -163,20 +181,16 @@ class ResultsPage extends StatelessWidget {
             ],
             if (hasReadings)
               DipstickResultsTable(
+                scanVerified:
+                    scanResult.hasCompleteSafetyMetadata &&
+                    currentContext &&
+                    scanResult.status != 'invalid',
                 rows: scanResult.rows,
                 analyteConfidences: scanResult.analyteConfidences,
                 requiredConfidence: scanResult.requiredAnalyteConfidence,
+                secondsAfterDipping: scanResult.provenance?.secondsAfterDipping,
               ),
-            if (scanResult.rejectionCode != null)
-              ExpansionTile(
-                title: const Text('Scan details'),
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(12),
-                    child: Text('Scan check: ${scanResult.rejectionCode}'),
-                  ),
-                ],
-              ),
+            ResearchDetails(scan: scanResult),
             const SizedBox(height: 12),
             const Text(
               'A completed checklist is required to save this scan to history.',
@@ -187,4 +201,12 @@ class ResultsPage extends StatelessWidget {
       ),
     );
   }
+
+  String? get _retakeHelp => switch (scanResult.rejectionCode) {
+    'IMAGE_TOO_DARK' => 'Use even lighting and avoid shadows.',
+    'IMAGE_OVEREXPOSED' => 'Reduce glare and avoid direct light.',
+    'IMAGE_BLURRED' => 'Tap the pads to focus and hold the phone steady.',
+    'LOW_CONFIDENCE' => 'Retake in even lighting.',
+    _ => null,
+  };
 }

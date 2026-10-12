@@ -1,0 +1,35 @@
+{
+  "version": "1.5.12+29",
+  "apk": "output/device_pilot/2026-10-12/1.5.12+29/Uritect_v1.5.12+29_release.apk",
+  "bytes": 57722651,
+  "sha256": "584A408E4C7009709B3AB1483BF2590FD9438845CB10E6D8A5A20300D462AF36",
+  "certificate_sha256": "15D1138DCE077ADA624A140B3A145343D1A48305FD0847E9002869E488F19D39",
+  "source_matches_archive": true,
+  "embedded_assets": {
+    "production_semiquant_model.json": "1380D9E04D044413B42BD045E3C7370BF3D06A720695D2654598657234742279",
+    "training_support_policy.json": "D0BBC47975EF7E4BA461A3F7D492A6281E2B70DC930BCE424F398D98EC53090B"
+  },
+  "offline_permissions_verified": true,
+  "verification": {
+    "app_version": "1.5.12+29",
+    "flutter_tests": {
+      "passed": 144,
+      "command": "flutter test --no-pub"
+    },
+    "static_analysis": {
+      "result": "No issues found",
+      "exit_code": 0
+    },
+    "scope": "Restored opening screen; full app regressions passed. Prior Python audit unchanged.",
+    "phone_acceptance": "pending; no connected device"
+  },
+  "purpose": "Frozen developer-evaluation research prototype; existing experimental classifier retained after focused audit",
+  "clinical_validation_established": false,
+  "phone_installation": "not performed for this build",
+  "pending": [
+    "Exact APK manual device evaluation",
+    "Physical-strip lot/expiry/IFU documentation",
+    "Recorded professional review and usability results",
+    "Independent outcome validation before clinical accuracy/calibration claims"
+  ]
+}

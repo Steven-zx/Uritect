@@ -244,6 +244,29 @@ void main() {
     expect(find.text('History is locked.'), findsOneWidget);
   });
   testWidgets(
+    'optional research details remain protected when history backgrounds',
+    (tester) async {
+      final history = seed();
+      tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+      await tester.pumpWidget(
+        MaterialApp(
+          home: ProtectedHistoryPage(recordId: 'test', historyService: history),
+        ),
+      );
+      await tester.pumpAndSettle();
+      await tester.ensureVisible(find.text('Research Details'));
+      await tester.tap(find.text('Research Details'));
+      await tester.pumpAndSettle();
+      expect(find.textContaining('Classifier:'), findsOneWidget);
+      tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.inactive);
+      await tester.pumpAndSettle();
+      expect(find.text('History is locked.'), findsOneWidget);
+      expect(find.textContaining('Classifier:'), findsNothing);
+      tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+      await tester.pumpWidget(const SizedBox.shrink());
+    },
+  );
+  testWidgets(
     'performance page separates historical metrics and clinical limits',
     (tester) async {
       await tester.pumpWidget(const MaterialApp(home: PerformanceNotesPage()));

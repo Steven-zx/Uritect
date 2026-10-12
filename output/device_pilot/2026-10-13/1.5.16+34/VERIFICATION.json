@@ -1,0 +1,19 @@
+{
+  "app_version": "1.5.16+34",
+  "flutter_tests": {
+    "passed": 164,
+    "command": "flutter test --no-pub"
+  },
+  "static_analysis": {
+    "result": "No issues found",
+    "exit_code": 0
+  },
+  "unchanged_core": "All existing assets/models/services verified byte-for-byte against pre-redesign guard",
+  "ui_review": "Real-font phone screenshots inspected: home, readings, summary, kidney follow-up. Small phone/180% text, unknown/duplicate timing, optional metadata, safe research-percent relocation, explicit unknown answers and saved-history research background locking tested.",
+  "python_tests": {
+    "scope": "Classifier and feature pipeline unchanged; previous full run 52 passed. Release metadata tooling checked directly."
+  },
+  "phone_acceptance": "pending; no device pass or installation for this APK",
+  "previous_evaluator_scores_apply_to_this_build": false,
+  "independent_clinical_validation": "not established"
+}

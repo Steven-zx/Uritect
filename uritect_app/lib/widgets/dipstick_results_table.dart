@@ -1,133 +1,107 @@
 import 'package:flutter/material.dart';
-
 import '../config/theme.dart';
 import '../models/dipstick_results_data.dart';
+import '../models/strip_reading_schedule.dart';
 
-/// Readable strip values; reference ranges are available on demand.
 class DipstickResultsTable extends StatelessWidget {
   final List<DipstickResultRow> rows;
   final Map<String, double> analyteConfidences;
   final double requiredConfidence;
+  final double? secondsAfterDipping;
+  final bool scanVerified;
   const DipstickResultsTable({
     super.key,
     required this.rows,
     this.analyteConfidences = const {},
-    this.requiredConfidence = 0.55,
+    this.requiredConfidence = .55,
+    this.secondsAfterDipping,
+    this.scanVerified = false,
   });
-
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: AppColors.bgCard,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.border),
-      ),
-      child: Column(
-        children: [
-          const Padding(
-            padding: EdgeInsets.all(14),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    'Analyte',
-                    style: TextStyle(fontWeight: FontWeight.w700),
-                  ),
-                ),
-                Expanded(
-                  child: Text(
-                    'Strip reading',
-                    textAlign: TextAlign.right,
-                    style: TextStyle(fontWeight: FontWeight.w700),
-                  ),
-                ),
-              ],
+  Widget build(BuildContext context) => Container(
+    clipBehavior: Clip.antiAlias,
+    decoration: BoxDecoration(
+      color: AppColors.bgCard,
+      borderRadius: BorderRadius.circular(18),
+      border: Border.all(color: AppColors.border),
+    ),
+    child: Column(
+      children: [
+        const Padding(
+          padding: EdgeInsets.all(14),
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              'Analyte readings',
+              style: TextStyle(fontWeight: FontWeight.w600),
             ),
           ),
-          for (final row in rows) ...[
-            const Divider(height: 1, color: AppColors.border),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: Text(
-                      row.name,
-                      style: const TextStyle(color: AppColors.textPrimary),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text(
-                          row.result.toLowerCase() == 'neg'
-                              ? 'Negative'
-                              : row.result,
-                          textAlign: TextAlign.right,
-                          style: const TextStyle(
-                            color: AppColors.primaryDark,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                        if (analyteConfidences[row.name] != null)
-                          Text(
-                            'Vote confidence: ${(analyteConfidences[row.name]! * 100).toStringAsFixed(0)}%${analyteConfidences[row.name]! < requiredConfidence ? ' ? provisional' : ''}',
-                            textAlign: TextAlign.right,
-                            style: TextStyle(
-                              fontSize: 11,
-                              color:
-                                  analyteConfidences[row.name]! <
-                                      requiredConfidence
-                                  ? Colors.orange.shade900
-                                  : AppColors.textPrimary,
-                            ),
-                          ),
-                      ],
-                    ),
-                  ),
-                ],
+        ),
+        for (final row in rows) ...[
+          const Divider(height: 1, color: AppColors.border),
+          _row(row),
+        ],
+      ],
+    ),
+  );
+  Widget _row(DipstickResultRow row) {
+    final confidence = analyteConfidences[row.name];
+    final timing = StripReadingSchedule.reportedTimeMatches(
+      row.code,
+      secondsAfterDipping,
+    );
+    final checked =
+        scanVerified &&
+        confidence != null &&
+        confidence.isFinite &&
+        confidence >= requiredConfidence &&
+        timing;
+    final result = checked
+        ? (row.result.toLowerCase() == 'neg' ? 'Negative' : row.result)
+        : 'Uncertain';
+    return ExpansionTile(
+      key: PageStorageKey('reading-${row.code}'),
+      tilePadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 2),
+      childrenPadding: const EdgeInsets.fromLTRB(14, 0, 14, 14),
+      shape: const Border(),
+      collapsedShape: const Border(),
+      title: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(child: Text(row.name, style: const TextStyle(fontSize: 14))),
+          const SizedBox(width: 10),
+          Flexible(
+            child: Text(
+              result,
+              textAlign: TextAlign.right,
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: checked ? AppColors.primaryDark : Colors.orange.shade900,
               ),
             ),
-          ],
-          const Divider(height: 1, color: AppColors.border),
-          ExpansionTile(
-            title: const Text(
-              'Reference ranges',
-              style: TextStyle(fontSize: 14),
-            ),
-            shape: const Border(),
-            collapsedShape: const Border(),
-            children: [
-              for (final row in rows)
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(14, 0, 14, 10),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        child: Text(
-                          row.name,
-                          style: const TextStyle(color: AppColors.textPrimary),
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Text(
-                          row.referenceRange,
-                          textAlign: TextAlign.right,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-            ],
           ),
         ],
       ),
+      children: [
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Result: $result'),
+              const SizedBox(height: 6),
+              Text(
+                checked
+                    ? 'This reading passed the app’s required checks. It is not a diagnosis.'
+                    : !timing
+                    ? 'Reading time is unconfirmed. Check the strip instructions before repeating the photo.'
+                    : 'This reading could not be confirmed. Retake a clear photo or seek professional review.',
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

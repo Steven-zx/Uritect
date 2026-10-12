@@ -1,6 +1,11 @@
 # URITECT Manuscript Final Revision Guide
 
-**2026-10-06 correction:** target release candidate 1.4.1+14. Keep final results and
+**2026-10-12 correction:** target evaluation candidate 1.5.16+34, experimental model
+`direction_verified_experimental_v1_20261011`. The original 82.52%/17.18% values below
+are historical and must not be presented as this app's current performance. Grouped
+retrospective baseline evidence is 80.18% per analyte / 12.50% all ten on an inspected
+112-event subset; it is not independent end-to-end APK validation. See the current
+developer handoff and pH/SG audit for split/model provenance. Keep final results and
 manuscript export pending until the exact signed APK, device evidence, IFU confirmation
 and human evaluation are frozen. Reviews are pending, so do not yet call it expert-reviewed.
 The editable thesis source is absent. Do not overwrite the historical PDF with invented results.
@@ -25,7 +30,7 @@ and conclusion.
 | Four sentinel analytes GLU/PRO/LEU/NIT in one Bayesian disease engine | Bayesian inference is limited to gated lower-UTI screening using LEU/NIT/BLD. Renal follow-up is a separate deterministic rule engine using protein, blood, symptoms, repeat history, safety, and interference inputs. |
 | Low/Moderate/High UTI risk or 20/80, 30/70, or 35/70 thresholds | Display the provisional posterior with its prior and applied LRs only for eligible calculations, plus Observe, Consultation suggested, Prompt medical consultation suggested, or Insufficient evidence. Do not convert the number into a probability band. |
 | Bayesian renal probability | Deterministic renal follow-up action; no renal probability and no renal diagnosis. |
-| 80% overall app/scan accuracy | 82.52% individual-analyte accuracy (1,345/1,630) and 17.18% all-ten-correct whole-scan accuracy (28/163), reproduced retrospectively from the original development split with known related-capture leakage. |
+| 80% overall app/scan accuracy | Describe the exact evaluation and split. The grouped retrospective baseline is 80.18% per-analyte / 12.50% all-ten on 112 previously inspected confirmation events; it does not validate this APK end to end. Historical 82.52% / 17.18% values precede orientation/grouping corrections and must be labeled historical. |
 | Random train/test split with images treated independently | The original source/event grouping was intended to prevent leakage but the October 5 audit found related captures across splits. New development grouping and an untouched participant/specimen-level final cohort are required. |
 | ISO compliance/certification | Evaluation guided by ISO/IEC 25010. |
 
@@ -83,6 +88,12 @@ requires no diabetes and no suspected STI. Use the exact confirmations and
 qualifying symptom lists in URITECT_UTI_Eligibility_Authority.md.
 Safety and alternate-cause gates apply separately.
 State that no culture-confirmed calibration study was performed.
+
+Record URS-10T lot 2026051201, manufacture 2026-05-12, expiry 2028-05-11 and
+the owner-transcribed 30/40/45/60-second schedule. Do not describe the manufacturer,
+anti-VC protection limits or full IFU as verified. Explain per-pad restricted reporting
+and that one photograph cannot satisfy all target times. No new accuracy improvement
+is established by fixing the timing policy.
 
 ## Chapter 3
 

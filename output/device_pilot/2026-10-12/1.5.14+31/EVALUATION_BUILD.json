@@ -1,0 +1,40 @@
+{
+  "version": "1.5.14+31",
+  "apk": "output/device_pilot/2026-10-12/1.5.14+31/Uritect_v1.5.14+31_release.apk",
+  "bytes": 56779127,
+  "sha256": "0CA45708DA6097ADF080915663388478B2B39BEFA2380B03D320C774F98D6780",
+  "certificate_sha256": "15D1138DCE077ADA624A140B3A145343D1A48305FD0847E9002869E488F19D39",
+  "source_matches_archive": true,
+  "embedded_assets": {
+    "production_semiquant_model.json": "1380D9E04D044413B42BD045E3C7370BF3D06A720695D2654598657234742279",
+    "training_support_policy.json": "D0BBC47975EF7E4BA461A3F7D492A6281E2B70DC930BCE424F398D98EC53090B"
+  },
+  "offline_permissions_verified": true,
+  "verification": {
+    "app_version": "1.5.14+31",
+    "flutter_tests": {
+      "passed": 148,
+      "command": "flutter test --no-pub"
+    },
+    "static_analysis": {
+      "result": "No issues found",
+      "exit_code": 0
+    },
+    "python_tests": {
+      "scope": "Unchanged classifier/feature tests; last full run 52 passed for 1.5.13+30; not repeated for typography"
+    },
+    "ui_review": "Actual bundled Poppins faces loaded for phone goldens; result, Bayesian and photo overlay images inspected; small-screen/reduced-motion checks passed",
+    "typography": "Poppins Bold 700 headings, SemiBold 600 sections, Regular 400 body; offline native font registration",
+    "phone_acceptance": "pending; this APK not installed",
+    "independent_clinical_validation": "not established"
+  },
+  "purpose": "Frozen developer-evaluation research prototype; existing experimental classifier retained after focused audit",
+  "clinical_validation_established": false,
+  "phone_installation": "not performed for this build",
+  "pending": [
+    "Exact APK manual device evaluation",
+    "Physical-strip lot/expiry/IFU documentation",
+    "Recorded professional review and usability results",
+    "Independent outcome validation before clinical accuracy/calibration claims"
+  ]
+}

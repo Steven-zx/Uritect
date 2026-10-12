@@ -1,4 +1,5 @@
 import 'verified_scan_fixture.dart';
+import 'support/load_app_fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -99,6 +100,7 @@ void main() {
     final icons = FontLoader('MaterialIcons')
       ..addFont(rootBundle.load('fonts/MaterialIcons-Regular.otf'));
     await icons.load();
+    await loadAppFonts();
   });
   testWidgets('results display Bayesian percentage and applied factors', (
     tester,
@@ -119,23 +121,22 @@ void main() {
     await tester.runAsync(() async => GoogleFonts.pendingFonts());
     await tester.pumpAndSettle();
 
-    expect(find.text('Female research model'), findsOneWidget);
-    expect(find.text('LR 7.20'), findsNothing);
+    expect(find.text('UTI-related screening'), findsOneWidget);
+    expect(find.text('91.5%'), findsNothing);
+    expect(find.textContaining('LR 7.20'), findsNothing);
     await expectLater(
       find.byType(Scaffold),
       matchesGoldenFile('goldens/bayesian_results_phone.png'),
     );
-    await tester.ensureVisible(find.byKey(const Key('bayesian_details')));
-    await tester.tap(find.text('How this estimate was calculated'));
+    await tester.ensureVisible(find.byKey(const Key('research_details')));
+    await tester.tap(find.text('Research Details'));
     await tester.runAsync(() async => GoogleFonts.pendingFonts());
     await tester.pumpAndSettle();
     expect(find.text('91.5%'), findsOneWidget);
-    expect(find.text('LR 7.20'), findsOneWidget);
-    expect(find.text('LR 1.50'), findsOneWidget);
+    expect(find.textContaining('LR 7.20'), findsOneWidget);
+    expect(find.textContaining('LR 1.50'), findsOneWidget);
     expect(
-      find.textContaining(
-        'Combining symptom and dipstick LRs remains an assumption',
-      ),
+      find.textContaining('Combining symptom and dipstick LRs'),
       findsOneWidget,
     );
     expect(
@@ -180,13 +181,14 @@ void main() {
     await tester.runAsync(() async => GoogleFonts.pendingFonts());
     await tester.pumpAndSettle();
 
-    expect(find.text('Male research model'), findsOneWidget);
-    expect(find.text('LR 5.14'), findsNothing);
-    await tester.ensureVisible(find.byKey(const Key('bayesian_details')));
-    await tester.tap(find.text('How this estimate was calculated'));
+    expect(find.text('UTI-related screening'), findsOneWidget);
+    expect(find.text('84.9%'), findsNothing);
+    expect(find.textContaining('LR 5.14'), findsNothing);
+    await tester.ensureVisible(find.byKey(const Key('research_details')));
+    await tester.tap(find.text('Research Details'));
     await tester.runAsync(() async => GoogleFonts.pendingFonts());
     await tester.pumpAndSettle();
-    expect(find.text('LR 5.14'), findsOneWidget);
+    expect(find.textContaining('LR 5.14'), findsOneWidget);
     expect(
       find.textContaining(
         'transfer of the study prior and LRs remain assumptions',
@@ -241,10 +243,16 @@ void main() {
       );
       await tester.runAsync(() async => GoogleFonts.pendingFonts());
       await tester.pumpAndSettle();
+      expect(find.text('12.0%'), findsNothing);
+      await tester.ensureVisible(find.text('Research Details'));
+      await tester.tap(find.text('Research Details'));
+      await tester.pumpAndSettle();
       expect(find.text('12.0%'), findsOneWidget);
       expect(find.text('91.5%'), findsNothing);
       expect(
-        find.textContaining('Saved research estimate shown as recorded'),
+        find.textContaining(
+          'Saved record. Follow-up guidance uses current rules.',
+        ),
         findsOneWidget,
       );
     },

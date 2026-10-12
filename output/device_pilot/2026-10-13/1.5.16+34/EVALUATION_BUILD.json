@@ -1,0 +1,41 @@
+{
+  "version": "1.5.16+34",
+  "apk": "output/device_pilot/2026-10-13/1.5.16+34/Uritect_v1.5.16+34_release.apk",
+  "bytes": 56779235,
+  "sha256": "44F4ED4CC41D0FE555D1B543F03016737353A054694B7EC90126F02E7A7CD77F",
+  "certificate_sha256": "15D1138DCE077ADA624A140B3A145343D1A48305FD0847E9002869E488F19D39",
+  "source_matches_archive": true,
+  "embedded_assets": {
+    "production_semiquant_model.json": "1380D9E04D044413B42BD045E3C7370BF3D06A720695D2654598657234742279",
+    "training_support_policy.json": "D0BBC47975EF7E4BA461A3F7D492A6281E2B70DC930BCE424F398D98EC53090B"
+  },
+  "offline_permissions_verified": true,
+  "verification": {
+    "app_version": "1.5.16+34",
+    "flutter_tests": {
+      "passed": 164,
+      "command": "flutter test --no-pub"
+    },
+    "static_analysis": {
+      "result": "No issues found",
+      "exit_code": 0
+    },
+    "unchanged_core": "All existing assets/models/services verified byte-for-byte against pre-redesign guard",
+    "ui_review": "Real-font phone screenshots inspected: home, readings, summary, kidney follow-up. Small phone/180% text, unknown/duplicate timing, optional metadata, safe research-percent relocation, explicit unknown answers and saved-history research background locking tested.",
+    "python_tests": {
+      "scope": "Classifier and feature pipeline unchanged; previous full run 52 passed. Release metadata tooling checked directly."
+    },
+    "phone_acceptance": "pending; no device pass or installation for this APK",
+    "previous_evaluator_scores_apply_to_this_build": false,
+    "independent_clinical_validation": "not established"
+  },
+  "purpose": "Frozen developer-evaluation research prototype; existing experimental classifier retained after focused audit",
+  "clinical_validation_established": false,
+  "phone_installation": "not performed for this build",
+  "pending": [
+    "Exact APK manual device evaluation",
+    "Physical-strip lot/expiry/IFU documentation",
+    "Recorded professional review and usability results",
+    "Independent outcome validation before clinical accuracy/calibration claims"
+  ]
+}

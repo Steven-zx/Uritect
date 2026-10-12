@@ -1,0 +1,20 @@
+{
+  "app_version": "1.5.13+30",
+  "flutter_tests": {
+    "passed": 148,
+    "command": "flutter test --no-pub"
+  },
+  "python_tests": {
+    "passed": 52,
+    "command": "python -m unittest discover -s pipeline"
+  },
+  "static_analysis": {
+    "result": "No issues found",
+    "exit_code": 0
+  },
+  "timing_regressions": "60 s required UTI/renal inputs retained; early/unknown/mismatched timing blocked for relevant pads; image review values preserved",
+  "ui_review": "Phone result and Bayesian summary golden images rendered and visually inspected",
+  "source_pdf": "docs/URITECT_UNRESOLVED_EVIDENCE_GAPS.pdf",
+  "phone_acceptance": "pending; no connected device",
+  "independent_clinical_validation": "not established"
+}

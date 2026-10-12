@@ -32,7 +32,7 @@ REQUIRED_CASES = {
     'PARTIAL': 'Incomplete strip/pad stack: explicit retake.',
     'WRONG_STRIP': 'Unsupported product: quality checklist blocks interpretation; test automatic detector limitations.',
     'MULTIPLE_STRIPS': 'Multiple visible strips: explicit retake.',
-    'LOW_CONFIDENCE': 'Any pad below 0.45: retake; no ordinary estimate; safety advice still available.',
+    'LOW_CONFIDENCE': 'Supported located readings below 0.45 carry review notices; unsupported inputs reject. UTI/renal estimates require their own reliable pad sets, with symptom safety advice retained. Low pH/SG confidence alone must not block adequate independent UTI pads.',
     'RETAKE': 'New scan clears old photo/result and opens live camera; repeated retakes remain responsive.',
     'CAMERA_LIFECYCLE': 'Background/resume and gallery-return restore camera; rapid taps do not double-submit.',
     'FEMALE_ELIGIBILITY': 'Eligible symptomatic nonpregnant adult: separate female estimate with prior/factors/disclosure.',

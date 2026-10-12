@@ -14,6 +14,7 @@ void main() {
         await GoogleFonts.pendingFonts();
         final manifest = await AssetManifest.loadFromAssetBundle(rootBundle);
         for (final name in [
+          'Poppins-Regular',
           'Inter-Regular',
           'Inter-Medium',
           'Inter-SemiBold',

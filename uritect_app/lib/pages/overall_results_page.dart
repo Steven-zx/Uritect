@@ -10,6 +10,7 @@ import 'renal_results_page.dart';
 import 'dashboard_navigation.dart';
 import 'protected_history_page.dart';
 import '../widgets/scan_context_notice.dart';
+import '../widgets/research_details.dart';
 import '../services/scan_history_service.dart';
 
 class OverallResultsPage extends StatelessWidget {
@@ -47,22 +48,6 @@ class OverallResultsPage extends StatelessWidget {
       scanResult: scanResult,
       checklist: clinicalChecklistResult,
     );
-
-    const symptomCategories = {
-      'uti',
-      'differential',
-      'systemic',
-      'renal',
-      'renal_safety',
-    };
-    final relevantSymptoms = clinicalSymptoms
-        .where((item) => symptomCategories.contains(item.category))
-        .toList();
-    final selectedCount = relevantSymptoms
-        .where(
-          (item) => clinicalChecklistResult.selectedSymptoms[item.id] == true,
-        )
-        .length;
 
     return Scaffold(
       backgroundColor: AppColors.bgMain,
@@ -126,11 +111,13 @@ class OverallResultsPage extends StatelessWidget {
                   onPressed: onEditPatientName,
                 ),
               ),
+            _screeningStatus(context, fusionResult, renalResult),
+            const SizedBox(height: 12),
             _riskCard(context, fusionResult),
             if (clinicalChecklistResult.hasIncompleteSafetyReview) ...[
               const SizedBox(height: 12),
               const Text(
-                'Safety answers are incomplete or uncertain. Review the checklist; unreported warning symptoms cannot be excluded.',
+                'Some health information is missing. Complete the checklist; warning symptoms cannot yet be excluded.',
                 style: TextStyle(fontWeight: FontWeight.w600),
               ),
             ],
@@ -163,8 +150,6 @@ class OverallResultsPage extends StatelessWidget {
               _evidenceConflictCard(context, fusionResult),
             ],
             const SizedBox(height: 12),
-            _renalFollowupCard(context, renalResult),
-            const SizedBox(height: 12),
             _bayesianEstimateCard(
               context,
               (!scanResult.modelDirectionReviewed ||
@@ -172,13 +157,15 @@ class OverallResultsPage extends StatelessWidget {
                   ? fusionResult.utiEstimate
                   : savedUtiEstimate ?? fusionResult.utiEstimate,
             ),
+            const SizedBox(height: 12),
+            _renalFollowupCard(context, renalResult),
             if (savedUtiEstimate != null &&
                 scanResult.modelDirectionReviewed &&
                 scanResult.stripDirectionVerified)
               const Padding(
                 padding: EdgeInsets.only(top: 8),
                 child: Text(
-                  'Saved research estimate shown as recorded. Follow-up guidance uses current rules.',
+                  'Saved record. Follow-up guidance uses current rules.',
                   style: TextStyle(fontSize: 12),
                 ),
               ),
@@ -191,9 +178,16 @@ class OverallResultsPage extends StatelessWidget {
                 tilePadding: EdgeInsets.zero,
                 children: [
                   DipstickResultsTable(
+                    scanVerified:
+                        scanResult.hasCompleteSafetyMetadata &&
+                        scanResult.provenance?.canSupportCurrentContext ==
+                            true &&
+                        scanResult.status != 'invalid',
                     rows: tableRows,
                     analyteConfidences: scanResult.analyteConfidences,
                     requiredConfidence: scanResult.requiredAnalyteConfidence,
+                    secondsAfterDipping:
+                        scanResult.provenance?.secondsAfterDipping,
                   ),
                 ],
               )
@@ -207,18 +201,68 @@ class OverallResultsPage extends StatelessWidget {
             ExpansionTile(
               title: const Text('Safety and checklist details'),
               tilePadding: EdgeInsets.zero,
-              children: [
-                _conditionCard(
-                  context,
-                  fusionResult,
-                  selectedCount,
-                  relevantSymptoms.length,
-                ),
-              ],
+              children: [_conditionCard(context, fusionResult)],
             ),
             _checklistAnswersCard(context),
+            ResearchDetails(
+              scan: scanResult,
+              renal: renalResult,
+              estimate:
+                  (!scanResult.modelDirectionReviewed ||
+                      !scanResult.stripDirectionVerified)
+                  ? fusionResult.utiEstimate
+                  : savedUtiEstimate ?? fusionResult.utiEstimate,
+            ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _screeningStatus(
+    BuildContext context,
+    ScreeningFusionResult fusion,
+    RenalFollowupResult renal,
+  ) {
+    final complete =
+        fusion.utiEstimate.isCalculable &&
+        renal.scanValid &&
+        !clinicalChecklistResult.hasIncompleteSafetyReview;
+    final someUncertain = scanResult.rows.any(
+      (row) =>
+          (scanResult.analyteConfidences[row.name] ?? 0) <
+              scanResult.requiredAnalyteConfidence ||
+          !scanResult.hasMatchingReportedReadingTime(row.code),
+    );
+    final title = !complete
+        ? 'Unable to complete screening'
+        : someUncertain
+        ? 'Some results need review'
+        : 'Screening completed';
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: const Color(0xFFEAF7F9),
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(title, style: Theme.of(context).textTheme.titleMedium),
+          const SizedBox(height: 6),
+          Text(
+            !complete
+                ? 'Some required readings or health information are unavailable. Follow the advice below.'
+                : someUncertain
+                ? 'Some information is available; uncertain readings are not confirmed findings.'
+                : 'Required information has been reviewed. Follow-up advice does not confirm or rule out disease.',
+          ),
+          const SizedBox(height: 6),
+          const Text(
+            'Research prototype · Not a diagnosis',
+            style: TextStyle(fontSize: 12),
+          ),
+        ],
       ),
     );
   }
@@ -226,114 +270,36 @@ class OverallResultsPage extends StatelessWidget {
   Widget _bayesianEstimateCard(
     BuildContext context,
     BayesianUtiEstimate estimate,
-  ) {
-    final calculated = estimate.isCalculable;
-    final male =
-        estimate.modelVersion == ScreeningFusionEngine.maleModelVersion;
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: const Color(0xFFEAF7F9),
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: const Color(0xFF9DCDD2)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'UTI screening estimate',
-            style: Theme.of(
-              context,
-            ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
-          ),
-          const SizedBox(height: 6),
-          if (calculated) ...[
-            Text(
-              '${estimate.posteriorPercent.toStringAsFixed(1)}%',
-              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                color: AppColors.primaryDark,
-                fontWeight: FontWeight.w800,
-              ),
-            ),
-            Text(male ? 'Male research model' : 'Female research model'),
-          ] else
-            Text(estimate.statusReason),
-          const SizedBox(height: 8),
-          const Text(
-            'Provisional research estimate. Not a diagnosis. No local culture-confirmed calibration.',
-            style: TextStyle(fontSize: 12, height: 1.4),
-          ),
-          ExpansionTile(
-            key: const Key('bayesian_details'),
-            tilePadding: EdgeInsets.zero,
-            title: const Text(
-              'How this estimate was calculated',
-              style: TextStyle(fontSize: 13),
-            ),
-            shape: const Border(),
-            collapsedShape: const Border(),
-            children: [
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if (calculated) ...[
-                      Text(
-                        'Starting prior: ${(estimate.priorProbability * 100).toStringAsFixed(male ? 1 : 0)}%',
-                      ),
-                      const SizedBox(height: 10),
-                      const Text(
-                        'Evidence applied',
-                        style: TextStyle(fontWeight: FontWeight.w700),
-                      ),
-                      for (final factor in estimate.factors)
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 6),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'LR ${factor.likelihoodRatio.toStringAsFixed(2)}',
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                              Text(factor.finding),
-                              Text(
-                                factor.group,
-                                style: const TextStyle(fontSize: 12),
-                              ),
-                            ],
-                          ),
-                        ),
-                      const SizedBox(height: 8),
-                      Text(
-                        male
-                            ? 'Prior odds x one selected dipstick-threshold LR = posterior odds'
-                            : 'Prior odds x selected dipstick LR x selected symptom LR = posterior odds',
-                      ),
-                      const SizedBox(height: 10),
-                    ],
-                    Text(
-                      male
-                          ? 'Provisional literature-derived screening estimate. The ordered-threshold branches and transfer of the study prior and LRs remain assumptions. No local culture-confirmed calibration has been performed. This is not a diagnosis or treatment recommendation.'
-                          : 'Provisional literature-derived screening estimate. Combining symptom and dipstick LRs remains an assumption. No local culture-confirmed calibration has been performed. This is not a diagnosis or treatment recommendation.',
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      estimate.modelVersion,
-                      style: const TextStyle(fontSize: 11),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
+  ) => Container(
+    padding: const EdgeInsets.all(16),
+    decoration: BoxDecoration(
+      color: AppColors.bgCard,
+      borderRadius: BorderRadius.circular(16),
+      border: Border.all(color: AppColors.border),
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'UTI-related screening',
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
+        const SizedBox(height: 6),
+        Text(
+          estimate.isCalculable
+              ? 'A research result is available. This app cannot tell you your personal chance of a UTI.'
+              : estimate.calculationStatus == 'not_designed'
+              ? 'UTI screening is not available for this situation. A healthcare professional can assess your symptoms.'
+              : 'UTI screening needs reliable readings and complete health information.',
+        ),
+        const SizedBox(height: 6),
+        const Text(
+          'This screening cannot confirm or rule out a UTI.',
+          style: TextStyle(fontSize: 12),
+        ),
+      ],
+    ),
+  );
 
   Widget _renalFollowupCard(
     BuildContext context,
@@ -364,7 +330,7 @@ class OverallResultsPage extends StatelessWidget {
                   style: Theme.of(context).textTheme.titleSmall?.copyWith(
                     color: AppColors.primaryMain,
                     fontSize: 14,
-                    fontWeight: FontWeight.w700,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
                 Text(
@@ -501,7 +467,7 @@ class OverallResultsPage extends StatelessWidget {
                 Text(
                   fusionResult.utiEstimate.isCalculable
                       ? 'Based on the strip readings, checklist and safety checks.'
-                      : fusionResult.utiEstimate.statusReason,
+                      : 'Complete missing information or review uncertain readings. Serious symptoms still need medical attention.',
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: AppColors.textSecondary,
                     fontSize: 12,
@@ -536,8 +502,6 @@ class OverallResultsPage extends StatelessWidget {
   Widget _conditionCard(
     BuildContext context,
     ScreeningFusionResult fusionResult,
-    int selectedCount,
-    int symptomTotal,
   ) {
     return Container(
       width: double.infinity,
@@ -550,7 +514,7 @@ class OverallResultsPage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Safety and Clinical Context',
+            'Your health information',
             style: Theme.of(context).textTheme.labelSmall?.copyWith(
               color: AppColors.primaryMain,
               fontSize: 13,
@@ -602,30 +566,12 @@ class OverallResultsPage extends StatelessWidget {
                                 height: 1.25,
                               ),
                         ),
-                        if (interpretation.evidence.isNotEmpty)
-                          Text(
-                            interpretation.evidence.join(' | '),
-                            style: Theme.of(context).textTheme.bodyMedium
-                                ?.copyWith(
-                                  color: AppColors.textSecondary,
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.w600,
-                                  height: 1.25,
-                                ),
-                          ),
                       ],
                     ),
                   ),
                 ],
               ),
             ),
-          Text(
-            'Symptoms reported: $selectedCount/$symptomTotal',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: AppColors.textSecondary,
-              fontSize: 12,
-            ),
-          ),
         ],
       ),
     );
@@ -658,12 +604,6 @@ class OverallResultsPage extends StatelessWidget {
   }
 
   Widget _checklistAnswersCard(BuildContext context) {
-    final selectedCount = clinicalSymptoms
-        .where(
-          (symptom) =>
-              clinicalChecklistResult.selectedSymptoms[symptom.id] == true,
-        )
-        .length;
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
@@ -684,66 +624,30 @@ class OverallResultsPage extends StatelessWidget {
           'Checklist Review',
           style: Theme.of(context).textTheme.titleSmall?.copyWith(
             color: AppColors.primaryDark,
-            fontWeight: FontWeight.w700,
+            fontWeight: FontWeight.w600,
           ),
         ),
         subtitle: Text(
-          '$selectedCount of ${clinicalSymptoms.length} items selected',
+          'Review symptoms, safety and eligibility answers',
           style: Theme.of(
             context,
           ).textTheme.bodySmall?.copyWith(color: AppColors.textSecondary),
         ),
         children: [
           for (final symptom in clinicalSymptoms)
-            Padding(
-              padding: const EdgeInsets.only(bottom: 7),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Icon(
-                    clinicalChecklistResult.selectedSymptoms[symptom.id] == true
-                        ? Icons.check_circle_rounded
-                        : Icons.radio_button_unchecked_rounded,
-                    size: 16,
-                    color:
-                        clinicalChecklistResult.selectedSymptoms[symptom.id] ==
-                            true
-                        ? AppColors.statusLow
-                        : AppColors.textSecondary,
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      symptom.label.replaceAll('\n', ' '),
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: AppColors.textPrimary,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    clinicalChecklistResult.questionnaireVersion != null
-                        ? clinicalChecklistResult.responseLabel(symptom.id)
-                        : clinicalChecklistResult.selectedSymptoms[symptom
-                                  .id] ==
-                              true
-                        ? 'Selected'
-                        : symptom.category == 'uti_eligibility'
-                        ? 'Not confirmed'
-                        : 'Not selected',
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color:
-                          clinicalChecklistResult.selectedSymptoms[symptom
-                                  .id] ==
-                              true
-                          ? AppColors.primaryMain
-                          : AppColors.textSecondary,
-                      fontSize: 10,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ],
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              title: Text(
+                symptom.label.replaceAll('\n', ' '),
+                style: const TextStyle(fontSize: 13),
+              ),
+              subtitle: Text(
+                clinicalChecklistResult.questionnaireVersion != null
+                    ? clinicalChecklistResult.responseLabel(symptom.id)
+                    : clinicalChecklistResult.selectedSymptoms[symptom.id] ==
+                          true
+                    ? 'Reported / confirmed'
+                    : 'Not confirmed',
               ),
             ),
         ],

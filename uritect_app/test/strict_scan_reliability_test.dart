@@ -43,7 +43,11 @@ void main() {
   test('only complete exact unique analytes with all safety evidence pass', () {
     final good = scan();
     expect(good.isReliableForInterpretation, isTrue);
-    expect(good.isUsableForCurrentInterpretation, isTrue);
+    expect(good.isUsableForCurrentInterpretation, isFalse);
+    expect(
+      good.hasUsableAnalytesForCurrentInterpretation({'LEU', 'NIT', 'BLD'}),
+      isTrue,
+    );
     for (final bad in [
       good.copyWith(analyteConfidences: {}),
       good.copyWith(padsDetected: 9),

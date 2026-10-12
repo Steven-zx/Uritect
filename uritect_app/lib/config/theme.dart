@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class AppColors {
   // Primary
@@ -29,7 +28,7 @@ class AppColors {
 class AppTheme {
   static ThemeData lightTheme = ThemeData(
     useMaterial3: true,
-    fontFamily: GoogleFonts.inter().fontFamily,
+    fontFamily: 'Poppins',
     colorScheme: ColorScheme.light(
       primary: AppColors.primaryMain,
       secondary: AppColors.primaryLight,
@@ -38,44 +37,51 @@ class AppTheme {
     ),
     scaffoldBackgroundColor: AppColors.bgMain,
     textTheme: TextTheme(
-      displayLarge: GoogleFonts.poppins(
+      displayLarge: TextStyle(
         fontSize: 32,
         fontWeight: FontWeight.bold,
         color: AppColors.textPrimary,
       ),
-      displayMedium: GoogleFonts.poppins(
+      displayMedium: TextStyle(
         fontSize: 28,
         fontWeight: FontWeight.bold,
         color: AppColors.textPrimary,
       ),
-      headlineSmall: GoogleFonts.poppins(
+      displaySmall: TextStyle(fontWeight: FontWeight.w700),
+      headlineLarge: TextStyle(fontWeight: FontWeight.w700),
+      headlineMedium: TextStyle(fontWeight: FontWeight.w700),
+      headlineSmall: TextStyle(
         fontSize: 20,
-        fontWeight: FontWeight.w600,
+        fontWeight: FontWeight.w700,
         color: AppColors.textPrimary,
       ),
-      titleLarge: GoogleFonts.inter(
+      titleLarge: TextStyle(
         fontSize: 18,
         fontWeight: FontWeight.w600,
         color: AppColors.textPrimary,
       ),
-      titleMedium: GoogleFonts.inter(
+      titleMedium: TextStyle(
         fontSize: 16,
-        fontWeight: FontWeight.w500,
+        fontWeight: FontWeight.w600,
         color: AppColors.textPrimary,
       ),
-      bodyLarge: GoogleFonts.inter(
+      titleSmall: TextStyle(fontWeight: FontWeight.w600),
+      bodyLarge: TextStyle(
         fontSize: 16,
         fontWeight: FontWeight.normal,
         color: AppColors.textPrimary,
       ),
-      bodyMedium: GoogleFonts.inter(
+      bodyMedium: TextStyle(
         fontSize: 14,
         fontWeight: FontWeight.normal,
         color: AppColors.textSecondary,
       ),
-      labelSmall: GoogleFonts.inter(
+      bodySmall: TextStyle(fontWeight: FontWeight.w400),
+      labelLarge: TextStyle(fontWeight: FontWeight.w600),
+      labelMedium: TextStyle(fontWeight: FontWeight.w600),
+      labelSmall: TextStyle(
         fontSize: 12,
-        fontWeight: FontWeight.w500,
+        fontWeight: FontWeight.w600,
         color: AppColors.textSecondary,
       ),
     ),

@@ -1,5 +1,6 @@
 import 'dipstick_results_data.dart';
 import 'scan_provenance.dart';
+import 'strip_reading_schedule.dart';
 
 class ScanResult {
   final String id;
@@ -83,7 +84,14 @@ class ScanResult {
   bool get isLegacyUnverified => rows.isNotEmpty && !hasCompleteSafetyMetadata;
   bool get isUsableForCurrentInterpretation =>
       isReliableForInterpretation &&
-      provenance?.canSupportCurrentContext == true;
+      provenance?.canSupportCurrentContext == true &&
+      expectedAnalytes.keys.every(hasMatchingReportedReadingTime);
+
+  bool hasMatchingReportedReadingTime(String code) =>
+      StripReadingSchedule.reportedTimeMatches(
+        code,
+        provenance?.secondsAfterDipping,
+      );
 
   // The experimental model's existing vote gate remains 0.55. A weak pH
   // reading must not invalidate independently adequate UTI-input pads.
@@ -111,6 +119,7 @@ class ScanResult {
               : minimumInterpretationConfidence) &&
       confidence <= 1 &&
       provenance?.canSupportCurrentContext == true &&
+      codes.every(hasMatchingReportedReadingTime) &&
       codes.every(
         (code) =>
             analyteConfidences[expectedAnalytes[code]]! >=
