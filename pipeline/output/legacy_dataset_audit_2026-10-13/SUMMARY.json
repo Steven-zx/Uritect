@@ -1,0 +1,49 @@
+{
+  "unique_photos": 1974,
+  "archive_occurrences": 3846,
+  "exact_duplicate_export_occurrences": 1872,
+  "statuses": {
+    "excluded_geometry_or_quality": 1208,
+    "geometry_only_not_training": 8,
+    "reference_only": 139,
+    "excluded_decode_or_size": 1,
+    "accepted_training": 618
+  },
+  "families": {
+    "BINARY_BATCH": {
+      "excluded_geometry_or_quality": 235,
+      "geometry_only_not_training": 5
+    },
+    "COLORWHEEL": {
+      "reference_only": 139,
+      "excluded_decode_or_size": 1
+    },
+    "RHU175": {
+      "excluded_geometry_or_quality": 448,
+      "accepted_training": 72,
+      "geometry_only_not_training": 1
+    },
+    "packages_backup_2026-03-22": {
+      "excluded_geometry_or_quality": 27,
+      "geometry_only_not_training": 2
+    },
+    "uritect_2026-7-15_Cabatuan": {
+      "excluded_geometry_or_quality": 39,
+      "accepted_training": 75
+    },
+    "uritect_2026-7-17_Cabatuan": {
+      "excluded_geometry_or_quality": 78,
+      "accepted_training": 69
+    },
+    "uritect_2026-7-30_Laua-an": {
+      "excluded_geometry_or_quality": 381,
+      "accepted_training": 402
+    }
+  },
+  "original_archives_modified": false,
+  "supplied_labels_modified": false,
+  "current_app_model_modified": false,
+  "clinical_reference_adjudication": false,
+  "scope": "First-pass geometric proposals; use FINAL_SUMMARY.json and FINAL_PHOTO_AUDIT.csv for the admitted dataset.",
+  "phase": "first_pass_proposals_not_final_training_pool"
+}

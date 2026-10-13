@@ -1,0 +1,63 @@
+{
+  "unique_photos": 2028,
+  "archive_occurrences": 3846,
+  "unique_archive_photos": 1974,
+  "byte_duplicate_export_occurrences": 1872,
+  "additional_unpacked_photos": 54,
+  "statuses": {
+    "excluded_geometry_or_quality": 265,
+    "geometry_only_not_training": 7,
+    "reference_only": 193,
+    "excluded_decode_or_size": 1,
+    "excluded_sampling_boundary_or_quality": 129,
+    "excluded_app_quality_or_geometry": 1219,
+    "excluded_reference_conflict": 4,
+    "accepted_training": 210
+  },
+  "training_photos": 210,
+  "training_reference_groups": 175,
+  "training_photos_requiring_archive_crop": 12,
+  "families": {
+    "BINARY_BATCH": {
+      "excluded_geometry_or_quality": 235,
+      "geometry_only_not_training": 5
+    },
+    "COLORWHEEL": {
+      "reference_only": 193,
+      "excluded_decode_or_size": 1
+    },
+    "RHU175": {
+      "excluded_sampling_boundary_or_quality": 9,
+      "excluded_app_quality_or_geometry": 502,
+      "excluded_reference_conflict": 4,
+      "accepted_training": 6
+    },
+    "packages_backup_2026-03-22": {
+      "excluded_geometry_or_quality": 27,
+      "geometry_only_not_training": 2
+    },
+    "uritect_2026-7-15_Cabatuan": {
+      "excluded_sampling_boundary_or_quality": 25,
+      "accepted_training": 44,
+      "excluded_app_quality_or_geometry": 45
+    },
+    "uritect_2026-7-17_Cabatuan": {
+      "excluded_app_quality_or_geometry": 108,
+      "excluded_sampling_boundary_or_quality": 11,
+      "excluded_geometry_or_quality": 3,
+      "accepted_training": 25
+    },
+    "uritect_2026-7-30_Laua-an": {
+      "excluded_sampling_boundary_or_quality": 84,
+      "excluded_app_quality_or_geometry": 564,
+      "accepted_training": 135
+    }
+  },
+  "native_detector_source_sha256": "9735bbd77a7e10985b82f9ecbd8f159ca8fa9b181012949f627bee1010e6b52c",
+  "feature_recipe": "Exact source-derived current Dart image decoder, resize, orientation, acquisition checks, detector and normalized feature math; no model confidence used for dataset inclusion",
+  "reference_status": "Owner-supplied categories preserved; no new medtech adjudication or IFU validation",
+  "identity_status": "Within-batch supplied IDs and exact byte/pixel duplicate consolidation; cross-batch global identity remains unverified",
+  "originals_modified": false,
+  "reference_categories_changed": false,
+  "classification_model_changed": false
+}

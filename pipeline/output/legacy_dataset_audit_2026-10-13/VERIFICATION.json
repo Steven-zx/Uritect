@@ -1,0 +1,53 @@
+{
+  "python_tests_passed": 59,
+  "full_photo_Dart_audit": {
+    "attempted": 1558,
+    "test_passed": true,
+    "detector_passes_before_independent_boundary_checks": 322
+  },
+  "tight_crop_diagnostic": {
+    "attempted": 452,
+    "detector_passes": 0,
+    "accepted_into_training": false
+  },
+  "context_crop_Dart_audit": {
+    "attempted": 392,
+    "test_passed": true,
+    "detector_passes_before_independent_boundary_checks": 29
+  },
+  "manual_review": {
+    "initial_detector_sample": 12,
+    "additional_unpacked_chart_sample": 4,
+    "final_accepted_sample": 16,
+    "all_6_retained_legacy_RHU_photos_inspected": true,
+    "limitations": "All images have automated dispositions; not every image has been manually clinically adjudicated."
+  },
+  "original_integrity": {
+    "checked_files": 202,
+    "all_unchanged": true,
+    "failed_count": 0,
+    "binary_values_modified": false,
+    "scope": "Archives and original reference files against inventory-time hashes; additional CSVs/model assets against protection snapshot. No original is edited."
+  },
+  "current_model_sha256": "1380d9e04d044413b42bd045e3c7370bf3d06a720695d2654598657234742279",
+  "app_source_or_assets_modified": false,
+  "binary_values_modified": false,
+  "reference_labels_modified": false,
+  "candidate_promoted": false,
+  "APK_rebuilt": false,
+  "artifact_sha256": {
+    "FINAL_PHOTO_AUDIT.json": "42fc8890395760c9006b47bba37a9dafe1c1ebd266c30c4f5b3b9bb6340f3d55",
+    "CLEAN_FEATURES.csv": "b8e00373d8648fc7821b3d81620c91b15c8abb643851da42b83a6bd5d581a954",
+    "DEVELOPMENT_COMPARISON.json": "5d8c18b5ab4f422cb5691d0d09ed8dbea25a9928ef9d7f71e4b0cdb89bcb864f",
+    "FIVE_METRICS.csv": "5ca4b687e4e765532440f6573e39b054eff306af03d08795607fe65d85cf7eb2"
+  },
+  "code_sha256": {
+    "audit_legacy_dataset.py": "d953a5c9fdf31e6c6b69bef9407589f9be8552cbef09f87102a132a91eab9c4e",
+    "evaluate_legacy_expansion.py": "f053c2df651a9df2a8730d76cb36f7e0fcbce973737c44ee679c02ce043556ac",
+    "finalize_legacy_runtime_audit.py": "d295637e7b892da759e850c270f4114e7cedf75c316b7e5acc9a80d0f0749446",
+    "prepare_legacy_runtime_audit.py": "a45919f08a090acbfba825c7bfe466f5a0a3daae71f9cde3f66aa04ad9b641a9",
+    "test_legacy_dataset_audit.py": "1af3fe835dc62d9cf0a29af2d51763cd7d27a7a1a1192c797eb5f4bb26c44f69",
+    "verify_legacy_sources.py": "368b489933b45c384d742cabbaea447c3ae01937adec8d51e0df6267074fe74b",
+    "write_legacy_audit_report.py": "c1b49cb92ec6b24285b755e2ffa68bb7e18aa11d1c362d4460847932431d9295"
+  }
+}

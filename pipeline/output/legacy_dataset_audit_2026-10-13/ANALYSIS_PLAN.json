@@ -1,0 +1,19 @@
+{
+  "baseline_model_sha256": "1380d9e04d044413b42bd045e3c7370bf3d06a720695d2654598657234742279",
+  "features_sha256": "b8e00373d8648fc7821b3d81620c91b15c8abb643851da42b83a6bd5d581a954",
+  "design": "Paired 3-fold grouped development comparison on the freshly verified subset of the original 453 target development events. Both arms see identical freshly audited validation-pad features. Baseline is refit using recorded current-training features; candidates train only freshly audited photos. Original 112 confirmation events and related known groups/tokens excluded. Fixed current per-analyte k, metric and transform. No hyperparameter or confidence-threshold search.",
+  "candidates": [
+    "cleaned_current_only",
+    "cleaned_plus_legacy"
+  ],
+  "additions": "Supplied, complete, non-conflicting specimen references and audited geometry only. Byte/pixel duplicate exports and chart/binary conversions excluded. Same held-out target-group numerical IDs/subject aliases are conservatively excluded from extra-data training across batches.",
+  "identity_limit": "Cross-batch participant identity remains unverified; this is retrospective exploratory development, not a new untouched final evaluation.",
+  "promotion": "Accuracy/macro F1/macro sensitivity/macro specificity and supported rule sensitivity/specificity must not decrease; macro F1 must improve; paired group bootstrap lower accuracy delta must exceed zero. Combined whole-ten accuracy, feature-stage retake coverage and accepted-all-ten accuracy must not regress. Engineering comparison only, not a clinical safety threshold.",
+  "original_development_events": 453,
+  "paired_audited_target_events": 140,
+  "target_events_excluded_by_audit": 313,
+  "baseline_confirmation_events_not_evaluated": 112,
+  "eligible_new_images": 27,
+  "selection_pool_images": 125,
+  "abstain_threshold": 0.55
+}

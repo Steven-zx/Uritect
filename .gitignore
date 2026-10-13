@@ -56,6 +56,23 @@ tmp/
 pipeline/output/abnormal_error_audit_*/image_evidence*/
 pipeline/output/knn_improvement_*/image_evidence/
 pipeline/output/ph_sg_error_audit_*/image_evidence/
+pipeline/output/legacy_dataset_audit_*/cleaned/
+pipeline/output/legacy_dataset_audit_*/thumbnails/
+pipeline/output/legacy_dataset_audit_*/audit_records/
+pipeline/output/legacy_dataset_audit_*/INVENTORY.json
+pipeline/output/legacy_dataset_audit_*/PHOTO_AUDIT.*
+pipeline/output/legacy_dataset_audit_*/PHOTO_REVIEW.html
+pipeline/output/legacy_dataset_audit_*/CLEAN_FEATURES.csv
+pipeline/output/legacy_dataset_audit_*/runtime_originals/
+pipeline/output/legacy_dataset_audit_*/runtime_detector/
+pipeline/output/legacy_dataset_audit_*/runtime_crop_detector/
+pipeline/output/legacy_dataset_audit_*/runtime_crop_originals/
+pipeline/output/legacy_dataset_audit_*/runtime_context_crop_originals/
+pipeline/output/legacy_dataset_audit_*/runtime_context_crop_detector/
+pipeline/output/legacy_dataset_audit_*/RUNTIME*MANIFEST.json
+pipeline/output/legacy_dataset_audit_*/FINAL_PHOTO_AUDIT.*
+pipeline/output/legacy_dataset_audit_*/PROTECTED_INPUTS.json
+pipeline/output/legacy_dataset_audit_*/UNPACKED_PHOTO_AUDIT.json
 
 # Frozen release APKs and archives are distributed as artifacts, not Git source.
 output/release/**/*.apk
