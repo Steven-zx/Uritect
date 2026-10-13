@@ -2,7 +2,7 @@ name: uritect_app
 description: "Clinical Decision Support System"
 publish_to: 'none'
 
-version: 1.5.16+34
+version: 1.5.17+35
 
 environment:
   sdk: ^3.9.2

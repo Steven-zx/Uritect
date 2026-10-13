@@ -264,7 +264,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                     builder: (_) => const CaptureDipstickPage(),
                   ),
                 );
-                if (mounted && _historyUnlocked) await _refreshHistory();
+                // History is refreshed only by an explicit history action.
               },
               icon: const Icon(Icons.camera_alt_outlined),
               label: const Padding(

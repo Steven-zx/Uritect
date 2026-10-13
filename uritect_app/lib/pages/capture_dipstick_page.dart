@@ -215,6 +215,7 @@ class _CaptureDipstickPageState extends State<CaptureDipstickPage>
       bool duplicateCheckCompleted = true;
       try {
         match = await const ScanHistoryService().findDuplicate(
+          promptForAuthentication: false,
           contentSha256: identity.contentHash,
           pixelSha256: identity.pixelHash,
           fingerprint: identity.fingerprint,

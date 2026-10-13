@@ -22,6 +22,15 @@ import android.hardware.biometrics.BiometricPrompt
 import android.hardware.biometrics.BiometricManager
 import android.os.CancellationSignal
 import android.util.Log
+import java.security.KeyPairGenerator
+import java.security.KeyFactory
+import java.security.PrivateKey
+import java.security.SecureRandom
+import java.security.spec.MGF1ParameterSpec
+import java.security.spec.X509EncodedKeySpec
+import javax.crypto.spec.OAEPParameterSpec
+import javax.crypto.spec.PSource
+import javax.crypto.spec.SecretKeySpec
 
 class HistorySecurity(private val activity: Activity) {
     private val requestCode = 7301
@@ -96,6 +105,67 @@ class HistorySecurity(private val activity: Activity) {
     }
     fun handle(call: io.flutter.plugin.common.MethodCall, result: MethodChannel.Result) {
         when (call.method) {
+            "sealPending", "openPending" -> {
+                val bytes = call.argument<ByteArray>("bytes")
+                val context = call.argument<String>("context")
+                if (bytes == null || context == null || !Regex("uritect:pending:[a-f0-9]{64}").matches(context)) {
+                    result.error("INVALID_REQUEST", "Invalid pending scan request.", null); return
+                }
+                worker.execute {
+                    try {
+                        val store = KeyStore.getInstance("AndroidKeyStore").apply { load(null) }
+                        val pendingAlias = "uritect_pending_private_v1"
+                        val guard = activity.getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
+                        check(guard.isDeviceSecure) { "Set a device screen lock before saving scans." }
+                        val oaep = OAEPParameterSpec("SHA-256", "MGF1", MGF1ParameterSpec.SHA1, PSource.PSpecified.DEFAULT)
+                        val output: ByteArray
+                        if (call.method == "sealPending") {
+                            if (!store.containsAlias(pendingAlias)) {
+                                check(call.argument<Boolean>("existingSealedRecords") != true) { "Pending encryption key is unavailable. Files were preserved." }
+                                val builder = KeyGenParameterSpec.Builder(pendingAlias, KeyProperties.PURPOSE_DECRYPT)
+                                    .setKeySize(2048).setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_RSA_OAEP)
+                                    .setDigests(KeyProperties.DIGEST_SHA256, KeyProperties.DIGEST_SHA1)
+                                    .setUserAuthenticationRequired(true)
+                                if (Build.VERSION.SDK_INT >= 30) builder.setUserAuthenticationParameters(120, KeyProperties.AUTH_DEVICE_CREDENTIAL)
+                                else { @Suppress("DEPRECATION") builder.setUserAuthenticationValidityDurationSeconds(120) }
+                                KeyPairGenerator.getInstance("RSA", "AndroidKeyStore").apply { initialize(builder.build()) }.generateKeyPair()
+                            }
+                            val aes = ByteArray(32).also { SecureRandom().nextBytes(it) }
+                            try {
+                                val body = Cipher.getInstance("AES/GCM/NoPadding")
+                                body.init(Cipher.ENCRYPT_MODE, SecretKeySpec(aes, "AES"))
+                                body.updateAAD(context.toByteArray(Charsets.UTF_8))
+                                val wrap = Cipher.getInstance("RSA/ECB/OAEPWithSHA-256AndMGF1Padding")
+                                // Export only the public key into an ordinary provider.
+                                // The Keystore private key remains decrypt-only and credential-bound.
+                                val publicKey = KeyFactory.getInstance("RSA").generatePublic(
+                                    X509EncodedKeySpec(store.getCertificate(pendingAlias).publicKey.encoded))
+                                wrap.init(Cipher.ENCRYPT_MODE, publicKey, oaep)
+                                val wrapped = wrap.doFinal(aes)
+                                check(wrapped.size == 256 && body.iv.size == 12)
+                                output = byteArrayOf(85,82,80,49) + wrapped + body.iv + body.doFinal(bytes)
+                            } finally { aes.fill(0) }
+                        } else {
+                            check(SystemClock.elapsedRealtime() < authenticatedUntil && !guard.isDeviceLocked) { "History is locked." }
+                            check(store.containsAlias(pendingAlias)) { "Pending encryption key is unavailable. Files were preserved." }
+                            require(bytes.size >= 288 && bytes.copyOfRange(0,4).contentEquals(byteArrayOf(85,82,80,49)))
+                            val unwrap = Cipher.getInstance("RSA/ECB/OAEPWithSHA-256AndMGF1Padding")
+                            unwrap.init(Cipher.DECRYPT_MODE, store.getKey(pendingAlias, null) as PrivateKey, oaep)
+                            val aes = unwrap.doFinal(bytes.copyOfRange(4,260))
+                            try {
+                                val body = Cipher.getInstance("AES/GCM/NoPadding")
+                                body.init(Cipher.DECRYPT_MODE, SecretKeySpec(aes, "AES"), GCMParameterSpec(128, bytes.copyOfRange(260,272)))
+                                body.updateAAD(context.toByteArray(Charsets.UTF_8))
+                                output = body.doFinal(bytes.copyOfRange(272,bytes.size))
+                            } finally { aes.fill(0) }
+                        }
+                        activity.runOnUiThread { result.success(output) }
+                    } catch (e: Exception) {
+                        val code = if (e is AEADBadTagException || e is IllegalArgumentException) "HISTORY_INTEGRITY_ERROR" else "HISTORY_LOCKED"
+                        activity.runOnUiThread { result.error(code, "The scan could not be saved or unlocked. Existing files were preserved.", null) }
+                    }
+                }
+            }
             "privacy" -> {
                 if (call.argument<Boolean>("enabled") == true) activity.window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
                 else if (activity.hasWindowFocus()) activity.window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)

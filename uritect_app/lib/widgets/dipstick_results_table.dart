@@ -56,9 +56,25 @@ class DipstickResultsTable extends StatelessWidget {
         confidence.isFinite &&
         confidence >= requiredConfidence &&
         timing;
-    final result = checked
-        ? (row.result.toLowerCase() == 'neg' ? 'Negative' : row.result)
-        : 'Uncertain';
+    final available =
+        row.result.trim().isNotEmpty &&
+        !['unavailable', 'no reading'].contains(row.result.toLowerCase());
+    final result = !available
+        ? 'No reading'
+        : row.result.toLowerCase() == 'neg'
+        ? 'Negative'
+        : row.result;
+    final status = !available
+        ? null
+        : confidence != null &&
+              confidence.isFinite &&
+              confidence < requiredConfidence
+        ? 'Low confidence'
+        : !scanVerified || confidence == null || !confidence.isFinite
+        ? 'Unverified'
+        : !timing
+        ? 'Provisional'
+        : null;
     return ExpansionTile(
       key: PageStorageKey('reading-${row.code}'),
       tilePadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 2),
@@ -71,14 +87,28 @@ class DipstickResultsTable extends StatelessWidget {
           Expanded(child: Text(row.name, style: const TextStyle(fontSize: 14))),
           const SizedBox(width: 10),
           Flexible(
-            child: Text(
-              result,
-              textAlign: TextAlign.right,
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-                color: checked ? AppColors.primaryDark : Colors.orange.shade900,
-              ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(
+                  result,
+                  textAlign: TextAlign.right,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.primaryDark,
+                  ),
+                ),
+                if (status != null)
+                  Text(
+                    status,
+                    textAlign: TextAlign.right,
+                    style: TextStyle(
+                      fontSize: 11,
+                      color: Colors.orange.shade900,
+                    ),
+                  ),
+              ],
             ),
           ),
         ],
@@ -89,7 +119,7 @@ class DipstickResultsTable extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Result: $result'),
+              Text('Model prediction: $result'),
               const SizedBox(height: 6),
               Text(
                 checked

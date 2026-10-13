@@ -125,8 +125,8 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(home: ResultsPage(scanResult: weak('pH'))),
     );
-    expect(find.text('6.5'), findsNothing);
-    expect(find.text('Uncertain'), findsWidgets);
+    expect(find.text('6.5'), findsOneWidget);
+    expect(find.text('Low confidence'), findsOneWidget);
     await tester.ensureVisible(find.text('pH'));
     await tester.tap(find.text('pH'));
     await tester.pumpAndSettle();

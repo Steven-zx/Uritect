@@ -1,0 +1,43 @@
+{
+  "version": "1.5.17+35",
+  "apk": "output/device_pilot/2026-10-13/1.5.17+35/Uritect_v1.5.17+35_release.apk",
+  "bytes": 56877627,
+  "sha256": "41B3EDC2745F7447BD55A2A5A5DF9D85978C914D2FFC3CB8481547E279494341",
+  "certificate_sha256": "15D1138DCE077ADA624A140B3A145343D1A48305FD0847E9002869E488F19D39",
+  "source_matches_archive": true,
+  "embedded_assets": {
+    "production_semiquant_model.json": "1380D9E04D044413B42BD045E3C7370BF3D06A720695D2654598657234742279",
+    "training_support_policy.json": "D0BBC47975EF7E4BA461A3F7D492A6281E2B70DC930BCE424F398D98EC53090B"
+  },
+  "offline_permissions_verified": true,
+  "verification": {
+    "app_version": "1.5.17+35",
+    "flutter_tests": {
+      "passed": 176,
+      "command": "flutter test --no-pub --reporter expanded"
+    },
+    "static_analysis": {
+      "result": "No issues found",
+      "exit_code": 0
+    },
+    "unchanged_core": "All existing assets/models and analysis services match 1.5.16+34; history service and native sealing intentionally changed",
+    "ui_review": "Real-font phone readings and summary screenshots inspected; predictions with secondary reliability labels and teal responsive actions. Restored checklist edits and recalculation, preliminary invalid scan predictions, timing labels and reference-only legend tested.",
+    "history_verification": "Host tests: no-auth sealing, same-ID updates, authenticated merge, encrypted photo round trips, cancellation/tampering preservation, deletion journal and interrupted write recovery, duplicate-cache invalidation. Android Keystore authorization requires actual device acceptance.",
+    "python_tests": {
+      "scope": "Classifier, features and clinical model code unchanged; no new training or accuracy claim"
+    },
+    "phone_acceptance": "pending; no installation or phone pass for this build",
+    "previous_evaluator_scores_apply_to_this_build": false,
+    "independent_clinical_validation": "not established",
+    "color_swatches": "pending owner-supplied chart; category reference only; no classifier changes"
+  },
+  "purpose": "Frozen developer-evaluation research prototype; existing experimental classifier retained after focused audit",
+  "clinical_validation_established": false,
+  "phone_installation": "not performed for this build",
+  "pending": [
+    "Exact APK manual device evaluation",
+    "Physical-strip lot/expiry/IFU documentation",
+    "Recorded professional review and usability results",
+    "Independent outcome validation before clinical accuracy/calibration claims"
+  ]
+}

@@ -11,8 +11,17 @@ import 'overall_results_page.dart';
 
 class SymptomChecklistPage extends StatefulWidget {
   final ScanResult scanResult;
+  final ClinicalChecklistResult? initialChecklistResult;
+  final bool returnToCaller;
+  final ScanHistoryService historyService;
 
-  const SymptomChecklistPage({super.key, required this.scanResult});
+  const SymptomChecklistPage({
+    super.key,
+    required this.scanResult,
+    this.initialChecklistResult,
+    this.returnToCaller = false,
+    this.historyService = const ScanHistoryService(),
+  });
 
   @override
   State<SymptomChecklistPage> createState() => _SymptomChecklistPageState();
@@ -21,7 +30,27 @@ class SymptomChecklistPage extends StatefulWidget {
 class _SymptomChecklistPageState extends State<SymptomChecklistPage> {
   final ChecklistDraft _draft = ChecklistDraft();
   Map<String, bool> get selectedSymptoms => _draft.result().selectedSymptoms;
-  final ScanHistoryService _historyService = const ScanHistoryService();
+  @override
+  void initState() {
+    super.initState();
+    final initial = widget.initialChecklistResult;
+    if (initial != null) {
+      _draft.answers.addAll(initial.answers);
+      if (![
+        'under18',
+        '18_64',
+        '65plus',
+        'unsure',
+      ].contains(_draft.answers['age_band'])) {
+        _draft.answers.remove('age_band');
+      }
+      // Legacy positive flags may be restored; missing answers remain unknown.
+      for (final entry in initial.selectedSymptoms.entries) {
+        if (entry.value) _draft.answers.putIfAbsent(entry.key, () => 'yes');
+      }
+    }
+  }
+
   final ScrollController _scrollController = ScrollController();
   int _currentStep = 0;
   bool _isSaving = false;
@@ -115,39 +144,45 @@ class _SymptomChecklistPageState extends State<SymptomChecklistPage> {
     );
 
     try {
-      final savedRecord = await _historyService.saveCompletedScan(
+      await widget.historyService.queueCompletedScan(
         scanResult: widget.scanResult,
         checklistResult: checklistResult,
         fusionResult: fusionResult,
         renalFollowupResult: renalFollowupResult,
       );
-      if (!mounted) return;
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (_) => OverallResultsPage(
-            scanResult: savedRecord.scanResult,
-            clinicalChecklistResult: savedRecord.checklistResult,
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              'Saved securely. Open saved history to view this record.',
+            ),
           ),
-        ),
-      );
+        );
+      }
     } catch (error) {
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Results are available but were not saved: $error'),
-        ),
-      );
-      Navigator.of(context).push(
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Results are available but were not saved: $error'),
+          ),
+        );
+      }
+    }
+    if (!mounted) return;
+    if (widget.returnToCaller) {
+      Navigator.of(context).pop(checklistResult);
+    } else {
+      await Navigator.of(context).push(
         MaterialPageRoute(
           builder: (_) => OverallResultsPage(
             scanResult: widget.scanResult,
             clinicalChecklistResult: checklistResult,
+            historyService: widget.historyService,
           ),
         ),
       );
-    } finally {
-      if (mounted) setState(() => _isSaving = false);
     }
+    if (mounted) setState(() => _isSaving = false);
   }
 
   @override

@@ -11,12 +11,15 @@ import '../models/scan_model.dart';
 import '../models/screening_fusion.dart';
 import '../models/scan_provenance.dart';
 import 'history_cipher.dart';
+import 'pending_scan_cipher.dart';
 
 class ScanHistoryService {
   final HistoryCipher cipher;
+  final PendingScanCipher pendingCipher;
   final Future<Directory> Function()? directoryProvider;
   const ScanHistoryService({
     this.cipher = const PlatformHistoryCipher(),
+    this.pendingCipher = const PlatformPendingScanCipher(),
     this.directoryProvider,
   });
   static Future<void> _queue = Future.value();
@@ -335,7 +338,10 @@ class ScanHistoryService {
       );
       return source.path;
     }
-    final bytes = await source.readAsBytes();
+    return _persistImageBytes(d, await source.readAsBytes());
+  }
+
+  Future<String> _persistImageBytes(Directory d, Uint8List bytes) async {
     final name = '${sha256.convert(bytes)}.enc';
     final directory = Directory('${d.path}/images');
     await directory.create(recursive: true);
@@ -360,14 +366,38 @@ class ScanHistoryService {
 
   Future<List<SavedScanRecord>> loadRecords() => _serial(() async {
     await cipher.authenticate();
-    return _load(await _directory());
+    final d = await _directory();
+    final records = await _mergePending(d, await _load(d));
+    await _cacheIdentities(d, records);
+    return records;
   });
   Future<ImageMatch?> findDuplicate({
     required String contentSha256,
     required String pixelSha256,
     required String fingerprint,
+    bool promptForAuthentication = true,
   }) => _serial(() async {
     final d = await _directory();
+    if (!promptForAuthentication) {
+      final signature = await _identitySignature(d);
+      final cache = _identityCache[d.path];
+      if (signature.isEmpty) return null;
+      if (cache == null || cache.signature != signature) {
+        throw StateError(
+          'Duplicate checking is unavailable until saved history is explicitly unlocked.',
+        );
+      }
+      ImageMatch? similar;
+      for (final item in cache.items) {
+        if (item.content == contentSha256 || item.pixels == pixelSha256) {
+          return ImageMatch(item.id, true);
+        }
+        if (item.fingerprint.isNotEmpty && item.fingerprint == fingerprint) {
+          similar ??= ImageMatch(item.id, false);
+        }
+      }
+      return similar;
+    }
     if (!await _file(d, 'history.v2.enc').exists() &&
         !await _file(d, 'history.recovery.enc').exists() &&
         !await _file(d, 'history.json').exists() &&
@@ -395,6 +425,209 @@ class ScanHistoryService {
     }
     return similar;
   });
+  // Only opaque identifiers and image hashes are retained in memory. No health
+  // records are decrypted during a current scan. A changed disk signature fails closed.
+  static final Map<String, _IdentityCache> _identityCache = {};
+  Future<String> _identitySignature(Directory d) async {
+    final files = <File>[];
+    for (final name in [
+      'history.v2.enc',
+      'history.recovery.enc',
+      'history.json',
+      'history.v2.enc.tmp',
+      'deleted.v2.enc',
+    ]) {
+      final f = _file(d, name);
+      if (await f.exists()) files.add(f);
+    }
+    final pending = Directory('${d.path}/pending');
+    if (await pending.exists()) {
+      files.addAll(
+        await pending.list().where((e) => e is File).cast<File>().toList(),
+      );
+    }
+    if (files.isEmpty) return '';
+    files.sort((a, b) => a.path.compareTo(b.path));
+    final parts = <String>[];
+    for (final f in files) {
+      parts.add('${f.path}:${sha256.convert(await f.readAsBytes())}');
+    }
+    return sha256.convert(utf8.encode(parts.join('\n'))).toString();
+  }
+
+  Future<void> _cacheIdentities(
+    Directory d,
+    List<SavedScanRecord> records,
+  ) async {
+    final items = <_ImageIdentity>[];
+    for (final r in records) {
+      final p = r.scanResult.provenance;
+      var content = p?.contentSha256 ?? '';
+      if (p == null && r.scanResult.imagePath.endsWith('.enc')) {
+        content = sha256
+            .convert(await _readImage(d, r.scanResult.imagePath))
+            .toString();
+      }
+      items.add(
+        _ImageIdentity(
+          r.id,
+          content,
+          p?.pixelSha256 ?? '',
+          p?.imageFingerprint ?? '',
+        ),
+      );
+    }
+    _identityCache[d.path] = _IdentityCache(await _identitySignature(d), items);
+  }
+
+  /// Write-only encrypted inbox: no authentication or saved-history reads.
+  /// The private decryption key requires explicit history authentication.
+  Future<void> queueCompletedScan({
+    required ScanResult scanResult,
+    required ClinicalChecklistResult checklistResult,
+    required ScreeningFusionResult fusionResult,
+    required RenalFollowupResult renalFollowupResult,
+  }) => _serial(() async {
+    final d = await _directory();
+    final before = await _identitySignature(d);
+    final previous = _identityCache[d.path];
+    final canCache = before.isEmpty || previous?.signature == before;
+    final record = SavedScanRecord.fromAnalysis(
+      scanResult: scanResult,
+      checklistResult: checklistResult,
+      fusionResult: fusionResult,
+      renalFollowupResult: renalFollowupResult,
+    );
+    final source = File(scanResult.imagePath);
+    final image = scanResult.imagePath.isNotEmpty && await source.exists()
+        ? base64Encode(await source.readAsBytes())
+        : null;
+    final pending = Directory('${d.path}/pending');
+    await pending.create(recursive: true);
+    if (!(await pending.resolveSymbolicLinks()).startsWith(
+      '${await d.resolveSymbolicLinks()}${Platform.pathSeparator}',
+    )) {
+      throw StateError('Invalid pending scan directory.');
+    }
+    final existing = await pending.list().isEmpty == false;
+    final name = sha256.convert(utf8.encode(scanResult.id)).toString();
+    final envelope = await pendingCipher.seal(
+      _bytes(
+        jsonEncode({'schema': 1, 'record': record.toJson(), 'image': image}),
+      ),
+      'uritect:pending:$name',
+      existing,
+    );
+    await _atomic(File('${pending.path}/$name.sealed'), envelope);
+    if (canCache) {
+      final p = scanResult.provenance;
+      final items = [
+        ...?previous?.items.where((item) => item.id != record.id),
+        _ImageIdentity(
+          record.id,
+          p?.contentSha256 ?? '',
+          p?.pixelSha256 ?? '',
+          p?.imageFingerprint ?? '',
+        ),
+      ];
+      // A missing legacy identity must never be treated as a completed check.
+      if (items.every((item) => item.content.isNotEmpty)) {
+        _identityCache[d.path] = _IdentityCache(
+          await _identitySignature(d),
+          items,
+        );
+      } else {
+        _identityCache.remove(d.path);
+      }
+    }
+  });
+
+  Future<List<SavedScanRecord>> _mergePending(
+    Directory d,
+    List<SavedScanRecord> records,
+  ) async {
+    final pending = Directory('${d.path}/pending');
+    if (!await pending.exists()) return records;
+    final files = await pending
+        .list()
+        .where((e) => e is File)
+        .cast<File>()
+        .toList();
+    if (files.isEmpty) return records;
+    final merged = {for (final r in records) r.id: r};
+    final deleted = await _deleted(d);
+    // Validate every committed envelope before replacing history. Uncommitted .tmp
+    // is recovered only when there is no committed envelope for that scan.
+    final selected = <File>[];
+    for (final f in files) {
+      if (f.path.endsWith('.sealed')) {
+        selected.add(f);
+      } else if (f.path.endsWith('.sealed.tmp') &&
+          !await File(f.path.substring(0, f.path.length - 4)).exists()) {
+        selected.add(f);
+      } else if (!f.path.endsWith('.sealed.tmp')) {
+        throw const HistoryCorruptionException(
+          'Unexpected pending file. Files were preserved.',
+        );
+      }
+    }
+    final decoded = <(SavedScanRecord, Uint8List?)>[];
+    for (final f in selected) {
+      final name = f.uri.pathSegments.last.split('.').first;
+      if (!RegExp(r'^[a-f0-9]{64}$').hasMatch(name)) {
+        throw const HistoryCorruptionException(
+          'Invalid pending identity. Files were preserved.',
+        );
+      }
+      final payload = jsonDecode(
+        utf8.decode(
+          await pendingCipher.open(
+            await f.readAsBytes(),
+            'uritect:pending:$name',
+          ),
+        ),
+      );
+      if (payload is! Map<String, dynamic> ||
+          payload['schema'] != 1 ||
+          payload['record'] is! Map<String, dynamic>) {
+        throw const HistoryCorruptionException(
+          'Invalid pending record. Files were preserved.',
+        );
+      }
+      final record = _records([payload['record']]).single;
+      if (sha256.convert(utf8.encode(record.id)).toString() != name) {
+        throw const HistoryCorruptionException(
+          'Pending identity mismatch. Files were preserved.',
+        );
+      }
+      final image = payload['image'] == null
+          ? null
+          : base64Decode(payload['image'] as String);
+      decoded.add((record, image));
+    }
+    for (final (record, image) in decoded) {
+      if (deleted.contains(record.id)) continue;
+      final path = image == null ? '' : await _persistImageBytes(d, image);
+      final updated = SavedScanRecord.fromJson(
+        record.toJson()
+          ..['patientName'] =
+              merged[record.id]?.patientName ?? record.patientName
+          ..['scanResult'] = record.scanResult
+              .copyWith(imagePath: path)
+              .toJson(),
+      );
+      merged[record.id] = updated;
+    }
+    final result = merged.values.toList()
+      ..sort((a, b) => b.savedAt.compareTo(a.savedAt));
+    await _write(d, result);
+    // Delete envelopes only after the encrypted index is committed and verified.
+    for (final f in files) {
+      await f.delete();
+    }
+    return result;
+  }
+
   Future<Uint8List> _readImage(Directory d, String path) async {
     final file = File(path);
     if (!path.endsWith('.enc') || !await _owns(d, file)) {
@@ -488,4 +721,15 @@ class ScanHistoryService {
         await _write(directory, records);
         return updated;
       });
+}
+
+class _ImageIdentity {
+  final String id, content, pixels, fingerprint;
+  const _ImageIdentity(this.id, this.content, this.pixels, this.fingerprint);
+}
+
+class _IdentityCache {
+  final String signature;
+  final List<_ImageIdentity> items;
+  const _IdentityCache(this.signature, this.items);
 }

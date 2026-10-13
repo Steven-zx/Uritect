@@ -1,0 +1,702 @@
+{
+  "schema_version": 1,
+  "release": "1.5.16+34",
+  "status": "pending_actual_evaluation",
+  "clinical_calibration_status": "not_established",
+  "devices": [
+    {
+      "device_id": "phone_1",
+      "model": "RMX3933",
+      "android_version": null,
+      "test_date": null,
+      "tester": null,
+      "apk_sha256": "44F4ED4CC41D0FE555D1B543F03016737353A054694B7EC90126F02E7A7CD77F",
+      "connection_status": "not_connected",
+      "cases": [
+        {
+          "id": "STARTUP",
+          "expected": "Splash opens dashboard automatically; reduced motion and readable small-screen UI.",
+          "actual": null,
+          "status": "PENDING",
+          "evidence": [],
+          "input_sha256": []
+        },
+        {
+          "id": "OFFLINE_CAMERA",
+          "expected": "Airplane mode with Wi-Fi/mobile data disabled: camera analysis completes locally.",
+          "actual": null,
+          "status": "PENDING",
+          "evidence": [],
+          "input_sha256": []
+        },
+        {
+          "id": "OFFLINE_GALLERY",
+          "expected": "Airplane mode: selecting a locally stored photo completes analysis locally.",
+          "actual": null,
+          "status": "PENDING",
+          "evidence": [],
+          "input_sha256": []
+        },
+        {
+          "id": "CAMERA_DENIAL",
+          "expected": "Deny camera permission: explanation/recovery UI; no crash or stale image.",
+          "actual": null,
+          "status": "PENDING",
+          "evidence": [],
+          "input_sha256": []
+        },
+        {
+          "id": "CAMERA_RECOVERY",
+          "expected": "Grant camera in Android settings and resume: usable live preview.",
+          "actual": null,
+          "status": "PENDING",
+          "evidence": [],
+          "input_sha256": []
+        },
+        {
+          "id": "GALLERY_CANCEL_DENIAL",
+          "expected": "Cancel picker or deny access if offered: return safely; explain modern picker N/A.",
+          "actual": null,
+          "status": "PENDING",
+          "evidence": [],
+          "input_sha256": []
+        },
+        {
+          "id": "GALLERY_RECOVERY",
+          "expected": "Reopen picker and select local photo; previous cancellation does not block analysis.",
+          "actual": null,
+          "status": "PENDING",
+          "evidence": [],
+          "input_sha256": []
+        },
+        {
+          "id": "VALID_COOL_CAMERA",
+          "expected": "Properly timed supported strip under cool light: ten correct pad boxes or explicit retake.",
+          "actual": null,
+          "status": "PENDING",
+          "evidence": [],
+          "input_sha256": []
+        },
+        {
+          "id": "VALID_COOL_GALLERY",
+          "expected": "Cool-light local photo: assess pad overlay/classes against medtech reference.",
+          "actual": null,
+          "status": "PENDING",
+          "evidence": [],
+          "input_sha256": []
+        },
+        {
+          "id": "VALID_WARM_CAMERA",
+          "expected": "Properly timed supported strip under warm light: assess boxes/classes and retake.",
+          "actual": null,
+          "status": "PENDING",
+          "evidence": [],
+          "input_sha256": []
+        },
+        {
+          "id": "VALID_WARM_GALLERY",
+          "expected": "Warm-light local photo: assess boxes/classes and retake.",
+          "actual": null,
+          "status": "PENDING",
+          "evidence": [],
+          "input_sha256": []
+        },
+        {
+          "id": "VALID_DAYLIGHT_CAMERA",
+          "expected": "Properly timed supported strip in daylight: assess boxes/classes and retake.",
+          "actual": null,
+          "status": "PENDING",
+          "evidence": [],
+          "input_sha256": []
+        },
+        {
+          "id": "VALID_DAYLIGHT_GALLERY",
+          "expected": "Daylight local photo: assess boxes/classes and retake.",
+          "actual": null,
+          "status": "PENDING",
+          "evidence": [],
+          "input_sha256": []
+        },
+        {
+          "id": "CAMERA_GALLERY_COMPARISON",
+          "expected": "Controlled same-strip/light/angle camera and gallery comparison: record distinct file hashes, IFU times, overlays, categories and retake reasons.",
+          "actual": null,
+          "status": "PENDING",
+          "evidence": [],
+          "input_sha256": []
+        },
+        {
+          "id": "BLANK",
+          "expected": "No strip: explicit retake; no analyte or ordinary Bayesian result.",
+          "actual": null,
+          "status": "PENDING",
+          "evidence": [],
+          "input_sha256": []
+        },
+        {
+          "id": "BLURRY",
+          "expected": "Unresolvable pads: explicit retake; no reassuring result.",
+          "actual": null,
+          "status": "PENDING",
+          "evidence": [],
+          "input_sha256": []
+        },
+        {
+          "id": "DARK",
+          "expected": "Unreadable dark image: explicit retake.",
+          "actual": null,
+          "status": "PENDING",
+          "evidence": [],
+          "input_sha256": []
+        },
+        {
+          "id": "OVEREXPOSED",
+          "expected": "Unreadable clipped image: explicit retake.",
+          "actual": null,
+          "status": "PENDING",
+          "evidence": [],
+          "input_sha256": []
+        },
+        {
+          "id": "PARTIAL",
+          "expected": "Incomplete strip/pad stack: explicit retake.",
+          "actual": null,
+          "status": "PENDING",
+          "evidence": [],
+          "input_sha256": []
+        },
+        {
+          "id": "WRONG_STRIP",
+          "expected": "Unsupported product: quality checklist blocks interpretation; test automatic detector limitations.",
+          "actual": null,
+          "status": "PENDING",
+          "evidence": [],
+          "input_sha256": []
+        },
+        {
+          "id": "MULTIPLE_STRIPS",
+          "expected": "Multiple visible strips: explicit retake.",
+          "actual": null,
+          "status": "PENDING",
+          "evidence": [],
+          "input_sha256": []
+        },
+        {
+          "id": "LOW_CONFIDENCE",
+          "expected": "Supported located readings below 0.45 carry review notices; unsupported inputs reject. UTI/renal estimates require their own reliable pad sets, with symptom safety advice retained. Low pH/SG confidence alone must not block adequate independent UTI pads.",
+          "actual": null,
+          "status": "PENDING",
+          "evidence": [],
+          "input_sha256": []
+        },
+        {
+          "id": "RETAKE",
+          "expected": "New scan clears old photo/result and opens live camera; repeated retakes remain responsive.",
+          "actual": null,
+          "status": "PENDING",
+          "evidence": [],
+          "input_sha256": []
+        },
+        {
+          "id": "CAMERA_LIFECYCLE",
+          "expected": "Background/resume and gallery-return restore camera; rapid taps do not double-submit.",
+          "actual": null,
+          "status": "PENDING",
+          "evidence": [],
+          "input_sha256": []
+        },
+        {
+          "id": "FEMALE_ELIGIBILITY",
+          "expected": "Eligible symptomatic nonpregnant adult: separate female estimate with prior/factors/disclosure.",
+          "actual": null,
+          "status": "PENDING",
+          "evidence": [],
+          "input_sha256": []
+        },
+        {
+          "id": "MALE_ELIGIBILITY",
+          "expected": "Eligible symptomatic adult male: separate male estimate; no female factors.",
+          "actual": null,
+          "status": "PENDING",
+          "evidence": [],
+          "input_sha256": []
+        },
+        {
+          "id": "UTI_EXCLUSIONS",
+          "expected": "Age, pregnancy, catheter, abnormality, immunocompromise, male diabetes/STI: each blocks estimate.",
+          "actual": null,
+          "status": "PENDING",
+          "evidence": [],
+          "input_sha256": []
+        },
+        {
+          "id": "UTI_UNKNOWN",
+          "expected": "Unknown/unanswered quality/safety or unmatched/unreliable evidence: no ordinary estimate.",
+          "actual": null,
+          "status": "PENDING",
+          "evidence": [],
+          "input_sha256": []
+        },
+        {
+          "id": "SAFETY",
+          "expected": "Fever/flank, hydration failure, serious illness and renal safety override: consultation advice.",
+          "actual": null,
+          "status": "PENDING",
+          "evidence": [],
+          "input_sha256": []
+        },
+        {
+          "id": "RENAL",
+          "expected": "Exercise OBSERVE, REPEAT_CONFIRM, CONSULT, RETAKE and PROMPT_CONSULT using reviewed scenarios.",
+          "actual": null,
+          "status": "PENDING",
+          "evidence": [],
+          "input_sha256": []
+        },
+        {
+          "id": "HISTORY_SAVE_RESTART",
+          "expected": "Save and restart offline: image/results, original posterior and versions preserved.",
+          "actual": null,
+          "status": "PENDING",
+          "evidence": [],
+          "input_sha256": []
+        },
+        {
+          "id": "HISTORY_DELETE",
+          "expected": "Delete a designated test record: record/image removed; other records retained.",
+          "actual": null,
+          "status": "PENDING",
+          "evidence": [],
+          "input_sha256": []
+        },
+        {
+          "id": "LATENCY_CRASH",
+          "expected": "Record at least five measured scan durations, failures, crash/hang count and OS behavior.",
+          "actual": null,
+          "status": "PENDING",
+          "evidence": [],
+          "input_sha256": []
+        },
+        {
+          "id": "ACCESSIBILITY",
+          "expected": "Large text, back navigation and reduced motion usable without clipped controls.",
+          "actual": null,
+          "status": "PENDING",
+          "evidence": [],
+          "input_sha256": []
+        }
+      ],
+      "scan_latency_seconds": [],
+      "crashes": null,
+      "hangs": null
+    },
+    {
+      "device_id": "phone_2",
+      "model": null,
+      "android_version": null,
+      "test_date": null,
+      "tester": null,
+      "apk_sha256": "44F4ED4CC41D0FE555D1B543F03016737353A054694B7EC90126F02E7A7CD77F",
+      "connection_status": "not_connected",
+      "cases": [
+        {
+          "id": "STARTUP",
+          "expected": "Splash opens dashboard automatically; reduced motion and readable small-screen UI.",
+          "actual": null,
+          "status": "PENDING",
+          "evidence": [],
+          "input_sha256": []
+        },
+        {
+          "id": "OFFLINE_CAMERA",
+          "expected": "Airplane mode with Wi-Fi/mobile data disabled: camera analysis completes locally.",
+          "actual": null,
+          "status": "PENDING",
+          "evidence": [],
+          "input_sha256": []
+        },
+        {
+          "id": "OFFLINE_GALLERY",
+          "expected": "Airplane mode: selecting a locally stored photo completes analysis locally.",
+          "actual": null,
+          "status": "PENDING",
+          "evidence": [],
+          "input_sha256": []
+        },
+        {
+          "id": "CAMERA_DENIAL",
+          "expected": "Deny camera permission: explanation/recovery UI; no crash or stale image.",
+          "actual": null,
+          "status": "PENDING",
+          "evidence": [],
+          "input_sha256": []
+        },
+        {
+          "id": "CAMERA_RECOVERY",
+          "expected": "Grant camera in Android settings and resume: usable live preview.",
+          "actual": null,
+          "status": "PENDING",
+          "evidence": [],
+          "input_sha256": []
+        },
+        {
+          "id": "GALLERY_CANCEL_DENIAL",
+          "expected": "Cancel picker or deny access if offered: return safely; explain modern picker N/A.",
+          "actual": null,
+          "status": "PENDING",
+          "evidence": [],
+          "input_sha256": []
+        },
+        {
+          "id": "GALLERY_RECOVERY",
+          "expected": "Reopen picker and select local photo; previous cancellation does not block analysis.",
+          "actual": null,
+          "status": "PENDING",
+          "evidence": [],
+          "input_sha256": []
+        },
+        {
+          "id": "VALID_COOL_CAMERA",
+          "expected": "Properly timed supported strip under cool light: ten correct pad boxes or explicit retake.",
+          "actual": null,
+          "status": "PENDING",
+          "evidence": [],
+          "input_sha256": []
+        },
+        {
+          "id": "VALID_COOL_GALLERY",
+          "expected": "Cool-light local photo: assess pad overlay/classes against medtech reference.",
+          "actual": null,
+          "status": "PENDING",
+          "evidence": [],
+          "input_sha256": []
+        },
+        {
+          "id": "VALID_WARM_CAMERA",
+          "expected": "Properly timed supported strip under warm light: assess boxes/classes and retake.",
+          "actual": null,
+          "status": "PENDING",
+          "evidence": [],
+          "input_sha256": []
+        },
+        {
+          "id": "VALID_WARM_GALLERY",
+          "expected": "Warm-light local photo: assess boxes/classes and retake.",
+          "actual": null,
+          "status": "PENDING",
+          "evidence": [],
+          "input_sha256": []
+        },
+        {
+          "id": "VALID_DAYLIGHT_CAMERA",
+          "expected": "Properly timed supported strip in daylight: assess boxes/classes and retake.",
+          "actual": null,
+          "status": "PENDING",
+          "evidence": [],
+          "input_sha256": []
+        },
+        {
+          "id": "VALID_DAYLIGHT_GALLERY",
+          "expected": "Daylight local photo: assess boxes/classes and retake.",
+          "actual": null,
+          "status": "PENDING",
+          "evidence": [],
+          "input_sha256": []
+        },
+        {
+          "id": "CAMERA_GALLERY_COMPARISON",
+          "expected": "Controlled same-strip/light/angle camera and gallery comparison: record distinct file hashes, IFU times, overlays, categories and retake reasons.",
+          "actual": null,
+          "status": "PENDING",
+          "evidence": [],
+          "input_sha256": []
+        },
+        {
+          "id": "BLANK",
+          "expected": "No strip: explicit retake; no analyte or ordinary Bayesian result.",
+          "actual": null,
+          "status": "PENDING",
+          "evidence": [],
+          "input_sha256": []
+        },
+        {
+          "id": "BLURRY",
+          "expected": "Unresolvable pads: explicit retake; no reassuring result.",
+          "actual": null,
+          "status": "PENDING",
+          "evidence": [],
+          "input_sha256": []
+        },
+        {
+          "id": "DARK",
+          "expected": "Unreadable dark image: explicit retake.",
+          "actual": null,
+          "status": "PENDING",
+          "evidence": [],
+          "input_sha256": []
+        },
+        {
+          "id": "OVEREXPOSED",
+          "expected": "Unreadable clipped image: explicit retake.",
+          "actual": null,
+          "status": "PENDING",
+          "evidence": [],
+          "input_sha256": []
+        },
+        {
+          "id": "PARTIAL",
+          "expected": "Incomplete strip/pad stack: explicit retake.",
+          "actual": null,
+          "status": "PENDING",
+          "evidence": [],
+          "input_sha256": []
+        },
+        {
+          "id": "WRONG_STRIP",
+          "expected": "Unsupported product: quality checklist blocks interpretation; test automatic detector limitations.",
+          "actual": null,
+          "status": "PENDING",
+          "evidence": [],
+          "input_sha256": []
+        },
+        {
+          "id": "MULTIPLE_STRIPS",
+          "expected": "Multiple visible strips: explicit retake.",
+          "actual": null,
+          "status": "PENDING",
+          "evidence": [],
+          "input_sha256": []
+        },
+        {
+          "id": "LOW_CONFIDENCE",
+          "expected": "Supported located readings below 0.45 carry review notices; unsupported inputs reject. UTI/renal estimates require their own reliable pad sets, with symptom safety advice retained. Low pH/SG confidence alone must not block adequate independent UTI pads.",
+          "actual": null,
+          "status": "PENDING",
+          "evidence": [],
+          "input_sha256": []
+        },
+        {
+          "id": "RETAKE",
+          "expected": "New scan clears old photo/result and opens live camera; repeated retakes remain responsive.",
+          "actual": null,
+          "status": "PENDING",
+          "evidence": [],
+          "input_sha256": []
+        },
+        {
+          "id": "CAMERA_LIFECYCLE",
+          "expected": "Background/resume and gallery-return restore camera; rapid taps do not double-submit.",
+          "actual": null,
+          "status": "PENDING",
+          "evidence": [],
+          "input_sha256": []
+        },
+        {
+          "id": "FEMALE_ELIGIBILITY",
+          "expected": "Eligible symptomatic nonpregnant adult: separate female estimate with prior/factors/disclosure.",
+          "actual": null,
+          "status": "PENDING",
+          "evidence": [],
+          "input_sha256": []
+        },
+        {
+          "id": "MALE_ELIGIBILITY",
+          "expected": "Eligible symptomatic adult male: separate male estimate; no female factors.",
+          "actual": null,
+          "status": "PENDING",
+          "evidence": [],
+          "input_sha256": []
+        },
+        {
+          "id": "UTI_EXCLUSIONS",
+          "expected": "Age, pregnancy, catheter, abnormality, immunocompromise, male diabetes/STI: each blocks estimate.",
+          "actual": null,
+          "status": "PENDING",
+          "evidence": [],
+          "input_sha256": []
+        },
+        {
+          "id": "UTI_UNKNOWN",
+          "expected": "Unknown/unanswered quality/safety or unmatched/unreliable evidence: no ordinary estimate.",
+          "actual": null,
+          "status": "PENDING",
+          "evidence": [],
+          "input_sha256": []
+        },
+        {
+          "id": "SAFETY",
+          "expected": "Fever/flank, hydration failure, serious illness and renal safety override: consultation advice.",
+          "actual": null,
+          "status": "PENDING",
+          "evidence": [],
+          "input_sha256": []
+        },
+        {
+          "id": "RENAL",
+          "expected": "Exercise OBSERVE, REPEAT_CONFIRM, CONSULT, RETAKE and PROMPT_CONSULT using reviewed scenarios.",
+          "actual": null,
+          "status": "PENDING",
+          "evidence": [],
+          "input_sha256": []
+        },
+        {
+          "id": "HISTORY_SAVE_RESTART",
+          "expected": "Save and restart offline: image/results, original posterior and versions preserved.",
+          "actual": null,
+          "status": "PENDING",
+          "evidence": [],
+          "input_sha256": []
+        },
+        {
+          "id": "HISTORY_DELETE",
+          "expected": "Delete a designated test record: record/image removed; other records retained.",
+          "actual": null,
+          "status": "PENDING",
+          "evidence": [],
+          "input_sha256": []
+        },
+        {
+          "id": "LATENCY_CRASH",
+          "expected": "Record at least five measured scan durations, failures, crash/hang count and OS behavior.",
+          "actual": null,
+          "status": "PENDING",
+          "evidence": [],
+          "input_sha256": []
+        },
+        {
+          "id": "ACCESSIBILITY",
+          "expected": "Large text, back navigation and reduced motion usable without clipped controls.",
+          "actual": null,
+          "status": "PENDING",
+          "evidence": [],
+          "input_sha256": []
+        }
+      ],
+      "scan_latency_seconds": [],
+      "crashes": null,
+      "hangs": null
+    }
+  ],
+  "physical_strip": {
+    "status": "partially_recorded_pending_signed_ifu_review",
+    "manufacturer": null,
+    "product": "URS-10T",
+    "catalogue_number": null,
+    "lot": "2026051201",
+    "manufacture_date": "2026-05-12",
+    "expiry": "2028-05-11",
+    "opening_date": null,
+    "storage_conditions": null,
+    "ifu_revision": null,
+    "ifu_evidence": [],
+    "pad_order": [
+      "Leukocytes",
+      "Nitrite",
+      "Urobilinogen",
+      "Protein",
+      "pH",
+      "Blood",
+      "Specific Gravity",
+      "Ketone",
+      "Bilirubin",
+      "Glucose"
+    ],
+    "categories": {
+      "Leukocytes": null,
+      "Nitrite": null,
+      "Urobilinogen": null,
+      "Protein": null,
+      "pH": null,
+      "Blood": null,
+      "Specific Gravity": null,
+      "Ketone": null,
+      "Bilirubin": null,
+      "Glucose": null
+    },
+    "reading_times_seconds": {
+      "Leukocytes": 60,
+      "Nitrite": 60,
+      "Urobilinogen": 60,
+      "Protein": 60,
+      "pH": 60,
+      "Blood": 60,
+      "Specific Gravity": 45,
+      "Ketone": 40,
+      "Bilirubin": 30,
+      "Glucose": 30
+    },
+    "timing_strategy_matches_app": null,
+    "reviewers": [],
+    "anti_vc_claim_verified": false
+  },
+  "reviews": {
+    "medtech_1": {
+      "status": "pending",
+      "reviewer": null,
+      "credentials": null,
+      "repository_commit_release_tag_or_version_reviewed": null,
+      "date": null,
+      "apk_sha256": "44F4ED4CC41D0FE555D1B543F03016737353A054694B7EC90126F02E7A7CD77F",
+      "decisions": [],
+      "evidence": []
+    },
+    "medtech_2": {
+      "status": "pending",
+      "reviewer": null,
+      "credentials": null,
+      "repository_commit_release_tag_or_version_reviewed": null,
+      "date": null,
+      "apk_sha256": "44F4ED4CC41D0FE555D1B543F03016737353A054694B7EC90126F02E7A7CD77F",
+      "decisions": [],
+      "evidence": []
+    },
+    "medtech_3": {
+      "status": "pending",
+      "reviewer": null,
+      "credentials": null,
+      "repository_commit_release_tag_or_version_reviewed": null,
+      "date": null,
+      "apk_sha256": "44F4ED4CC41D0FE555D1B543F03016737353A054694B7EC90126F02E7A7CD77F",
+      "decisions": [],
+      "evidence": []
+    },
+    "physician": {
+      "status": "pending",
+      "reviewer": null,
+      "credentials": null,
+      "repository_commit_release_tag_or_version_reviewed": null,
+      "date": null,
+      "apk_sha256": "44F4ED4CC41D0FE555D1B543F03016737353A054694B7EC90126F02E7A7CD77F",
+      "decisions": [],
+      "evidence": []
+    },
+    "statistician": {
+      "status": "pending",
+      "reviewer": null,
+      "credentials": null,
+      "repository_commit_release_tag_or_version_reviewed": null,
+      "date": null,
+      "apk_sha256": "44F4ED4CC41D0FE555D1B543F03016737353A054694B7EC90126F02E7A7CD77F",
+      "decisions": [],
+      "evidence": []
+    },
+    "usability_evaluation": {
+      "status": "pending",
+      "reviewer": null,
+      "credentials": null,
+      "repository_commit_release_tag_or_version_reviewed": null,
+      "date": null,
+      "apk_sha256": "44F4ED4CC41D0FE555D1B543F03016737353A054694B7EC90126F02E7A7CD77F",
+      "decisions": [],
+      "evidence": []
+    }
+  },
+  "manuscript": {
+    "status": "pending_editable_source_and_actual_revision",
+    "evidence": []
+  },
+  "clinical_outcome_study": {
+    "status": "not_performed",
+    "evidence": []
+  }
+}

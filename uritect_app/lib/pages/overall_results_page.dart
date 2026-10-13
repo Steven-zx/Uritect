@@ -6,7 +6,9 @@ import '../models/scan_model.dart';
 import '../models/screening_fusion.dart';
 import '../models/renal_followup.dart';
 import '../widgets/dipstick_results_table.dart';
+import '../widgets/dataset_level_legend.dart';
 import 'renal_results_page.dart';
+import 'symptom_checklist_page.dart';
 import 'dashboard_navigation.dart';
 import 'protected_history_page.dart';
 import '../widgets/scan_context_notice.dart';
@@ -65,26 +67,70 @@ class OverallResultsPage extends StatelessWidget {
       bottomNavigationBar: SafeArea(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
-          child: Row(
-            children: [
-              if (savedUtiEstimate == null) ...[
-                Expanded(
-                  child: OutlinedButton.icon(
-                    onPressed: () => Navigator.of(context).pop(),
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              final buttons = <Widget>[
+                if (savedUtiEstimate == null)
+                  OutlinedButton.icon(
+                    onPressed: () async {
+                      final edited = await Navigator.of(context)
+                          .push<ClinicalChecklistResult>(
+                            MaterialPageRoute(
+                              builder: (_) => SymptomChecklistPage(
+                                scanResult: scanResult,
+                                initialChecklistResult: clinicalChecklistResult,
+                                returnToCaller: true,
+                                historyService:
+                                    historyService ??
+                                    const ScanHistoryService(),
+                              ),
+                            ),
+                          );
+                      if (edited != null && context.mounted) {
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(
+                            builder: (_) => OverallResultsPage(
+                              scanResult: scanResult,
+                              clinicalChecklistResult: edited,
+                              historyService: historyService,
+                            ),
+                          ),
+                        );
+                      }
+                    },
                     icon: const Icon(Icons.edit_outlined, size: 18),
-                    label: const Text('EDIT CHECKLIST'),
+                    label: const Text('Edit Checklist'),
                   ),
-                ),
-                const SizedBox(width: 12),
-              ],
-              Expanded(
-                child: FilledButton.icon(
+                FilledButton.icon(
                   onPressed: () => returnToDashboard(context),
                   icon: const Icon(Icons.home_outlined, size: 18),
-                  label: const Text('HOME'),
+                  label: const Text('Home'),
                 ),
-              ),
-            ],
+              ];
+              final stacked =
+                  constraints.maxWidth < 360 ||
+                  MediaQuery.textScalerOf(context).scale(14) > 18;
+              if (stacked) {
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    for (var i = 0; i < buttons.length; i++) ...[
+                      if (i > 0) const SizedBox(height: 8),
+                      buttons[i],
+                    ],
+                  ],
+                );
+              }
+              return Row(
+                children: [
+                  for (var i = 0; i < buttons.length; i++) ...[
+                    if (i > 0) const SizedBox(width: 12),
+                    Expanded(child: buttons[i]),
+                  ],
+                ],
+              );
+            },
           ),
         ),
       ),
@@ -204,6 +250,7 @@ class OverallResultsPage extends StatelessWidget {
               children: [_conditionCard(context, fusionResult)],
             ),
             _checklistAnswersCard(context),
+            const DatasetLevelLegend(),
             ResearchDetails(
               scan: scanResult,
               renal: renalResult,

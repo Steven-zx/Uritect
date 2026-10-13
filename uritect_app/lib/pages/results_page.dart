@@ -6,6 +6,7 @@ import '../models/scan_model.dart';
 import '../models/scan_localization.dart';
 import '../widgets/strip_analysis_animation.dart';
 import '../widgets/dipstick_results_table.dart';
+import '../widgets/dataset_level_legend.dart';
 import '../widgets/research_details.dart';
 import 'dashboard_navigation.dart';
 import 'symptom_checklist_page.dart';
@@ -127,7 +128,7 @@ class ResultsPage extends StatelessWidget {
                               ? 'Some readings need review. Check the reading time or retake the photo.'
                               : 'Review your readings, then complete the safety checklist. This is not a diagnosis.')
                         : hasReadings
-                        ? 'Some readings are uncertain. Retake the photo for more reliable results.'
+                        ? 'Preliminary model predictions are shown below. This scan did not pass the required checks; do not treat these values as confirmed readings. Retake the photo.'
                         : 'Unable to read the dipstick reliably. Please retake the photo.',
                   ),
                   if (!hasReadings && _retakeHelp != null) ...[
@@ -190,6 +191,7 @@ class ResultsPage extends StatelessWidget {
                 requiredConfidence: scanResult.requiredAnalyteConfidence,
                 secondsAfterDipping: scanResult.provenance?.secondsAfterDipping,
               ),
+            const DatasetLevelLegend(),
             ResearchDetails(scan: scanResult),
             const SizedBox(height: 12),
             const Text(

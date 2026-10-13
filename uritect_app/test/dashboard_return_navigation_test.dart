@@ -69,7 +69,7 @@ void main() {
           );
           await tester.pumpAndSettle();
         }
-        await tester.tap(find.text('HOME'));
+        await tester.tap(find.text(fromOverall ? 'Home' : 'HOME'));
         await tester.pumpAndSettle();
         await tester.pump(const Duration(seconds: 1));
         expect(find.byType(RootPage), findsOneWidget);
@@ -162,7 +162,7 @@ void main() {
       expect(find.text('Negative'), findsNothing);
       await tester.tap(find.text('Leukocytes'));
       await tester.pumpAndSettle();
-      expect(find.text('Result: $value'), findsOneWidget);
+      expect(find.text('Model prediction: $value'), findsOneWidget);
       expect(find.text('Reference: Negative'), findsNothing);
       expect(tester.takeException(), isNull);
     },

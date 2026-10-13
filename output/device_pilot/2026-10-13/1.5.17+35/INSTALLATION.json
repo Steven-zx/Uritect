@@ -1,0 +1,14 @@
+{
+  "date": "2026-10-13",
+  "device_model": "RMX3933",
+  "package": "ph.edu.wvsu.uritect",
+  "version_name_verified": "1.5.17",
+  "version_code_verified": 35,
+  "apk_sha256": "41B3EDC2745F7447BD55A2A5A5DF9D85978C914D2FFC3CB8481547E279494341",
+  "installation": "adb install -r returned Success",
+  "app_data_cleared": false,
+  "uninstalled": false,
+  "launch": "am start accepted for MainActivity",
+  "saved_history_contents_inspected": false,
+  "workflow_acceptance": "pending; installation is not a device workflow pass"
+}

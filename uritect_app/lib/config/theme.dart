@@ -36,6 +36,26 @@ class AppTheme {
       error: AppColors.statusHigh,
     ),
     scaffoldBackgroundColor: AppColors.bgMain,
+    outlinedButtonTheme: OutlinedButtonThemeData(
+      style: OutlinedButton.styleFrom(
+        foregroundColor: AppColors.primaryMain,
+        side: const BorderSide(color: AppColors.primaryMain, width: 1.5),
+        shape: const StadiumBorder(),
+        minimumSize: const Size(0, 48),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      ),
+    ),
+    textButtonTheme: TextButtonThemeData(
+      style: TextButton.styleFrom(foregroundColor: AppColors.primaryMain),
+    ),
+    filledButtonTheme: FilledButtonThemeData(
+      style: FilledButton.styleFrom(
+        backgroundColor: AppColors.primaryMain,
+        foregroundColor: Colors.white,
+        minimumSize: const Size(0, 48),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      ),
+    ),
     textTheme: TextTheme(
       displayLarge: TextStyle(
         fontSize: 32,

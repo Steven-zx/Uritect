@@ -1,0 +1,171 @@
+{
+  "baseline": "1.5.16+34",
+  "scope": "All existing assets and models; existing services except intentionally changed scan_history_service. New pending_scan_cipher and native history implementation intentionally changed.",
+  "passed": true,
+  "files": [
+    {
+      "path": "uritect_app/assets/calibration/capture_manifest_template.json",
+      "sha256": "206D3BB5A0385310B75FE6BEBA181E59DB3A8D5C180A231AC6D627A11A3518F8"
+    },
+    {
+      "path": "uritect_app/assets/calibration/capture_metadata_template.csv",
+      "sha256": "6203E3F803CCB76A622FA88817C2E82BF9ECA779509F18956AE78631E99DE352"
+    },
+    {
+      "path": "uritect_app/assets/calibration/phase0_white_card_metadata_template.csv",
+      "sha256": "F19065EB33999A5FCAC8B6D8AD4D6A181CE10F9AA37B1D5E4C57A1D90E202DC3"
+    },
+    {
+      "path": "uritect_app/assets/fonts/FONT_SOURCES.json",
+      "sha256": "01850980673B96AE31A76E996813BC085746BF1AF78CF49544434E8DA1EF08E3"
+    },
+    {
+      "path": "uritect_app/assets/fonts/Inter-Medium.ttf",
+      "sha256": "36A36FF7AC46DC2AECEAC3A80A87A67E7B844B8FC936699259AAC8FBA9BCF734"
+    },
+    {
+      "path": "uritect_app/assets/fonts/Inter-Regular.ttf",
+      "sha256": "15B294B67F2F8BBC04D990023EF4AEC66502B87DC9040D84ABE5F896CCB693DE"
+    },
+    {
+      "path": "uritect_app/assets/fonts/Inter-SemiBold.ttf",
+      "sha256": "334BB2C51AEBA5F566ABAC8D03A7E75AB3234D6926B52E92A85DC704129258B5"
+    },
+    {
+      "path": "uritect_app/assets/fonts/INTER_OFL.txt",
+      "sha256": "5B9321A4298CFEB6B34354164A1C3AFC3DB114569984C502B9B35D988FD58C57"
+    },
+    {
+      "path": "uritect_app/assets/fonts/Poppins-Bold.ttf",
+      "sha256": "ED709F2BA2BE295030614990104CB4C9C62BC2A2445C25CCB19A1500158A5A8B"
+    },
+    {
+      "path": "uritect_app/assets/fonts/Poppins-Medium.ttf",
+      "sha256": "C0BA5609D6562C76AB7DB73FA9C9B283D210598CB318A45D4085F540E4753D60"
+    },
+    {
+      "path": "uritect_app/assets/fonts/Poppins-Regular.ttf",
+      "sha256": "7E65201E9B79159E2300267CC885E16C8DCEF2424CDFA09A29BFB0980A94A7BA"
+    },
+    {
+      "path": "uritect_app/assets/fonts/Poppins-SemiBold.ttf",
+      "sha256": "EC23E010878CF0841F910EF94F62294E40C7D77CE99BE250DBA2911D0A1A61CD"
+    },
+    {
+      "path": "uritect_app/assets/fonts/POPPINS_OFL.txt",
+      "sha256": "6BE04893D770899A015649C7AA3B582F871B272F8747A92B78B17C3E5C8B2573"
+    },
+    {
+      "path": "uritect_app/assets/knn_reference_map.json",
+      "sha256": "01482BA9817A379E7C1CE0261A7E7B69BA89B1838F0588C2DF49C6BAC395376E"
+    },
+    {
+      "path": "uritect_app/assets/photos/dipstick icon.png",
+      "sha256": "3249C7D3FCB07D10F67123A02E334C3869EB096CD82CE011064F24B5E7EE36AA"
+    },
+    {
+      "path": "uritect_app/assets/photos/high risk.png",
+      "sha256": "21A3A517B0A0FBB294C768C577ADACF37D7879CD60743642A3BD21CEE1EC31B9"
+    },
+    {
+      "path": "uritect_app/assets/photos/logo.png",
+      "sha256": "A74C89366CF4D31ADA3315165ED55C1BD66B86D81BE4C92A843B99EFA04C5796"
+    },
+    {
+      "path": "uritect_app/assets/photos/low risk.png",
+      "sha256": "84E5692F93203766A5B845C25620981F723D60EAB5B96BB7BC25C8854D70620B"
+    },
+    {
+      "path": "uritect_app/assets/photos/minUriLogo.png",
+      "sha256": "2F26788CC34AD02B7DBD0269725365FFE2A94032728692F8404C827A71D7B55D"
+    },
+    {
+      "path": "uritect_app/assets/photos/moderate risk.png",
+      "sha256": "45E86D3DDA14D587DB981657E7A89441DC23AEC0FE88FBFAA4F21B41491DB6FC"
+    },
+    {
+      "path": "uritect_app/assets/production_semiquant_model.json",
+      "sha256": "1380D9E04D044413B42BD045E3C7370BF3D06A720695D2654598657234742279"
+    },
+    {
+      "path": "uritect_app/assets/training_support_policy.json",
+      "sha256": "D0BBC47975EF7E4BA461A3F7D492A6281E2B70DC930BCE424F398D98EC53090B"
+    },
+    {
+      "path": "uritect_app/lib/models/checklist_draft.dart",
+      "sha256": "FEC90F863C83601AC9E3223DA7DFE6DD985E17EE972E449721E045E3A2BD1026"
+    },
+    {
+      "path": "uritect_app/lib/models/clinical_symptoms.dart",
+      "sha256": "D6E6B6B206843FED3F36B3E3BE6DC2FCF3EDCEC0A042B0A26723B3727CA24A69"
+    },
+    {
+      "path": "uritect_app/lib/models/dipstick_results_data.dart",
+      "sha256": "64CA31CC3155DB46B075FA60F019700388A249F0E4213F1D5D15F261C777FE12"
+    },
+    {
+      "path": "uritect_app/lib/models/renal_followup.dart",
+      "sha256": "1E2A0CB2D9BF3AD670B089AA53C5A2266B1AAD66D944EC54877D1E89CD869403"
+    },
+    {
+      "path": "uritect_app/lib/models/saved_scan_record.dart",
+      "sha256": "F2F1EDEF0DB4C7EE591A31D82E923C48831327B02DA6A5BB472C0CE0275D29B7"
+    },
+    {
+      "path": "uritect_app/lib/models/scan_analysis_exit_reason.dart",
+      "sha256": "D9CE2EB5DD0E87A3495D8969FA1123AF90EDC1C1D1165E8C7CDB67113640C185"
+    },
+    {
+      "path": "uritect_app/lib/models/scan_analysis_failure.dart",
+      "sha256": "F5B4F12DD5585DCBBD89DC4F001DF04530529AF09EF16A0DD0870893C28A3ACB"
+    },
+    {
+      "path": "uritect_app/lib/models/scan_localization.dart",
+      "sha256": "E36A6EC245F469A640CEAA7E4F034B6AE1529461D1CAAE7EE2DBCBF27D7D0AD3"
+    },
+    {
+      "path": "uritect_app/lib/models/scan_model.dart",
+      "sha256": "63787C06C96C19A66EFD0E0A6D3A03801805AF8DEF27CE192FAB2B4D80259566"
+    },
+    {
+      "path": "uritect_app/lib/models/scan_provenance.dart",
+      "sha256": "657ADC6EB848432A0F6CE0DF94AFF22333B0FFB8A4810499E0C78F3CFC7E55DC"
+    },
+    {
+      "path": "uritect_app/lib/models/screening_fusion.dart",
+      "sha256": "F14B25209A4217C663238BE95E6AF4BDA858478A79B8372FD8815B153580B64B"
+    },
+    {
+      "path": "uritect_app/lib/models/strip_reading_schedule.dart",
+      "sha256": "7A6E451CAF11ABE8745084EB8A88F5CD5CBA7FE51A32BDD1D8E24570EA4A44D6"
+    },
+    {
+      "path": "uritect_app/lib/services/history_cipher.dart",
+      "sha256": "4117A5074E8F9968737A51353E754E3CFC0733C910D584E757FDB1E6BA4C9BF5"
+    },
+    {
+      "path": "uritect_app/lib/services/local_scan_analysis_service.dart",
+      "sha256": "9735BBD77A7E10985B82F9ECBD8F159CA8FA9B181012949F627BEE1010E6B52C"
+    },
+    {
+      "path": "uritect_app/lib/services/photo_quality_check.dart",
+      "sha256": "E2C7B89930F63CA6D4920ED21E3A6055062E30C1019B929BEA4C1625E7539444"
+    },
+    {
+      "path": "uritect_app/lib/services/runtime_pad_features.dart",
+      "sha256": "F399E36C9A81255D5EC85CFB3F80D86891BE8E75A4C57D5EA7F2F9D28D194308"
+    },
+    {
+      "path": "uritect_app/lib/services/scan_analysis_service.dart",
+      "sha256": "D7619ADC78B456C1544DE9BA157C68D2C63A3F4E90EDD0DB35A1C824368E0CE1"
+    },
+    {
+      "path": "uritect_app/lib/services/scan_provenance_service.dart",
+      "sha256": "3B5EA5881D7B26E605F32B53925CA386EDD55B9059EF8E391D7C9107FBBB5780"
+    },
+    {
+      "path": "uritect_app/lib/services/training_support_policy.dart",
+      "sha256": "0577EE4584E365632A346CB598920837DAD3115FF61BA1B137A778CCBDF19F53"
+    }
+  ]
+}
