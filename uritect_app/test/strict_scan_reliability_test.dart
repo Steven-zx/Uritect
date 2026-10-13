@@ -95,7 +95,6 @@ void main() {
         {'source': 'unknown'},
         {'duplicateCheckCompleted': false},
         {'currentSpecimenConfirmed': false},
-        {'specimenCode': ''},
         {'secondsAfterDipping': null},
         {'secondsAfterDipping': -1},
         {'duplicateOf': 'old'},

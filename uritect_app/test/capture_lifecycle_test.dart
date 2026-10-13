@@ -106,6 +106,23 @@ void main() {
     await tester.pumpAndSettle();
   }
 
+  testWidgets('camera controls expose accessible action labels', (
+    tester,
+  ) async {
+    final semantics = tester.ensureSemantics();
+    await open(tester);
+    expect(find.bySemanticsLabel('Take photo'), findsOneWidget);
+    expect(find.bySemanticsLabel('Choose photo'), findsOneWidget);
+    expect(find.bySemanticsLabel('Turn flashlight on'), findsOneWidget);
+    expect(find.byTooltip('Back'), findsOneWidget);
+    expect(find.text('Gallery'), findsOneWidget);
+    expect(find.text('Light'), findsOneWidget);
+    expect(find.text('Grid'), findsOneWidget);
+    await tester.pumpWidget(const SizedBox());
+    await tester.pumpAndSettle();
+    semantics.dispose();
+  });
+
   testWidgets('ten-pad guide toggles without restarting the camera', (
     tester,
   ) async {
@@ -230,10 +247,13 @@ void main() {
       expect(find.byType(TenPadAlignmentGuide), findsNothing);
       expect(
         tester
-            .widget<IconButton>(
-              find.widgetWithIcon(IconButton, Icons.grid_off_rounded),
+            .widget<GestureDetector>(
+              find.descendant(
+                of: find.byTooltip('Hide 10-pad guide'),
+                matching: find.byType(GestureDetector),
+              ),
             )
-            .onPressed,
+            .onTap,
         isNull,
       );
       expect(find.byType(Image), findsOneWidget);

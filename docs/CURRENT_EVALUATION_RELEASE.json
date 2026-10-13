@@ -1,26 +1,26 @@
 {
   "schema_version": 1,
-  "version": "1.5.17+35",
+  "version": "1.5.20+38",
   "status": "signed_research_candidate_pending_device_and_external_evidence",
   "apk": {
-    "path": "output/device_pilot/2026-10-13/1.5.17+35/Uritect_v1.5.17+35_release.apk",
-    "bytes": 56877627,
-    "sha256": "41B3EDC2745F7447BD55A2A5A5DF9D85978C914D2FFC3CB8481547E279494341"
+    "path": "output/device_pilot/2026-10-13/1.5.20+38/Uritect_v1.5.20+38_release.apk",
+    "bytes": 56910395,
+    "sha256": "A6501BA7931B4D94F3D9199A911C5946DF86F298CB737777419E3AFBBAB8A4EE"
   },
   "build_receipt": {
-    "path": "output/device_pilot/2026-10-13/1.5.17+35/EVALUATION_BUILD.json",
-    "bytes": 2574,
-    "sha256": "593BBD0AE7812533CEC56B957DC40DE257FAE7A44B60981246628F728A8287B8"
+    "path": "output/device_pilot/2026-10-13/1.5.20+38/EVALUATION_BUILD.json",
+    "bytes": 1918,
+    "sha256": "19E5EE8066CBD8129932FEA7B8284C52606C3FFABD2B6DDB54DA0C5F93ED802D"
   },
   "source_snapshot": {
-    "path": "output/device_pilot/2026-10-13/1.5.17+35/SOURCE_SNAPSHOT.json",
-    "bytes": 28320,
-    "sha256": "F57F2CC4C2B50F814A53658ECDFD5C53CC47454457B8D8FCF09DB5870CC5BBDD"
+    "path": "output/device_pilot/2026-10-13/1.5.20+38/SOURCE_SNAPSHOT.json",
+    "bytes": 29086,
+    "sha256": "0D008F23A9D605499EB84C77D9DAFF5069A422F077F152B9625009F119692E1A"
   },
   "source_archive": {
-    "path": "output/device_pilot/2026-10-13/1.5.17+35/URITECT_SOURCE_SNAPSHOT.zip",
-    "bytes": 6665350,
-    "sha256": "25109787BF689F0F63C99299C89EE412A91D4C2E815AA38A2DC006BACFFE6C48"
+    "path": "output/device_pilot/2026-10-13/1.5.20+38/URITECT_SOURCE_SNAPSHOT.zip",
+    "bytes": 7319398,
+    "sha256": "FB97339AA848885DD67B274F7AD6AC63E8517CDC64750C74840166F0D392A36E"
   },
   "model": {
     "path": "uritect_app/assets/production_semiquant_model.json",
@@ -38,5 +38,6 @@
   "gap_response": "docs/URITECT_EVIDENCE_GAP_REMEDIATION_2026-10-12.md",
   "historical_manifest": "output/release/URITECT_FINAL_RELEASE_MANIFEST.json",
   "historical_manifest_is_current": false,
-  "note": "Byte/hash identity is verified, not byte-for-byte reproducible rebuilds or clinical validity."
+  "note": "Byte/hash identity is verified, not byte-for-byte reproducible rebuilds or clinical validity.",
+  "installation_receipt": "output/device_pilot/2026-10-13/1.5.20+38/INSTALLATION.json"
 }

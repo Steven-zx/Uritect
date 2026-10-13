@@ -125,7 +125,7 @@ void main() {
     },
   );
   testWidgets(
-    'invalid scan still displays actual predictions with preliminary warning; no predictions remain absent',
+    'simplified results retain predictions without status labels and never invent missing readings',
     (tester) async {
       await tester.pumpWidget(
         MaterialApp(
@@ -137,9 +137,10 @@ void main() {
       expect(find.text('6.5'), findsOneWidget);
       expect(
         find.textContaining('Preliminary model predictions'),
-        findsOneWidget,
+        findsNothing,
       );
-      expect(find.text('Unverified'), findsWidgets);
+      expect(find.text('Unverified'), findsNothing);
+      expect(find.byType(ExpansionTile), findsNothing);
       await tester.pumpWidget(
         MaterialApp(
           home: ResultsPage(

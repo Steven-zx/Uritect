@@ -102,7 +102,7 @@ void main() {
     await icons.load();
     await loadAppFonts();
   });
-  testWidgets('results display Bayesian percentage and applied factors', (
+  testWidgets('screening summary retains guidance without research details', (
     tester,
   ) async {
     tester.view.physicalSize = const Size(430, 932);
@@ -128,21 +128,8 @@ void main() {
       find.byType(Scaffold),
       matchesGoldenFile('goldens/bayesian_results_phone.png'),
     );
-    await tester.ensureVisible(find.byKey(const Key('research_details')));
-    await tester.tap(find.text('Research Details'));
-    await tester.runAsync(() async => GoogleFonts.pendingFonts());
-    await tester.pumpAndSettle();
-    expect(find.text('91.5%'), findsOneWidget);
-    expect(find.textContaining('LR 7.20'), findsOneWidget);
-    expect(find.textContaining('LR 1.50'), findsOneWidget);
-    expect(
-      find.textContaining('Combining symptom and dipstick LRs'),
-      findsOneWidget,
-    );
-    expect(
-      find.textContaining('No local culture-confirmed calibration'),
-      findsWidgets,
-    );
+    expect(find.text('Research Details'), findsNothing);
+    expect(find.text('Unable to complete screening'), findsNothing);
     expect(find.text('Consultation suggested'), findsOneWidget);
   });
 
@@ -162,9 +149,7 @@ void main() {
     expect(find.textContaining('Answer each question'), findsOneWidget);
   });
 
-  testWidgets('male pathway displays its separate model and one factor', (
-    tester,
-  ) async {
+  testWidgets('male summary omits technical model details', (tester) async {
     tester.view.physicalSize = const Size(430, 932);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.resetPhysicalSize);
@@ -184,20 +169,9 @@ void main() {
     expect(find.text('UTI-related screening'), findsOneWidget);
     expect(find.text('84.9%'), findsNothing);
     expect(find.textContaining('LR 5.14'), findsNothing);
-    await tester.ensureVisible(find.byKey(const Key('research_details')));
-    await tester.tap(find.text('Research Details'));
-    await tester.runAsync(() async => GoogleFonts.pendingFonts());
-    await tester.pumpAndSettle();
-    expect(find.textContaining('LR 5.14'), findsOneWidget);
-    expect(
-      find.textContaining(
-        'transfer of the study prior and LRs remain assumptions',
-      ),
-      findsOneWidget,
-    );
-    expect(find.text('84.9%'), findsOneWidget);
-    expect(find.text('Starting prior: 52.2%'), findsOneWidget);
-    expect(find.textContaining('uti_bayesian_male_v0_1'), findsOneWidget);
+    expect(find.text('Research Details'), findsNothing);
+    expect(find.text('Starting prior: 52.2%'), findsNothing);
+    expect(find.textContaining('uti_bayesian_male_v0_1'), findsNothing);
   });
 
   testWidgets('scan results continue into the clinical checklist', (
@@ -223,7 +197,7 @@ void main() {
     expect(find.text('Basic information'), findsWidgets);
   });
   testWidgets(
-    'history displays recorded posterior instead of recalculating it',
+    'summary preserves saved posterior without displaying research details',
     (tester) async {
       await tester.pumpWidget(
         _app(
@@ -244,10 +218,14 @@ void main() {
       await tester.runAsync(() async => GoogleFonts.pendingFonts());
       await tester.pumpAndSettle();
       expect(find.text('12.0%'), findsNothing);
-      await tester.ensureVisible(find.text('Research Details'));
-      await tester.tap(find.text('Research Details'));
-      await tester.pumpAndSettle();
-      expect(find.text('12.0%'), findsOneWidget);
+      expect(find.text('Research Details'), findsNothing);
+      expect(
+        tester
+            .widget<OverallResultsPage>(find.byType(OverallResultsPage))
+            .savedUtiEstimate!
+            .posteriorProbability,
+        0.12,
+      );
       expect(find.text('91.5%'), findsNothing);
       expect(
         find.textContaining(

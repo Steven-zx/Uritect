@@ -48,6 +48,14 @@ def main():
     if old and old['release'] != version:
         assert re.fullmatch(r'\d+\.\d+\.\d+\+\d+', old['release'])
         previous_folders = list((ROOT / 'output/device_pilot').glob('*/' + old['release']))
+        index_path = ROOT / 'docs/CURRENT_EVALUATION_RELEASE.json'
+        if index_path.exists():
+            prior_index = json.loads(index_path.read_text())
+            if prior_index.get('version') == old['release']:
+                prior_folder = (ROOT / prior_index['build_receipt']['path']).resolve().parent
+                assert prior_folder.is_relative_to(ROOT / 'output/device_pilot')
+                assert json.loads((prior_folder / 'EVALUATION_BUILD.json').read_text())['version'] == old['release']
+                previous_folders = [prior_folder]
         assert len(previous_folders) == 1, 'Locate the prior build evidence uniquely'
         previous = previous_folders[0] / 'ACCEPTANCE_RECORD.json'
         assert previous.parent.exists(), 'Prior build evidence folder must exist'

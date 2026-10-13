@@ -10,7 +10,7 @@ void main() {
     DeviceOrientation.portraitUp,
     DeviceOrientation.landscapeLeft,
   ]) {
-    testWidgets('full frame and focus mapping for $orientation', (
+    testWidgets('cover frame and focus mapping for $orientation', (
       tester,
     ) async {
       final controller = CameraController(
@@ -44,23 +44,25 @@ void main() {
       );
       final viewport = tester.getRect(find.byType(ScanCameraPreview));
       final image = tester.getRect(find.byType(CameraPreview));
-      expect(viewport.contains(image.topLeft), isTrue);
-      expect(image.right, lessThanOrEqualTo(viewport.right));
-      expect(image.bottom, lessThanOrEqualTo(viewport.bottom));
+      expect(image.left, lessThanOrEqualTo(viewport.left));
+      expect(image.top, lessThanOrEqualTo(viewport.top));
+      expect(image.right, greaterThanOrEqualTo(viewport.right));
+      expect(image.bottom, greaterThanOrEqualTo(viewport.bottom));
       final expectedRatio = orientation == DeviceOrientation.portraitUp
           ? 720 / 1280
           : 1280 / 720;
       expect(image.width / image.height, closeTo(expectedRatio, 0.001));
-      await tester.tapAt(
-        image.topLeft + Offset(image.width * .25, image.height * .75),
-      );
-      expect(focused!.dx, closeTo(.25, .001));
-      expect(focused!.dy, closeTo(.75, .001));
+      final tap =
+          viewport.topLeft +
+          Offset(viewport.width * .25, viewport.height * .75);
+      await tester.tapAt(tap);
+      expect(focused!.dx, closeTo((tap.dx - image.left) / image.width, .001));
+      expect(focused!.dy, closeTo((tap.dy - image.top) / image.height, .001));
       // Tapping an outlined pad must still focus at the real image coordinate.
       for (var i = 0; i < 10; i++) {
         final rect = tester.getRect(find.byKey(ValueKey('alignment-pad-$i')));
-        expect(image.contains(rect.topLeft), isTrue);
-        expect(image.contains(rect.bottomRight), isTrue);
+        expect(viewport.contains(rect.topLeft), isTrue);
+        expect(viewport.contains(rect.bottomRight), isTrue);
         await tester.tapAt(rect.center);
         expect(
           focused!.dx,

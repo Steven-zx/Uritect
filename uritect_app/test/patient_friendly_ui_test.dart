@@ -52,43 +52,47 @@ void main() {
     await tester.pumpAndSettle();
   }
 
+  testWidgets('unknown timing still blocks current-context interpretation', (
+    tester,
+  ) async {
+    ScanProvenance? p;
+    await openPhoto(tester, (value) => p = value);
+    expect(find.text('Review Photo'), findsOneWidget);
+    expect(find.text('Specimen code (optional)'), findsNothing);
+    await tester.tap(find.text('Analyze Photo'));
+    await tester.pumpAndSettle();
+    expect(p!.secondsAfterDipping, isNull);
+    expect(p!.specimenCode, isNull);
+    expect(p!.canSupportCurrentContext, isFalse);
+  });
   testWidgets(
-    'unknown timing and optional empty code cannot bypass the existing gate',
+    'optional name survives review with timing and specimen confirmation retained',
     (tester) async {
       ScanProvenance? p;
       await openPhoto(tester, (value) => p = value);
-      expect(find.text('Review Photo'), findsOneWidget);
-      expect(find.text('Specimen code (optional)'), findsNothing);
-      await tester.tap(find.text('Analyze Photo'));
-      await tester.pumpAndSettle();
-      expect(p!.secondsAfterDipping, isNull);
-      expect(p!.specimenCode, isNull);
-      expect(p!.canSupportCurrentContext, isFalse);
-    },
-  );
-  testWidgets(
-    'known timing, explicit specimen confirmation and code preserve the gate',
-    (tester) async {
-      ScanProvenance? p;
-      await openPhoto(tester, (value) => p = value);
+      expect(find.byType(TextField), findsOneWidget);
+      expect(find.byType(Checkbox), findsOneWidget);
+      expect(find.byKey(const Key('photo_reading_time')), findsOneWidget);
+      expect(find.text('Research Details'), findsNothing);
       await tester.tap(find.byKey(const Key('photo_reading_time')));
       await tester.pumpAndSettle();
       await tester.tap(find.text('60 seconds').last);
       await tester.pumpAndSettle();
       await tester.tap(find.byType(Checkbox));
       await tester.pumpAndSettle();
-      await tester.tap(find.text('Research Details'));
-      await tester.pumpAndSettle();
-      await tester.enterText(find.byType(TextField), 'CASE-01');
+      await tester.enterText(find.byType(TextField), '  Test Patient  ');
       await tester.tap(find.text('Analyze Photo'));
       await tester.pumpAndSettle();
+      expect(p!.patientName, 'Test Patient');
+      expect(ScanProvenance.fromJson(p!.toJson()).patientName, 'Test Patient');
       expect(p!.secondsAfterDipping, 60);
-      expect(p!.specimenCode, 'CASE-01');
+      expect(p!.currentSpecimenConfirmed, isTrue);
+      expect(p!.specimenCode, isNull);
       expect(p!.canSupportCurrentContext, isTrue);
     },
   );
   testWidgets(
-    'duplicate photo remains review only with a brief visible notice',
+    'duplicate photo remains review only with timing and name controls',
     (tester) async {
       ScanProvenance? p;
       await openPhoto(tester, (value) => p = value, duplicate: 'saved-01');
@@ -187,7 +191,12 @@ void main() {
         ),
       );
       await tester.pumpAndSettle();
-      expect(find.text('Unable to complete screening'), findsOneWidget);
+      expect(find.text('Unable to complete screening'), findsNothing);
+      expect(find.text('Research Details'), findsNothing);
+      expect(
+        find.textContaining('Some health information is missing'),
+        findsOneWidget,
+      );
       expect(find.textContaining('Symptoms reported:'), findsNothing);
       expect(find.textContaining('items selected'), findsNothing);
       await tester.ensureVisible(find.text('Checklist Review'));

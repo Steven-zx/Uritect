@@ -6,8 +6,6 @@ import '../models/scan_model.dart';
 import '../models/scan_localization.dart';
 import '../widgets/strip_analysis_animation.dart';
 import '../widgets/dipstick_results_table.dart';
-import '../widgets/dataset_level_legend.dart';
-import '../widgets/research_details.dart';
 import 'dashboard_navigation.dart';
 import 'symptom_checklist_page.dart';
 
@@ -18,15 +16,10 @@ class ResultsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final modelPaused =
-        scanResult.rejectionCode == 'MODEL_ORIENTATION_REVIEW_REQUIRED';
     final hasReadings = scanResult.rows.isNotEmpty;
-    final reliable = scanResult.isReliableForInterpretation;
-    final currentContext =
-        scanResult.provenance?.canSupportCurrentContext == true;
-    final timingUnconfirmed = scanResult.rows.any(
-      (r) => !scanResult.hasMatchingReportedReadingTime(r.code),
-    );
+    final dipstickDetected =
+        scanResult.padsDetected == 10 ||
+        (scanResult.padsDetected == null && localization?.regions.length == 10);
     return Scaffold(
       backgroundColor: AppColors.bgMain,
       appBar: AppBar(
@@ -48,12 +41,14 @@ class ResultsPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               FilledButton(
-                onPressed: () => Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (_) =>
-                        SymptomChecklistPage(scanResult: scanResult),
-                  ),
-                ),
+                onPressed: !dipstickDetected
+                    ? null
+                    : () => Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) =>
+                              SymptomChecklistPage(scanResult: scanResult),
+                        ),
+                      ),
                 child: Text(
                   hasReadings
                       ? 'CONTINUE TO CHECKLIST'
@@ -90,125 +85,56 @@ class ResultsPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: reliable
-                    ? const Color(0xFFEAF7F9)
-                    : const Color(0xFFFFF7E6),
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    modelPaused
-                        ? 'Classifier under review'
-                        : reliable
-                        ? (!currentContext
-                              ? 'For research review only'
-                              : timingUnconfirmed
-                              ? 'Some results need review'
-                              : 'Strip readings available')
-                        : hasReadings
-                        ? 'Readings need review'
-                        : 'Please retake the photo',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  const SizedBox(height: 6),
-                  Text(
-                    modelPaused
-                        ? 'Pad locations can be inspected below. Analyte readings are temporarily withheld while the model is reviewed.'
-                        : reliable
-                        ? (!currentContext
-                              ? 'Photo or timing details are unconfirmed. These readings cannot support current-specimen screening.'
-                              : timingUnconfirmed
-                              ? 'Some readings need review. Check the reading time or retake the photo.'
-                              : 'Review your readings, then complete the safety checklist. This is not a diagnosis.')
-                        : hasReadings
-                        ? 'Preliminary model predictions are shown below. This scan did not pass the required checks; do not treat these values as confirmed readings. Retake the photo.'
-                        : 'Unable to read the dipstick reliably. Please retake the photo.',
-                  ),
-                  if (!hasReadings && _retakeHelp != null) ...[
-                    const SizedBox(height: 8),
-                    Text(_retakeHelp!),
-                  ],
-                  if (!reliable) ...[
-                    const SizedBox(height: 8),
-                    const Text(
-                      'Serious symptoms still require attention when a scan fails.',
-                    ),
-                  ],
-                  const SizedBox(height: 6),
-                  const Text(
-                    'Research prototype · Not a diagnosis',
-                    style: TextStyle(fontSize: 12),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 12),
-
             if (localization?.regions.isNotEmpty == true)
               ExpansionTile(
                 title: const Text('View sampled pad regions'),
-                subtitle: const Text(
-                  'Located regions do not guarantee valid readings.',
-                ),
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(12),
                     child: StripAnalysisAnimation(
                       stage: 'complete',
+                      showCaptions: false,
                       imagePath: scanResult.imagePath,
                       localization: localization,
                     ),
                   ),
                 ],
               ),
-            if (scanResult.padsUnavailable != null &&
-                scanResult.padsUnavailable! > 0) ...[
-              Text(
-                scanResult.status == 'invalid'
-                    ? scanResult.padsDetected == 10
-                          ? 'Located: 10/10 pads; results unavailable'
-                          : 'Ten-pad detection not confirmed'
-                    : 'Detected: ${scanResult.padsDetected ?? 0}/${(scanResult.padsDetected ?? 0) + (scanResult.padsUnavailable ?? 0)} pads',
-                style: Theme.of(context).textTheme.bodySmall,
-              ),
-              const SizedBox(height: 12),
-            ],
-            if (hasReadings)
-              DipstickResultsTable(
-                scanVerified:
-                    scanResult.hasCompleteSafetyMetadata &&
-                    currentContext &&
-                    scanResult.status != 'invalid',
-                rows: scanResult.rows,
-                analyteConfidences: scanResult.analyteConfidences,
-                requiredConfidence: scanResult.requiredAnalyteConfidence,
-                secondsAfterDipping: scanResult.provenance?.secondsAfterDipping,
-              ),
-            const DatasetLevelLegend(),
-            ResearchDetails(scan: scanResult),
             const SizedBox(height: 12),
-            const Text(
-              'A completed checklist is required to save this scan to history.',
-              style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
-            ),
+            if (hasReadings)
+              DipstickResultsTable(rows: scanResult.rows, showDetails: false)
+            else
+              Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: AppColors.bgCard,
+                  borderRadius: BorderRadius.circular(18),
+                  border: Border.all(color: AppColors.border),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      dipstickDetected
+                          ? 'Unable to read dipstick'
+                          : 'Ten-pad dipstick not detected',
+                      style: Theme.of(context).textTheme.headlineSmall
+                          ?.copyWith(
+                            fontSize: 24,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.primaryDark,
+                          ),
+                    ),
+                    const SizedBox(height: 12),
+                    const Text(
+                      'No readings available. Please take a new photo.',
+                    ),
+                  ],
+                ),
+              ),
           ],
         ),
       ),
     );
   }
-
-  String? get _retakeHelp => switch (scanResult.rejectionCode) {
-    'IMAGE_TOO_DARK' => 'Use even lighting and avoid shadows.',
-    'IMAGE_OVEREXPOSED' => 'Reduce glare and avoid direct light.',
-    'IMAGE_BLURRED' => 'Tap the pads to focus and hold the phone steady.',
-    'LOW_CONFIDENCE' => 'Retake in even lighting.',
-    _ => null,
-  };
 }

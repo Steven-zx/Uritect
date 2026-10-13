@@ -15,6 +15,7 @@ class ScanProvenance {
   final String? duplicateOf;
   final String? similarImageOf;
   final String? specimenCode;
+  final String? patientName;
   final double? secondsAfterDipping;
   final bool currentSpecimenConfirmed;
   final bool duplicateCheckCompleted;
@@ -30,6 +31,7 @@ class ScanProvenance {
     this.duplicateOf,
     this.similarImageOf,
     this.specimenCode,
+    this.patientName,
     this.secondsAfterDipping,
     this.currentSpecimenConfirmed = false,
     this.duplicateCheckCompleted = false,
@@ -52,8 +54,6 @@ class ScanProvenance {
       RegExp(r'^[a-f0-9]{16}$').hasMatch(imageFingerprint) &&
       (source != 'camera' || capturedAt != null) &&
       (source == 'camera' || source == 'import') &&
-      specimenCode != null &&
-      specimenCode!.trim().isNotEmpty &&
       secondsAfterDipping != null &&
       secondsAfterDipping!.isFinite &&
       secondsAfterDipping! >= 0;
@@ -69,6 +69,7 @@ class ScanProvenance {
     'duplicateOf': duplicateOf,
     'similarImageOf': similarImageOf,
     'specimenCode': specimenCode,
+    'patientName': patientName,
     'secondsAfterDipping': secondsAfterDipping,
     'currentSpecimenConfirmed': currentSpecimenConfirmed,
     'duplicateCheckCompleted': duplicateCheckCompleted,
@@ -88,6 +89,7 @@ class ScanProvenance {
     duplicateOf: j['duplicateOf'] as String?,
     similarImageOf: j['similarImageOf'] as String?,
     specimenCode: j['specimenCode'] as String?,
+    patientName: j['patientName'] as String?,
     secondsAfterDipping: (j['secondsAfterDipping'] as num?)?.toDouble(),
     currentSpecimenConfirmed: j['currentSpecimenConfirmed'] == true,
     duplicateCheckCompleted: j['duplicateCheckCompleted'] == true,

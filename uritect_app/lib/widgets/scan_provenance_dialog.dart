@@ -23,13 +23,13 @@ class ScanProvenanceDialog extends StatefulWidget {
 }
 
 class _ScanProvenanceDialogState extends State<ScanProvenanceDialog> {
-  final code = TextEditingController();
+  final name = TextEditingController();
   final timing = TextEditingController();
   String selectedTime = 'unknown';
   bool confirmed = false;
   @override
   void dispose() {
-    code.dispose();
+    name.dispose();
     timing.dispose();
     super.dispose();
   }
@@ -110,31 +110,21 @@ class _ScanProvenanceDialogState extends State<ScanProvenanceDialog> {
               onChanged: (v) => setState(() => confirmed = v ?? false),
               title: const Text('This photo is from the current specimen.'),
             ),
-            ExpansionTile(
-              tilePadding: EdgeInsets.zero,
-              shape: const Border(),
-              collapsedShape: const Border(),
-              title: const Text('Research Details'),
-              children: [
-                TextField(
-                  controller: code,
-                  maxLength: 64,
-                  enableSuggestions: false,
-                  autocorrect: false,
-                  decoration: const InputDecoration(
-                    labelText: 'Specimen code (optional)',
-                    helperText: 'Use a code, not a patient name.',
-                  ),
-                ),
-                const Text(
-                  'A specimen code is required for current-specimen screening. Without it, photo review and the safety checklist remain available.',
-                  style: TextStyle(fontSize: 12),
-                ),
-                if (widget.identity.reportedPhotoDate != null)
-                  Text(
-                    'Unverified photo date: ${widget.identity.reportedPhotoDate}',
-                  ),
-              ],
+            const SizedBox(height: 12),
+            TextField(
+              key: const Key('photo_patient_name'),
+              controller: name,
+              maxLength: 100,
+              keyboardType: TextInputType.name,
+              textCapitalization: TextCapitalization.words,
+              enableSuggestions: false,
+              autocorrect: false,
+              enableIMEPersonalizedLearning: false,
+              decoration: const InputDecoration(
+                labelText: 'Input Name (optional)',
+                border: OutlineInputBorder(),
+                counterText: '',
+              ),
             ),
           ],
         ),
@@ -160,7 +150,7 @@ class _ScanProvenanceDialogState extends State<ScanProvenanceDialog> {
               imageFingerprint: widget.identity.fingerprint,
               duplicateOf: widget.duplicateOf,
               similarImageOf: widget.similarImageOf,
-              specimenCode: code.text.trim().isEmpty ? null : code.text.trim(),
+              patientName: name.text.trim().isEmpty ? null : name.text.trim(),
               secondsAfterDipping:
                   seconds != null && seconds.isFinite && seconds >= 0
                   ? seconds

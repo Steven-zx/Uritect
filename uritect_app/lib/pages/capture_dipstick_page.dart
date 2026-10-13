@@ -359,8 +359,7 @@ class _CaptureDipstickPageState extends State<CaptureDipstickPage>
   }
 
   Widget _buildCameraFrame() {
-    // CameraPreview handles the active capture orientation and aspect ratio.
-    // Show the full view: a cover fit hides background that analysis still sees.
+    // Cover the bordered viewport without stretching; focus maps to the full frame.
     return ScanCameraPreview(
       controller: _cameraController!,
       onFocus: _setAutomaticMetering,
@@ -397,6 +396,7 @@ class _CaptureDipstickPageState extends State<CaptureDipstickPage>
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: IconButton(
+                        tooltip: 'Back',
                         onPressed: () => Navigator.of(context).maybePop(),
                         icon: const Icon(Icons.arrow_back_rounded, size: 24),
                         color: AppColors.primaryMain,
@@ -435,19 +435,28 @@ class _CaptureDipstickPageState extends State<CaptureDipstickPage>
                   ),
                   SizedBox(
                     width: 64,
-                    child: IconButton(
-                      tooltip: _showPadGuide
+                    child: Tooltip(
+                      message: _showPadGuide
                           ? 'Hide 10-pad guide'
                           : 'Show 10-pad guide',
-                      isSelected: _showPadGuide,
-                      color: AppColors.primaryMain,
-                      icon: const Icon(Icons.grid_on_rounded),
-                      selectedIcon: const Icon(Icons.grid_off_rounded),
-                      onPressed:
-                          _busy || !_isCameraReady || _pendingImagePath != null
-                          ? null
-                          : () =>
-                                setState(() => _showPadGuide = !_showPadGuide),
+                      child: _CaptureToolButton(
+                        label: _showPadGuide
+                            ? 'Hide 10-pad guide'
+                            : 'Show 10-pad guide',
+                        caption: 'Grid',
+                        icon: _showPadGuide
+                            ? Icons.grid_off_rounded
+                            : Icons.grid_on_rounded,
+                        isActive: _showPadGuide,
+                        onTap:
+                            _busy ||
+                                !_isCameraReady ||
+                                _pendingImagePath != null
+                            ? null
+                            : () => setState(
+                                () => _showPadGuide = !_showPadGuide,
+                              ),
+                      ),
                     ),
                   ),
                 ],
@@ -463,7 +472,7 @@ class _CaptureDipstickPageState extends State<CaptureDipstickPage>
                       onClose: _busy ? null : _clearPendingImage,
                       child: Image.file(
                         File(_pendingImagePath!),
-                        fit: BoxFit.contain,
+                        fit: BoxFit.cover,
                       ),
                     );
                   }
@@ -524,22 +533,34 @@ class _CaptureDipstickPageState extends State<CaptureDipstickPage>
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   _CaptureToolButton(
+                    label: 'Choose photo',
+                    caption: 'Gallery',
                     icon: Icons.photo_outlined,
                     onTap: _busy ? null : _pickFromGallery,
                   ),
                   _CaptureButton(
                     key: const Key('capture_shutter'),
-                    onTap: _busy
+                    label: _pendingImagePath == null
+                        ? 'Take photo'
+                        : 'Retake photo',
+                    onTap:
+                        _busy || (!_isCameraReady && _pendingImagePath == null)
                         ? null
                         : _pendingImagePath == null
                         ? _capturePhoto
                         : _clearPendingImage,
                   ),
                   _CaptureToolButton(
+                    caption: 'Light',
+                    label: _isFlashlightOn
+                        ? 'Turn flashlight off'
+                        : 'Turn flashlight on',
                     icon: _isFlashlightOn
                         ? Icons.lightbulb_rounded
                         : Icons.lightbulb_outline_rounded,
-                    onTap: _busy ? null : _toggleFlashlight,
+                    onTap: _busy || !_isCameraReady || _pendingImagePath != null
+                        ? null
+                        : _toggleFlashlight,
                     isActive: _isFlashlightOn,
                   ),
                 ],
@@ -610,6 +631,7 @@ class _ScanPreviewFrame extends StatelessWidget {
                         shape: BoxShape.circle,
                       ),
                       child: IconButton(
+                        tooltip: 'Discard selected photo',
                         onPressed: onClose,
                         icon: const Icon(
                           Icons.close_rounded,
@@ -629,27 +651,33 @@ class _ScanPreviewFrame extends StatelessWidget {
 
 class _CaptureButton extends StatelessWidget {
   final VoidCallback? onTap;
+  final String label;
 
-  const _CaptureButton({super.key, required this.onTap});
+  const _CaptureButton({super.key, required this.onTap, required this.label});
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: 86,
-        height: 86,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: AppColors.primaryMain,
-          border: Border.all(color: Colors.white, width: 6),
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.primaryMain.withValues(alpha: 0.18),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
-            ),
-          ],
+    return Semantics(
+      label: label,
+      button: true,
+      enabled: onTap != null,
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          width: 86,
+          height: 86,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: AppColors.primaryMain,
+            border: Border.all(color: Colors.white, width: 6),
+            boxShadow: [
+              BoxShadow(
+                color: AppColors.primaryMain.withValues(alpha: 0.18),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -658,33 +686,58 @@ class _CaptureButton extends StatelessWidget {
 
 class _CaptureToolButton extends StatelessWidget {
   final IconData icon;
+  final String label;
+  final String caption;
   final VoidCallback? onTap;
   final bool isActive;
 
   const _CaptureToolButton({
     required this.icon,
+    required this.label,
+    required this.caption,
     required this.onTap,
     this.isActive = false,
   });
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: 42,
-        height: 42,
-        alignment: Alignment.center,
-        decoration: isActive
-            ? BoxDecoration(
-                shape: BoxShape.circle,
-                color: AppColors.primaryMain.withValues(alpha: 0.15),
-              )
-            : null,
-        child: Icon(
-          icon,
-          color: isActive ? AppColors.primaryMain : AppColors.textSecondary,
-          size: 28,
+    return Semantics(
+      label: label,
+      excludeSemantics: true,
+      button: true,
+      enabled: onTap != null,
+      child: GestureDetector(
+        onTap: onTap,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 48,
+              height: 48,
+              alignment: Alignment.center,
+              decoration: isActive
+                  ? BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: AppColors.primaryMain.withValues(alpha: 0.15),
+                    )
+                  : null,
+              child: Icon(
+                icon,
+                color: isActive
+                    ? AppColors.primaryMain
+                    : AppColors.textSecondary,
+                size: 28,
+              ),
+            ),
+            const SizedBox(height: 2),
+            Text(
+              caption,
+              style: const TextStyle(
+                fontSize: 12,
+                color: AppColors.textSecondary,
+              ),
+            ),
+          ],
         ),
       ),
     );

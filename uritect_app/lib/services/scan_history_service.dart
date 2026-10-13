@@ -610,8 +610,9 @@ class ScanHistoryService {
       final path = image == null ? '' : await _persistImageBytes(d, image);
       final updated = SavedScanRecord.fromJson(
         record.toJson()
-          ..['patientName'] =
-              merged[record.id]?.patientName ?? record.patientName
+          ..['patientName'] = merged.containsKey(record.id)
+              ? merged[record.id]!.patientName
+              : record.patientName
           ..['scanResult'] = record.scanResult
               .copyWith(imagePath: path)
               .toJson(),

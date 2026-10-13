@@ -7,11 +7,13 @@ class StripAnalysisAnimation extends StatefulWidget {
   final String stage;
   final String? imagePath;
   final ScanLocalization? localization;
+  final bool showCaptions;
   const StripAnalysisAnimation({
     super.key,
     required this.stage,
     this.imagePath,
     this.localization,
+    this.showCaptions = true,
   });
   @override
   State<StripAnalysisAnimation> createState() => _StripAnalysisAnimationState();
@@ -97,13 +99,14 @@ class _StripAnalysisAnimationState extends State<StripAnalysisAnimation>
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(
-              located ? 'Your pad sampling regions' : 'Your strip photo',
-              style: Theme.of(
-                context,
-              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
-            ),
-            const SizedBox(height: 12),
+            if (widget.showCaptions)
+              Text(
+                located ? 'Your pad sampling regions' : 'Your strip photo',
+                style: Theme.of(
+                  context,
+                ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
+              ),
+            if (widget.showCaptions) const SizedBox(height: 12),
             Semantics(
               image: true,
               label: located
@@ -179,19 +182,21 @@ class _StripAnalysisAnimationState extends State<StripAnalysisAnimation>
                 ),
               ),
             ),
-            const SizedBox(height: 12),
-            Text(
-              located
-                  ? '${evidence!.regions.length} sampling ${evidence.regions.length == 1 ? 'region' : 'regions'} located'
-                  : 'Locating the strip. Regions appear when confirmed.',
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 6),
-            const Text(
-              'Outlines show color samples, not clinical results.',
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 12, color: Color(0xFF47717B)),
-            ),
+            if (widget.showCaptions) const SizedBox(height: 12),
+            if (widget.showCaptions)
+              Text(
+                located
+                    ? '${evidence!.regions.length} sampling ${evidence.regions.length == 1 ? 'region' : 'regions'} located'
+                    : 'Locating the strip. Regions appear when confirmed.',
+                textAlign: TextAlign.center,
+              ),
+            if (widget.showCaptions) const SizedBox(height: 6),
+            if (widget.showCaptions)
+              const Text(
+                'Outlines show color samples, not clinical results.',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 12, color: Color(0xFF47717B)),
+              ),
           ],
         ),
       ),

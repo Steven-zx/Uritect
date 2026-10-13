@@ -1,0 +1,16 @@
+{
+  "app_version": "1.5.20+38",
+  "targeted_flutter_tests": {
+    "passed": 37,
+    "scope": "Photo review, timing and specimen confirmation, optional names, encrypted history and edits, strict scan reliability, provenance, current scan workflow and capture lifecycle"
+  },
+  "full_suite_repeated_for_this_version": false,
+  "static_analysis": {
+    "result": "No issues found",
+    "exit_code": 0
+  },
+  "classifier_assets_changed": false,
+  "context_gate_change": "Specimen code is no longer required; explicit specimen confirmation, reading time, duplicate/age/source/hash checks remain. Name is optional and never authenticates a specimen.",
+  "clinical_validation_established": false,
+  "exact_apk_device_acceptance": "pending"
+}

@@ -245,12 +245,21 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
           ),
           const SizedBox(height: 18),
           Text(
-            'Start with a clear photo',
-            style: Theme.of(
-              context,
-            ).textTheme.headlineSmall?.copyWith(color: AppColors.primaryDark),
+            'Scan your Dipstick',
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+              color: AppColors.primaryDark,
+              fontWeight: FontWeight.w700,
+            ),
           ),
           const SizedBox(height: 8),
+          Text(
+            'Start with a clear photo',
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.w600,
+              color: AppColors.textSecondary,
+            ),
+          ),
+          const SizedBox(height: 6),
           const Text(
             'Capture or upload your dipstick, then complete the safety checklist.',
           ),

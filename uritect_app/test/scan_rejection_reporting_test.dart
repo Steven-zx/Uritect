@@ -61,16 +61,17 @@ void main() {
         ),
       );
       expect(
-        find.text('Located: 10/10 pads; results unavailable'),
+        find.text('No readings available. Please take a new photo.'),
         findsOneWidget,
       );
-      expect(find.text('Scan check: LOW_CONFIDENCE'), findsNothing);
-      await tester.ensureVisible(find.text('Research Details'));
-      await tester.tap(find.text('Research Details'));
-      await tester.pumpAndSettle();
-      expect(find.text('Scan check: LOW_CONFIDENCE'), findsOneWidget);
+      expect(find.text('Research Details'), findsNothing);
       expect(find.text('Detected: 0/10 pads'), findsNothing);
       expect(find.text('COMPLETE SAFETY CHECKLIST'), findsOneWidget);
+      expect(find.text('Unable to read dipstick'), findsOneWidget);
+      expect(
+        tester.widget<FilledButton>(find.byType(FilledButton)).onPressed,
+        isNotNull,
+      );
       expect(tester.takeException(), isNull);
     },
   );
@@ -90,8 +91,49 @@ void main() {
         ),
       ),
     );
-    expect(find.text('Ten-pad detection not confirmed'), findsOneWidget);
+    expect(
+      find.text('No readings available. Please take a new photo.'),
+      findsOneWidget,
+    );
     expect(find.text('Detected: 0/10 pads'), findsNothing);
+    expect(find.text('Ten-pad dipstick not detected'), findsOneWidget);
+    expect(find.text('Dataset level reference'), findsNothing);
+    expect(find.text('Research Details'), findsNothing);
+    expect(
+      tester.widget<FilledButton>(find.byType(FilledButton)).onPressed,
+      isNull,
+    );
+    await tester.tap(find.text('COMPLETE SAFETY CHECKLIST'));
+    await tester.pumpAndSettle();
+    expect(find.byType(ResultsPage), findsOneWidget);
     expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('zero detected pads cannot open the checklist', (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: ResultsPage(
+          scanResult: ScanResult.empty(imagePath: '').copyWith(
+            status: 'invalid',
+            padsDetected: 0,
+            rejectionCode: 'IMAGE_BLANK',
+          ),
+        ),
+      ),
+    );
+    final heading = tester.widget<Text>(
+      find.text('Ten-pad dipstick not detected'),
+    );
+    expect(heading.style?.fontWeight, FontWeight.w700);
+    expect(heading.style?.fontSize, 24);
+    expect(
+      tester.widget<FilledButton>(find.byType(FilledButton)).onPressed,
+      isNull,
+    );
+    expect(
+      tester.widget<OutlinedButton>(find.byType(OutlinedButton)).onPressed,
+      isNotNull,
+    );
+    expect(find.text('HOME'), findsOneWidget);
   });
 }

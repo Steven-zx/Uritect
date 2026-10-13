@@ -90,5 +90,12 @@ output/device_pilot/**/*.jpeg
 output/device_pilot/**/*.png
 
 # IDE caches and local diagnostic logs.
+pipeline/output/knn_runtime_metric_*/runtime_detector/
+pipeline/output/knn_runtime_metric_*/PRIVATE_*.json
+pipeline/output/knn_runtime_metric_*/PRIVATE_*.csv
+pipeline/output/knn_runtime_metric_*/PRIVATE_*.npz
+pipeline/output/knn_runtime_metric_*/PRIVATE_*.html
+pipeline/output/knn_runtime_metric_*/image_evidence/
+pipeline/output/knn_runtime_metric_*/candidate_models/
 .idea/
 output/*.log

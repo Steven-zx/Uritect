@@ -244,7 +244,7 @@ void main() {
     expect(find.text('History is locked.'), findsOneWidget);
   });
   testWidgets(
-    'optional research details remain protected when history backgrounds',
+    'summary omits research details and still locks when history backgrounds',
     (tester) async {
       final history = seed();
       tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
@@ -254,10 +254,8 @@ void main() {
         ),
       );
       await tester.pumpAndSettle();
-      await tester.ensureVisible(find.text('Research Details'));
-      await tester.tap(find.text('Research Details'));
-      await tester.pumpAndSettle();
-      expect(find.textContaining('Classifier:'), findsOneWidget);
+      expect(find.text('Research Details'), findsNothing);
+      expect(find.byType(OverallResultsPage), findsOneWidget);
       tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.inactive);
       await tester.pumpAndSettle();
       expect(find.text('History is locked.'), findsOneWidget);

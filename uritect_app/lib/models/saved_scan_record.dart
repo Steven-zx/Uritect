@@ -95,7 +95,9 @@ class SavedScanRecord {
     return SavedScanRecord(
       id: scanResult.id,
       savedAt: DateTime.now(),
-      patientName: normalizePatientName(patientName),
+      patientName: normalizePatientName(
+        patientName ?? scanResult.provenance?.patientName,
+      ),
       scanResult: scanResult,
       checklistResult: checklistResult,
       clinicalAction: fusionResult.clinicalAction,

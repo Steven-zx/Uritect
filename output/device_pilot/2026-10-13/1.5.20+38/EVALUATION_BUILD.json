@@ -1,0 +1,38 @@
+{
+  "version": "1.5.20+38",
+  "apk": "output/device_pilot/2026-10-13/1.5.20+38/Uritect_v1.5.20+38_release.apk",
+  "bytes": 56910395,
+  "sha256": "A6501BA7931B4D94F3D9199A911C5946DF86F298CB737777419E3AFBBAB8A4EE",
+  "certificate_sha256": "15D1138DCE077ADA624A140B3A145343D1A48305FD0847E9002869E488F19D39",
+  "source_matches_archive": true,
+  "embedded_assets": {
+    "production_semiquant_model.json": "1380D9E04D044413B42BD045E3C7370BF3D06A720695D2654598657234742279",
+    "training_support_policy.json": "D0BBC47975EF7E4BA461A3F7D492A6281E2B70DC930BCE424F398D98EC53090B"
+  },
+  "offline_permissions_verified": true,
+  "verification": {
+    "app_version": "1.5.20+38",
+    "targeted_flutter_tests": {
+      "passed": 37,
+      "scope": "Photo review, timing and specimen confirmation, optional names, encrypted history and edits, strict scan reliability, provenance, current scan workflow and capture lifecycle"
+    },
+    "full_suite_repeated_for_this_version": false,
+    "static_analysis": {
+      "result": "No issues found",
+      "exit_code": 0
+    },
+    "classifier_assets_changed": false,
+    "context_gate_change": "Specimen code is no longer required; explicit specimen confirmation, reading time, duplicate/age/source/hash checks remain. Name is optional and never authenticates a specimen.",
+    "clinical_validation_established": false,
+    "exact_apk_device_acceptance": "pending"
+  },
+  "purpose": "Frozen developer-evaluation research prototype; existing experimental classifier retained after focused audit",
+  "clinical_validation_established": false,
+  "phone_installation": "not performed for this build",
+  "pending": [
+    "Exact APK manual device evaluation",
+    "Physical-strip lot/expiry/IFU documentation",
+    "Recorded professional review and usability results",
+    "Independent outcome validation before clinical accuracy/calibration claims"
+  ]
+}

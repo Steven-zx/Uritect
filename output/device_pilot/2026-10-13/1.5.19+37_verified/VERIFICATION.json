@@ -1,0 +1,22 @@
+{
+  "app_version": "1.5.19+37",
+  "flutter_tests": {
+    "full_suite_passed": 181,
+    "full_suite_failed": 1,
+    "failure": "Outdated dashboard visual reference after requested heading change",
+    "resolved_by": "Updated and visually inspected dashboard reference; both dashboard tests passed",
+    "full_suite_repeated_after_snapshot_update": false
+  },
+  "targeted_checks": {
+    "results_screen": 33,
+    "summary_screen": 30,
+    "retake_and_navigation": 29,
+    "camera_cover_focus_labels_lifecycle": 9,
+    "updated_dashboard": 2,
+    "counts_overlap": true
+  },
+  "static_analysis": "No issues found",
+  "classifier_assets_changed": false,
+  "clinical_validation_established": false,
+  "exact_apk_device_acceptance": "pending"
+}

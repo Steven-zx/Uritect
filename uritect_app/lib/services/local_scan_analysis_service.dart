@@ -14,6 +14,7 @@ import '../models/scan_analysis_failure.dart';
 import 'training_support_policy.dart';
 import 'runtime_pad_features.dart';
 import 'photo_quality_check.dart';
+import 'pad_presence_check.dart';
 
 const List<String> _analyteOrder = [
   'Leukocytes',
@@ -174,7 +175,7 @@ class LocalScanAnalysisService {
             localContrast: detector.startsWith('local_contrast'),
             backingContrast: detector.endsWith('_backing'),
           );
-          _validateReadableCapture(extraction);
+          _validateReadableCapture(extraction, variant.image);
           if (best == null || extraction.qualityScore > best.qualityScore) {
             best = extraction;
           }
@@ -993,7 +994,10 @@ class LocalScanAnalysisService {
     return [target / r, target / g, target / b];
   }
 
-  void _validateReadableCapture(_FeatureExtraction extraction) {
+  void _validateReadableCapture(
+    _FeatureExtraction extraction,
+    img.Image image,
+  ) {
     if (extraction.featuresByAnalyte.length != _analyteOrder.length) {
       throw StateError('INVALID_IMAGE: The full ten-pad strip was not found.');
     }
@@ -1044,6 +1048,31 @@ class LocalScanAnalysisService {
       if (!roiInsideX || !roiInsideY) {
         throw StateError(
           'INVALID_IMAGE: Pad ROIs do not align with the detected strip.',
+        );
+      }
+      // Backing variants already require ten measured reagent-to-plastic
+      // regions, including pale endpoints. Background color alone cannot
+      // distinguish those legitimate pale pads on a white surface.
+      if (!PadPresenceCheck.isSupported(
+            image,
+            left: roi.left,
+            top: roi.top,
+            width: roi.width,
+            height: roi.height,
+          ) &&
+          !(extraction.variantName.endsWith('_backing') &&
+              PadPresenceCheck.hasPersistentStripEdge(
+                image,
+                left: roi.left,
+                top: roi.top,
+                width: roi.width,
+                height: roi.height,
+              ))) {
+        throw ScanAnalysisFailure(
+          code: 'PAD_BOUNDARIES_UNCLEAR',
+          guidance:
+              'A sampling box could not be confirmed inside a reagent pad. '
+              'Keep the full strip on a plain background, tap to focus, and retake.',
         );
       }
     }
@@ -1245,7 +1274,7 @@ Map<String, dynamic> _classifyVerifiedExtraction(
           _analyteOrder.length - extraction.featuresByAnalyte.length,
     ).toJson()
     ..['pipeline_version'] =
-        'android_markerless_direction_guard_v6_experimental_20261011'
+        'android_markerless_direction_guard_v7_pad_presence_20261013'
     ..['feature_space'] = 'normalized_hsv'
     ..['localization'] = 'markerless_strip_v1'
     ..['orientation'] = extraction.variantName;

@@ -1,0 +1,18 @@
+{
+  "app_version": "1.5.18+36",
+  "flutter_tests": {
+    "passed": 181,
+    "command": "flutter test --no-pub --reporter expanded",
+    "log": "flutter_tests.log"
+  },
+  "static_analysis": {
+    "result": "No issues found",
+    "exit_code": 0,
+    "log": "static_analysis.log"
+  },
+  "regression": "Background-as-first-pad reproduced before fix; correct placement or fail-closed rejection required after fix. Targeted 17 tests passed including pale and rotated strips.",
+  "classifier_assets_changed": false,
+  "new_accuracy_claim": false,
+  "phone_acceptance": "pending exact APK repeat; baseline v35 observations recorded separately",
+  "independent_clinical_validation": "not established"
+}

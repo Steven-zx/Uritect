@@ -187,7 +187,10 @@ void main() {
       );
       await tester.pumpAndSettle();
       expect(find.byType(ResultsPage), findsOneWidget);
-      expect(find.text('Retake in even lighting.'), findsOneWidget);
+      expect(
+        find.text('No readings available. Please take a new photo.'),
+        findsOneWidget,
+      );
       expect(find.text('View sampled pad regions'), findsOneWidget);
       expect(
         (tester.widget(find.byType(ResultsPage)) as ResultsPage)

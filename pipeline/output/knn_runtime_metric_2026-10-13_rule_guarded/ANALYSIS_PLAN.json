@@ -1,0 +1,507 @@
+{
+  "date": "2026-10-13",
+  "retained_images_to_recheck": 210,
+  "detector_sha256": "42cb757ae707c11fda83550dac1bed5affb74620091477b7ac4c6179db673eeb",
+  "harness_sha256": "ad3f94f8a11751e430fb53e76abf9b88d5f794909e150de003ef1fb712e1aa06",
+  "pad_presence_guard_sha256": "0ce2ffea059c297af621f336e396d43b6d19460b9ed7efbd98c52626fc3399ab",
+  "installed_classifier_sha256": "1380d9e04d044413b42bd045e3c7370bf3d06a720695d2654598657234742279",
+  "design": "Current-detector revalidation followed by nested grouped development-only comparison of runtime feature recipes and kNN metric settings. No inspected confirmation events enter tuning.",
+  "selection": "Inner-fold all-five metric and supported abnormal-rule sensitivity/specificity nonregression; macro F1 must improve. Otherwise retain the recorded baseline recipe. No permissive trade-off winner.",
+  "data_rules": "Original labels and binary data unchanged. No artificial rare specimens. Duplicate exports excluded. Conservative participant-token grouping and confirmation exclusions retained.",
+  "promotion": "All five metrics must not decrease versus the paired baseline; macro F1 must improve. Supported abnormal-rule sensitivity/specificity, whole-ten accuracy and retake coverage must not regress. No confidence threshold reduction. Runtime parity and model-bound distance support required before deployment.",
+  "clinical_validation_established": false,
+  "revalidated_geometry_failures": {
+    "Bad state": 22
+  },
+  "safe_training_pool": 77,
+  "paired_target_photos": 70,
+  "paired_target_groups": 47,
+  "original_confirmation_events_excluded": 112,
+  "conservative_identity": "Merge repeated numeric participant tokens across batches; original inspected confirmation tokens excluded throughout. Different unknown aliases remain a limitation.",
+  "configurations": [
+    {
+      "recipe": "normalized",
+      "geometry": "scaled",
+      "k": 1,
+      "metric": "euclidean"
+    },
+    {
+      "recipe": "normalized",
+      "geometry": "scaled",
+      "k": 1,
+      "metric": "manhattan"
+    },
+    {
+      "recipe": "normalized",
+      "geometry": "scaled",
+      "k": 3,
+      "metric": "euclidean"
+    },
+    {
+      "recipe": "normalized",
+      "geometry": "scaled",
+      "k": 3,
+      "metric": "manhattan"
+    },
+    {
+      "recipe": "normalized",
+      "geometry": "scaled",
+      "k": 5,
+      "metric": "euclidean"
+    },
+    {
+      "recipe": "normalized",
+      "geometry": "scaled",
+      "k": 5,
+      "metric": "manhattan"
+    },
+    {
+      "recipe": "normalized",
+      "geometry": "scaled",
+      "k": 7,
+      "metric": "euclidean"
+    },
+    {
+      "recipe": "normalized",
+      "geometry": "scaled",
+      "k": 7,
+      "metric": "manhattan"
+    },
+    {
+      "recipe": "normalized",
+      "geometry": "within_class",
+      "k": 1,
+      "metric": "euclidean"
+    },
+    {
+      "recipe": "normalized",
+      "geometry": "within_class",
+      "k": 1,
+      "metric": "manhattan"
+    },
+    {
+      "recipe": "normalized",
+      "geometry": "within_class",
+      "k": 3,
+      "metric": "euclidean"
+    },
+    {
+      "recipe": "normalized",
+      "geometry": "within_class",
+      "k": 3,
+      "metric": "manhattan"
+    },
+    {
+      "recipe": "normalized",
+      "geometry": "within_class",
+      "k": 5,
+      "metric": "euclidean"
+    },
+    {
+      "recipe": "normalized",
+      "geometry": "within_class",
+      "k": 5,
+      "metric": "manhattan"
+    },
+    {
+      "recipe": "normalized",
+      "geometry": "within_class",
+      "k": 7,
+      "metric": "euclidean"
+    },
+    {
+      "recipe": "normalized",
+      "geometry": "within_class",
+      "k": 7,
+      "metric": "manhattan"
+    },
+    {
+      "recipe": "raw",
+      "geometry": "scaled",
+      "k": 1,
+      "metric": "euclidean"
+    },
+    {
+      "recipe": "raw",
+      "geometry": "scaled",
+      "k": 1,
+      "metric": "manhattan"
+    },
+    {
+      "recipe": "raw",
+      "geometry": "scaled",
+      "k": 3,
+      "metric": "euclidean"
+    },
+    {
+      "recipe": "raw",
+      "geometry": "scaled",
+      "k": 3,
+      "metric": "manhattan"
+    },
+    {
+      "recipe": "raw",
+      "geometry": "scaled",
+      "k": 5,
+      "metric": "euclidean"
+    },
+    {
+      "recipe": "raw",
+      "geometry": "scaled",
+      "k": 5,
+      "metric": "manhattan"
+    },
+    {
+      "recipe": "raw",
+      "geometry": "scaled",
+      "k": 7,
+      "metric": "euclidean"
+    },
+    {
+      "recipe": "raw",
+      "geometry": "scaled",
+      "k": 7,
+      "metric": "manhattan"
+    },
+    {
+      "recipe": "raw",
+      "geometry": "within_class",
+      "k": 1,
+      "metric": "euclidean"
+    },
+    {
+      "recipe": "raw",
+      "geometry": "within_class",
+      "k": 1,
+      "metric": "manhattan"
+    },
+    {
+      "recipe": "raw",
+      "geometry": "within_class",
+      "k": 3,
+      "metric": "euclidean"
+    },
+    {
+      "recipe": "raw",
+      "geometry": "within_class",
+      "k": 3,
+      "metric": "manhattan"
+    },
+    {
+      "recipe": "raw",
+      "geometry": "within_class",
+      "k": 5,
+      "metric": "euclidean"
+    },
+    {
+      "recipe": "raw",
+      "geometry": "within_class",
+      "k": 5,
+      "metric": "manhattan"
+    },
+    {
+      "recipe": "raw",
+      "geometry": "within_class",
+      "k": 7,
+      "metric": "euclidean"
+    },
+    {
+      "recipe": "raw",
+      "geometry": "within_class",
+      "k": 7,
+      "metric": "manhattan"
+    },
+    {
+      "recipe": "normalized_hs",
+      "geometry": "scaled",
+      "k": 1,
+      "metric": "euclidean"
+    },
+    {
+      "recipe": "normalized_hs",
+      "geometry": "scaled",
+      "k": 1,
+      "metric": "manhattan"
+    },
+    {
+      "recipe": "normalized_hs",
+      "geometry": "scaled",
+      "k": 3,
+      "metric": "euclidean"
+    },
+    {
+      "recipe": "normalized_hs",
+      "geometry": "scaled",
+      "k": 3,
+      "metric": "manhattan"
+    },
+    {
+      "recipe": "normalized_hs",
+      "geometry": "scaled",
+      "k": 5,
+      "metric": "euclidean"
+    },
+    {
+      "recipe": "normalized_hs",
+      "geometry": "scaled",
+      "k": 5,
+      "metric": "manhattan"
+    },
+    {
+      "recipe": "normalized_hs",
+      "geometry": "scaled",
+      "k": 7,
+      "metric": "euclidean"
+    },
+    {
+      "recipe": "normalized_hs",
+      "geometry": "scaled",
+      "k": 7,
+      "metric": "manhattan"
+    },
+    {
+      "recipe": "normalized_hs",
+      "geometry": "within_class",
+      "k": 1,
+      "metric": "euclidean"
+    },
+    {
+      "recipe": "normalized_hs",
+      "geometry": "within_class",
+      "k": 1,
+      "metric": "manhattan"
+    },
+    {
+      "recipe": "normalized_hs",
+      "geometry": "within_class",
+      "k": 3,
+      "metric": "euclidean"
+    },
+    {
+      "recipe": "normalized_hs",
+      "geometry": "within_class",
+      "k": 3,
+      "metric": "manhattan"
+    },
+    {
+      "recipe": "normalized_hs",
+      "geometry": "within_class",
+      "k": 5,
+      "metric": "euclidean"
+    },
+    {
+      "recipe": "normalized_hs",
+      "geometry": "within_class",
+      "k": 5,
+      "metric": "manhattan"
+    },
+    {
+      "recipe": "normalized_hs",
+      "geometry": "within_class",
+      "k": 7,
+      "metric": "euclidean"
+    },
+    {
+      "recipe": "normalized_hs",
+      "geometry": "within_class",
+      "k": 7,
+      "metric": "manhattan"
+    },
+    {
+      "recipe": "raw_hs",
+      "geometry": "scaled",
+      "k": 1,
+      "metric": "euclidean"
+    },
+    {
+      "recipe": "raw_hs",
+      "geometry": "scaled",
+      "k": 1,
+      "metric": "manhattan"
+    },
+    {
+      "recipe": "raw_hs",
+      "geometry": "scaled",
+      "k": 3,
+      "metric": "euclidean"
+    },
+    {
+      "recipe": "raw_hs",
+      "geometry": "scaled",
+      "k": 3,
+      "metric": "manhattan"
+    },
+    {
+      "recipe": "raw_hs",
+      "geometry": "scaled",
+      "k": 5,
+      "metric": "euclidean"
+    },
+    {
+      "recipe": "raw_hs",
+      "geometry": "scaled",
+      "k": 5,
+      "metric": "manhattan"
+    },
+    {
+      "recipe": "raw_hs",
+      "geometry": "scaled",
+      "k": 7,
+      "metric": "euclidean"
+    },
+    {
+      "recipe": "raw_hs",
+      "geometry": "scaled",
+      "k": 7,
+      "metric": "manhattan"
+    },
+    {
+      "recipe": "raw_hs",
+      "geometry": "within_class",
+      "k": 1,
+      "metric": "euclidean"
+    },
+    {
+      "recipe": "raw_hs",
+      "geometry": "within_class",
+      "k": 1,
+      "metric": "manhattan"
+    },
+    {
+      "recipe": "raw_hs",
+      "geometry": "within_class",
+      "k": 3,
+      "metric": "euclidean"
+    },
+    {
+      "recipe": "raw_hs",
+      "geometry": "within_class",
+      "k": 3,
+      "metric": "manhattan"
+    },
+    {
+      "recipe": "raw_hs",
+      "geometry": "within_class",
+      "k": 5,
+      "metric": "euclidean"
+    },
+    {
+      "recipe": "raw_hs",
+      "geometry": "within_class",
+      "k": 5,
+      "metric": "manhattan"
+    },
+    {
+      "recipe": "raw_hs",
+      "geometry": "within_class",
+      "k": 7,
+      "metric": "euclidean"
+    },
+    {
+      "recipe": "raw_hs",
+      "geometry": "within_class",
+      "k": 7,
+      "metric": "manhattan"
+    },
+    {
+      "recipe": "joined",
+      "geometry": "scaled",
+      "k": 1,
+      "metric": "euclidean"
+    },
+    {
+      "recipe": "joined",
+      "geometry": "scaled",
+      "k": 1,
+      "metric": "manhattan"
+    },
+    {
+      "recipe": "joined",
+      "geometry": "scaled",
+      "k": 3,
+      "metric": "euclidean"
+    },
+    {
+      "recipe": "joined",
+      "geometry": "scaled",
+      "k": 3,
+      "metric": "manhattan"
+    },
+    {
+      "recipe": "joined",
+      "geometry": "scaled",
+      "k": 5,
+      "metric": "euclidean"
+    },
+    {
+      "recipe": "joined",
+      "geometry": "scaled",
+      "k": 5,
+      "metric": "manhattan"
+    },
+    {
+      "recipe": "joined",
+      "geometry": "scaled",
+      "k": 7,
+      "metric": "euclidean"
+    },
+    {
+      "recipe": "joined",
+      "geometry": "scaled",
+      "k": 7,
+      "metric": "manhattan"
+    },
+    {
+      "recipe": "joined",
+      "geometry": "within_class",
+      "k": 1,
+      "metric": "euclidean"
+    },
+    {
+      "recipe": "joined",
+      "geometry": "within_class",
+      "k": 1,
+      "metric": "manhattan"
+    },
+    {
+      "recipe": "joined",
+      "geometry": "within_class",
+      "k": 3,
+      "metric": "euclidean"
+    },
+    {
+      "recipe": "joined",
+      "geometry": "within_class",
+      "k": 3,
+      "metric": "manhattan"
+    },
+    {
+      "recipe": "joined",
+      "geometry": "within_class",
+      "k": 5,
+      "metric": "euclidean"
+    },
+    {
+      "recipe": "joined",
+      "geometry": "within_class",
+      "k": 5,
+      "metric": "manhattan"
+    },
+    {
+      "recipe": "joined",
+      "geometry": "within_class",
+      "k": 7,
+      "metric": "euclidean"
+    },
+    {
+      "recipe": "joined",
+      "geometry": "within_class",
+      "k": 7,
+      "metric": "manhattan"
+    }
+  ],
+  "outer_folds": 3,
+  "inner_folds": 3,
+  "reason_for_followup": "First nested development comparison increased pooled accuracy but reduced all-ten accuracy and abnormal-rule specificity. This is another inspected development experiment, not final-test confirmation.",
+  "previous_results_sha256": "e5d2d64ad95cfe5da5701b6dd594db0e75ec3a11be3bddd87795e6b49d77b1cd"
+}

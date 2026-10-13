@@ -1,0 +1,15 @@
+{
+  "date": "2026-10-13",
+  "device_model": "RMX3933",
+  "android_version": "16",
+  "connection": "192.168.0.216:38329",
+  "package": "ph.edu.wvsu.uritect",
+  "version_name": "1.5.20",
+  "version_code": 38,
+  "apk_sha256": "A6501BA7931B4D94F3D9199A911C5946DF86F298CB737777419E3AFBBAB8A4EE",
+  "adb_install_result": "Success",
+  "in_place_update": true,
+  "app_data_clear_or_uninstall_performed": false,
+  "launch": "MainActivity brought to foreground",
+  "manual_scan_acceptance": "pending"
+}

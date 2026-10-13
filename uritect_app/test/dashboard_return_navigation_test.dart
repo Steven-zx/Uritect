@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:uritect_app/models/clinical_symptoms.dart';
 import 'package:uritect_app/models/dipstick_results_data.dart';
 import 'package:uritect_app/models/scan_model.dart';
+import 'package:uritect_app/models/scan_analysis_failure.dart';
 import 'package:uritect_app/pages/analyzing_page.dart';
 import 'package:uritect_app/pages/overall_results_page.dart';
 import 'package:uritect_app/pages/results_page.dart';
@@ -13,14 +14,19 @@ import 'package:uritect_app/services/scan_analysis_service.dart';
 import 'package:uritect_app/widgets/dipstick_results_table.dart';
 
 class InvalidAnalysis extends ScanAnalysisService {
-  const InvalidAnalysis();
+  final int? padsDetected;
+  const InvalidAnalysis({this.padsDetected});
   @override
   Future<ScanResult> analyze({
     required String imagePath,
     void Function(double, String)? onProgress,
     void Function(ScanLocalization)? onLocalization,
   }) async {
-    throw StateError('INVALID_IMAGE: no strip');
+    throw ScanAnalysisFailure(
+      code: padsDetected == 10 ? 'LOW_CONFIDENCE' : 'STRIP_NOT_CONFIRMED',
+      guidance: 'Retake the photo.',
+      padsDetected: padsDetected,
+    );
   }
 }
 
@@ -43,9 +49,11 @@ void main() {
         await tester.pumpAndSettle();
         navigator.currentState!.push(
           MaterialPageRoute<void>(
-            builder: (_) => const AnalyzingPage(
+            builder: (_) => AnalyzingPage(
               imagePath: 'synthetic.png',
-              analysisService: InvalidAnalysis(),
+              analysisService: InvalidAnalysis(
+                padsDetected: fromOverall ? 10 : null,
+              ),
             ),
           ),
         );

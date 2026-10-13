@@ -1,0 +1,21 @@
+{
+  "installed_classifier_unchanged": true,
+  "protected_files_unchanged": 201,
+  "runtime_photos_checked": 210,
+  "runtime_geometry_passed": 188,
+  "experimental_guard_tests_passed": 4,
+  "unit_test_command": "python -m unittest discover -s pipeline -p test_runtime_metric_knn.py",
+  "source_hashes": {
+    "prepare_runtime_metric_experiment.py": "6a060c76f9de5da4de7881bfb289955cbef3e218a922e23ecd742ab8da30ca8d",
+    "evaluate_runtime_metric_knn.py": "f358e259d61e19a419c9ed6cab4caf108fab187a24844b2b8422144ce919777b",
+    "test_runtime_metric_knn.py": "c91a6c119f51401a6318861cea8f8b48ef3dfc0b3606ee95c916841bf16d963f"
+  },
+  "environment": {
+    "python": "3.12.1",
+    "numpy": "2.4.3",
+    "sklearn": "1.8.0"
+  },
+  "confirmation_set_reused": false,
+  "clinical_validation_established": false,
+  "candidate_promoted": false
+}

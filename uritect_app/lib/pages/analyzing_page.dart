@@ -126,8 +126,7 @@ class _AnalyzingPageState extends State<AnalyzingPage> {
                 ).copyWith(
                   status: 'invalid',
                   riskBucket: 'Unavailable',
-                  modelVersion:
-                      'production_semiquant_knn_markerless_roi_topfix_v3_20260908',
+                  modelVersion: 'not_evaluated',
                   padsDetected: failure.padsDetected,
                   padsUnavailable: 10,
                   rejectionCode: failure.code,

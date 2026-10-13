@@ -9,6 +9,7 @@ class DipstickResultsTable extends StatelessWidget {
   final double requiredConfidence;
   final double? secondsAfterDipping;
   final bool scanVerified;
+  final bool showDetails;
   const DipstickResultsTable({
     super.key,
     required this.rows,
@@ -16,6 +17,7 @@ class DipstickResultsTable extends StatelessWidget {
     this.requiredConfidence = .55,
     this.secondsAfterDipping,
     this.scanVerified = false,
+    this.showDetails = true,
   });
   @override
   Widget build(BuildContext context) => Container(
@@ -45,6 +47,36 @@ class DipstickResultsTable extends StatelessWidget {
     ),
   );
   Widget _row(DipstickResultRow row) {
+    if (!showDetails) {
+      final value = row.result.trim();
+      final result =
+          value.isEmpty ||
+              ['unavailable', 'no reading'].contains(value.toLowerCase())
+          ? 'No reading'
+          : value.toLowerCase() == 'neg'
+          ? 'Negative'
+          : value;
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(child: Text(row.name)),
+            const SizedBox(width: 12),
+            Flexible(
+              child: Text(
+                result,
+                textAlign: TextAlign.right,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.primaryDark,
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
     final confidence = analyteConfidences[row.name];
     final timing = StripReadingSchedule.reportedTimeMatches(
       row.code,

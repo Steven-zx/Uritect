@@ -12,7 +12,6 @@ import 'symptom_checklist_page.dart';
 import 'dashboard_navigation.dart';
 import 'protected_history_page.dart';
 import '../widgets/scan_context_notice.dart';
-import '../widgets/research_details.dart';
 import '../services/scan_history_service.dart';
 
 class OverallResultsPage extends StatelessWidget {
@@ -157,8 +156,6 @@ class OverallResultsPage extends StatelessWidget {
                   onPressed: onEditPatientName,
                 ),
               ),
-            _screeningStatus(context, fusionResult, renalResult),
-            const SizedBox(height: 12),
             _riskCard(context, fusionResult),
             if (clinicalChecklistResult.hasIncompleteSafetyReview) ...[
               const SizedBox(height: 12),
@@ -251,65 +248,8 @@ class OverallResultsPage extends StatelessWidget {
             ),
             _checklistAnswersCard(context),
             const DatasetLevelLegend(),
-            ResearchDetails(
-              scan: scanResult,
-              renal: renalResult,
-              estimate:
-                  (!scanResult.modelDirectionReviewed ||
-                      !scanResult.stripDirectionVerified)
-                  ? fusionResult.utiEstimate
-                  : savedUtiEstimate ?? fusionResult.utiEstimate,
-            ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _screeningStatus(
-    BuildContext context,
-    ScreeningFusionResult fusion,
-    RenalFollowupResult renal,
-  ) {
-    final complete =
-        fusion.utiEstimate.isCalculable &&
-        renal.scanValid &&
-        !clinicalChecklistResult.hasIncompleteSafetyReview;
-    final someUncertain = scanResult.rows.any(
-      (row) =>
-          (scanResult.analyteConfidences[row.name] ?? 0) <
-              scanResult.requiredAnalyteConfidence ||
-          !scanResult.hasMatchingReportedReadingTime(row.code),
-    );
-    final title = !complete
-        ? 'Unable to complete screening'
-        : someUncertain
-        ? 'Some results need review'
-        : 'Screening completed';
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: const Color(0xFFEAF7F9),
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(title, style: Theme.of(context).textTheme.titleMedium),
-          const SizedBox(height: 6),
-          Text(
-            !complete
-                ? 'Some required readings or health information are unavailable. Follow the advice below.'
-                : someUncertain
-                ? 'Some information is available; uncertain readings are not confirmed findings.'
-                : 'Required information has been reviewed. Follow-up advice does not confirm or rule out disease.',
-          ),
-          const SizedBox(height: 6),
-          const Text(
-            'Research prototype · Not a diagnosis',
-            style: TextStyle(fontSize: 12),
-          ),
-        ],
       ),
     );
   }

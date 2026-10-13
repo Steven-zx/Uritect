@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:uritect_app/models/clinical_symptoms.dart';
 import 'package:uritect_app/models/scan_model.dart';
+import 'package:uritect_app/models/scan_provenance.dart';
 import 'package:uritect_app/models/renal_followup.dart';
 import 'package:uritect_app/models/screening_fusion.dart';
 import 'package:uritect_app/services/pending_scan_cipher.dart';
@@ -116,6 +117,29 @@ void main() {
         fixture.baseScan().rows.map((r) => r.result),
       );
       expect(await Directory('${d.path}/pending').list().isEmpty, true);
+    },
+  );
+  test(
+    'optional capture name is sealed and later name edits stay authoritative',
+    () async {
+      final base = fixture.baseScan();
+      final provenance = ScanProvenance.fromJson(
+        base.provenance!.toJson()..['patientName'] = 'Test Patient',
+      );
+      final scan = base.copyWith(provenance: provenance);
+      await queue(scan: scan);
+      expect(cipher.prompts, 0);
+      expect(
+        utf8.decode(
+          await (await envelope()).readAsBytes(),
+          allowMalformed: true,
+        ),
+        isNot(contains('Test Patient')),
+      );
+      expect((await service.loadRecords()).single.patientName, 'Test Patient');
+      await service.updatePatientName(scan.id, null);
+      await queue(scan: scan);
+      expect((await service.loadRecords()).single.patientName, isNull);
     },
   );
   test(

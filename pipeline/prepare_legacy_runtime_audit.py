@@ -115,7 +115,7 @@ def prepare(out, limit=0, only_group=None, crop_fallback=False, context_crop=Fal
     source=ROOT/'uritect_app/lib/services/local_scan_analysis_service.dart'
     text=source.read_text(encoding='utf-8')
     text=text.replace("import '../models/", "import 'package:uritect_app/models/")
-    for name in ['training_support_policy','runtime_pad_features','photo_quality_check']:
+    for name in ['training_support_policy','runtime_pad_features','photo_quality_check','pad_presence_check']:
         text=text.replace(f"import '{name}.dart';",f"import 'package:uritect_app/services/{name}.dart';")
     text="import 'package:flutter_test/flutter_test.dart';\nimport 'package:crypto/crypto.dart' as crypto;\n"+text+WRAPPER
     harness=ROOT/'tmp'/(f'legacy_runtime_{kind}_detector_test.dart' if crop_fallback else 'legacy_runtime_detector_test.dart')
