@@ -1,0 +1,9 @@
+{
+  "photos": 184,
+  "bounds": "Independent label-free first-pass physical ROI envelope, six pad widths of genuine lateral context, two tip gaps and six handle gaps; crop at original resolution before runtime resizing.",
+  "confirmation_groups_excluded": true,
+  "originals_untouched": true,
+  "labels_unchanged": true,
+  "detector_sha256": "42cb757ae707c11fda83550dac1bed5affb74620091477b7ac4c6179db673eeb",
+  "harness_sha256": "ad3f94f8a11751e430fb53e76abf9b88d5f794909e150de003ef1fb712e1aa06"
+}

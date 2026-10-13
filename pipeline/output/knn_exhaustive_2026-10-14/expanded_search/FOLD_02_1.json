@@ -1,0 +1,356 @@
+{
+  "fold": 1,
+  "selected": {
+    "config": {
+      "recipe": "backing_spatial_lab_1",
+      "geometry": "within_class",
+      "metric": "manhattan",
+      "augmentation": true,
+      "k": 11,
+      "weights": "uniform",
+      "group_balanced": false,
+      "prior_gamma": 0.25
+    },
+    "metrics": {
+      "accuracy": 0.9680851063829787,
+      "macro_f1_supported_reference_classes": 0.9532105525136885,
+      "macro_sensitivity": 0.9455316373124592,
+      "macro_specificity": 0.9782126549249837,
+      "cohens_kappa": 0.9064366290643663,
+      "reference_label_thresholds": {
+        "analytical_above_baseline_category": {
+          "sensitivity": 0.9047619047619048,
+          "specificity": 0.9863013698630136
+        }
+      }
+    },
+    "acceptance": {
+      "accepted_count": 92,
+      "accepted_accuracy": 0.967391304347826
+    },
+    "objective": 0.9556382712748427
+  },
+  "diagnostic": {
+    "tested": 19440,
+    "eligible": 2341,
+    "baseline": {
+      "accuracy": 0.776595744680851,
+      "macro_f1_supported_reference_classes": 0.5458937198067633,
+      "macro_sensitivity": 0.550880626223092,
+      "macro_specificity": 0.8203522504892368,
+      "cohens_kappa": 0.13648293963254582,
+      "reference_label_thresholds": {
+        "analytical_above_baseline_category": {
+          "sensitivity": 0.14285714285714285,
+          "specificity": 0.958904109589041
+        }
+      }
+    },
+    "baseline_acceptance": {
+      "accepted_count": 89,
+      "accepted_accuracy": 0.7865168539325843
+    },
+    "top_diagnostic": [
+      {
+        "config": {
+          "recipe": "backing_spatial_lab_1",
+          "geometry": "within_class",
+          "metric": "manhattan",
+          "augmentation": true,
+          "k": 11,
+          "weights": "uniform",
+          "group_balanced": false,
+          "prior_gamma": 0.25
+        },
+        "metrics": {
+          "accuracy": 0.9680851063829787,
+          "macro_f1_supported_reference_classes": 0.9532105525136885,
+          "macro_sensitivity": 0.9455316373124592,
+          "macro_specificity": 0.9782126549249837,
+          "cohens_kappa": 0.9064366290643663,
+          "reference_label_thresholds": {
+            "analytical_above_baseline_category": {
+              "sensitivity": 0.9047619047619048,
+              "specificity": 0.9863013698630136
+            }
+          }
+        },
+        "acceptance": {
+          "accepted_count": 92,
+          "accepted_accuracy": 0.967391304347826
+        },
+        "objective": 0.9556382712748427
+      },
+      {
+        "config": {
+          "recipe": "backing_spatial_lab_1",
+          "geometry": "within_class",
+          "metric": "manhattan",
+          "augmentation": true,
+          "k": 11,
+          "weights": "uniform",
+          "group_balanced": false,
+          "prior_gamma": 0.5
+        },
+        "metrics": {
+          "accuracy": 0.9680851063829787,
+          "macro_f1_supported_reference_classes": 0.9532105525136885,
+          "macro_sensitivity": 0.9455316373124592,
+          "macro_specificity": 0.9782126549249837,
+          "cohens_kappa": 0.9064366290643663,
+          "reference_label_thresholds": {
+            "analytical_above_baseline_category": {
+              "sensitivity": 0.9047619047619048,
+              "specificity": 0.9863013698630136
+            }
+          }
+        },
+        "acceptance": {
+          "accepted_count": 93,
+          "accepted_accuracy": 0.967741935483871
+        },
+        "objective": 0.9556382712748427
+      },
+      {
+        "config": {
+          "recipe": "backing_spatial_lab_1",
+          "geometry": "within_class",
+          "metric": "manhattan",
+          "augmentation": true,
+          "k": 11,
+          "weights": "distance",
+          "group_balanced": false,
+          "prior_gamma": 0.5
+        },
+        "metrics": {
+          "accuracy": 0.9680851063829787,
+          "macro_f1_supported_reference_classes": 0.9532105525136885,
+          "macro_sensitivity": 0.9455316373124592,
+          "macro_specificity": 0.9782126549249837,
+          "cohens_kappa": 0.9064366290643663,
+          "reference_label_thresholds": {
+            "analytical_above_baseline_category": {
+              "sensitivity": 0.9047619047619048,
+              "specificity": 0.9863013698630136
+            }
+          }
+        },
+        "acceptance": {
+          "accepted_count": 93,
+          "accepted_accuracy": 0.967741935483871
+        },
+        "objective": 0.9556382712748427
+      },
+      {
+        "config": {
+          "recipe": "backing_spatial_lab_1",
+          "geometry": "within_class",
+          "metric": "manhattan",
+          "augmentation": true,
+          "k": 7,
+          "weights": "distance",
+          "group_balanced": true,
+          "prior_gamma": 0.25
+        },
+        "metrics": {
+          "accuracy": 0.9680851063829787,
+          "macro_f1_supported_reference_classes": 0.9514713474445018,
+          "macro_sensitivity": 0.9285714285714286,
+          "macro_specificity": 0.9714285714285715,
+          "cohens_kappa": 0.9030927835051547,
+          "reference_label_thresholds": {
+            "analytical_above_baseline_category": {
+              "sensitivity": 0.8571428571428571,
+              "specificity": 1.0
+            }
+          }
+        },
+        "acceptance": {
+          "accepted_count": 91,
+          "accepted_accuracy": 0.967032967032967
+        },
+        "objective": 0.9490891580217584
+      },
+      {
+        "config": {
+          "recipe": "backing_spatial_lab_1",
+          "geometry": "within_class",
+          "metric": "manhattan",
+          "augmentation": true,
+          "k": 11,
+          "weights": "distance",
+          "group_balanced": false,
+          "prior_gamma": 0.25
+        },
+        "metrics": {
+          "accuracy": 0.9680851063829787,
+          "macro_f1_supported_reference_classes": 0.9514713474445018,
+          "macro_sensitivity": 0.9285714285714286,
+          "macro_specificity": 0.9714285714285715,
+          "cohens_kappa": 0.9030927835051547,
+          "reference_label_thresholds": {
+            "analytical_above_baseline_category": {
+              "sensitivity": 0.8571428571428571,
+              "specificity": 1.0
+            }
+          }
+        },
+        "acceptance": {
+          "accepted_count": 91,
+          "accepted_accuracy": 0.978021978021978
+        },
+        "objective": 0.9490891580217584
+      },
+      {
+        "config": {
+          "recipe": "backing_spatial_lab_1",
+          "geometry": "within_class",
+          "metric": "manhattan",
+          "augmentation": false,
+          "k": 3,
+          "weights": "uniform",
+          "group_balanced": false,
+          "prior_gamma": 0.5
+        },
+        "metrics": {
+          "accuracy": 0.9574468085106383,
+          "macro_f1_supported_reference_classes": 0.9364864864864866,
+          "macro_sensitivity": 0.9217221135029354,
+          "macro_specificity": 0.9686888454011742,
+          "cohens_kappa": 0.87305874409183,
+          "reference_label_thresholds": {
+            "analytical_above_baseline_category": {
+              "sensitivity": 0.8571428571428571,
+              "specificity": 0.9863013698630136
+            }
+          }
+        },
+        "acceptance": {
+          "accepted_count": 85,
+          "accepted_accuracy": 0.9647058823529412
+        },
+        "objective": 0.9384214587865128
+      },
+      {
+        "config": {
+          "recipe": "backing_spatial_lab_1",
+          "geometry": "within_class",
+          "metric": "manhattan",
+          "augmentation": false,
+          "k": 3,
+          "weights": "uniform",
+          "group_balanced": true,
+          "prior_gamma": 0.5
+        },
+        "metrics": {
+          "accuracy": 0.9574468085106383,
+          "macro_f1_supported_reference_classes": 0.9364864864864866,
+          "macro_sensitivity": 0.9217221135029354,
+          "macro_specificity": 0.9686888454011742,
+          "cohens_kappa": 0.87305874409183,
+          "reference_label_thresholds": {
+            "analytical_above_baseline_category": {
+              "sensitivity": 0.8571428571428571,
+              "specificity": 0.9863013698630136
+            }
+          }
+        },
+        "acceptance": {
+          "accepted_count": 85,
+          "accepted_accuracy": 0.9647058823529412
+        },
+        "objective": 0.9384214587865128
+      },
+      {
+        "config": {
+          "recipe": "backing_spatial_lab_1",
+          "geometry": "within_class",
+          "metric": "manhattan",
+          "augmentation": false,
+          "k": 3,
+          "weights": "distance",
+          "group_balanced": false,
+          "prior_gamma": 0.5
+        },
+        "metrics": {
+          "accuracy": 0.9574468085106383,
+          "macro_f1_supported_reference_classes": 0.9364864864864866,
+          "macro_sensitivity": 0.9217221135029354,
+          "macro_specificity": 0.9686888454011742,
+          "cohens_kappa": 0.87305874409183,
+          "reference_label_thresholds": {
+            "analytical_above_baseline_category": {
+              "sensitivity": 0.8571428571428571,
+              "specificity": 0.9863013698630136
+            }
+          }
+        },
+        "acceptance": {
+          "accepted_count": 88,
+          "accepted_accuracy": 0.9659090909090909
+        },
+        "objective": 0.9384214587865128
+      },
+      {
+        "config": {
+          "recipe": "backing_spatial_lab_1",
+          "geometry": "within_class",
+          "metric": "manhattan",
+          "augmentation": false,
+          "k": 3,
+          "weights": "distance",
+          "group_balanced": true,
+          "prior_gamma": 0.5
+        },
+        "metrics": {
+          "accuracy": 0.9574468085106383,
+          "macro_f1_supported_reference_classes": 0.9364864864864866,
+          "macro_sensitivity": 0.9217221135029354,
+          "macro_specificity": 0.9686888454011742,
+          "cohens_kappa": 0.87305874409183,
+          "reference_label_thresholds": {
+            "analytical_above_baseline_category": {
+              "sensitivity": 0.8571428571428571,
+              "specificity": 0.9863013698630136
+            }
+          }
+        },
+        "acceptance": {
+          "accepted_count": 88,
+          "accepted_accuracy": 0.9659090909090909
+        },
+        "objective": 0.9384214587865128
+      },
+      {
+        "config": {
+          "recipe": "backing_spatial_lab_1",
+          "geometry": "within_class",
+          "metric": "manhattan",
+          "augmentation": true,
+          "k": 7,
+          "weights": "uniform",
+          "group_balanced": true,
+          "prior_gamma": 0.25
+        },
+        "metrics": {
+          "accuracy": 0.9574468085106383,
+          "macro_f1_supported_reference_classes": 0.9364864864864866,
+          "macro_sensitivity": 0.9217221135029354,
+          "macro_specificity": 0.9686888454011742,
+          "cohens_kappa": 0.87305874409183,
+          "reference_label_thresholds": {
+            "analytical_above_baseline_category": {
+              "sensitivity": 0.8571428571428571,
+              "specificity": 0.9863013698630136
+            }
+          }
+        },
+        "acceptance": {
+          "accepted_count": 93,
+          "accepted_accuracy": 0.956989247311828
+        },
+        "objective": 0.9384214587865128
+      }
+    ]
+  }
+}

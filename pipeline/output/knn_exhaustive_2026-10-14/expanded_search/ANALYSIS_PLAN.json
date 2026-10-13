@@ -1,0 +1,17 @@
+{
+  "feature_cache_sha256": "8d9e46fe702652aa110e7954b7fdd8b4ae87bea6ec77eccb51cb3ecbb6f57016",
+  "search_script_sha256": "752f21abe452053cf95ff0c772ef1b1b29eb99e94396d800725773d493567bba",
+  "development_pool": 140,
+  "paired_validation_photos": 130,
+  "validation_groups": 66,
+  "outer_folds": 3,
+  "inner_folds": 3,
+  "settings_per_analyte_per_outer_fold": 19440,
+  "design": "Nested grouped development only. Scaling, covariance metric, augmentation and prior/group weighting use training partitions only. Actual known confirmation identities excluded throughout.",
+  "selection": "All five inner-CV metrics, supported clinical-threshold sensitivity/specificity and accepted-reading accuracy/coverage must not regress; macro F1 must improve. Otherwise retain baseline.",
+  "absolute_support": "Maximum leave-one-inferred-group-out nearest training distance, recomputed within each training fold; augmented replicas cannot support their own source group.",
+  "confidence_threshold": 0.55,
+  "installed_model_sha256": "1380d9e04d044413b42bd045e3c7370bf3d06a720695d2654598657234742279",
+  "reference_labels_changed": false,
+  "clinical_validation_established": false
+}

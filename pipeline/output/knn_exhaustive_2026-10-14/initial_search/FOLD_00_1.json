@@ -1,0 +1,452 @@
+{
+  "fold": 1,
+  "selected": {
+    "config": {
+      "recipe": "backing_spatial_lab_1",
+      "geometry": "within_class",
+      "metric": "manhattan",
+      "augmentation": false,
+      "k": 11,
+      "weights": "distance",
+      "group_balanced": true,
+      "prior_gamma": 0.0
+    },
+    "metrics": {
+      "accuracy": 0.6153846153846154,
+      "macro_f1_supported_reference_classes": 0.4329979879275654,
+      "macro_sensitivity": 0.4607843137254902,
+      "macro_specificity": 0.8502857142857142,
+      "cohens_kappa": 0.275766016713092,
+      "reference_label_thresholds": {
+        "female_le_small_or_higher": {
+          "sensitivity": 0.25,
+          "specificity": 0.9545454545454546
+        },
+        "male_le_trace_or_higher": {
+          "sensitivity": 0.32,
+          "specificity": 1.0
+        },
+        "analytical_any_nonnegative": {
+          "sensitivity": 0.32,
+          "specificity": 1.0
+        }
+      }
+    },
+    "acceptance": {
+      "accepted_count": 41,
+      "accepted_accuracy": 0.6341463414634146
+    },
+    "objective": 0.5104206524213153
+  },
+  "diagnostic": {
+    "tested": 19440,
+    "eligible": 14,
+    "baseline": {
+      "accuracy": 0.5192307692307693,
+      "macro_f1_supported_reference_classes": 0.18,
+      "macro_sensitivity": 0.25,
+      "macro_specificity": 0.8125714285714285,
+      "cohens_kappa": 0.051094890510948995,
+      "reference_label_thresholds": {
+        "female_le_small_or_higher": {
+          "sensitivity": 0.0,
+          "specificity": 0.9545454545454546
+        },
+        "male_le_trace_or_higher": {
+          "sensitivity": 0.16,
+          "specificity": 1.0
+        },
+        "analytical_any_nonnegative": {
+          "sensitivity": 0.16,
+          "specificity": 1.0
+        }
+      }
+    },
+    "baseline_acceptance": {
+      "accepted_count": 41,
+      "accepted_accuracy": 0.6341463414634146
+    },
+    "top_diagnostic": [
+      {
+        "config": {
+          "recipe": "raw_lab_0.45",
+          "geometry": "within_class",
+          "metric": "manhattan",
+          "augmentation": true,
+          "k": 7,
+          "weights": "distance",
+          "group_balanced": true,
+          "prior_gamma": 0.0
+        },
+        "metrics": {
+          "accuracy": 0.7692307692307693,
+          "macro_f1_supported_reference_classes": 0.7132996632996632,
+          "macro_sensitivity": 0.7750544662309368,
+          "macro_specificity": 0.9202236024844719,
+          "cohens_kappa": 0.6112149532710281,
+          "reference_label_thresholds": {
+            "female_le_small_or_higher": {
+              "sensitivity": 0.75,
+              "specificity": 0.9318181818181818
+            },
+            "male_le_trace_or_higher": {
+              "sensitivity": 0.72,
+              "specificity": 0.9629629629629629
+            },
+            "analytical_any_nonnegative": {
+              "sensitivity": 0.72,
+              "specificity": 0.9629629629629629
+            }
+          }
+        },
+        "acceptance": {
+          "accepted_count": 45,
+          "accepted_accuracy": 0.7777777777777778
+        },
+        "objective": 0.7609081639871921
+      },
+      {
+        "config": {
+          "recipe": "raw_lab_quantiles_1",
+          "geometry": "within_class",
+          "metric": "manhattan",
+          "augmentation": true,
+          "k": 11,
+          "weights": "distance",
+          "group_balanced": false,
+          "prior_gamma": 0.5
+        },
+        "metrics": {
+          "accuracy": 0.75,
+          "macro_f1_supported_reference_classes": 0.6937439525882921,
+          "macro_sensitivity": 0.7766884531590413,
+          "macro_specificity": 0.926385093167702,
+          "cohens_kappa": 0.6016499705362405,
+          "reference_label_thresholds": {
+            "female_le_small_or_higher": {
+              "sensitivity": 0.75,
+              "specificity": 0.8863636363636364
+            },
+            "male_le_trace_or_higher": {
+              "sensitivity": 0.88,
+              "specificity": 0.8518518518518519
+            },
+            "analytical_any_nonnegative": {
+              "sensitivity": 0.88,
+              "specificity": 0.8518518518518519
+            }
+          }
+        },
+        "acceptance": {
+          "accepted_count": 42,
+          "accepted_accuracy": 0.7619047619047619
+        },
+        "objective": 0.7503298239292141
+      },
+      {
+        "config": {
+          "recipe": "raw_lab_quantiles_0.7",
+          "geometry": "within_class",
+          "metric": "manhattan",
+          "augmentation": true,
+          "k": 7,
+          "weights": "uniform",
+          "group_balanced": false,
+          "prior_gamma": 0.5
+        },
+        "metrics": {
+          "accuracy": 0.7307692307692307,
+          "macro_f1_supported_reference_classes": 0.7037037037037036,
+          "macro_sensitivity": 0.7674291938997821,
+          "macro_specificity": 0.9133664596273292,
+          "cohens_kappa": 0.5627627627627626,
+          "reference_label_thresholds": {
+            "female_le_small_or_higher": {
+              "sensitivity": 0.75,
+              "specificity": 0.9318181818181818
+            },
+            "male_le_trace_or_higher": {
+              "sensitivity": 0.8,
+              "specificity": 0.8148148148148148
+            },
+            "analytical_any_nonnegative": {
+              "sensitivity": 0.8,
+              "specificity": 0.8148148148148148
+            }
+          }
+        },
+        "acceptance": {
+          "accepted_count": 49,
+          "accepted_accuracy": 0.7551020408163265
+        },
+        "objective": 0.7478474554147188
+      },
+      {
+        "config": {
+          "recipe": "raw_lab_0.7",
+          "geometry": "within_class",
+          "metric": "manhattan",
+          "augmentation": true,
+          "k": 5,
+          "weights": "uniform",
+          "group_balanced": true,
+          "prior_gamma": 0.25
+        },
+        "metrics": {
+          "accuracy": 0.75,
+          "macro_f1_supported_reference_classes": 0.6905626134301269,
+          "macro_sensitivity": 0.7657952069716776,
+          "macro_specificity": 0.920447204968944,
+          "cohens_kappa": 0.5893074119076549,
+          "reference_label_thresholds": {
+            "female_le_small_or_higher": {
+              "sensitivity": 0.75,
+              "specificity": 0.9090909090909091
+            },
+            "male_le_trace_or_higher": {
+              "sensitivity": 0.8,
+              "specificity": 0.9259259259259259
+            },
+            "analytical_any_nonnegative": {
+              "sensitivity": 0.8,
+              "specificity": 0.9259259259259259
+            }
+          }
+        },
+        "acceptance": {
+          "accepted_count": 45,
+          "accepted_accuracy": 0.7777777777777778
+        },
+        "objective": 0.7450364586319547
+      },
+      {
+        "config": {
+          "recipe": "raw_lab_quantiles_0.7",
+          "geometry": "within_class",
+          "metric": "manhattan",
+          "augmentation": true,
+          "k": 1,
+          "weights": "uniform",
+          "group_balanced": false,
+          "prior_gamma": 0.0
+        },
+        "metrics": {
+          "accuracy": 0.7307692307692307,
+          "macro_f1_supported_reference_classes": 0.699003281664572,
+          "macro_sensitivity": 0.7619825708061002,
+          "macro_specificity": 0.9110807453416149,
+          "cohens_kappa": 0.5574468085106383,
+          "reference_label_thresholds": {
+            "female_le_small_or_higher": {
+              "sensitivity": 0.75,
+              "specificity": 0.9318181818181818
+            },
+            "male_le_trace_or_higher": {
+              "sensitivity": 0.76,
+              "specificity": 0.8518518518518519
+            },
+            "analytical_any_nonnegative": {
+              "sensitivity": 0.76,
+              "specificity": 0.8518518518518519
+            }
+          }
+        },
+        "acceptance": {
+          "accepted_count": 51,
+          "accepted_accuracy": 0.7450980392156863
+        },
+        "objective": 0.7438697071404335
+      },
+      {
+        "config": {
+          "recipe": "raw_lab_quantiles_0.7",
+          "geometry": "within_class",
+          "metric": "manhattan",
+          "augmentation": true,
+          "k": 1,
+          "weights": "uniform",
+          "group_balanced": false,
+          "prior_gamma": 0.25
+        },
+        "metrics": {
+          "accuracy": 0.7307692307692307,
+          "macro_f1_supported_reference_classes": 0.699003281664572,
+          "macro_sensitivity": 0.7619825708061002,
+          "macro_specificity": 0.9110807453416149,
+          "cohens_kappa": 0.5574468085106383,
+          "reference_label_thresholds": {
+            "female_le_small_or_higher": {
+              "sensitivity": 0.75,
+              "specificity": 0.9318181818181818
+            },
+            "male_le_trace_or_higher": {
+              "sensitivity": 0.76,
+              "specificity": 0.8518518518518519
+            },
+            "analytical_any_nonnegative": {
+              "sensitivity": 0.76,
+              "specificity": 0.8518518518518519
+            }
+          }
+        },
+        "acceptance": {
+          "accepted_count": 51,
+          "accepted_accuracy": 0.7450980392156863
+        },
+        "objective": 0.7438697071404335
+      },
+      {
+        "config": {
+          "recipe": "raw_lab_quantiles_0.7",
+          "geometry": "within_class",
+          "metric": "manhattan",
+          "augmentation": true,
+          "k": 1,
+          "weights": "uniform",
+          "group_balanced": false,
+          "prior_gamma": 0.5
+        },
+        "metrics": {
+          "accuracy": 0.7307692307692307,
+          "macro_f1_supported_reference_classes": 0.699003281664572,
+          "macro_sensitivity": 0.7619825708061002,
+          "macro_specificity": 0.9110807453416149,
+          "cohens_kappa": 0.5574468085106383,
+          "reference_label_thresholds": {
+            "female_le_small_or_higher": {
+              "sensitivity": 0.75,
+              "specificity": 0.9318181818181818
+            },
+            "male_le_trace_or_higher": {
+              "sensitivity": 0.76,
+              "specificity": 0.8518518518518519
+            },
+            "analytical_any_nonnegative": {
+              "sensitivity": 0.76,
+              "specificity": 0.8518518518518519
+            }
+          }
+        },
+        "acceptance": {
+          "accepted_count": 51,
+          "accepted_accuracy": 0.7450980392156863
+        },
+        "objective": 0.7438697071404335
+      },
+      {
+        "config": {
+          "recipe": "raw_lab_quantiles_0.7",
+          "geometry": "within_class",
+          "metric": "manhattan",
+          "augmentation": true,
+          "k": 1,
+          "weights": "uniform",
+          "group_balanced": true,
+          "prior_gamma": 0.0
+        },
+        "metrics": {
+          "accuracy": 0.7307692307692307,
+          "macro_f1_supported_reference_classes": 0.699003281664572,
+          "macro_sensitivity": 0.7619825708061002,
+          "macro_specificity": 0.9110807453416149,
+          "cohens_kappa": 0.5574468085106383,
+          "reference_label_thresholds": {
+            "female_le_small_or_higher": {
+              "sensitivity": 0.75,
+              "specificity": 0.9318181818181818
+            },
+            "male_le_trace_or_higher": {
+              "sensitivity": 0.76,
+              "specificity": 0.8518518518518519
+            },
+            "analytical_any_nonnegative": {
+              "sensitivity": 0.76,
+              "specificity": 0.8518518518518519
+            }
+          }
+        },
+        "acceptance": {
+          "accepted_count": 51,
+          "accepted_accuracy": 0.7450980392156863
+        },
+        "objective": 0.7438697071404335
+      },
+      {
+        "config": {
+          "recipe": "raw_lab_quantiles_0.7",
+          "geometry": "within_class",
+          "metric": "manhattan",
+          "augmentation": true,
+          "k": 1,
+          "weights": "uniform",
+          "group_balanced": true,
+          "prior_gamma": 0.25
+        },
+        "metrics": {
+          "accuracy": 0.7307692307692307,
+          "macro_f1_supported_reference_classes": 0.699003281664572,
+          "macro_sensitivity": 0.7619825708061002,
+          "macro_specificity": 0.9110807453416149,
+          "cohens_kappa": 0.5574468085106383,
+          "reference_label_thresholds": {
+            "female_le_small_or_higher": {
+              "sensitivity": 0.75,
+              "specificity": 0.9318181818181818
+            },
+            "male_le_trace_or_higher": {
+              "sensitivity": 0.76,
+              "specificity": 0.8518518518518519
+            },
+            "analytical_any_nonnegative": {
+              "sensitivity": 0.76,
+              "specificity": 0.8518518518518519
+            }
+          }
+        },
+        "acceptance": {
+          "accepted_count": 51,
+          "accepted_accuracy": 0.7450980392156863
+        },
+        "objective": 0.7438697071404335
+      },
+      {
+        "config": {
+          "recipe": "raw_lab_quantiles_0.7",
+          "geometry": "within_class",
+          "metric": "manhattan",
+          "augmentation": true,
+          "k": 1,
+          "weights": "uniform",
+          "group_balanced": true,
+          "prior_gamma": 0.5
+        },
+        "metrics": {
+          "accuracy": 0.7307692307692307,
+          "macro_f1_supported_reference_classes": 0.699003281664572,
+          "macro_sensitivity": 0.7619825708061002,
+          "macro_specificity": 0.9110807453416149,
+          "cohens_kappa": 0.5574468085106383,
+          "reference_label_thresholds": {
+            "female_le_small_or_higher": {
+              "sensitivity": 0.75,
+              "specificity": 0.9318181818181818
+            },
+            "male_le_trace_or_higher": {
+              "sensitivity": 0.76,
+              "specificity": 0.8518518518518519
+            },
+            "analytical_any_nonnegative": {
+              "sensitivity": 0.76,
+              "specificity": 0.8518518518518519
+            }
+          }
+        },
+        "acceptance": {
+          "accepted_count": 51,
+          "accepted_accuracy": 0.7450980392156863
+        },
+        "objective": 0.7438697071404335
+      }
+    ]
+  }
+}

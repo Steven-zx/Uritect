@@ -1,0 +1,12 @@
+{
+  "crops_checked": 51,
+  "reference_matches": 51,
+  "reference_mismatches": 0,
+  "color_boundary_supported": 37,
+  "measured_roi_support_below_95": 0,
+  "bright_clipping_above_5_percent": 0,
+  "visual_contact_sheets": 6,
+  "bottle_chart_verified": false,
+  "original_labels_changed": false,
+  "chart_search": "No owner-supplied exact-bottle chart image found. Manuscript cites a manufacturer but current physical bottle has no identified manufacturer; no substitute chart treated as verified."
+}

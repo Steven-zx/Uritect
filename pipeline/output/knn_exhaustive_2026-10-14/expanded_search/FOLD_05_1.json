@@ -1,0 +1,395 @@
+{
+  "fold": 1,
+  "selected": {
+    "config": null,
+    "metrics": {
+      "accuracy": 0.9361702127659575,
+      "macro_f1_supported_reference_classes": 0.876984126984127,
+      "macro_sensitivity": 0.8444198078344419,
+      "macro_specificity": 0.9285475234270416,
+      "cohens_kappa": 0.6694021101992966,
+      "reference_label_thresholds": {
+        "female_blood_study_positive": {
+          "sensitivity": 1.0,
+          "specificity": 1.0
+        },
+        "analytical_any_nonnegative": {
+          "sensitivity": 0.5833333333333334,
+          "specificity": 0.9878048780487805
+        }
+      }
+    },
+    "acceptance": {
+      "accepted_count": 94,
+      "accepted_accuracy": 0.9361702127659575
+    },
+    "objective": 0.8812490837507875
+  },
+  "diagnostic": {
+    "tested": 19440,
+    "eligible": 0,
+    "baseline": {
+      "accuracy": 0.9361702127659575,
+      "macro_f1_supported_reference_classes": 0.876984126984127,
+      "macro_sensitivity": 0.8444198078344419,
+      "macro_specificity": 0.9285475234270416,
+      "cohens_kappa": 0.6694021101992966,
+      "reference_label_thresholds": {
+        "female_blood_study_positive": {
+          "sensitivity": 1.0,
+          "specificity": 1.0
+        },
+        "analytical_any_nonnegative": {
+          "sensitivity": 0.5833333333333334,
+          "specificity": 0.9878048780487805
+        }
+      }
+    },
+    "baseline_acceptance": {
+      "accepted_count": 94,
+      "accepted_accuracy": 0.9361702127659575
+    },
+    "top_diagnostic": [
+      {
+        "config": {
+          "recipe": "raw_hsv_vector_0.7",
+          "geometry": "within_class",
+          "metric": "euclidean",
+          "augmentation": false,
+          "k": 11,
+          "weights": "distance",
+          "group_balanced": false,
+          "prior_gamma": 0.5
+        },
+        "metrics": {
+          "accuracy": 0.9680851063829787,
+          "macro_f1_supported_reference_classes": 0.6303030303030303,
+          "macro_sensitivity": 0.6322985957132299,
+          "macro_specificity": 0.9702141900937082,
+          "cohens_kappa": 0.8522786799371399,
+          "reference_label_thresholds": {
+            "female_blood_study_positive": {
+              "sensitivity": 0.0,
+              "specificity": 1.0
+            },
+            "analytical_any_nonnegative": {
+              "sensitivity": 0.8333333333333334,
+              "specificity": 0.9878048780487805
+            }
+          }
+        },
+        "acceptance": {
+          "accepted_count": 90,
+          "accepted_accuracy": 0.9777777777777777
+        },
+        "objective": 0.7155601273171501
+      },
+      {
+        "config": {
+          "recipe": "raw_hsv_vector_0.45",
+          "geometry": "within_class",
+          "metric": "euclidean",
+          "augmentation": false,
+          "k": 5,
+          "weights": "uniform",
+          "group_balanced": false,
+          "prior_gamma": 0.5
+        },
+        "metrics": {
+          "accuracy": 0.9680851063829787,
+          "macro_f1_supported_reference_classes": 0.6303030303030303,
+          "macro_sensitivity": 0.6322985957132299,
+          "macro_specificity": 0.9702141900937082,
+          "cohens_kappa": 0.8522786799371399,
+          "reference_label_thresholds": {
+            "female_blood_study_positive": {
+              "sensitivity": 0.0,
+              "specificity": 1.0
+            },
+            "analytical_any_nonnegative": {
+              "sensitivity": 0.8333333333333334,
+              "specificity": 0.9878048780487805
+            }
+          }
+        },
+        "acceptance": {
+          "accepted_count": 93,
+          "accepted_accuracy": 0.978494623655914
+        },
+        "objective": 0.7155601273171501
+      },
+      {
+        "config": {
+          "recipe": "raw_hsv_vector_0.45",
+          "geometry": "within_class",
+          "metric": "euclidean",
+          "augmentation": false,
+          "k": 5,
+          "weights": "uniform",
+          "group_balanced": true,
+          "prior_gamma": 0.5
+        },
+        "metrics": {
+          "accuracy": 0.9680851063829787,
+          "macro_f1_supported_reference_classes": 0.6303030303030303,
+          "macro_sensitivity": 0.6322985957132299,
+          "macro_specificity": 0.9702141900937082,
+          "cohens_kappa": 0.8522786799371399,
+          "reference_label_thresholds": {
+            "female_blood_study_positive": {
+              "sensitivity": 0.0,
+              "specificity": 1.0
+            },
+            "analytical_any_nonnegative": {
+              "sensitivity": 0.8333333333333334,
+              "specificity": 0.9878048780487805
+            }
+          }
+        },
+        "acceptance": {
+          "accepted_count": 93,
+          "accepted_accuracy": 0.978494623655914
+        },
+        "objective": 0.7155601273171501
+      },
+      {
+        "config": {
+          "recipe": "backing_spatial_lab_0.45",
+          "geometry": "robust",
+          "metric": "manhattan",
+          "augmentation": false,
+          "k": 3,
+          "weights": "uniform",
+          "group_balanced": false,
+          "prior_gamma": 0.5
+        },
+        "metrics": {
+          "accuracy": 0.9574468085106383,
+          "macro_f1_supported_reference_classes": 0.6091734352603918,
+          "macro_sensitivity": 0.6544715447154471,
+          "macro_specificity": 0.9919678714859437,
+          "cohens_kappa": 0.828545371637027,
+          "reference_label_thresholds": {
+            "female_blood_study_positive": {
+              "sensitivity": 0.0,
+              "specificity": 1.0
+            },
+            "analytical_any_nonnegative": {
+              "sensitivity": 1.0,
+              "specificity": 0.9634146341463414
+            }
+          }
+        },
+        "acceptance": {
+          "accepted_count": 91,
+          "accepted_accuracy": 0.978021978021978
+        },
+        "objective": 0.7132833177070006
+      },
+      {
+        "config": {
+          "recipe": "backing_logrgb_0.7",
+          "geometry": "robust",
+          "metric": "manhattan",
+          "augmentation": true,
+          "k": 7,
+          "weights": "uniform",
+          "group_balanced": false,
+          "prior_gamma": 0.5
+        },
+        "metrics": {
+          "accuracy": 0.9680851063829787,
+          "macro_f1_supported_reference_classes": 0.6191233651466949,
+          "macro_sensitivity": 0.6322985957132299,
+          "macro_specificity": 0.982095046854083,
+          "cohens_kappa": 0.8575757575757575,
+          "reference_label_thresholds": {
+            "female_blood_study_positive": {
+              "sensitivity": 0.0,
+              "specificity": 1.0
+            },
+            "analytical_any_nonnegative": {
+              "sensitivity": 0.9166666666666666,
+              "specificity": 0.9878048780487805
+            }
+          }
+        },
+        "acceptance": {
+          "accepted_count": 91,
+          "accepted_accuracy": 0.978021978021978
+        },
+        "objective": 0.7117173636728369
+      },
+      {
+        "config": {
+          "recipe": "raw_hsv_vector_0.7",
+          "geometry": "within_class",
+          "metric": "euclidean",
+          "augmentation": false,
+          "k": 7,
+          "weights": "distance",
+          "group_balanced": false,
+          "prior_gamma": 0.5
+        },
+        "metrics": {
+          "accuracy": 0.9574468085106383,
+          "macro_f1_supported_reference_classes": 0.6150583244962884,
+          "macro_sensitivity": 0.6282335550628234,
+          "macro_specificity": 0.9682061579651942,
+          "cohens_kappa": 0.8101010101010103,
+          "reference_label_thresholds": {
+            "female_blood_study_positive": {
+              "sensitivity": 0.0,
+              "specificity": 1.0
+            },
+            "analytical_any_nonnegative": {
+              "sensitivity": 0.8333333333333334,
+              "specificity": 0.975609756097561
+            }
+          }
+        },
+        "acceptance": {
+          "accepted_count": 90,
+          "accepted_accuracy": 0.9777777777777777
+        },
+        "objective": 0.705683949615292
+      },
+      {
+        "config": {
+          "recipe": "raw_hsv_vector_0.45",
+          "geometry": "within_class",
+          "metric": "euclidean",
+          "augmentation": false,
+          "k": 5,
+          "weights": "distance",
+          "group_balanced": false,
+          "prior_gamma": 0.25
+        },
+        "metrics": {
+          "accuracy": 0.9574468085106383,
+          "macro_f1_supported_reference_classes": 0.6150583244962884,
+          "macro_sensitivity": 0.6282335550628234,
+          "macro_specificity": 0.9682061579651942,
+          "cohens_kappa": 0.8101010101010103,
+          "reference_label_thresholds": {
+            "female_blood_study_positive": {
+              "sensitivity": 0.0,
+              "specificity": 1.0
+            },
+            "analytical_any_nonnegative": {
+              "sensitivity": 0.8333333333333334,
+              "specificity": 0.975609756097561
+            }
+          }
+        },
+        "acceptance": {
+          "accepted_count": 91,
+          "accepted_accuracy": 0.978021978021978
+        },
+        "objective": 0.705683949615292
+      },
+      {
+        "config": {
+          "recipe": "raw_hsv_vector_0.45",
+          "geometry": "within_class",
+          "metric": "euclidean",
+          "augmentation": false,
+          "k": 5,
+          "weights": "distance",
+          "group_balanced": false,
+          "prior_gamma": 0.5
+        },
+        "metrics": {
+          "accuracy": 0.9574468085106383,
+          "macro_f1_supported_reference_classes": 0.6150583244962884,
+          "macro_sensitivity": 0.6282335550628234,
+          "macro_specificity": 0.9682061579651942,
+          "cohens_kappa": 0.8101010101010103,
+          "reference_label_thresholds": {
+            "female_blood_study_positive": {
+              "sensitivity": 0.0,
+              "specificity": 1.0
+            },
+            "analytical_any_nonnegative": {
+              "sensitivity": 0.8333333333333334,
+              "specificity": 0.975609756097561
+            }
+          }
+        },
+        "acceptance": {
+          "accepted_count": 93,
+          "accepted_accuracy": 0.967741935483871
+        },
+        "objective": 0.705683949615292
+      },
+      {
+        "config": {
+          "recipe": "raw_hsv_vector_0.45",
+          "geometry": "within_class",
+          "metric": "euclidean",
+          "augmentation": false,
+          "k": 5,
+          "weights": "distance",
+          "group_balanced": true,
+          "prior_gamma": 0.25
+        },
+        "metrics": {
+          "accuracy": 0.9574468085106383,
+          "macro_f1_supported_reference_classes": 0.6150583244962884,
+          "macro_sensitivity": 0.6282335550628234,
+          "macro_specificity": 0.9682061579651942,
+          "cohens_kappa": 0.8101010101010103,
+          "reference_label_thresholds": {
+            "female_blood_study_positive": {
+              "sensitivity": 0.0,
+              "specificity": 1.0
+            },
+            "analytical_any_nonnegative": {
+              "sensitivity": 0.8333333333333334,
+              "specificity": 0.975609756097561
+            }
+          }
+        },
+        "acceptance": {
+          "accepted_count": 91,
+          "accepted_accuracy": 0.978021978021978
+        },
+        "objective": 0.705683949615292
+      },
+      {
+        "config": {
+          "recipe": "raw_hsv_vector_0.45",
+          "geometry": "within_class",
+          "metric": "euclidean",
+          "augmentation": false,
+          "k": 5,
+          "weights": "distance",
+          "group_balanced": true,
+          "prior_gamma": 0.5
+        },
+        "metrics": {
+          "accuracy": 0.9574468085106383,
+          "macro_f1_supported_reference_classes": 0.6150583244962884,
+          "macro_sensitivity": 0.6282335550628234,
+          "macro_specificity": 0.9682061579651942,
+          "cohens_kappa": 0.8101010101010103,
+          "reference_label_thresholds": {
+            "female_blood_study_positive": {
+              "sensitivity": 0.0,
+              "specificity": 1.0
+            },
+            "analytical_any_nonnegative": {
+              "sensitivity": 0.8333333333333334,
+              "specificity": 0.975609756097561
+            }
+          }
+        },
+        "acceptance": {
+          "accepted_count": 93,
+          "accepted_accuracy": 0.967741935483871
+        },
+        "objective": 0.705683949615292
+      }
+    ]
+  }
+}

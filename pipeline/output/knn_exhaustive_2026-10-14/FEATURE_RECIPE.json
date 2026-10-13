@@ -1,0 +1,24 @@
+{
+  "fractions": [
+    1.0,
+    0.7,
+    0.45
+  ],
+  "kinds": [
+    "raw_lab",
+    "backing_lab",
+    "backing_logrgb",
+    "backing_chroma",
+    "raw_hsv_vector",
+    "backing_hsv_vector",
+    "raw_lab_quantiles",
+    "backing_lab_quantiles",
+    "backing_spatial_lab"
+  ],
+  "safe_development_photos": 77,
+  "paired_targets": 70,
+  "neutral_backing_available": 69,
+  "augmentation": "Training only: unclipped neutral \u00b13% exposure, matching backing exposure; \u00b11 pixel central-crop shifts constrained inside the existing ROI. No chemical category or new specimen fabricated.",
+  "feature_source_sha256": "d68a698d4e93e077a94fda5bcbdeec5843e94145ff2059f0ff7f9f6b42453470",
+  "cache_sha256": "faf0dfab5bf9cd9c13b2dc59205786fc9de97efc05abd34bd8f9246aecce9ecd"
+}

@@ -1,0 +1,395 @@
+{
+  "fold": 0,
+  "selected": {
+    "config": null,
+    "metrics": {
+      "accuracy": 0.9215686274509803,
+      "macro_f1_supported_reference_classes": 0.47959183673469385,
+      "macro_sensitivity": 0.5,
+      "macro_specificity": 0.8333333333333334,
+      "cohens_kappa": 0.0,
+      "reference_label_thresholds": {
+        "renal_protein_0_3_or_higher": {
+          "sensitivity": null,
+          "specificity": 1.0
+        },
+        "analytical_any_nonnegative": {
+          "sensitivity": 0.0,
+          "specificity": 1.0
+        }
+      }
+    },
+    "acceptance": {
+      "accepted_count": 51,
+      "accepted_accuracy": 0.9215686274509803
+    },
+    "objective": 0.5873849539815926
+  },
+  "diagnostic": {
+    "tested": 19440,
+    "eligible": 0,
+    "baseline": {
+      "accuracy": 0.9215686274509803,
+      "macro_f1_supported_reference_classes": 0.47959183673469385,
+      "macro_sensitivity": 0.5,
+      "macro_specificity": 0.8333333333333334,
+      "cohens_kappa": 0.0,
+      "reference_label_thresholds": {
+        "renal_protein_0_3_or_higher": {
+          "sensitivity": null,
+          "specificity": 1.0
+        },
+        "analytical_any_nonnegative": {
+          "sensitivity": 0.0,
+          "specificity": 1.0
+        }
+      }
+    },
+    "baseline_acceptance": {
+      "accepted_count": 51,
+      "accepted_accuracy": 0.9215686274509803
+    },
+    "top_diagnostic": [
+      {
+        "config": {
+          "recipe": "backing_lab_1",
+          "geometry": "standard",
+          "metric": "euclidean",
+          "augmentation": true,
+          "k": 7,
+          "weights": "distance",
+          "group_balanced": false,
+          "prior_gamma": 0.5
+        },
+        "metrics": {
+          "accuracy": 0.8823529411764706,
+          "macro_f1_supported_reference_classes": 0.7166666666666667,
+          "macro_sensitivity": 0.8218085106382979,
+          "macro_specificity": 0.9406028368794326,
+          "cohens_kappa": 0.44160583941605824,
+          "reference_label_thresholds": {
+            "renal_protein_0_3_or_higher": {
+              "sensitivity": null,
+              "specificity": 1.0
+            },
+            "analytical_any_nonnegative": {
+              "sensitivity": 0.75,
+              "specificity": 0.8936170212765957
+            }
+          }
+        },
+        "acceptance": {
+          "accepted_count": 46,
+          "accepted_accuracy": 0.9130434782608695
+        },
+        "objective": 0.7954557780559032
+      },
+      {
+        "config": {
+          "recipe": "backing_lab_1",
+          "geometry": "standard",
+          "metric": "euclidean",
+          "augmentation": true,
+          "k": 7,
+          "weights": "distance",
+          "group_balanced": true,
+          "prior_gamma": 0.25
+        },
+        "metrics": {
+          "accuracy": 0.8627450980392157,
+          "macro_f1_supported_reference_classes": 0.6914433880726016,
+          "macro_sensitivity": 0.8111702127659575,
+          "macro_specificity": 0.9370567375886525,
+          "cohens_kappa": 0.39593908629441643,
+          "reference_label_thresholds": {
+            "renal_protein_0_3_or_higher": {
+              "sensitivity": null,
+              "specificity": 1.0
+            },
+            "analytical_any_nonnegative": {
+              "sensitivity": 0.75,
+              "specificity": 0.8723404255319149
+            }
+          }
+        },
+        "acceptance": {
+          "accepted_count": 49,
+          "accepted_accuracy": 0.8775510204081632
+        },
+        "objective": 0.7776180269272056
+      },
+      {
+        "config": {
+          "recipe": "backing_lab_1",
+          "geometry": "standard",
+          "metric": "euclidean",
+          "augmentation": true,
+          "k": 11,
+          "weights": "distance",
+          "group_balanced": false,
+          "prior_gamma": 0.25
+        },
+        "metrics": {
+          "accuracy": 0.8627450980392157,
+          "macro_f1_supported_reference_classes": 0.6914433880726016,
+          "macro_sensitivity": 0.8111702127659575,
+          "macro_specificity": 0.9370567375886525,
+          "cohens_kappa": 0.39593908629441643,
+          "reference_label_thresholds": {
+            "renal_protein_0_3_or_higher": {
+              "sensitivity": null,
+              "specificity": 1.0
+            },
+            "analytical_any_nonnegative": {
+              "sensitivity": 0.75,
+              "specificity": 0.8723404255319149
+            }
+          }
+        },
+        "acceptance": {
+          "accepted_count": 49,
+          "accepted_accuracy": 0.8775510204081632
+        },
+        "objective": 0.7776180269272056
+      },
+      {
+        "config": {
+          "recipe": "backing_lab_1",
+          "geometry": "robust",
+          "metric": "manhattan",
+          "augmentation": false,
+          "k": 7,
+          "weights": "uniform",
+          "group_balanced": false,
+          "prior_gamma": 0.5
+        },
+        "metrics": {
+          "accuracy": 0.8627450980392157,
+          "macro_f1_supported_reference_classes": 0.6914433880726016,
+          "macro_sensitivity": 0.8111702127659575,
+          "macro_specificity": 0.9370567375886525,
+          "cohens_kappa": 0.39593908629441643,
+          "reference_label_thresholds": {
+            "renal_protein_0_3_or_higher": {
+              "sensitivity": null,
+              "specificity": 1.0
+            },
+            "analytical_any_nonnegative": {
+              "sensitivity": 0.75,
+              "specificity": 0.8723404255319149
+            }
+          }
+        },
+        "acceptance": {
+          "accepted_count": 50,
+          "accepted_accuracy": 0.88
+        },
+        "objective": 0.7776180269272056
+      },
+      {
+        "config": {
+          "recipe": "backing_lab_0.45",
+          "geometry": "standard",
+          "metric": "euclidean",
+          "augmentation": true,
+          "k": 7,
+          "weights": "uniform",
+          "group_balanced": true,
+          "prior_gamma": 0.5
+        },
+        "metrics": {
+          "accuracy": 0.8627450980392157,
+          "macro_f1_supported_reference_classes": 0.6914433880726016,
+          "macro_sensitivity": 0.8111702127659575,
+          "macro_specificity": 0.9370567375886525,
+          "cohens_kappa": 0.39593908629441643,
+          "reference_label_thresholds": {
+            "renal_protein_0_3_or_higher": {
+              "sensitivity": null,
+              "specificity": 1.0
+            },
+            "analytical_any_nonnegative": {
+              "sensitivity": 0.75,
+              "specificity": 0.8723404255319149
+            }
+          }
+        },
+        "acceptance": {
+          "accepted_count": 50,
+          "accepted_accuracy": 0.86
+        },
+        "objective": 0.7776180269272056
+      },
+      {
+        "config": {
+          "recipe": "backing_lab_0.45",
+          "geometry": "standard",
+          "metric": "euclidean",
+          "augmentation": true,
+          "k": 7,
+          "weights": "distance",
+          "group_balanced": true,
+          "prior_gamma": 0.5
+        },
+        "metrics": {
+          "accuracy": 0.8627450980392157,
+          "macro_f1_supported_reference_classes": 0.6914433880726016,
+          "macro_sensitivity": 0.8111702127659575,
+          "macro_specificity": 0.9370567375886525,
+          "cohens_kappa": 0.39593908629441643,
+          "reference_label_thresholds": {
+            "renal_protein_0_3_or_higher": {
+              "sensitivity": null,
+              "specificity": 1.0
+            },
+            "analytical_any_nonnegative": {
+              "sensitivity": 0.75,
+              "specificity": 0.8723404255319149
+            }
+          }
+        },
+        "acceptance": {
+          "accepted_count": 49,
+          "accepted_accuracy": 0.8571428571428571
+        },
+        "objective": 0.7776180269272056
+      },
+      {
+        "config": {
+          "recipe": "backing_lab_0.45",
+          "geometry": "robust",
+          "metric": "euclidean",
+          "augmentation": false,
+          "k": 7,
+          "weights": "uniform",
+          "group_balanced": false,
+          "prior_gamma": 0.5
+        },
+        "metrics": {
+          "accuracy": 0.8627450980392157,
+          "macro_f1_supported_reference_classes": 0.6914433880726016,
+          "macro_sensitivity": 0.8111702127659575,
+          "macro_specificity": 0.9370567375886525,
+          "cohens_kappa": 0.39593908629441643,
+          "reference_label_thresholds": {
+            "renal_protein_0_3_or_higher": {
+              "sensitivity": null,
+              "specificity": 1.0
+            },
+            "analytical_any_nonnegative": {
+              "sensitivity": 0.75,
+              "specificity": 0.8723404255319149
+            }
+          }
+        },
+        "acceptance": {
+          "accepted_count": 50,
+          "accepted_accuracy": 0.88
+        },
+        "objective": 0.7776180269272056
+      },
+      {
+        "config": {
+          "recipe": "backing_lab_quantiles_0.45",
+          "geometry": "robust",
+          "metric": "euclidean",
+          "augmentation": false,
+          "k": 7,
+          "weights": "uniform",
+          "group_balanced": false,
+          "prior_gamma": 0.5
+        },
+        "metrics": {
+          "accuracy": 0.8627450980392157,
+          "macro_f1_supported_reference_classes": 0.6914433880726016,
+          "macro_sensitivity": 0.8111702127659575,
+          "macro_specificity": 0.9370567375886525,
+          "cohens_kappa": 0.39593908629441643,
+          "reference_label_thresholds": {
+            "renal_protein_0_3_or_higher": {
+              "sensitivity": null,
+              "specificity": 1.0
+            },
+            "analytical_any_nonnegative": {
+              "sensitivity": 0.75,
+              "specificity": 0.8723404255319149
+            }
+          }
+        },
+        "acceptance": {
+          "accepted_count": 50,
+          "accepted_accuracy": 0.88
+        },
+        "objective": 0.7776180269272056
+      },
+      {
+        "config": {
+          "recipe": "backing_lab_quantiles_0.45",
+          "geometry": "robust",
+          "metric": "euclidean",
+          "augmentation": true,
+          "k": 11,
+          "weights": "uniform",
+          "group_balanced": true,
+          "prior_gamma": 0.5
+        },
+        "metrics": {
+          "accuracy": 0.8627450980392157,
+          "macro_f1_supported_reference_classes": 0.6914433880726016,
+          "macro_sensitivity": 0.8111702127659575,
+          "macro_specificity": 0.9370567375886525,
+          "cohens_kappa": 0.39593908629441643,
+          "reference_label_thresholds": {
+            "renal_protein_0_3_or_higher": {
+              "sensitivity": null,
+              "specificity": 1.0
+            },
+            "analytical_any_nonnegative": {
+              "sensitivity": 0.75,
+              "specificity": 0.8723404255319149
+            }
+          }
+        },
+        "acceptance": {
+          "accepted_count": 50,
+          "accepted_accuracy": 0.86
+        },
+        "objective": 0.7776180269272056
+      },
+      {
+        "config": {
+          "recipe": "backing_lab_quantiles_0.45",
+          "geometry": "robust",
+          "metric": "euclidean",
+          "augmentation": true,
+          "k": 11,
+          "weights": "distance",
+          "group_balanced": true,
+          "prior_gamma": 0.5
+        },
+        "metrics": {
+          "accuracy": 0.8627450980392157,
+          "macro_f1_supported_reference_classes": 0.6914433880726016,
+          "macro_sensitivity": 0.8111702127659575,
+          "macro_specificity": 0.9370567375886525,
+          "cohens_kappa": 0.39593908629441643,
+          "reference_label_thresholds": {
+            "renal_protein_0_3_or_higher": {
+              "sensitivity": null,
+              "specificity": 1.0
+            },
+            "analytical_any_nonnegative": {
+              "sensitivity": 0.75,
+              "specificity": 0.8723404255319149
+            }
+          }
+        },
+        "acceptance": {
+          "accepted_count": 48,
+          "accepted_accuracy": 0.875
+        },
+        "objective": 0.7776180269272056
+      }
+    ]
+  }
+}
